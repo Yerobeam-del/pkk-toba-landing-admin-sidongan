@@ -1,7 +1,7 @@
 <div class="page" id="page-berita">
     <div class="page-header">
         <div class="page-header-content">
-            <h1>Berita & Kegiatan</h1>
+            <h1>Berita & Kegiatan _TEST</h1>
             <p>Informasi terbaru seputar kegiatan dan program PKK Kabupaten Toba</p>
             <div class="breadcrumb">
                 <a onclick="navigateTo('beranda')">Beranda</a>
