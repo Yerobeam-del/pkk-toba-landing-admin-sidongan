@@ -241,7 +241,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($activeUsers as $user)
+                    @foreach($users as $user)
                     <tr style="border-bottom:1px solid rgba(0,0,0,0.04)">
                         <td style="padding:1rem">
                             <div style="display:flex;align-items:center;gap:0.75rem">
@@ -308,10 +308,9 @@
     </div>
 
     {{-- Inactive Users --}}
-    <div id="tab-inactive" class="tab-content" style="display:none">
+    <div id="tab-inactive" class="tab-content" style="display:{{ $tab === 'inactive' ? 'block' : 'none' }}">
         <div class="table-container" style="padding:1rem">
-            @php $inactiveUsers = $users->filter(fn($u) => !$u->email_verified_at); @endphp
-            @if($inactiveUsers->count() > 0)
+            @if($users->count() > 0)
             <table style="width:100%;border-collapse:collapse">
                 <thead>
                     <tr style="text-align:left;border-bottom:1px solid rgba(0,0,0,0.06)">
@@ -322,7 +321,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($inactiveUsers as $user)
+                    @foreach($users as $user)
                     <tr style="border-bottom:1px solid rgba(0,0,0,0.04)">
                         <td style="padding:1rem">
                             <div style="display:flex;align-items:center;gap:0.75rem">
@@ -388,10 +387,9 @@
     </div>
 
     {{-- Users with Access --}}
-    <div id="tab-with-access" class="tab-content" style="display:none">
+    <div id="tab-with-access" class="tab-content" style="display:{{ $tab === 'with-access' ? 'block' : 'none' }}">
         <div class="table-container" style="padding:1rem">
-            @php $usersWithAccess = $users->filter(fn($u) => $u->applications->count() > 0); @endphp
-            @if($usersWithAccess->count() > 0)
+            @if($users->count() > 0)
             <table style="width:100%;border-collapse:collapse">
                 <thead>
                     <tr style="text-align:left;border-bottom:1px solid rgba(0,0,0,0.06)">
@@ -402,7 +400,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($usersWithAccess as $user)
+                    @foreach($users as $user)
                     <tr style="border-bottom:1px solid rgba(0,0,0,0.04)">
                         <td style="padding:1rem">
                             <div style="display:flex;align-items:center;gap:0.75rem">
