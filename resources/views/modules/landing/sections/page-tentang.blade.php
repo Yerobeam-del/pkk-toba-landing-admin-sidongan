@@ -1,7 +1,7 @@
 <div class="page" id="page-tentang" style="display: none;">
     <div class="page-header" style="background: linear-gradient(135deg, var(--primary), var(--primary-light));">
         <div class="page-header-content">
-            <h1 id="tentangJudul">Tentang Kami</h1>
+            <h1 id="tentangJudul">Tentang Kami _TEST</h1>
             <p id="tentangSubjudul">Informasi tentang PKK Kabupaten Toba</p>
             <div class="breadcrumb">
                 <a onclick="navigateTo('beranda')">Beranda</a><span>/</span><span class="current">Tentang</span>
