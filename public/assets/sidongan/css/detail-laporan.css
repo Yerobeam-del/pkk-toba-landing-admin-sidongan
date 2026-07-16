@@ -1,0 +1,722 @@
+/* =========================================
+   DETAIL LAPORAN KEGIATAN - SIDONGAN
+   ========================================= */
+
+/* ===== CONTAINER ===== */
+.dl-container {
+    padding: 0 1.5rem;
+}
+
+/* ===== HEADER ===== */
+.dl-header {
+    background: linear-gradient(135deg, #0891b2, #14b8a6);
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    box-shadow: 0 4px 20px rgba(8, 145, 178, 0.2);
+}
+
+.dl-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dl-header h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    line-height: 1.3;
+}
+
+.dl-header p {
+    font-size: 0.875rem;
+    opacity: 0.95;
+    margin: 0;
+}
+
+.dl-header-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* ===== BUTTONS ===== */
+.dl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.25s ease;
+    border: none;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.dl-btn-back {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dl-btn-back:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+}
+
+.dl-btn-verify {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+}
+
+.dl-btn-verify:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+}
+
+.dl-btn-link {
+    background: #dbeafe;
+    color: #2563eb;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+}
+
+.dl-btn-link:hover {
+    background: #bfdbfe;
+    transform: translateY(-1px);
+}
+
+/* ===== CONTENT GRID ===== */
+.dl-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+/* ===== CARD ===== */
+.dl-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.dl-card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 2px solid;
+}
+
+.dl-card-header-info {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    border-bottom-color: #86efac;
+}
+
+.dl-card-header-surat {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border-bottom-color: #bae6fd;
+}
+
+.dl-card-header-status {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-bottom-color: #fcd34d;
+}
+
+.dl-card-header h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dl-card-header h2 i {
+    font-size: 1.1rem;
+}
+
+.dl-card-body {
+    padding: 1.5rem;
+}
+
+/* ===== INFO ITEMS ===== */
+.dl-info-item {
+    margin-bottom: 1.25rem;
+}
+
+.dl-info-item:last-child {
+    margin-bottom: 0;
+}
+
+.dl-info-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0.375rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.dl-info-value {
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.dl-info-value i {
+    margin-right: 0.375rem;
+    color: #0891b2;
+}
+
+.dl-info-value-muted {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    font-style: italic;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* ===== INFO GRID (2 kolom dalam card) ===== */
+.dl-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+/* ===== LOKASI BOX ===== */
+.dl-lokasi-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+.dl-lokasi-hierarki {
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.5;
+}
+
+.dl-lokasi-alamat {
+    font-size: 0.85rem;
+    color: #64748b;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e2e8f0;
+    margin: 0;
+    line-height: 1.6;
+    display: flex;
+    align-items: start;
+    gap: 0.375rem;
+}
+
+.dl-lokasi-alamat i {
+    color: #3b82f6;
+    margin-top: 0.25rem;
+}
+
+.dl-lokasi-kosong {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.dl-lokasi-kosong i {
+    margin-right: 0.375rem;
+}
+
+/* ===== DESKRIPSI BOX ===== */
+.dl-deskripsi-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-size: 0.95rem;
+    color: #334155;
+    line-height: 1.7;
+    margin-top: 0.5rem;
+}
+
+/* ===== FOTO GRID ===== */
+.dl-foto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.dl-foto-item {
+    cursor: pointer;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s;
+    aspect-ratio: 1;
+}
+
+.dl-foto-item:hover {
+    border-color: #0891b2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(8, 145, 178, 0.15);
+}
+
+.dl-foto-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ===== STATUS BADGE ===== */
+.dl-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.dl-status-draft {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.dl-status-menunggu {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.dl-status-disetujui {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.dl-status-ditolak {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* ===== ROLE BADGE ===== */
+.dl-role-badge {
+    display: inline-block;
+    margin-top: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ===== CATATAN VERIFIKASI ===== */
+.dl-catatan-section {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.dl-catatan-box {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.6;
+    margin-top: 0.5rem;
+}
+
+/* ===== GALLERY OVERLAY ===== */
+.dl-gallery-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: none;
+}
+
+.dl-gallery-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.dl-gallery-container {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dl-gallery-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    max-width: 85vw;
+    max-height: 75vh;
+}
+
+.dl-gallery-image {
+    display: block;
+    max-width: 85vw;
+    max-height: 75vh;
+    object-fit: contain;
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.dl-gallery-image.slide-left { animation: dl-slideLeft 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.dl-gallery-image.slide-right { animation: dl-slideRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.dl-gallery-image.fade-in { animation: dl-fadeIn 0.3s ease; }
+
+@keyframes dl-slideLeft { 0% { opacity: 0; transform: translateX(60px) scale(0.95); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
+@keyframes dl-slideRight { 0% { opacity: 0; transform: translateX(-60px) scale(0.95); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
+@keyframes dl-fadeIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+
+.dl-gallery-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10000;
+}
+
+.dl-gallery-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dl-gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    color: #0f172a;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.dl-gallery-nav:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.dl-gallery-nav.prev { left: 1rem; }
+.dl-gallery-nav.next { right: 1rem; }
+
+.dl-gallery-bottom-bar {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.dl-gallery-counter {
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.dl-gallery-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    background: rgba(59, 130, 246, 0.8);
+    border: 1px solid rgba(59, 130, 246, 0.5);
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.dl-gallery-download-btn:hover {
+    background: rgba(59, 130, 246, 1);
+    transform: translateY(-2px);
+}
+
+.dl-gallery-thumbnails {
+    position: absolute;
+    bottom: -5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dl-gallery-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.dl-gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dl-gallery-thumb.active {
+    border: 2px solid #0891b2;
+    opacity: 1;
+}
+
+.dl-gallery-thumb:hover {
+    opacity: 0.95;
+    transform: scale(1.1);
+}
+
+/* =========================================
+   RESPONSIVE - TABLET (max 1024px)
+   ========================================= */
+@media (max-width: 1024px) {
+    .dl-container {
+        padding: 0 1rem;
+    }
+
+    .dl-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .dl-header {
+        padding: 1.5rem;
+    }
+
+    .dl-card-body {
+        padding: 1.5rem;
+    }
+
+    .dl-gallery-nav.prev { left: 0.5rem; }
+    .dl-gallery-nav.next { right: 0.5rem; }
+}
+
+/* =========================================
+   RESPONSIVE - MOBILE (max 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    .dl-container {
+        padding: 0 1rem;
+    }
+
+    .dl-header {
+        padding: 1.25rem 1.5rem;
+        border-radius: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .dl-header-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .dl-header h1 {
+        font-size: 1.125rem;
+    }
+
+    .dl-header p {
+        font-size: 0.8rem;
+    }
+
+    .dl-header-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .dl-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+    }
+
+    .dl-card-header {
+        padding: 1rem 1.25rem;
+    }
+
+    .dl-card-header h2 {
+        font-size: 1rem;
+    }
+
+    .dl-card-body {
+        padding: 1.25rem;
+    }
+
+    .dl-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .dl-info-label {
+        font-size: 0.75rem;
+    }
+
+    .dl-info-value {
+        font-size: 0.9rem;
+    }
+
+    .dl-info-value-muted {
+        font-size: 0.9rem;
+    }
+
+    .dl-lokasi-box,
+    .dl-deskripsi-box,
+    .dl-catatan-box {
+        padding: 0.875rem;
+        font-size: 0.9rem;
+    }
+
+    .dl-lokasi-hierarki {
+        font-size: 0.9rem;
+    }
+
+    .dl-foto-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .dl-status-badge {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .dl-role-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .dl-btn-link {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Gallery mobile */
+    .dl-gallery-close {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .dl-gallery-nav {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 0.875rem;
+    }
+
+    .dl-gallery-nav.prev { left: 0.5rem; }
+    .dl-gallery-nav.next { right: 0.5rem; }
+
+    .dl-gallery-counter {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.875rem;
+    }
+
+    .dl-gallery-download-btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.875rem;
+    }
+
+    .dl-gallery-thumb {
+        width: 50px;
+        height: 50px;
+    }
+
+    .dl-gallery-bottom-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+    }
+}
+
+/* =========================================
+   RESPONSIVE - SMALL MOBILE (max 480px)
+   ========================================= */
+@media (max-width: 480px) {
+    .dl-container {
+        padding: 0 0.75rem;
+    }
+
+    .dl-header h1 {
+        font-size: 1rem;
+    }
+
+    .dl-card-header h2 {
+        font-size: 0.95rem;
+    }
+
+    .dl-card-body {
+        padding: 1rem;
+    }
+
+    .dl-foto-grid {
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    }
+}
