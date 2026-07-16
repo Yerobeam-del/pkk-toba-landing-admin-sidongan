@@ -72,19 +72,33 @@
 </div>
 
 {{-- Modern Tabs --}}
-<div style="display:flex;gap:0.25rem;margin-bottom:1.5rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem;overflow-x:auto">
-    <button class="tab-btn active" onclick="switchTab('all', this)" style="padding:0.6rem 1rem;border-radius:8px 8px 0 0;background:transparent;border:none;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all 0.2s;border-bottom:2px solid var(--primary)">
-        Semua Pengguna
-    </button>
-    <button class="tab-btn" onclick="switchTab('active', this)" style="padding:0.6rem 1rem;border-radius:8px 8px 0 0;background:transparent;border:none;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent">
-        Aktif <span style="background:rgba(56,161,105,0.15);color:#2f855a;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:4px">{{ $users->filter(fn($u) => $u->email_verified_at)->count() }}</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('inactive', this)" style="padding:0.6rem 1rem;border-radius:8px 8px 0 0;background:transparent;border:none;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent">
-        Nonaktif <span style="background:rgba(229,62,62,0.15);color:#c53030;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:4px">{{ $users->filter(fn($u) => !$u->email_verified_at)->count() }}</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('with-access', this)" style="padding:0.6rem 1rem;border-radius:8px 8px 0 0;background:transparent;border:none;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent">
-        Punya Akses <span style="background:rgba(128,90,213,0.15);color:#6b46c1;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:4px">{{ $users->filter(fn($u) => $u->applications->count() > 0)->count() }}</span>
-    </button>
+<div style="display:flex;gap:0.25rem;margin-bottom:0;border-bottom:1px solid rgba(0,0,0,0.06);padding:0 1rem 0 1rem;overflow-x:auto">
+    @php
+        $tabs = [
+            'all' => 'Semua Pengguna',
+            'active' => 'Aktif',
+            'inactive' => 'Nonaktif',
+            'with-access' => 'Punya Akses'
+        ];
+    @endphp
+    @foreach($tabs as $key => $label)
+        @php
+            $isActive = $tab === $key;
+            $url = request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]);
+            
+            // Hitung badge count (opsional, bisa di-hardcode atau query terpisah jika perlu performa)
+            $badgeCount = 0;
+            if($key === 'active') $badgeCount = \App\Models\User::whereNotNull('email_verified_at')->count();
+            if($key === 'inactive') $badgeCount = \App\Models\User::whereNull('email_verified_at')->count();
+            if($key === 'with-access') $badgeCount = \App\Models\User::whereHas('applications')->count();
+        @endphp
+        <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}" style="padding:0.75rem 1rem;border-radius:8px 8px 0 0;background:transparent;border:none;font-weight:600;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};cursor:pointer;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};text-decoration:none;display:flex;align-items:center;gap:0.5rem;">
+            {{ $label }}
+            @if($key !== 'all' && $badgeCount > 0)
+                <span style="background:rgba(0,0,0,0.05);color:var(--text-muted);padding:2px 8px;border-radius:12px;font-size:0.75rem;">{{ $badgeCount }}</span>
+            @endif
+        </a>
+    @endforeach
 </div>
 
 {{-- Main Card --}}
@@ -214,10 +228,9 @@
     </div>
 
     {{-- Active Users --}}
-    <div id="tab-active" class="tab-content" style="display:none">
+    <div id="tab-active" class="tab-content" style="display:{{ $tab === 'active' ? 'block' : 'none' }}">
         <div class="table-container" style="padding:1rem">
-            @php $activeUsers = $users->filter(fn($u) => $u->email_verified_at); @endphp
-            @if($activeUsers->count() > 0)
+            @if($users->count() > 0)
             <table style="width:100%;border-collapse:collapse">
                 <thead>
                     <tr style="text-align:left;border-bottom:1px solid rgba(0,0,0,0.06)">
@@ -465,6 +478,39 @@
         </div>
     </div>
 
+    {{-- Pagination Controls --}}
+    @if($users->hasPages())
+    <div style="padding:1rem;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+        <div style="font-size:0.85rem;color:var(--text-muted);">
+            Halaman {{ $users->currentPage() }} dari {{ $users->lastPage() }}
+        </div>
+        
+        <div style="display:flex;gap:0.25rem;">
+            {{-- Previous Button --}}
+            @if($users->onFirstPage())
+                <span style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-size:0.85rem;cursor:not-allowed;background:#f8fafc;">Previous</span>
+            @else
+                <a href="{{ $users->previousPageUrl() }}" style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;color:var(--primary);font-size:0.85rem;text-decoration:none;background:white;transition:all 0.2s;" onmouseover="this.style.background='#fff7ed';this.style.borderColor='var(--primary)'" onmouseout="this.style.background='white';this.style.borderColor='var(--border)'">Previous</a>
+            @endif
+
+            {{-- Page Numbers (Simplified) --}}
+            @foreach($users->getUrlRange(1, $users->lastPage()) as $page => $url)
+                @if($page == $users->currentPage())
+                    <span style="padding:0.5rem 0.75rem;border:1px solid var(--primary);border-radius:6px;color:white;font-size:0.85rem;font-weight:600;background:var(--primary);">{{ $page }}</span>
+                @elseif($page > $users->currentPage() - 3 && $page < $users->currentPage() + 3)
+                    <a href="{{ $url }}" style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;color:var(--text-dark);font-size:0.85rem;text-decoration:none;background:white;transition:all 0.2s;" onmouseover="this.style.background='#fff7ed';this.style.borderColor='var(--primary)'" onmouseout="this.style.background='white';this.style.borderColor='var(--border)'">{{ $page }}</a>
+                @endif
+            @endforeach
+
+            {{-- Next Button --}}
+            @if($users->hasMorePages())
+                <a href="{{ $users->nextPageUrl() }}" style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;color:var(--primary);font-size:0.85rem;text-decoration:none;background:white;transition:all 0.2s;" onmouseover="this.style.background='#fff7ed';this.style.borderColor='var(--primary)'" onmouseout="this.style.background='white';this.style.borderColor='var(--border)'">Next</a>
+            @else
+                <span style="padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-size:0.85rem;cursor:not-allowed;background:#f8fafc;">Next</span>
+            @endif
+        </div>
+    </div>
+    @endif
 </div>
 
 <script>

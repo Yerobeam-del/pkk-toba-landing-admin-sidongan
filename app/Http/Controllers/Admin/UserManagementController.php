@@ -21,9 +21,11 @@ class UserManagementController extends Controller
     /**
      * Display listing of users.
      */
-    public function index()
+    public function index(Request $request)
     {
         $currentUser = auth()->user();
+        $perPage = $request->get('per_page', 10);
+        $tab = $request->get('tab', 'all');
         
         $query = User::with('applications')->latest();
         
@@ -31,9 +33,18 @@ class UserManagementController extends Controller
             $query->where('sidongan_role', '!=', 'super_admin');
         }
         
-        $users = $query->paginate(10);
+        // Filter berdasarkan tab yang dipilih SEBELUM pagination
+        if ($tab === 'active') {
+            $query->whereNotNull('email_verified_at');
+        } elseif ($tab === 'inactive') {
+            $query->whereNull('email_verified_at');
+        } elseif ($tab === 'with-access') {
+            $query->whereHas('applications');
+        }
         
-        return view('admin.user-management.index', compact('users'));
+        $users = $query->paginate($perPage);
+        
+        return view('admin.user-management.index', compact('users', 'tab', 'perPage'));
     }
 
     /**
