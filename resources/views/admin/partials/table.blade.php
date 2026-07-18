@@ -16,7 +16,7 @@
             <thead>
                 <tr>
                     @foreach($columns as $column)
-                        <th style="{{ $column['align'] ?? 'left' === 'right' ? 'text-align: right' : 'text-align: left' }}">
+                        <th style="{{ ($column['align'] ?? 'left') === 'right' ? 'text-align: right' : 'text-align: left' }}">
                             @if(isset($column['icon']))
                                 <span class="header-icon">
                                     {!! $column['icon'] !!}
@@ -145,7 +145,7 @@
             <div class="member-card">
                 <div class="member-card-header">
                     @foreach($columns as $column)
-                        @if($column['type'] ?? 'text' === 'image')
+                        @if(($column['type'] ?? 'text') === 'image')
                             @php
                                 $value = data_get($item, $column['key']);
                             @endphp

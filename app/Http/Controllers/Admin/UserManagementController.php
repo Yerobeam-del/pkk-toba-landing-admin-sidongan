@@ -26,6 +26,7 @@ class UserManagementController extends Controller
         $currentUser = auth()->user();
         $perPage = $request->get('per_page', 10);
         $tab = $request->get('tab', 'all');
+        $search = $request->get('search'); // Ambil parameter pencarian
         
         $query = User::with('applications')->latest();
         
@@ -40,6 +41,14 @@ class UserManagementController extends Controller
             $query->whereNull('email_verified_at');
         } elseif ($tab === 'with-access') {
             $query->whereHas('applications');
+        }
+
+        // Tambahkan filter pencarian berdasarkan Nama atau Email
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
         }
         
         $users = $query->paginate($perPage);

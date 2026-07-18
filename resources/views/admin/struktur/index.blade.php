@@ -17,36 +17,108 @@
         </a>
     </div>
 
-    {{-- TABS --}}
-    <div class="tabs-container">
-        <button class="tab-btn active" onclick="switchTab('pengurus', this)">
-            Pengurus Inti
-        </button>
-        <button class="tab-btn" onclick="switchTab('pokja1', this)">
-            POKJA I
-        </button>
-        <button class="tab-btn" onclick="switchTab('pokja2', this)">
-            POKJA II
-        </button>
-        <button class="tab-btn" onclick="switchTab('pokja3', this)">
-            POKJA III
-        </button>
-        <button class="tab-btn" onclick="switchTab('pokja4', this)">
-            POKJA IV
-        </button>
+    {{-- TABS & SEARCH --}}
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:1.5rem;flex-wrap:wrap">
+        <div class="tabs-container" style="flex:1;min-width:0;display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem">
+            @php
+                $tabs = [
+                    'pengurus' => 'Pengurus Inti',
+                    'pokja1' => 'POKJA I',
+                    'pokja2' => 'POKJA II',
+                    'pokja3' => 'POKJA III',
+                    'pokja4' => 'POKJA IV'
+                ];
+            @endphp
+            @foreach($tabs as $key => $label)
+                <button class="tab-btn {{ $key === 'pengurus' ? 'active' : '' }}" onclick="switchTab('{{ $key }}', this)" 
+                        style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $key === 'pengurus' ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $key === 'pengurus' ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;cursor:pointer;border-bottom:2px solid {{ $key === 'pengurus' ? 'var(--primary)' : 'transparent' }}"
+                        onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}" 
+                        onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
+                    {{ $label }}
+                </button>
+            @endforeach
+        </div>
+        
+        {{-- Search Form & Per Page --}}
+        <div style="flex-shrink:0;display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">
+            {{-- Per Page Dropdown --}}
+            <form method="GET" action="{{ route('admin.struktur.index') }}" style="display:flex;align-items:center;gap:0.5rem">
+                <input type="hidden" name="tab" id="struktur_tab_input" value="pengurus">
+                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
+                <div style="position:relative">
+                    <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+            </form>
+            
+            {{-- Search Form --}}
+            <form method="GET" action="{{ route('admin.struktur.index') }}" style="flex-shrink:0">
+                <input type="hidden" name="tab" id="struktur_search_tab_input" value="pengurus">
+                <div style="position:relative">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau jabatan..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;width:250px;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+                    @if(request('search'))
+                        <a href="{{ route('admin.struktur.index') }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </a>
+                    @endif
+                </div>
+            </form>
+        </div>
     </div>
 
     {{-- Main Card --}}
     <div class="struktur-card">
+        
+        @php
+            $strukturColumns = [
+                [
+                    'key' => 'photo_path',
+                    'label' => 'Foto',
+                    'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+                    'type' => 'image',
+                    'initial_key' => 'name'
+                ],
+                [
+                    'key' => 'name',
+                    'label' => 'Nama',
+                    'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+                ],
+                [
+                    'key' => 'position',
+                    'label' => 'Jabatan',
+                    'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+                    'type' => 'callback',
+                    'callback' => function($item, $value) {
+                        return '<span class="position-badge" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(13,148,166,0.1);color:var(--primary-dark);border:1px solid rgba(13,148,166,0.2)">' . $value . '</span>';
+                    }
+                ],
+            ];
+        @endphp
         
         {{-- Tab 1: Pengurus Inti --}}
         <div id="tab-pengurus" class="tab-content active">
             <div class="table-container">
                 @include('admin.partials.table', [
                     'data' => $pengurusInti ?? [], 
+                    'columns' => $strukturColumns,
                     'emptyMessage' => 'Belum ada data pengurus inti.',
                     'editRoute' => 'admin.struktur.edit',
-                    'deleteRoute' => 'admin.struktur.destroy'
+                    'deleteRoute' => 'admin.struktur.destroy',
+                    'actions' => ['edit', 'delete']
                 ])
             </div>
         </div>
@@ -57,9 +129,11 @@
             <div class="table-container">
                 @include('admin.partials.table', [
                     'data' => $pokja1->members ?? [], 
+                    'columns' => $strukturColumns,
                     'emptyMessage' => 'Belum ada anggota di Pokja I.',
                     'editRoute' => 'admin.struktur.edit',
-                    'deleteRoute' => 'admin.struktur.destroy'
+                    'deleteRoute' => 'admin.struktur.destroy',
+                    'actions' => ['edit', 'delete']
                 ])
             </div>
         </div>
@@ -70,9 +144,11 @@
             <div class="table-container">
                 @include('admin.partials.table', [
                     'data' => $pokja2->members ?? [], 
+                    'columns' => $strukturColumns,
                     'emptyMessage' => 'Belum ada anggota di Pokja II.',
                     'editRoute' => 'admin.struktur.edit',
-                    'deleteRoute' => 'admin.struktur.destroy'
+                    'deleteRoute' => 'admin.struktur.destroy',
+                    'actions' => ['edit', 'delete']
                 ])
             </div>
         </div>
@@ -83,9 +159,11 @@
             <div class="table-container">
                 @include('admin.partials.table', [
                     'data' => $pokja3->members ?? [], 
+                    'columns' => $strukturColumns,
                     'emptyMessage' => 'Belum ada anggota di Pokja III.',
                     'editRoute' => 'admin.struktur.edit',
-                    'deleteRoute' => 'admin.struktur.destroy'
+                    'deleteRoute' => 'admin.struktur.destroy',
+                    'actions' => ['edit', 'delete']
                 ])
             </div>
         </div>
@@ -96,9 +174,11 @@
             <div class="table-container">
                 @include('admin.partials.table', [
                     'data' => $pokja4->members ?? [], 
+                    'columns' => $strukturColumns,
                     'emptyMessage' => 'Belum ada anggota di Pokja IV.',
                     'editRoute' => 'admin.struktur.edit',
-                    'deleteRoute' => 'admin.struktur.destroy'
+                    'deleteRoute' => 'admin.struktur.destroy',
+                    'actions' => ['edit', 'delete']
                 ])
             </div>
         </div>
@@ -111,6 +191,9 @@ function switchTab(tabId, btn) {
     // Reset all tabs
     document.querySelectorAll('.tab-btn').forEach(b => {
         b.classList.remove('active');
+        b.style.background = 'transparent';
+        b.style.color = 'var(--text-muted)';
+        b.style.borderBottom = '2px solid transparent';
     });
     
     // Hide all contents
@@ -120,7 +203,14 @@ function switchTab(tabId, btn) {
     
     // Activate selected
     btn.classList.add('active');
+    btn.style.background = 'rgba(13, 148, 136, 0.1)';
+    btn.style.color = 'var(--primary)';
+    btn.style.borderBottom = '2px solid var(--primary)';
     document.getElementById('tab-' + tabId).classList.add('active');
+    
+    // Update hidden inputs for forms to maintain tab state on search/per_page change
+    document.getElementById('struktur_tab_input').value = tabId;
+    document.getElementById('struktur_search_tab_input').value = tabId;
 }
 
 // Init first tab on load
