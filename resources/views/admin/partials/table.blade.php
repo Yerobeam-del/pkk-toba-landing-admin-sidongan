@@ -9,6 +9,12 @@
     'rowActions' => null
 ])
 
+@php
+    // Cek apakah data adalah paginator instance
+    $isPaginator = $data instanceof \Illuminate\Pagination\LengthAwarePaginator;
+    $paginator = $isPaginator ? $data : null;
+@endphp
+
 <div class="desktop-table-view">
     @if(count($data) > 0)
     <div class="table-wrapper">
@@ -120,6 +126,84 @@
             </tbody>
         </table>
     </div>
+    
+    {{-- PAGINATION - Otomatis muncul jika data adalah paginator --}}
+    @if($isPaginator && $paginator->hasPages())
+    <div style="margin-top:1.5rem;padding:1rem;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+        <div style="font-size:0.85rem;color:var(--text-muted)">
+            Menampilkan <strong>{{ $paginator->firstItem() }}</strong> - <strong>{{ $paginator->lastItem() }}</strong> dari <strong>{{ $paginator->total() }}</strong> data
+        </div>
+        
+        <div style="display:flex;gap:0.4rem">
+            @php
+                $currentPage = $paginator->currentPage();
+                $lastPage = $paginator->lastPage();
+                
+                if ($lastPage <= 5) {
+                    $pages = range(1, $lastPage);
+                } else {
+                    if ($currentPage <= 3) {
+                        $pages = [1, 2, 3, 4, '...', $lastPage];
+                    } elseif ($currentPage >= $lastPage - 2) {
+                        $pages = [1, '...', $lastPage - 3, $lastPage - 2, $lastPage - 1, $lastPage];
+                    } else {
+                        $pages = [1, '...', $currentPage - 1, $currentPage, $currentPage + 1, '...', $lastPage];
+                    }
+                }
+            @endphp
+            
+            {{-- Previous Button --}}
+            @if($paginator->onFirstPage())
+                <button disabled style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-muted);border:1px solid #e2e8f0;border-radius:8px;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;cursor:default;opacity:0.5">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                    <span class="desktop-only">Previous</span>
+                </button>
+            @else
+                <a href="{{ $paginator->previousPageUrl() }}" style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;transition:all 0.2s" onmouseover="this.style.background='#f8fafc';this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.background='#fff';this.style.borderColor='#e2e8f0';this.style.color='var(--text-dark)'">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                    <span class="desktop-only">Previous</span>
+                </a>
+            @endif
+
+            {{-- Page Numbers --}}
+            @foreach($pages as $page)
+                @if($page === '...')
+                    <span style="padding:0.5rem 0.25rem;color:var(--text-muted);font-size:0.875rem">...</span>
+                @elseif($page == $currentPage)
+                    <button style="padding:0.5rem 0.9rem;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:1px solid var(--primary);border-radius:8px;font-size:0.875rem;font-weight:600;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;cursor:default;box-shadow:0 2px 8px rgba(20,184,166,0.3)">
+                        {{ $page }}
+                    </button>
+                @else
+                    <a href="{{ $paginator->url($page) }}" style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;transition:all 0.2s" onmouseover="this.style.background='#f8fafc';this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.background='#fff';this.style.borderColor='#e2e8f0';this.style.color='var(--text-dark)'">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+            {{-- Next Button --}}
+            @if($paginator->hasMorePages())
+                <a href="{{ $paginator->nextPageUrl() }}" style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;transition:all 0.2s" onmouseover="this.style.background='#f8fafc';this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.background='#fff';this.style.borderColor='#e2e8f0';this.style.color='var(--text-dark)'">
+                    <span class="desktop-only">Next</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </a>
+            @else
+                <button disabled style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-muted);border:1px solid #e2e8f0;border-radius:8px;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;cursor:default;opacity:0.5">
+                    <span class="desktop-only">Next</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
+            @endif
+        </div>
+    </div>
+    @endif
+    
     @else
         <div class="empty-state">
             <div class="empty-state-icon-wrapper">
@@ -198,6 +282,28 @@
             </div>
             @endforeach
         </div>
+        
+        {{-- Mobile Pagination --}}
+        @if($isPaginator && $paginator->hasPages())
+        <div style="margin-top:1.5rem;padding:1rem;border-top:1px solid rgba(0,0,0,0.06);text-align:center">
+            <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.75rem">
+                Halaman {{ $paginator->currentPage() }} dari {{ $paginator->lastPage() }}
+            </div>
+            <div style="display:flex;justify-content:center;gap:0.4rem">
+                @if($paginator->onFirstPage())
+                    <button disabled style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-muted);border:1px solid #e2e8f0;border-radius:8px;font-size:0.875rem;opacity:0.5">Previous</button>
+                @else
+                    <a href="{{ $paginator->previousPageUrl() }}" style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.875rem">Previous</a>
+                @endif
+                
+                @if($paginator->hasMorePages())
+                    <a href="{{ $paginator->nextPageUrl() }}" style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.875rem">Next</a>
+                @else
+                    <button disabled style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-muted);border:1px solid #e2e8f0;border-radius:8px;font-size:0.875rem;opacity:0.5">Next</button>
+                @endif
+            </div>
+        </div>
+        @endif
     @else
         <div class="empty-state">
             <div class="empty-state-icon-wrapper">

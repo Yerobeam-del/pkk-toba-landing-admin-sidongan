@@ -730,6 +730,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // STRUKTUR
     Route::resource('struktur', App\Http\Controllers\Admin\StrukturController::class)
         ->middleware('permission:manage-struktur');
+    
+    Route::get('/admin/struktur/tab/{tab}', [App\Http\Controllers\Admin\StrukturController::class, 'getTabData'])->name('admin.struktur.tab');
 
     // Aplikasi
     Route::resource('aplikasi', App\Http\Controllers\Admin\ApplicationController::class)
