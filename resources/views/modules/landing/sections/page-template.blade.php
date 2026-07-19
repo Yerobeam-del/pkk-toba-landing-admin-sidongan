@@ -474,6 +474,7 @@ function openTemplatePreview(fileUrl, title, originalFileName, format) {
 function showOfficePreview(fileUrl, title, format) {
     const bodyEl = document.getElementById('templatePreviewBody');
     const originalName = currentTemplateOriginalFileName;
+    const modalBody = document.querySelector('.template-preview-modal-body');
 
     // Pastikan URL adalah URL absolut dan menggunakan HTTPS
     let publicUrl = fileUrl;
@@ -486,6 +487,12 @@ function showOfficePreview(fileUrl, title, format) {
     // Encode URL untuk Microsoft Office Viewer
     const encodedUrl = encodeURIComponent(publicUrl);
     const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}&wdEmbed=0`;
+
+    // PENTING: Disable scroll pada modal body
+    if (modalBody) {
+        modalBody.style.overflow = 'hidden';
+        modalBody.style.padding = '0';
+    }
 
     // Tampilkan loading
     bodyEl.innerHTML = '<div style="padding:3rem;text-align:center;">' +
@@ -503,12 +510,11 @@ function showOfficePreview(fileUrl, title, format) {
                 throw new Error('File tidak dapat diakses (HTTP ' + response.status + ')');
             }
 
-            // Jika berhasil, tampilkan iframe DENGAN PENGATURAN SCROLL YANG BENAR
+            // Jika berhasil, tampilkan iframe yang mengisi penuh container
             setTimeout(function() {
-                // overflow: hidden pada parent mencegah double scroll
-                // iframe mengisi sisa ruang yang tersedia
-                bodyEl.innerHTML = '<div style="width:100%;height:650px;position:relative;overflow:hidden;">' +
-                    '<iframe id="officePreviewIframe" src="' + officeViewerUrl + '" width="100%" height="100%" style="border:none;overflow:auto;" frameborder="0" onload="this.style.opacity=1">' +
+                // Container dengan overflow hidden untuk mencegah double scroll
+                bodyEl.innerHTML = '<div style="width:100%;height:100%;position:relative;overflow:hidden;">' +
+                    '<iframe id="officePreviewIframe" src="' + officeViewerUrl + '" width="100%" height="100%" style="border:none;display:block;" frameborder="0" onload="this.style.opacity=1">' +
                     '</iframe>' +
                 '</div>';
             }, 1000);
@@ -712,8 +718,17 @@ function escapeHtml(text) {
 function closeTemplatePreview() {
     const modal = document.getElementById('templatePreviewModal');
     const bodyEl = document.getElementById('templatePreviewBody');
+    const modalBody = document.querySelector('.template-preview-modal-body');
+
     if (modal) modal.style.display = 'none';
     if (bodyEl) bodyEl.innerHTML = '';
+
+    // Reset overflow modal body ke default
+    if (modalBody) {
+        modalBody.style.overflow = '';
+        modalBody.style.padding = '';
+    }
+
     document.body.style.overflow = '';
 }
 
