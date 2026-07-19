@@ -430,8 +430,9 @@ function openTemplatePreview(fileUrl, title, originalFileName, format) {
     currentTemplateFileUrl = fileUrl;
     currentTemplateOriginalFileName = originalFileName || title;
 
-    // Set judul modal (tampilkan judul template)
-    titleEl.textContent = title;
+    // Bersihkan nama file dari ekstensi agar rapi di judul modal
+    const cleanTitle = (originalFileName || title).replace(/\.[^/.]+$/, "");
+    titleEl.textContent = cleanTitle;
 
     // Set download button dengan nama file ASLI
     downloadBtn.href = fileUrl;
@@ -486,17 +487,14 @@ function showOfficePreview(fileUrl, title, format) {
     const encodedUrl = encodeURIComponent(publicUrl);
     const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}&wdEmbed=0`;
 
-    console.log('Office Preview:', {
-        originalUrl: fileUrl,
-        publicUrl: publicUrl,
-        viewerUrl: officeViewerUrl
-    });
-
     // Tampilkan loading
     bodyEl.innerHTML = '<div style="padding:3rem;text-align:center;">' +
         '<div style="width:50px;height:50px;border:4px solid rgba(15,107,99,0.1);border-top-color:var(--primary);border-radius:50%;margin:0 auto 1rem;animation:spin 0.8s linear infinite;"></div>' +
         '<p style="color:var(--text-muted);">Memuat preview dokumen...</p>' +
     '</div>';
+
+    // Update footer dengan tombol Print dan Download
+    updateTemplatePreviewFooter(publicUrl, originalName, officeViewerUrl);
 
     // Test apakah URL bisa diakses
     fetch(publicUrl, { method: 'HEAD' })
@@ -505,10 +503,12 @@ function showOfficePreview(fileUrl, title, format) {
                 throw new Error('File tidak dapat diakses (HTTP ' + response.status + ')');
             }
 
-            // Jika berhasil, tampilkan iframe TANPA footer info di dalam iframe
+            // Jika berhasil, tampilkan iframe DENGAN PENGATURAN SCROLL YANG BENAR
             setTimeout(function() {
-                bodyEl.innerHTML = '<div style="width:100%;height:650px;position:relative;">' +
-                    '<iframe id="officePreviewIframe" src="' + officeViewerUrl + '" width="100%" height="100%" style="border:none;" frameborder="0" onload="this.style.opacity=1" onerror="showOfficePreviewError(\'' + title + '\', \'' + publicUrl + '\', \'' + format + '\')">' +
+                // overflow: hidden pada parent mencegah double scroll
+                // iframe mengisi sisa ruang yang tersedia
+                bodyEl.innerHTML = '<div style="width:100%;height:650px;position:relative;overflow:hidden;">' +
+                    '<iframe id="officePreviewIframe" src="' + officeViewerUrl + '" width="100%" height="100%" style="border:none;overflow:auto;" frameborder="0" onload="this.style.opacity=1">' +
                     '</iframe>' +
                 '</div>';
             }, 1000);
@@ -517,17 +517,18 @@ function showOfficePreview(fileUrl, title, format) {
             console.error('Error accessing file:', error);
             showOfficePreviewError(title, publicUrl, format, error.message);
         });
-
-    // Update footer dengan tombol Print dan Download
-    updateTemplatePreviewFooter(publicUrl, originalName, officeViewerUrl);
 }
 
 function updateTemplatePreviewFooter(fileUrl, originalName, officeViewerUrl) {
     const footerEl = document.querySelector('.template-preview-modal-footer');
     if (!footerEl) return;
 
+    // Escape single quotes agar tidak error di onclick
+    const safeFileUrl = fileUrl.replace(/'/g, "\\'");
+    const safeOriginalName = originalName.replace(/'/g, "\\'");
+
     footerEl.innerHTML =
-        '<button onclick="printOfficeDocument(\'' + officeViewerUrl + '\')" class="template-preview-print-btn" style="display:inline-flex;align-items:center;gap:0.75rem;padding:0.875rem 1.5rem;background:#f1f5f9;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background=\'#e2e8f0\';this.style.borderColor=\'#cbd5e1\'" onmouseout="this.style.background=\'#f1f5f9\';this.style.borderColor=\'#e2e8f0\'">' +
+        '<button onclick="printOfficeDocument(\'' + safeFileUrl + '\', \'' + safeOriginalName + '\')" class="template-preview-print-btn" style="display:inline-flex;align-items:center;gap:0.75rem;padding:0.875rem 1.5rem;background:#f1f5f9;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background=\'#e2e8f0\';this.style.borderColor=\'#cbd5e1\'" onmouseout="this.style.background=\'#f1f5f9\';this.style.borderColor=\'#e2e8f0\'">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">' +
                 '<polyline points="6 9 6 2 18 2 18 9"/>' +
                 '<path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>' +
@@ -551,13 +552,19 @@ function updateTemplatePreviewFooter(fileUrl, originalName, officeViewerUrl) {
 }
 
 // Fungsi untuk print dokumen Office
-function printOfficeDocument(officeViewerUrl) {
-    // Buka Microsoft Office Viewer di tab baru dengan parameter print
-    const printUrl = officeViewerUrl.replace('/embed.aspx/', '/print.aspx?');
-    window.open(printUrl, '_blank');
+function printOfficeDocument(fileUrl, originalName) {
+    // 1. Trigger download file secara otomatis
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = originalName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-    // Atau bisa juga dengan cara ini untuk trigger print dialog
-    // window.open(officeViewerUrl + '&action=print', '_blank');
+    // 2. Berikan instruksi yang jelas kepada pengguna
+    setTimeout(function() {
+        alert('File "' + originalName + '" sedang diunduh.\n\nSetelah unduhan selesai, silakan buka file tersebut di komputer Anda dan cetak menggunakan tombol:\n• Windows: Ctrl + P\n• Mac: Cmd + P');
+    }, 500);
 }
 
 function showOfficePreviewError(title, fileUrl, format, errorMsg) {
