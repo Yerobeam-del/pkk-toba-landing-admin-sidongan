@@ -708,6 +708,24 @@ function showUnsupportedFormat(title, fileUrl, format) {
 // ==========================================
 // HELPERS
 // ==========================================
+function formatTanggalIndonesia(dateString) {
+    if (!dateString) return '-';
+    try {
+        const date = new Date(dateString);
+        // Cek apakah tanggal valid
+        if (isNaN(date.getTime())) return dateString;
+
+        // Format ke bahasa Indonesia dengan nama bulan panjang (long)
+        return date.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long', // 'long' = Januari, Februari, dst.
+            year: 'numeric'
+        });
+    } catch (e) {
+        return dateString;
+    }
+}
+
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
