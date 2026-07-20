@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\URL; // <-- Tambahan: Import Facade URL
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,12 +15,12 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Tambahan: Memaksa HTTPS jika diakses via proxy/tunnel (localtunnel)
-        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+        // Memaksa semua URL yang di-generate Laravel (asset, url, route) menggunakan HTTPS di production
+        if (env('APP_ENV') === 'production') {
             URL::forceScheme('https');
         }
 
-        // Daftarkan View Composer untuk floating button (Kode lama Anda tetap aman)
+        // View Composer untuk floating button
         View::composer(
             'modules.landing.partials.floating-btn',
             \App\Http\View\Composers\FloatingButtonComposer::class
