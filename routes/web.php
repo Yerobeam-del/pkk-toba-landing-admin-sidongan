@@ -22,7 +22,7 @@ Route::get('/api/v1/health', function () {
 });
 
 // ======================================================================
-// 1. LANDING PAGE & ADMIN PANEL (HANYA untuk domain: pkktoba.id)
+// 1. ROUTES KHUSUS DOMAIN: pkktoba.id (Landing Page & Admin Panel)
 // ======================================================================
 Route::domain('pkktoba.id')->group(function () {
 
@@ -44,9 +44,8 @@ Route::domain('pkktoba.id')->group(function () {
             $formattedData = $news->map(function($item) {
                 return [
                     'id' => $item->id, 'slug' => $item->slug, 'title' => $item->title,
-                    'category' => $item->category, 'excerpt' => $item->excerpt,
-                    'content' => $item->content, 'image_path' => $item->image_path,
-                    'image' => $item->image_path ? asset('storage/' . $item->image_path) : null,
+                    'category' => $item->category, 'excerpt' => $item->excerpt, 'content' => $item->content,
+                    'image_path' => $item->image_path, 'image' => $item->image_path ? asset('storage/' . $item->image_path) : null,
                     'published_at' => $item->published_at, 'created_at' => $item->created_at,
                     'date' => $item->published_at?->format('d F Y') ?? $item->created_at->format('d F Y'),
                 ];
@@ -125,19 +124,98 @@ Route::domain('pkktoba.id')->group(function () {
     });
 
     // Proxy Wilayah.id
-    Route::get('/api/v1/wilayah/proxy/provinces', function () { /* ... (kode proxy provinces tetap sama) ... */ return response()->json(['success' => true, 'data' => []]); });
-    Route::get('/api/v1/wilayah/proxy/regencies/{provinceCode}', function ($provinceCode) { /* ... */ return response()->json(['success' => true, 'data' => []]); });
-    Route::get('/api/v1/wilayah/proxy/districts/{regencyCode}', function ($regencyCode) { /* ... */ return response()->json(['success' => true, 'data' => []]); });
-    Route::get('/api/v1/wilayah/proxy/villages/{districtCode}', function ($districtCode) { /* ... */ return response()->json(['success' => true, 'data' => []]); });
+    Route::get('/api/v1/wilayah/proxy/provinces', function () {
+        try {
+            $provinces = cache()->remember('wilayah_provinces', 86400, fn() => Http::timeout(30)->get('https://wilayah.id/api/provinces.json')->json()['data'] ?? []);
+            return response()->json(['success' => true, 'data' => $provinces]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
+    Route::get('/api/v1/wilayah/proxy/regencies/{provinceCode}', function ($provinceCode) {
+        try {
+            $regencies = cache()->remember('wilayah_regencies_' . $provinceCode, 86400, fn() => Http::timeout(30)->get("https://wilayah.id/api/regencies/{$provinceCode}.json")->json()['data'] ?? []);
+            return response()->json(['success' => true, 'data' => $regencies]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
+    Route::get('/api/v1/wilayah/proxy/districts/{regencyCode}', function ($regencyCode) {
+        try {
+            $districts = cache()->remember('wilayah_districts_' . $regencyCode, 86400, fn() => Http::timeout(30)->get("https://wilayah.id/api/districts/{$regencyCode}.json")->json()['data'] ?? []);
+            return response()->json(['success' => true, 'data' => $districts]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
+    Route::get('/api/v1/wilayah/proxy/villages/{districtCode}', function ($districtCode) {
+        try {
+            $villages = cache()->remember('wilayah_villages_' . $districtCode, 86400, fn() => Http::timeout(30)->get("https://wilayah.id/api/villages/{$districtCode}.json")->json()['data'] ?? []);
+            return response()->json(['success' => true, 'data' => $villages]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
 
-    Route::get('/api/v1/wilayah/provinces', function () { /* ... */ return response()->json(['success' => true, 'data' => []]); });
-    Route::get('/api/v1/wilayah/regencies/{provinceCode}', function ($provinceCode) { /* ... */ return response()->json(['success' => true, 'data' => []]); });
-    Route::get('/api/v1/wilayah/districts/{regencyCode}', function ($regencyCode) { /* ... */ return response()->json(['success' => true, 'data' => []]); });
-    Route::get('/api/v1/wilayah/villages/{districtCode}', function ($districtCode) { /* ... */ return response()->json(['success' => true, 'data' => []]); });
+    Route::get('/api/v1/wilayah/provinces', function () {
+        try {
+            $provinces = \App\Models\Wilayah::where('kode', 'like', '__')->where('kode', 'not like', '%.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($p) => ['code' => $p->kode, 'name' => $p->nama]);
+            return response()->json(['success' => true, 'data' => $provinces]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
+    Route::get('/api/v1/wilayah/regencies/{provinceCode}', function ($provinceCode) {
+        try {
+            $regencies = \App\Models\Wilayah::where('kode', 'like', $provinceCode . '.%')->where('kode', 'not like', '%.__.%')->where('kode', 'not like', '%.__.__.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($r) => ['code' => $r->kode, 'name' => $r->nama]);
+            return response()->json(['success' => true, 'data' => $regencies]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
+    Route::get('/api/v1/wilayah/districts/{regencyCode}', function ($regencyCode) {
+        try {
+            $districts = \App\Models\Wilayah::where('kode', 'like', $regencyCode . '.%')->where('kode', 'not like', '%.__.__.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($d) => ['code' => $d->kode, 'name' => $d->nama]);
+            return response()->json(['success' => true, 'data' => $districts]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
+    Route::get('/api/v1/wilayah/villages/{districtCode}', function ($districtCode) {
+        try {
+            $villages = \App\Models\Wilayah::where('kode', 'like', $districtCode . '.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($v) => ['code' => $v->kode, 'name' => $v->nama]);
+            return response()->json(['success' => true, 'data' => $villages]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
 
-    Route::get('/api/v1/dokumens', function (Request $request) { /* ... (kode dokumen tetap sama) ... */ return response()->json(['success' => true, 'data' => []]); });
-    Route::get('/api/v1/templates', function (Request $request) { /* ... (kode template tetap sama) ... */ return response()->json(['success' => true, 'data' => []]); });
-    Route::get('/api/v1/tentang', function () { return response()->json(['success' => true, 'data' => \App\Models\TentangKami::getFirst()]); });
+    Route::get('/api/v1/dokumens', function (Request $request) {
+        try {
+            $perPage = min(max((int) $request->get('per_page', 5), 1), 50);
+            $search = $request->get('search', '');
+            $query = \App\Models\Dokumen::published();
+            if ($search) {
+                $searchTerm = strtolower($search);
+                $query->where(function($q) use ($searchTerm) {
+                    $q->whereRaw('LOWER(name) LIKE ?', ['%' . $searchTerm . '%'])->orWhereRaw('LOWER(file_name) LIKE ?', ['%' . $searchTerm . '%']);
+                });
+            }
+            $dokumens = $query->orderBy('document_date', 'desc')->orderBy('sort_order')->paginate($perPage);
+            $formattedData = $dokumens->map(function($doc) {
+                return ['id' => $doc->id, 'name' => $doc->name, 'file_name' => $doc->file_name, 'file_size' => $doc->file_size, 'file_url' => $doc->file_url, 'file_type' => $doc->file_type, 'document_date' => $doc->document_date?->format('Y-m-d'), 'formatted_date' => $doc->document_date?->format('d F Y'), 'status' => $doc->status];
+            });
+            return response()->json(['success' => true, 'data' => $formattedData, 'pagination' => ['current_page' => $dokumens->currentPage(), 'last_page' => $dokumens->lastPage(), 'per_page' => $dokumens->perPage(), 'total' => $dokumens->total(), 'from' => $dokumens->firstItem(), 'to' => $dokumens->lastItem()]]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
+
+    Route::get('/api/v1/templates', function (Request $request) {
+        try {
+            $perPage = min(max((int) $request->get('per_page', 6), 1), 50);
+            $search = $request->get('search', '');
+            $query = \App\Models\Template::published();
+            if ($search) {
+                $searchTerm = strtolower($search);
+                $query->where(function($q) use ($searchTerm) {
+                    $q->whereRaw('LOWER(name) LIKE ?', ['%' . $searchTerm . '%'])->orWhereRaw('LOWER(file_name) LIKE ?', ['%' . $searchTerm . '%']);
+                });
+            }
+            $templates = $query->orderBy('upload_date', 'desc')->orderBy('sort_order')->paginate($perPage);
+            $formattedData = $templates->map(function($t) {
+                return ['id' => $t->id, 'name' => $t->name, 'file_name' => $t->file_name, 'file_size' => $t->file_size, 'file_url' => asset('storage/' . $t->file_path), 'file_path' => $t->file_path, 'file_type' => $t->file_type, 'upload_date' => $t->upload_date?->format('Y-m-d'), 'formatted_date' => $t->upload_date?->format('d F Y'), 'status' => $t->status, 'description' => $t->description ?? null];
+            });
+            return response()->json(['success' => true, 'data' => $formattedData, 'pagination' => ['current_page' => $templates->currentPage(), 'last_page' => $templates->lastPage(), 'per_page' => $templates->perPage(), 'total' => $templates->total(), 'from' => $templates->firstItem(), 'to' => $templates->lastItem()]]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    });
+
+    Route::get('/api/v1/tentang', function () {
+        return response()->json(['success' => true, 'data' => \App\Models\TentangKami::getFirst()]);
+    });
+
     Route::get('/api/v1/hero-slider', function () {
         $sliders = \App\Models\HeroSlider::active()->get()->map(fn($s) => ['id' => $s->id, 'image_url' => $s->image_url, 'display_duration' => $s->display_duration ?? 5]);
         $settings = file_exists(storage_path('app/hero_slider_settings.json')) ? json_decode(file_get_contents(storage_path('app/hero_slider_settings.json')), true) : ['auto_play' => true, 'transition_duration' => 500, 'show_arrows' => false, 'show_dots' => true];
@@ -219,7 +297,7 @@ Route::domain('pkktoba.id')->group(function () {
 });
 
 // ======================================================================
-// 2. SIDONGAN (HANYA untuk domain: sidongan.pkktoba.id)
+// 2. ROUTES KHUSUS DOMAIN: sidongan.pkktoba.id (Aplikasi SIDONGAN)
 // ======================================================================
 Route::domain('sidongan.pkktoba.id')->group(function () {
 
@@ -265,6 +343,11 @@ Route::domain('sidongan.pkktoba.id')->group(function () {
 
     // ================= WEB: SIDONGAN AUTH =================
     Route::middleware(['sidongan.guest'])->group(function () {
+        // Redirect root subdomain langsung ke halaman login
+        Route::get('/', function () {
+            return redirect()->route('sidongan.login');
+        });
+
         Route::get('/sidongan-login', function () {
             \Illuminate\Support\Facades\Auth::guard('web')->logout();
             if (session()->isStarted()) {
