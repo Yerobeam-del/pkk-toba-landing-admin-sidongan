@@ -132,19 +132,27 @@ let newsTotalItems = window.newsTotalItems;
 // INITIALIZATION
 // ==========================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Load preferences
+    // 1. Ambil preferensi dari localStorage
     const savedPerPage = localStorage.getItem('news_per_page') || '6';
     const savedSort = localStorage.getItem('news_sort') || 'latest';
 
+    // 2. Update variabel state
     newsPerPage = parseInt(savedPerPage);
     newsSort = savedSort;
+    window.newsPerPage = newsPerPage; // Sinkronisasi dengan window object
 
-    // Set select values
+    // 3. Set nilai dropdown di HTML
     const perPageSelect = document.getElementById('newsPerPageSelect');
     const sortSelect = document.getElementById('newsSortSelect');
 
     if (perPageSelect) perPageSelect.value = newsPerPage;
     if (sortSelect) sortSelect.value = newsSort;
+
+    // 4. Update teks deskripsi sorting sesuai nilai awal
+    updateSortDescription(newsSort);
+
+    // 5. Cek dan muat data jika halaman berita sudah aktif
+    checkAndLoadBerita();
 });
 
 // ==========================================
@@ -417,13 +425,6 @@ function changeNewsSort(value) {
     updateSortDescription(value); // Add this line
     loadBeritaData();
 }
-
-// Call on init
-document.addEventListener('DOMContentLoaded', function() {
-    // ... existing code ...
-    updateSortDescription(newsSort); // Add this line
-});
-
 
 
 // Safe observer
