@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Panel - PKK Kabupaten Toba')</title>
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- CSS Admin -->
     <link rel="stylesheet" href="{{ asset('assets/admin/css/style.css') }}">
-    
+
     <!-- Cropper.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" integrity="sha512-...">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -78,12 +78,12 @@
         }
 
         .sidebar-logo {
-            width: 44px; 
+            width: 44px;
             height: 44px;
             background: transparent;
             border-radius: 8px;
-            display: flex; 
-            align-items: center; 
+            display: flex;
+            align-items: center;
             justify-content: center;
             flex-shrink: 0;
             padding: 4px;
@@ -235,7 +235,7 @@
         /* ==========================================
            FIX CKEDITOR LIST DISPLAY
            ========================================== */
-        
+
         /* Editor content area */
         .ck.ck-content ul,
         .ck.ck-content ol {
@@ -244,23 +244,23 @@
             margin-right: 0 !important;
             list-style-position: outside !important;
         }
-        
+
         .ck.ck-content ul li,
         .ck.ck-content ol li {
             margin: 0.5rem 0 !important;
             padding-left: 0.25rem !important;
             line-height: 1.8 !important;
         }
-        
+
         /* Ensure list markers are visible */
         .ck.ck-content ul {
             list-style-type: disc !important;
         }
-        
+
         .ck.ck-content ol {
             list-style-type: decimal !important;
         }
-        
+
         /* Fix for nested lists */
         .ck.ck-content ul ul,
         .ck.ck-content ol ol,
@@ -269,7 +269,7 @@
             padding-left: 2rem !important;
             margin: 0.5rem 0 !important;
         }
-        
+
         /* Blockquote fix */
         .ck.ck-content blockquote {
             padding: 0.5rem 1rem 0.5rem 1.5rem !important;
@@ -277,7 +277,7 @@
             border-left: 4px solid #e2e8f0 !important;
             background: #f8fafc !important;
         }
-        
+
         /* Also fix for frontend display */
         .news-detail-content ul,
         .news-detail-content ol {
@@ -285,7 +285,7 @@
             margin: 1rem 0 !important;
             list-style-position: outside !important;
         }
-        
+
         .news-detail-content ul li,
         .news-detail-content ol li {
             margin: 0.5rem 0 !important;
@@ -356,13 +356,13 @@
             .admin-footer {
                 padding: 1.25rem 1.5rem;
             }
-            
+
             .admin-footer-inner {
                 flex-direction: column;
                 text-align: center;
                 gap: 0.75rem;
             }
-            
+
             .admin-footer-right {
                 flex-wrap: wrap;
                 justify-content: center;
@@ -370,12 +370,15 @@
             }
         }
     </style>
-    
+
     @stack('styles')
 </head>
 <body>
+
+    <x-loading-screen />
+
     <div class="admin-layout" id="adminLayout">
-        
+
         <!-- Overlay for Mobile -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -393,7 +396,7 @@
 
             <nav class="sidebar-nav">
                 <div class="nav-section-title">Main Navigation</div>
-                
+
                 {{-- Beranda (Semua user bisa akses) --}}
                 <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <div class="nav-icon-box">
@@ -446,7 +449,7 @@
                 </a>
                 @endif
 
-                {{-- Desa 
+                {{-- Desa
                 @if(auth()->user()->hasPermission('manage-desa'))
                 <a href="{{ route('admin.desa.index') }}" class="nav-item {{ request()->routeIs('admin.desa.*') ? 'active' : '' }}">
                     <div class="nav-icon-box">
@@ -492,7 +495,7 @@
                     <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.4); padding: 0.5rem 0.5rem; margin-bottom: 0.5rem;">
                         System
                     </div>
-                    
+
                     {{-- Manajemen Akun --}}
                     <a href="{{ route('admin.user-management.index') }}" class="nav-item {{ request()->routeIs('admin.user-management.*') ? 'active' : '' }}">
                         <div class="nav-icon-box">
@@ -530,16 +533,16 @@
                     </svg>
                 </button>
                 <div class="header-right" style="position:relative">
-                    
+
                     {{-- User Profile Button --}}
                     <button onclick="toggleUserMenu()" class="user-profile-btn" style="display:flex;align-items:center;gap:0.75rem;background:none;border:none;cursor:pointer;padding:0.5rem 0.75rem;border-radius:8px;transition:background 0.2s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
-                        
+
                         {{-- User Info --}}
                         <div class="user-text" style="text-align:right;display:flex;flex-direction:column;align-items:flex-end">
                             <span style="font-weight:600;font-size:0.9rem;color:#334155;line-height:1.2">{{ Auth::user()->name ?? 'Admin' }}</span>
                             <span style="font-size:0.7rem;color:#94a3b8">{{ Auth::user()->role?->display_name ?? 'Administrator' }}</span>
                         </div>
-                        
+
                         {{-- User Avatar --}}
                         <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.1)">
                             @if(Auth::user()->avatar)
@@ -551,7 +554,7 @@
                                 </svg>
                             @endif
                         </div>
-                        
+
                         {{-- Dropdown Arrow --}}
                         <svg id="userMenuArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="transition:transform 0.2s">
                             <polyline points="6 9 12 15 18 9"/>
@@ -560,13 +563,13 @@
 
                     {{-- Dropdown Menu --}}
                     <div id="userMenu" style="display:none;position:absolute;right:0;top:calc(100% + 0.5rem);background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1);min-width:220px;z-index:1000;animation:slideIn 0.2s ease">
-                        
+
                         {{-- Menu Header --}}
                         <div style="padding:0.75rem 1rem;border-bottom:1px solid #f1f5f9">
                             <div style="font-weight:600;font-size:0.9rem;color:#334155">Akun Saya</div>
                             <div style="font-size:0.75rem;color:#94a3b8">{{ Auth::user()->email }}</div>
                         </div>
-                        
+
                         {{-- Menu Items --}}
                         <div style="padding:0.5rem 0">
                             <a href="{{ route('admin.profile.edit') }}" style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;color:#334155;text-decoration:none;transition:background 0.2s;font-size:0.9rem" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
@@ -576,7 +579,7 @@
                                 </svg>
                                 <span>Edit Profil</span>
                             </a>
-                            
+
                             <a href="{{ route('admin.profile.password') }}" style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;color:#334155;text-decoration:none;transition:background 0.2s;font-size:0.9rem" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -585,10 +588,10 @@
                                 <span>Ubah Password</span>
                             </a>
                         </div>
-                        
+
                         {{-- Divider --}}
                         <div style="border-top:1px solid #f1f5f9;margin:0.5rem 0"></div>
-                        
+
                         {{-- Logout --}}
                         <form method="POST" action="{{ route('logout') }}" style="padding:0.5rem 0">
                             @csrf
@@ -679,7 +682,7 @@
         function toggleUserMenu() {
             const menu = document.getElementById('userMenu');
             const arrow = document.getElementById('userMenuArrow');
-            
+
             if (menu.style.display === 'block') {
                 menu.style.display = 'none';
                 arrow.style.transform = 'rotate(0deg)';
@@ -692,7 +695,7 @@
         document.addEventListener('click', function(e) {
             const menu = document.getElementById('userMenu');
             const btn = e.target.closest('.user-profile-btn');
-            
+
             if (!btn && menu.style.display === 'block') {
                 menu.style.display = 'none';
                 document.getElementById('userMenuArrow').style.transform = 'rotate(0deg)';
@@ -707,7 +710,7 @@
             }
         });
     </script>
-    
+
     {{-- Toast Notification System --}}
     <script src="{{ asset('assets/admin/js/toast.js') }}"></script>
 

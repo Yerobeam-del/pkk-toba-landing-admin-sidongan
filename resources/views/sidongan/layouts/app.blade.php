@@ -7,22 +7,25 @@
 
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/sidongan/images/Logo-SIDONGAN-white.svg') }}">
     <title>@yield('title', 'SIDONGAN - PKK Kabupaten Toba')</title>
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- SIDONGAN CSS -->
     <link rel="stylesheet" href="{{ asset('assets/sidongan/css/style.css') }}">
-    
+
     @stack('styles')
 </head>
 <body>
+
+    <x-loading-screen />
+
     @php
         $currentUser = auth()->guard('sidongan')->user();
-        
+
         if (!$currentUser && !request()->routeIs('sidongan.login*')) {
             if (!request()->ajax() && !request()->wantsJson()) {
                 echo '<script>window.location.href="' . route('sidongan.login') . '";</script>';
@@ -52,7 +55,7 @@
 
     <!-- SIDONGAN JS -->
     <script src="{{ asset('assets/sidongan/js/app.js') }}"></script>
-    
+
     {{-- Toast Notifications --}}
     @include('sidongan.partials.toast')
 
