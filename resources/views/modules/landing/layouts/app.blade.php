@@ -5,49 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'PKK Kabupaten Toba - Portal Aplikasi')</title>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('assets/landing/css/style.css') }}">
-    
+
     @stack('styles')
 </head>
 <body>
     {{-- Header / Navbar --}}
     @include('modules.landing.partials.header')
-    
+
     {{-- Floating Button --}}
     @include('modules.landing.partials.floating-btn')
-    
+
     {{-- Main Content --}}
     <main>
         @yield('content')
     </main>
-    
+
     {{-- Footer --}}
     @include('modules.landing.partials.footer')
-    
+
     {{-- Global Config & Init --}}
     <script>
         window.Laravel = { csrfToken: '{{ csrf_token() }}' };
         // Script inisialisasi SPA sudah dipindah ke navigation.js
     </script>
-    
+
     {{-- JavaScript Modular --}}
     <script src="{{ asset('assets/landing/js/main.js') }}"></script>
     <script src="{{ asset('assets/landing/js/navigation.js') }}"></script>
     <script src="{{ asset('assets/landing/js/hero-slider.js') }}"></script>
-    <script src="{{ asset('assets/landing/js/news-handler.js') }}"></script>
+    {{-- <script src="{{ asset('assets/landing/js/news-handler.js') }}"></script> --}}
     <script src="{{ asset('assets/landing/js/desa-handler.js') }}"></script>
     <script src="{{ asset('assets/landing/js/sk-handler.js') }}"></script>
     <script src="{{ asset('assets/landing/js/template-handler.js') }}"></script>
     <script src="{{ asset('assets/landing/js/struktur-handler.js') }}"></script>
     <script src="{{ asset('assets/landing/js/animations.js') }}"></script>
-    
+
     {{-- Dynamic News Content (Inline Script) --}}
     <script>
         // ==========================================
@@ -139,16 +139,16 @@
                     return window.landingNewsData || [];
                 }
             }
-            
+
             function renderNewsCard(news, index) {
-                const imgUrl = news.image_path 
-                    ? `/storage/${news.image_path}` 
+                const imgUrl = news.image_path
+                    ? `/storage/${news.image_path}`
                     : '/assets/landing/images/berita/default.jpg';
-                
-                const date = news.published_at 
+
+                const date = news.published_at
                     ? new Date(news.published_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
                     : new Date(news.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-                
+
                 return `<div class="news-card" onclick="openNewsModalBySlug('${news.slug}')">
                     <img src="${imgUrl}" alt="${news.title}" class="news-card-image" onerror="this.src='/assets/landing/images/berita/default.jpg'">
                     <div class="news-card-body">
@@ -163,11 +163,11 @@
                     </div>
                 </div>`;
             }
-            
+
             async function populateNewsHome() {
                 const grid = document.getElementById('newsHomeGrid');
                 if (!grid) return;
-                
+
                 try {
                     const news = await fetchNewsFromAPI(3);
                     if (news.length === 0) {
@@ -179,7 +179,7 @@
                     console.error('Error:', error);
                 }
             }
-            
+
             async function openNewsModalBySlug(slug) {
                 try {
                     const response = await fetch('/api/v1/news/' + slug);
@@ -198,13 +198,13 @@
                     console.error('Error:', error);
                 }
             }
-            
+
             function closeNewsModal() {
                 document.getElementById('newsModal')?.classList.remove('active');
                 document.body.style.overflow = '';
             }
         }
-        
+
         // ==========================================
         // INITIALIZATION - HANDLE HYBRID ROUTING
         // ==========================================
@@ -261,13 +261,13 @@
                                 currentPath.includes('/template') ||
                                 currentPath.includes('/struktur') ||
                                 currentPath.includes('/desa');
-            
+
             if (isLaravelRoute) {
                 setActiveLinkByRoute();
             }
         });
     </script>
-    
+
     @stack('scripts')
 </body>
 </html>
