@@ -417,6 +417,9 @@ function getFileIconColor(format) {
 // ==========================================
 // PREVIEW MODAL
 // ==========================================
+// ==========================================
+// PREVIEW MODAL (FIXED: CAN REOPEN AFTER CLOSE)
+// ==========================================
 function openTemplatePreview(fileUrl, title, originalFileName, format) {
     const modal = document.getElementById('templatePreviewModal');
     const titleEl = document.getElementById('templatePreviewTitle');
@@ -424,7 +427,10 @@ function openTemplatePreview(fileUrl, title, originalFileName, format) {
     const downloadBtn = document.getElementById('templatePreviewDownloadBtn');
     const openBtn = document.getElementById('templatePreviewOpenBtn');
 
-    if (!modal || !titleEl || !bodyEl) return;
+    if (!modal || !titleEl || !bodyEl) {
+        console.error('Modal elements not found');
+        return;
+    }
 
     // Simpan data global
     currentTemplateFileUrl = fileUrl;
@@ -434,9 +440,11 @@ function openTemplatePreview(fileUrl, title, originalFileName, format) {
     const cleanTitle = (originalFileName || title).replace(/\.[^/.]+$/, "");
     titleEl.textContent = cleanTitle;
 
-    // Set download button dengan nama file ASLI
-    downloadBtn.href = fileUrl;
-    downloadBtn.setAttribute('download', currentTemplateOriginalFileName);
+    // Set download button dengan nama file ASLI (dengan null check)
+    if (downloadBtn) {
+        downloadBtn.href = fileUrl;
+        downloadBtn.setAttribute('download', currentTemplateOriginalFileName);
+    }
 
     if (openBtn) openBtn.href = fileUrl;
 
@@ -466,6 +474,53 @@ function openTemplatePreview(fileUrl, title, originalFileName, format) {
     } else {
         showUnsupportedFormat(title, fileUrl, normalizedFormat);
     }
+}
+
+function closeTemplatePreview() {
+    const modal = document.getElementById('templatePreviewModal');
+    const bodyEl = document.getElementById('templatePreviewBody');
+    const modalBody = document.querySelector('.template-preview-modal-body');
+    const modalFooter = document.querySelector('.template-preview-modal-footer');
+
+    if (modal) {
+        modal.style.display = 'none';
+    }
+
+    if (bodyEl) {
+        bodyEl.innerHTML = '';
+    }
+
+    // Reset overflow modal body ke default
+    if (modalBody) {
+        modalBody.style.overflow = '';
+        modalBody.style.padding = '';
+    }
+
+    // Reset footer jika ada
+    if (modalFooter) {
+        modalFooter.innerHTML = `
+            <a id="templatePreviewOpenBtn" href="#" target="_blank" class="template-preview-open-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                Buka di Tab Baru
+            </a>
+            <a id="templatePreviewDownloadBtn" href="#" download class="template-preview-download-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download
+            </a>
+        `;
+    }
+
+    document.body.style.overflow = '';
+
+    console.log('Preview closed and reset');
 }
 
 // ==========================================
