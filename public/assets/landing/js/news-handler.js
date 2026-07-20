@@ -6,11 +6,17 @@
 // Base API URL
 const API_BASE = '/api/v1';
 
-// Pagination state
-let newsCurrentPage = 1;
-let newsPerPage = 6;
-let newsTotalPages = 0;
-let newsTotalItems = 0;
+if (typeof window.newsCurrentPage === 'undefined') {
+    window.newsCurrentPage = 1;
+    window.newsPerPage = 6;
+    window.newsTotalPages = 0;
+    window.newsTotalItems = 0;
+}
+
+let newsCurrentPage = window.newsCurrentPage;
+let newsPerPage = window.newsPerPage;
+let newsTotalPages = window.newsTotalPages;
+let newsTotalItems = window.newsTotalItems;
 
 /**
  * Check if news modal exists in DOM
@@ -33,16 +39,16 @@ async function fetchNews(params = {}) {
             category: params.category || '',
             ...params
         });
-        
+
         const response = await fetch(`${API_BASE}/news?${queryParams}`);
         const result = await response.json();
-        
+
         if (result.success) {
             // Store pagination info
             newsTotalItems = result.total || result.data.length;
             newsTotalPages = result.last_page || Math.ceil(newsTotalItems / (params.limit || newsPerPage));
             newsCurrentPage = params.page || 1;
-            
+
             return result;
         }
         throw new Error('Failed to fetch news');
@@ -59,29 +65,29 @@ async function fetchNews(params = {}) {
  * @returns {String}
  */
 function renderNewsCard(news, index) {
-    const imageUrl = news.image_path 
-        ? `/storage/${news.image_path}` 
+    const imageUrl = news.image_path
+        ? `/storage/${news.image_path}`
         : '/assets/landing/images/berita/default.jpg';
-    
-    const publishedDate = news.published_at 
-        ? new Date(news.published_at).toLocaleDateString('id-ID', { 
-            day: '2-digit', month: 'short', year: 'numeric' 
+
+    const publishedDate = news.published_at
+        ? new Date(news.published_at).toLocaleDateString('id-ID', {
+            day: '2-digit', month: 'short', year: 'numeric'
         })
-        : new Date(news.created_at).toLocaleDateString('id-ID', { 
-            day: '2-digit', month: 'short', year: 'numeric' 
+        : new Date(news.created_at).toLocaleDateString('id-ID', {
+            day: '2-digit', month: 'short', year: 'numeric'
         });
-    
-    const onclickAction = hasNewsModal() 
-        ? `onclick="openNewsModalBySlug('${news.slug}')"` 
+
+    const onclickAction = hasNewsModal()
+        ? `onclick="openNewsModalBySlug('${news.slug}')"`
         : '';
-    
+
     const cardTag = hasNewsModal() ? 'div' : 'a';
     const hrefAttr = !hasNewsModal() ? `href="/berita/${news.slug}"` : '';
-    
+
     return `
     <${cardTag} class="news-card" ${onclickAction} ${hrefAttr}>
-        <img src="${imageUrl}" 
-             alt="${escapeHtml(news.title)}" 
+        <img src="${imageUrl}"
+             alt="${escapeHtml(news.title)}"
              class="news-card-image"
              onerror="this.src='/assets/landing/images/berita/default.jpg'">
         <div class="news-card-body">
@@ -112,26 +118,26 @@ function renderNewsCard(news, index) {
  * @returns {String}
  */
 function renderNewsCardFull(news) {
-    const imageUrl = news.image_path 
-        ? `/storage/${news.image_path}` 
+    const imageUrl = news.image_path
+        ? `/storage/${news.image_path}`
         : '/assets/landing/images/berita/default.jpg';
-    
-    const publishedDate = news.published_at 
-        ? new Date(news.published_at).toLocaleDateString('id-ID', { 
-            day: '2-digit', month: 'short', year: 'numeric' 
+
+    const publishedDate = news.published_at
+        ? new Date(news.published_at).toLocaleDateString('id-ID', {
+            day: '2-digit', month: 'short', year: 'numeric'
         })
-        : new Date(news.created_at).toLocaleDateString('id-ID', { 
-            day: '2-digit', month: 'short', year: 'numeric' 
+        : new Date(news.created_at).toLocaleDateString('id-ID', {
+            day: '2-digit', month: 'short', year: 'numeric'
         });
-    
+
     const newsUrl = news.slug ? `/berita/${news.slug}` : `/berita/${news.id}`;
-    
+
     return `
     <a href="${newsUrl}" class="news-card-link">
         <article class="news-card-full">
             <div class="news-card-image-wrapper">
-                <img src="${imageUrl}" 
-                     alt="${escapeHtml(news.title)}" 
+                <img src="${imageUrl}"
+                     alt="${escapeHtml(news.title)}"
                      class="news-card-image"
                      onerror="this.src='/assets/landing/images/berita/default.jpg'">
             </div>
@@ -143,7 +149,7 @@ function renderNewsCardFull(news) {
                 <h3 class="news-card-title">${escapeHtml(news.title)}</h3>
                 <p class="news-card-excerpt">${escapeHtml(news.excerpt || news.content || '')}</p>
                 <span class="news-card-readmore">
-                    Baca Selengkapnya 
+                    Baca Selengkapnya
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
@@ -155,7 +161,7 @@ function renderNewsCardFull(news) {
 
 /**
  * Escape HTML to prevent XSS
- * @param {String} text 
+ * @param {String} text
  * @returns {String}
  */
 function escapeHtml(text) {
@@ -171,17 +177,17 @@ function escapeHtml(text) {
 async function populateNewsHome() {
     const grid = document.getElementById('newsHomeGrid');
     if (!grid) return;
-    
+
     grid.innerHTML = '<div class="col-span-3 text-center py-4"><div class="animate-pulse">Memuat berita...</div></div>';
-    
+
     try {
         const result = await fetchNews({ limit: 3 });
-        
+
         if (!result.data || result.data.length === 0) {
             grid.innerHTML = '<div class="col-span-3 text-center py-8 text-muted"><p>Belum ada berita terbaru.</p></div>';
             return;
         }
-        
+
         grid.innerHTML = result.data.map((n, i) => renderNewsCard(n, i)).join('');
     } catch (error) {
         console.error('Error populating news:', error);
@@ -197,37 +203,37 @@ async function populateNewsFull(page = 1) {
     const loadingEl = document.getElementById('news-loading');
     const emptyEl = document.getElementById('news-empty-state');
     const paginationWrapper = document.getElementById('newsPaginationWrapper');
-    
+
     if (!grid) return;
-    
+
     // Show loading
     if (loadingEl) {
         loadingEl.style.display = 'block';
         loadingEl.innerHTML = '<div class="news-loading-text">Memuat berita terbaru...</div>';
     }
-    
+
     grid.style.display = 'none';
     grid.innerHTML = '';
-    
+
     if (emptyEl) emptyEl.style.display = 'none';
     if (paginationWrapper) paginationWrapper.classList.add('hidden');
-    
+
     try {
         const result = await fetchNews({ page: page, limit: newsPerPage });
-        
+
         if (loadingEl) loadingEl.style.display = 'none';
-        
+
         if (!result.data || result.data.length === 0) {
             if (emptyEl) emptyEl.style.display = 'block';
             return;
         }
-        
+
         grid.style.display = 'grid';
         grid.innerHTML = result.data.map(n => renderNewsCardFull(n)).join('');
-        
+
         // Render pagination
         renderNewsPagination();
-        
+
     } catch (error) {
         console.error('Error populating full news:', error);
         if (loadingEl) {
@@ -246,26 +252,26 @@ function renderNewsPagination() {
     const prevBtn = document.getElementById('newsPrevBtn');
     const nextBtn = document.getElementById('newsNextBtn');
     const infoEl = document.getElementById('newsPaginationInfo');
-    
+
     if (!paginationWrapper || !pageNumbersEl) return;
-    
+
     // Jika hanya 1 halaman, sembunyikan pagination
     if (newsTotalPages <= 1) {
         paginationWrapper.classList.add('hidden');
         return;
     }
-    
+
     paginationWrapper.classList.remove('hidden');
-    
+
     // Update prev/next buttons
     if (prevBtn) prevBtn.disabled = newsCurrentPage === 1;
     if (nextBtn) nextBtn.disabled = newsCurrentPage === newsTotalPages;
-    
+
     // Generate page numbers
     pageNumbersEl.innerHTML = '';
-    
+
     let pages = [];
-    
+
     // Logic untuk menampilkan page numbers dengan ellipsis
     if (newsTotalPages <= 7) {
         // Jika total halaman <= 7, tampilkan semua
@@ -285,7 +291,7 @@ function renderNewsPagination() {
             pages = [1, '...', newsCurrentPage - 1, newsCurrentPage, newsCurrentPage + 1, '...', newsTotalPages];
         }
     }
-    
+
     pages.forEach(function(page) {
         if (page === '...') {
             const dots = document.createElement('span');
@@ -299,13 +305,13 @@ function renderNewsPagination() {
                 btn.classList.add('active');
             }
             btn.textContent = page;
-            btn.onclick = function() { 
-                changeNewsPage(page); 
+            btn.onclick = function() {
+                changeNewsPage(page);
             };
             pageNumbersEl.appendChild(btn);
         }
     });
-    
+
     // Update info text
     if (infoEl) {
         const from = (newsCurrentPage - 1) * newsPerPage + 1;
@@ -333,13 +339,13 @@ function changeNewsPage(direction) {
     } else {
         newsCurrentPage = parseInt(direction);
     }
-    
+
     // Scroll to top of news section
     const newsSection = document.querySelector('.news-section-title') || document.querySelector('.page-header');
     if (newsSection) {
         newsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-    
+
     populateNewsFull(newsCurrentPage);
 }
 
@@ -355,37 +361,37 @@ function changeNewsPerPage(value) {
 
 /**
  * Open news modal by fetching single news by slug
- * @param {String} slug 
+ * @param {String} slug
  */
 async function openNewsModalBySlug(slug) {
     if (!hasNewsModal()) {
         window.location.href = `/berita/${slug}`;
         return;
     }
-    
+
     try {
         const response = await fetch(`${API_BASE}/news/${slug}`);
         const result = await response.json();
-        
+
         if (result.success) {
             const news = result.data;
-            const imageUrl = news.image_path 
-                ? `/storage/${news.image_path}` 
+            const imageUrl = news.image_path
+                ? `/storage/${news.image_path}`
                 : '/assets/landing/images/berita/default.jpg';
-            
+
             const modalImage = document.getElementById('newsModalImage');
             const modalDate = document.getElementById('newsModalDate');
             const modalCategory = document.getElementById('newsModalCategory');
             const modalTitle = document.getElementById('newsModalTitle');
             const modalContent = document.getElementById('newsModalContent');
             const modal = document.getElementById('newsModal');
-            
+
             if (!modalImage || !modalDate || !modalCategory || !modalTitle || !modalContent || !modal) {
                 console.error('Modal elements not found');
                 window.location.href = `/berita/${slug}`;
                 return;
             }
-            
+
             modalImage.src = imageUrl;
             modalDate.innerHTML = `
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px">
@@ -393,9 +399,9 @@ async function openNewsModalBySlug(slug) {
                     <line x1="16" y1="2" x2="16" y2="6"/>
                     <line x1="8" y1="2" x2="8" y2="6"/>
                     <line x1="3" y1="10" x2="21" y2="10"/>
-                </svg> 
-                ${new Date(news.published_at || news.created_at).toLocaleDateString('id-ID', { 
-                    day: '2-digit', month: 'long', year: 'numeric' 
+                </svg>
+                ${new Date(news.published_at || news.created_at).toLocaleDateString('id-ID', {
+                    day: '2-digit', month: 'long', year: 'numeric'
                 })}
             `;
             modalCategory.textContent = news.category;
@@ -426,37 +432,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load per page preference
     const savedPerPage = localStorage.getItem('news_per_page') || '6';
     newsPerPage = parseInt(savedPerPage);
-    
+
     const perPageSelect = document.getElementById('newsPerPageSelect');
     if (perPageSelect) perPageSelect.value = newsPerPage;
-    
+
     // Populate homepage if grid exists
     if (document.getElementById('newsHomeGrid')) {
         populateNewsHome();
     }
-    
+
     // Modal close handlers
     const modal = document.getElementById('newsModal');
     if (modal) {
-        modal.addEventListener('click', function(e) { 
-            if (e.target === this) closeNewsModal(); 
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) closeNewsModal();
         });
     }
-    
-    document.addEventListener('keydown', (e) => { 
-        if (e.key === 'Escape') closeNewsModal(); 
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeNewsModal();
     });
 });
 
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { 
-        fetchNews, 
-        renderNewsCard, 
+    module.exports = {
+        fetchNews,
+        renderNewsCard,
         renderNewsCardFull,
-        populateNewsHome, 
-        populateNewsFull, 
-        openNewsModalBySlug, 
+        populateNewsHome,
+        populateNewsFull,
+        openNewsModalBySlug,
         closeNewsModal,
         changeNewsPage,
         changeNewsPerPage

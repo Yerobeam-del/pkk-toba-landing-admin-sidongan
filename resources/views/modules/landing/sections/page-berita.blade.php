@@ -112,13 +112,21 @@
 // ==========================================
 // PAGINATION & SORT STATE
 // ==========================================
-let newsCurrentPage = 1;
-let newsPerPage = 6;
-let newsTotalPages = 0;
-let newsTotalItems = 0;
-let newsSort = 'latest'; // latest, oldest, title_asc, title_desc
+if (typeof window.newsCurrentPage === 'undefined') {
+    window.newsCurrentPage = 1;
+    window.newsPerPage = 6;
+    window.newsTotalPages = 0;
+    window.newsTotalItems = 0;
+}
+
+let newsSort = 'latest';
 let isBeritaLoading = false;
 let beritaLoaded = false;
+
+let newsCurrentPage = window.newsCurrentPage;
+let newsPerPage = window.newsPerPage;
+let newsTotalPages = window.newsTotalPages;
+let newsTotalItems = window.newsTotalItems;
 
 // ==========================================
 // INITIALIZATION
@@ -127,14 +135,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load preferences
     const savedPerPage = localStorage.getItem('news_per_page') || '6';
     const savedSort = localStorage.getItem('news_sort') || 'latest';
-    
+
     newsPerPage = parseInt(savedPerPage);
     newsSort = savedSort;
-    
+
     // Set select values
     const perPageSelect = document.getElementById('newsPerPageSelect');
     const sortSelect = document.getElementById('newsSortSelect');
-    
+
     if (perPageSelect) perPageSelect.value = newsPerPage;
     if (sortSelect) sortSelect.value = newsSort;
 });
@@ -154,22 +162,24 @@ function changeNewsSort(value) {
 // ==========================================
 function changeNewsPerPage(value) {
     newsPerPage = parseInt(value);
+    window.newsPerPage = newsPerPage;
     localStorage.setItem('news_per_page', newsPerPage);
     newsCurrentPage = 1;
-    
+    window.newsCurrentPage = 1;
+
     // AUTO SCROLL KE JUDUL "Daftar Berita" DENGAN OFFSET
     const sectionTitle = document.querySelector('.news-section-title');
     if (sectionTitle) {
         const navbarHeight = 165; // Tinggi navbar
         const elementPosition = sectionTitle.getBoundingClientRect().top + window.pageYOffset;
         const offsetPosition = elementPosition - navbarHeight;
-        
+
         window.scrollTo({
             top: offsetPosition,
             behavior: 'smooth'
         });
     }
-    
+
     loadBeritaData();
 }
 
@@ -178,7 +188,7 @@ function changeNewsPerPage(value) {
 // ==========================================
 function changeNewsPage(direction) {
     if (isBeritaLoading) return;
-    
+
     if (direction === 'prev') {
         if (newsCurrentPage > 1) newsCurrentPage--;
         else return;
@@ -188,20 +198,22 @@ function changeNewsPage(direction) {
     } else {
         newsCurrentPage = parseInt(direction);
     }
-    
+
+    window.newsCurrentPage = newsCurrentPage;
+
     // AUTO SCROLL KE JUDUL "Daftar Berita" DENGAN OFFSET
     const sectionTitle = document.querySelector('.news-section-title');
     if (sectionTitle) {
         const navbarHeight = 165; // Tinggi navbar
         const elementPosition = sectionTitle.getBoundingClientRect().top + window.pageYOffset;
         const offsetPosition = elementPosition - navbarHeight;
-        
+
         window.scrollTo({
             top: offsetPosition,
             behavior: 'smooth'
         });
     }
-    
+
     loadBeritaData();
 }
 
@@ -211,17 +223,17 @@ function changeNewsPage(direction) {
 async function loadBeritaData() {
     if (isBeritaLoading) return;
     isBeritaLoading = true;
-    
+
     const loadingEl = document.getElementById('news-loading');
     const gridEl = document.getElementById('newsFullGrid');
     const emptyEl = document.getElementById('news-empty-state');
     const paginationWrapper = document.getElementById('newsPaginationWrapper');
-    
+
     if (!loadingEl || !gridEl) {
         isBeritaLoading = false;
         return;
     }
-    
+
     // Show loading
     loadingEl.style.display = 'block';
     loadingEl.innerHTML = '<div class="news-loading-text">Memuat berita terbaru...</div>';
@@ -229,7 +241,7 @@ async function loadBeritaData() {
     gridEl.innerHTML = '';
     if (emptyEl) emptyEl.style.display = 'none';
     if (paginationWrapper) paginationWrapper.classList.add('hidden');
-    
+
     try {
         // Build query params
         const params = new URLSearchParams({
@@ -237,30 +249,30 @@ async function loadBeritaData() {
             limit: newsPerPage,
             sort: newsSort
         });
-        
+
         const response = await fetch(`/api/v1/news?${params.toString()}`);
         const result = await response.json();
-        
+
         loadingEl.style.display = 'none';
-        
+
         if (result.success && result.data && result.data.length > 0) {
             newsTotalItems = result.total || result.data.length;
             newsTotalPages = result.last_page || Math.ceil(newsTotalItems / newsPerPage);
-            
+
             gridEl.style.display = 'grid';
-            
+
             gridEl.innerHTML = result.data.map(news => {
-                const imgUrl = news.image_path 
-                    ? '/storage/' + news.image_path 
+                const imgUrl = news.image_path
+                    ? '/storage/' + news.image_path
                     : '/assets/landing/images/berita/default.jpg';
-                
+
                 const date = news.published_at || news.created_at;
-                const formattedDate = date ? new Date(date).toLocaleDateString('id-ID', { 
-                    day: '2-digit', month: 'short', year: 'numeric' 
+                const formattedDate = date ? new Date(date).toLocaleDateString('id-ID', {
+                    day: '2-digit', month: 'short', year: 'numeric'
                 }) : '-';
-                
+
                 const newsUrl = news.slug ? '/berita/' + news.slug : '/berita/' + news.id;
-                
+
                 return `
                 <a href="${newsUrl}" class="news-card-link">
                     <article class="news-card-full">
@@ -276,7 +288,7 @@ async function loadBeritaData() {
                             <h3 class="news-card-title">${news.title}</h3>
                             <p class="news-card-excerpt">${news.excerpt || news.content || ''}</p>
                             <span class="news-card-readmore">
-                                Baca Selengkapnya 
+                                Baca Selengkapnya
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <path d="M5 12h14M12 5l7 7-7 7"/>
                                 </svg>
@@ -286,7 +298,7 @@ async function loadBeritaData() {
                 </a>
                 `;
             }).join('');
-            
+
             renderNewsPagination();
         } else {
             if (emptyEl) emptyEl.style.display = 'block';
@@ -308,23 +320,23 @@ function renderNewsPagination() {
     const prevBtn = document.getElementById('newsPrevBtn');
     const nextBtn = document.getElementById('newsNextBtn');
     const infoEl = document.getElementById('newsPaginationInfo');
-    
+
     if (!paginationWrapper || !pageNumbersEl) return;
-    
+
     if (newsTotalPages <= 1) {
         paginationWrapper.classList.add('hidden');
         return;
     }
-    
+
     paginationWrapper.classList.remove('hidden');
-    
+
     if (prevBtn) prevBtn.disabled = newsCurrentPage === 1;
     if (nextBtn) nextBtn.disabled = newsCurrentPage === newsTotalPages;
-    
+
     pageNumbersEl.innerHTML = '';
-    
+
     let pages = [];
-    
+
     if (newsTotalPages <= 7) {
         for (let i = 1; i <= newsTotalPages; i++) pages.push(i);
     } else {
@@ -336,7 +348,7 @@ function renderNewsPagination() {
             pages = [1, '...', newsCurrentPage - 1, newsCurrentPage, newsCurrentPage + 1, '...', newsTotalPages];
         }
     }
-    
+
     pages.forEach(function(page) {
         if (page === '...') {
             const dots = document.createElement('span');
@@ -352,7 +364,7 @@ function renderNewsPagination() {
             pageNumbersEl.appendChild(btn);
         }
     });
-    
+
     if (infoEl) {
         const from = (newsCurrentPage - 1) * newsPerPage + 1;
         const to = Math.min(newsCurrentPage * newsPerPage, newsTotalItems);
@@ -388,7 +400,7 @@ function updateSortDescription(value) {
         'title_asc': 'Menampilkan berita berdasarkan judul dari A sampai Z',
         'title_desc': 'Menampilkan berita berdasarkan judul dari Z sampai A'
     };
-    
+
     const descEl = document.getElementById('sortDescription');
     if (descEl) {
         descEl.textContent = descriptions[value] || descriptions['latest'];
@@ -427,9 +439,9 @@ if (beritaPage) {
             }
         });
     });
-    
-    beritaObserver.observe(beritaPage, { 
-        attributes: true, 
+
+    beritaObserver.observe(beritaPage, {
+        attributes: true,
         attributeFilter: ['class']
     });
 }
