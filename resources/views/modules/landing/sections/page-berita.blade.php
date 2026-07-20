@@ -268,7 +268,9 @@ async function loadBeritaData() {
 
                 const date = news.published_at || news.created_at;
                 const formattedDate = date ? new Date(date).toLocaleDateString('id-ID', {
-                    day: '2-digit', month: 'short', year: 'numeric'
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
                 }) : '-';
 
                 const newsUrl = news.slug ? '/berita/' + news.slug : '/berita/' + news.id;

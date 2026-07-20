@@ -401,7 +401,7 @@ async function openNewsModalBySlug(slug) {
                     <line x1="3" y1="10" x2="21" y2="10"/>
                 </svg>
                 ${new Date(news.published_at || news.created_at).toLocaleDateString('id-ID', {
-                    day: '2-digit', month: 'long', year: 'numeric'
+                    day: 'numeric', month: 'long', year: 'numeric'
                 })}
             `;
             modalCategory.textContent = news.category;
