@@ -14,7 +14,7 @@
 @include('modules.landing.sections.page-struktur')
 @include('modules.landing.sections.page-aplikasi')
 @include('modules.landing.sections.page-berita')
-@include('modules.landing.sections.page-desa')
+{{-- @include('modules.landing.sections.page-desa') --}}
 @include('modules.landing.sections.page-sk')
 @include('modules.landing.sections.page-template')
 @include('modules.landing.sections.page-tentang')
