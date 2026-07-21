@@ -5,9 +5,18 @@
     <div class="cloud c3"></div>
     <div class="cloud c4"></div>
 
-    {{-- Logo PKK dengan Animasi --}}
-    <div class="logo-container">
-        <img src="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}" alt="Loading">
+    {{-- Logo PKK dengan Animasi Loading --}}
+    <div class="loading-wrapper">
+        <div class="logo-container">
+            <img src="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}" alt="Logo PKK">
+        </div>
+
+        {{-- Loading Dots --}}
+        <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </div>
 </div>
 
@@ -68,12 +77,21 @@
         to { transform: translateX(110vw); }
     }
 
-    /* ===== LOGO CONTAINER & ANIMATION ===== */
-    .logo-container {
+    /* ===== LOADING WRAPPER ===== */
+    .loading-wrapper {
         position: relative;
         z-index: 10;
-        width: 140px;
-        height: 140px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    /* ===== LOGO CONTAINER ===== */
+    .logo-container {
+        width: 120px;
+        height: 120px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -83,11 +101,11 @@
     @keyframes logoPulse {
         0%, 100% {
             transform: scale(1);
-            opacity: 1;
+            filter: drop-shadow(0 8px 24px rgba(13, 148, 136, 0.25));
         }
         50% {
-            transform: scale(1.08);
-            opacity: 0.85;
+            transform: scale(1.05);
+            filter: drop-shadow(0 12px 32px rgba(13, 148, 136, 0.35));
         }
     }
 
@@ -95,13 +113,41 @@
         width: 100%;
         height: 100%;
         object-fit: contain;
-        filter: drop-shadow(0 8px 24px rgba(13, 148, 136, 0.25));
-        animation: logoRotate 8s linear infinite;
     }
 
-    @keyframes logoRotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+    /* ===== LOADING DOTS ===== */
+    .loading-dots {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .loading-dots span {
+        width: 12px;
+        height: 12px;
+        background: linear-gradient(135deg, #14b8a6, #0d9488);
+        border-radius: 50%;
+        display: inline-block;
+        animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .loading-dots span:nth-child(1) {
+        animation-delay: -0.32s;
+    }
+
+    .loading-dots span:nth-child(2) {
+        animation-delay: -0.16s;
+    }
+
+    @keyframes bounce {
+        0%, 80%, 100% {
+            transform: scale(0);
+            opacity: 0.5;
+        }
+        40% {
+            transform: scale(1);
+            opacity: 1;
+        }
     }
 
     /* ===== RESPONSIVE ===== */
@@ -109,6 +155,13 @@
         .logo-container {
             width: 100px;
             height: 100px;
+        }
+        .loading-wrapper {
+            gap: 1.5rem;
+        }
+        .loading-dots span {
+            width: 10px;
+            height: 10px;
         }
     }
 </style>
