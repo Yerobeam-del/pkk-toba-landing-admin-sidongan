@@ -31,7 +31,7 @@
         justify-content: center;
         z-index: 9999;
         overflow: hidden;
-        transition: opacity 0.4s ease, visibility 0.4s ease;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
     }
 
     /* State ketika loading disembunyikan */
@@ -182,4 +182,17 @@
             loader.classList.add('hidden');
         }
     };
+
+    // Otomatis sembunyikan loading saat halaman selesai dimuat
+    window.addEventListener('load', function() {
+        // Delay 500ms agar transisi terlihat halus
+        setTimeout(function() {
+            window.hideLoading();
+        }, 500);
+    });
+
+    // Fallback: sembunyikan loading maksimal setelah 5 detik
+    setTimeout(function() {
+        window.hideLoading();
+    }, 5000);
 </script>
