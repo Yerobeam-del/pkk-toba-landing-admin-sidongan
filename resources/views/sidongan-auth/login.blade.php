@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SIDONGAN</title>
-    
+
+    {{-- Favicon untuk Tab Browser (Format SVG) --}}
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/sidongan/images/Logo-SIDONGAN-white.svg') }}">
+
+    {{-- Fallback untuk browser lama yang tidak mendukung SVG --}}
+    <link rel="alternate icon" type="image/png" href="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}">
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             /* Tema Ungu */
@@ -434,7 +440,7 @@
                     <img src="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}" alt="Logo PKK">
                 </div>
             </div>
-            
+
             <div class="branding-content">
                 <h1 class="branding-title">SIDONGAN</h1>
                 <p class="branding-subtitle">Sistem Informasi Dokumen Organisasi Agenda dan Naskah</p>
@@ -486,7 +492,7 @@
                     <div class="input-wrapper">
                         <!-- Tambahkan style padding-right agar teks tidak menabrak ikon mata -->
                         <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password" style="padding-right: 2.5rem;">
-                        
+
                         <!-- Ikon Gembok (Kiri) -->
                         <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -544,7 +550,7 @@
             </form>
         </div>
     </div>
-    
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const togglePassword = document.getElementById('togglePassword');
@@ -556,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ganti tipe input antara 'password' dan 'text'
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
-        
+
         // Ganti ikon mata
         if (type === 'text') {
             eyeOpen.style.display = 'none';

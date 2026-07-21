@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Admin Panel</title>
-    
+
+    {{-- Favicon untuk Tab Browser (Format SVG) --}}
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel-White.svg') }}">
+
+    {{-- Fallback untuk browser lama yang tidak mendukung SVG --}}
+    <link rel="alternate icon" type="image/png" href="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}">
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --primary: #f97316;
@@ -390,8 +396,8 @@
             text-align: center;
         }
 
-        .alert ul { 
-            margin: 0; 
+        .alert ul {
+            margin: 0;
             padding: 0;
             list-style: none;
         }
@@ -444,7 +450,7 @@
                     <img src="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}" alt="Logo PKK">
                 </div>
             </div>
-            
+
             <div class="branding-content">
                 <h1 class="branding-title">Admin Panel</h1>
                 <p class="branding-subtitle">PKK Kabupaten Toba</p>
@@ -472,7 +478,7 @@
                                             // Cek apakah email terdaftar
                                             $emailExists = \App\Models\User::where('email', old('email'))->exists();
                                         @endphp
-                                        
+
                                         @if (!$emailExists && old('email'))
                                             Email <strong>"{{ old('email') }}"</strong> tidak terdaftar dalam sistem.
                                         @elseif ($emailExists)
@@ -513,7 +519,7 @@
                     <div class="input-wrapper">
                         <!-- Tambahkan style padding-right agar teks tidak menabrak ikon mata -->
                         <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password" style="padding-right: 2.5rem;">
-                        
+
                         <!-- Ikon Gembok (Kiri) -->
                         <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -582,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ganti tipe input antara 'password' dan 'text'
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
-        
+
         // Ganti ikon mata
         if (type === 'text') {
             eyeOpen.style.display = 'none';
