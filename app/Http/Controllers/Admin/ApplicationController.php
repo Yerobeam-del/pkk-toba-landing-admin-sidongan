@@ -11,36 +11,75 @@ class ApplicationController extends Controller
 {
     public function index()
     {
-        $applications = Application::orderBy('category')->orderBy('sort_order')->get();
-        
-        // Hitung statistik untuk visibility
+        $perPage = request('per_page', 10);
+        $search = request('search', '');
+        $currentTab = request('tab', 'all');
+
+        // Query dasar dengan search
+        $baseQuery = Application::query()->where(function($q) use ($search) {
+            if ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('short_name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            }
+        });
+
+        // 1. Semua Aplikasi (dengan pagination)
+        $allApps = (clone $baseQuery)
+            ->orderBy('category')
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_all');
+
+        // 2. Aplikasi Aktif (dengan pagination)
+        $activeApps = (clone $baseQuery)
+            ->where('status', 'active')
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_active');
+
+        // 3. Maintenance (dengan pagination)
+        $maintenanceApps = (clone $baseQuery)
+            ->where('status', 'maintenance')
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_maintenance');
+
+        // 4. Pengembangan (dengan pagination)
+        $developmentApps = (clone $baseQuery)
+            ->where('status', 'development')
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_development');
+
+        // Hitung statistik untuk badge dan cards
         $stats = [
-            'total' => $applications->count(),
-            'active' => $applications->where('status', 'active')->count(),
-            'maintenance' => $applications->where('status', 'maintenance')->count(),
-            'development' => $applications->where('status', 'development')->count(),
-            'show_in_beranda' => $applications->where('is_active', true)
+            'total' => Application::count(),
+            'active' => Application::where('status', 'active')->where('is_active', true)->count(),
+            'maintenance' => Application::where('status', 'maintenance')->count(),
+            'development' => Application::where('status', 'development')->count(),
+            'show_in_beranda' => Application::where('is_active', true)
                 ->where('status', 'active')
                 ->where('show_in_quick_access', true)
                 ->count(),
-            'show_in_footer' => $applications->where('is_active', true)
+            'show_in_footer' => Application::where('is_active', true)
                 ->where('status', 'active')
                 ->where('show_in_footer', true)
                 ->count(),
-            'show_in_floating' => $applications->where('is_active', true)
+            'show_in_floating' => Application::where('is_active', true)
                 ->where('status', 'active')
                 ->where('show_in_floating', true)
                 ->count(),
         ];
-        
-        return view('admin.aplikasi.index', compact('applications', 'stats'));
+
+        return view('admin.aplikasi.index', compact(
+            'allApps', 'activeApps', 'maintenanceApps', 'developmentApps',
+            'stats', 'currentTab', 'search', 'perPage'
+        ));
     }
 
     public function create()
     {
         $maxSortOrder = Application::max('sort_order') ?? 0;
         $nextSortOrder = $maxSortOrder + 1;
-        
+
         return view('admin.aplikasi.create', compact('nextSortOrder'));
     }
 
@@ -70,20 +109,20 @@ class ApplicationController extends Controller
         $validated['is_active'] = $request->has('is_active') ? 1 : 0;
         $validated['show_in_floating'] = $request->has('show_in_floating') ? 1 : 0;
         $validated['show_in_footer'] = $request->has('show_in_footer') ? 1 : 0;
-        
+
         // Validasi maksimal 2 aplikasi di Beranda
         if ($request->has('show_in_quick_access')) {
             $currentBerandaCount = Application::where('show_in_quick_access', true)
                 ->where('is_active', true)
                 ->where('status', 'active')
                 ->count();
-            
+
             if ($currentBerandaCount >= 2) {
                 return redirect()->back()
                     ->withInput()
                     ->withErrors(['show_in_quick_access' => 'Maksimal hanya 2 aplikasi yang bisa tampil di Beranda.']);
             }
-            
+
             $validated['show_in_quick_access'] = 1;
         } else {
             $validated['show_in_quick_access'] = 0;
@@ -141,7 +180,7 @@ class ApplicationController extends Controller
         $validated['is_active'] = $request->has('is_active') ? 1 : 0;
         $validated['show_in_floating'] = $request->has('show_in_floating') ? 1 : 0;
         $validated['show_in_footer'] = $request->has('show_in_footer') ? 1 : 0;
-        
+
         // Validasi maksimal 2 aplikasi di Beranda (kecuali aplikasi yang sedang diedit)
         if ($request->has('show_in_quick_access')) {
             // Jika aplikasi ini sebelumnya sudah dicentang Beranda, skip validasi
@@ -151,14 +190,14 @@ class ApplicationController extends Controller
                     ->where('status', 'active')
                     ->where('id', '!=', $aplikasi->id)
                     ->count();
-                
+
                 if ($currentBerandaCount >= 2) {
                     return redirect()->back()
                         ->withInput()
                         ->withErrors(['show_in_quick_access' => 'Maksimal hanya 2 aplikasi yang bisa tampil di Beranda.']);
                 }
             }
-            
+
             $validated['show_in_quick_access'] = 1;
         } else {
             $validated['show_in_quick_access'] = 0;
@@ -173,7 +212,7 @@ class ApplicationController extends Controller
         }
 
         $aplikasi->update($validated);
-        
+
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil diperbarui.');
     }
 
@@ -182,9 +221,9 @@ class ApplicationController extends Controller
         if ($aplikasi->icon) {
             Storage::disk('public')->delete($aplikasi->icon);
         }
-        
+
         $aplikasi->delete();
-        
+
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil dihapus.');
     }
 }
