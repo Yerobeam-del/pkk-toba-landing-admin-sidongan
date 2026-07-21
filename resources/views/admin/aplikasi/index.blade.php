@@ -293,9 +293,7 @@ grid-template-columns: 1fr !important;
             'editRoute' => 'admin.aplikasi.edit',
             'deleteRoute' => 'admin.aplikasi.destroy',
             'actions' => ['edit', 'delete'],
-            'rowActions' => function($item) {
-                return view('admin.aplikasi.partials.action-buttons', ['app' => $item])->render();
-            }
+            'emptyIcon' => 'monitor'
         ])
     </div>
 
@@ -308,9 +306,7 @@ grid-template-columns: 1fr !important;
             'editRoute' => 'admin.aplikasi.edit',
             'deleteRoute' => 'admin.aplikasi.destroy',
             'actions' => ['edit', 'delete'],
-            'rowActions' => function($item) {
-                return view('admin.aplikasi.partials.action-buttons', ['app' => $item])->render();
-            }
+            'emptyIcon' => 'monitor'
         ])
     </div>
 
@@ -323,9 +319,7 @@ grid-template-columns: 1fr !important;
             'editRoute' => 'admin.aplikasi.edit',
             'deleteRoute' => 'admin.aplikasi.destroy',
             'actions' => ['edit', 'delete'],
-            'rowActions' => function($item) {
-                return view('admin.aplikasi.partials.action-buttons', ['app' => $item])->render();
-            }
+            'emptyIcon' => 'monitor'
         ])
     </div>
 
@@ -338,9 +332,7 @@ grid-template-columns: 1fr !important;
             'editRoute' => 'admin.aplikasi.edit',
             'deleteRoute' => 'admin.aplikasi.destroy',
             'actions' => ['edit', 'delete'],
-            'rowActions' => function($item) {
-                return view('admin.aplikasi.partials.action-buttons', ['app' => $item])->render();
-            }
+            'emptyIcon' => 'monitor'
         ])
     </div>
 </div>
