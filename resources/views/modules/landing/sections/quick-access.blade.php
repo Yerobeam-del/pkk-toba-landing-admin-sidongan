@@ -5,11 +5,10 @@
         <p class="section-desc">Akses berbagai layanan digital PKK Kabupaten Toba dengan mudah dan cepat.</p>
     </div>
 
-    {{-- 🎨 CSS KHUSUS: Paksa 1 Baris di Desktop --}}
     <style>
         .quick-access-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr) !important; /* 6 kartu = 1 baris */
+            grid-template-columns: repeat(5, 1fr) !important; /* 5 kartu = 1 baris */
             gap: 1.25rem;
             width: 100%;
         }
