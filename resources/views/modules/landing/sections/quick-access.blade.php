@@ -13,17 +13,17 @@
             gap: 1.25rem;
             width: 100%;
         }
-        
+
         /* Tablet: 3 kolom per baris */
         @media (max-width: 1024px) {
             .quick-access-grid { grid-template-columns: repeat(3, 1fr) !important; }
         }
-        
+
         /* HP Besar: 2 kolom per baris */
         @media (max-width: 640px) {
             .quick-access-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
-        
+
         /* HP Kecil: 1 kolom */
         @media (max-width: 480px) {
             .quick-access-grid { grid-template-columns: 1fr !important; }
@@ -52,13 +52,13 @@
             <h3>Berita</h3>
             <p>Kabar terkini PKK</p>
         </a>
-        <a onclick="navigateTo('desa')" class="quick-access-card">
+        {{-- <a onclick="navigateTo('desa')" class="quick-access-card">
             <div class="quick-access-icon" style="background: linear-gradient(135deg, #9b2c2c, #e53e3e);">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </div>
             <h3>Data Desa</h3>
             <p>Daftar desa & kelurahan</p>
-        </a>
+        </a> --}}
         <a onclick="navigateTo('sk')" class="quick-access-card">
             <div class="quick-access-icon" style="background: linear-gradient(135deg, #553c9a, #805ad5);">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
