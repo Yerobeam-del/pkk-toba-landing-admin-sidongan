@@ -375,8 +375,6 @@
 </head>
 <body>
 
-    <x-loading-screen />
-
     <div class="admin-layout" id="adminLayout">
 
         <!-- Overlay for Mobile -->

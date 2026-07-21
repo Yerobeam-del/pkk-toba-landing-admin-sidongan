@@ -21,8 +21,6 @@
 </head>
 <body>
 
-    <x-loading-screen />
-
     @php
         $currentUser = auth()->guard('sidongan')->user();
 
