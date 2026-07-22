@@ -3,6 +3,75 @@
 @section('page-title', 'Struktur Organisasi')
 
 @section('content')
+
+<style>
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .struktur-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+
+    .struktur-header h1 {
+        font-size: 1.25rem !important;
+    }
+
+    .struktur-header .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* FIX: Toolbar responsive */
+    .struktur-toolbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 1rem !important;
+    }
+
+    .struktur-toolbar .tabs-container {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        border-bottom: 1px solid rgba(0,0,0,0.06) !important;
+        padding-bottom: 0.5rem !important;
+    }
+
+    .struktur-toolbar .tabs-container::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .struktur-toolbar .tabs-container::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 4px;
+    }
+
+    .struktur-toolbar .tab-btn {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    .struktur-toolbar .toolbar-controls {
+        width: 100% !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
+    }
+
+    .struktur-toolbar .toolbar-controls form {
+        width: 100% !important;
+    }
+
+    .struktur-toolbar .toolbar-controls input[type="text"] {
+        width: 100% !important;
+    }
+
+    .struktur-toolbar .toolbar-controls select {
+        width: 100% !important;
+    }
+}
+</style>
+
 <div style="margin-bottom:2rem">
 
     {{-- Header Section --}}
@@ -18,7 +87,7 @@
     </div>
 
     {{-- TABS & SEARCH --}}
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:1.5rem;flex-wrap:wrap">
+    <div class="struktur-toolbar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:1.5rem;flex-wrap:wrap">
         <div class="tabs-container" style="flex:1;min-width:0;display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem">
             @php
                 $tabs = [
@@ -28,15 +97,11 @@
                     'pokja3' => ['label' => 'POKJA III', 'count' => $pokja3Count],
                     'pokja4' => ['label' => 'POKJA IV', 'count' => $pokja4Count],
                 ];
-
-                // Ambil tab dari request, default ke 'pengurus'
-                // Kita tidak perlu mengecek page_pokjaX lagi karena link tab sudah mengirim parameter 'tab'
                 $currentTab = request('tab', 'pengurus');
             @endphp
             @foreach($tabs as $key => $tabData)
                 @php
                     $isActive = $currentTab === $key;
-                    // Reset semua page ke 1 saat ganti tab, tapi pertahankan search & per_page
                     $url = request()->fullUrlWithQuery([
                         'tab' => $key,
                         'page_pengurus' => 1,
@@ -47,9 +112,9 @@
                     ]);
                 @endphp
                 <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}"
-                   style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }}"
-                   onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}"
-                   onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
+                style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }}"
+                onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}"
+                onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
                     {{ $tabData['label'] }}
                     @if($tabData['count'] > 0)
                         <span style="background:rgba(0,0,0,0.05);color:var(--text-muted);padding:2px 8px;border-radius:12px;font-size:0.75rem">{{ $tabData['count'] }}</span>
@@ -59,7 +124,7 @@
         </div>
 
         {{-- Search Form & Per Page --}}
-        <div style="flex-shrink:0;display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">
+        <div class="toolbar-controls" style="flex-shrink:0;display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">
             {{-- Per Page Dropdown --}}
             <form method="GET" action="{{ route('admin.struktur.index') }}" style="display:flex;align-items:center;gap:0.5rem">
                 <input type="hidden" name="tab" value="{{ $currentTab }}">
