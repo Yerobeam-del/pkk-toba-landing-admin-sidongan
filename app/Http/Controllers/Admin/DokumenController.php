@@ -14,27 +14,49 @@ class DokumenController extends Controller
      */
     public function index()
     {
-        $query = Dokumen::query();
-        
-        // Filter search
-        if (request('search')) {
-            $search = request('search');
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('file_name', 'like', '%' . $search . '%');
-            });
-        }
-        
-        // Filter status
-        if (request('status')) {
-            $query->where('status', request('status'));
-        }
-        
-        $dokumens = $query->orderBy('document_date', 'desc')
-                          ->orderBy('sort_order')
-                          ->paginate(20);
-        
-        return view('admin.sk.index', compact('dokumens'));
+        $perPage = request('per_page', 10);
+        $search = request('search', '');
+        $currentTab = request('tab', 'all');
+
+        // Base query dengan pencarian
+        $baseQuery = Dokumen::query()->where(function($q) use ($search) {
+            if ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('file_name', 'like', "%{$search}%");
+            }
+        });
+
+        // 1. Semua Dokumen (dengan pagination)
+        $allDocs = (clone $baseQuery)
+            ->orderBy('document_date', 'desc')
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_all');
+
+        // 2. Published (dengan pagination)
+        $publishedDocs = (clone $baseQuery)
+            ->where('status', 'published')
+            ->orderBy('document_date', 'desc')
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_published');
+
+        // 3. Draft (dengan pagination)
+        $draftDocs = (clone $baseQuery)
+            ->where('status', 'draft')
+            ->orderBy('document_date', 'desc')
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_draft');
+
+        // Hitung statistik untuk badge
+        $stats = [
+            'total' => Dokumen::count(),
+            'published' => Dokumen::where('status', 'published')->count(),
+            'draft' => Dokumen::where('status', 'draft')->count(),
+        ];
+
+        return view('admin.sk.index', compact(
+            'allDocs', 'publishedDocs', 'draftDocs',
+            'stats', 'currentTab', 'search', 'perPage'
+        ));
     }
 
     /**
@@ -64,7 +86,7 @@ class DokumenController extends Controller
             $fileSize = $this->formatFileSize($file->getSize());
             $fileType = $file->getMimeType();
             $filePath = $file->store('dokumen', 'public');
-            
+
             $validated['file_path'] = $filePath;
             $validated['file_name'] = $fileName;
             $validated['file_size'] = $fileSize;
@@ -73,7 +95,7 @@ class DokumenController extends Controller
 
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
         Dokumen::create($validated);
-        
+
         return redirect()->route('admin.sk.index')->with('success', 'Dokumen berhasil ditambahkan.');
     }
 
@@ -112,12 +134,12 @@ class DokumenController extends Controller
             if ($dokumen->file_path && Storage::disk('public')->exists($dokumen->file_path)) {
                 Storage::disk('public')->delete($dokumen->file_path);
             }
-            
+
             $file = $request->file('file');
             $fileName = $file->getClientOriginalName();
             $fileSize = $this->formatFileSize($file->getSize());
             $fileType = $file->getMimeType();
-            
+
             $validated['file_path'] = $file->store('dokumen', 'public');
             $validated['file_name'] = $fileName;
             $validated['file_size'] = $fileSize;
@@ -126,7 +148,7 @@ class DokumenController extends Controller
 
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
         $dokumen->update($validated);
-        
+
         return redirect()->route('admin.sk.index')->with('success', 'Dokumen berhasil diperbarui.');
     }
 
@@ -139,9 +161,9 @@ class DokumenController extends Controller
         if ($dokumen->file_path && Storage::disk('public')->exists($dokumen->file_path)) {
             Storage::disk('public')->delete($dokumen->file_path);
         }
-        
+
         $dokumen->delete();
-        
+
         return redirect()->route('admin.sk.index')->with('success', 'Dokumen berhasil dihapus.');
     }
 
