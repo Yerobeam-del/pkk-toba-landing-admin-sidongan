@@ -5,37 +5,41 @@
 
 {{-- CSS untuk Responsive Mobile --}}
 <style>
-    @media (max-width: 768px) {
-        /* Memaksa toolbar search & per-page menjadi column dan full width */
-        .struktur-toolbar-row {
-            flex-direction: column !important;
-            align-items: stretch !important;
-            width: 100% !important;
-            flex-shrink: 1 !important;
-        }
-
-        /* Memaksa input search menjadi full width */
-        .struktur-search-input {
-            width: 100% !important;
-        }
-
-        /* Memaksa form per-page menyesuaikan lebar */
-        .struktur-form-wrapper {
-            width: auto !important;
-            justify-content: flex-start !important;
-            gap: 0.5rem !important;
-        }
-
-        /* Header adjustments */
-        .struktur-header {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-        }
-        .struktur-header .btn {
-            width: 100% !important;
-            justify-content: center !important;
-        }
+@media (max-width: 768px) {
+    /* Header adjustments */
+    .struktur-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
     }
+    .struktur-header .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* Toolbar: Tampilkan di kanan atas, Search di bawah full width */
+    .struktur-toolbar-row {
+        flex-direction: column !important;
+        align-items: flex-end !important; /* Tampilkan rata kanan */
+        gap: 0.75rem !important;
+    }
+
+    /* Dropdown Tampilkan hanya selebar isinya */
+    .struktur-form-wrapper {
+        width: auto !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Search input memenuhi lebar layar */
+    .struktur-search-input {
+        width: 100% !important;
+    }
+
+    /* Form Search mengambil sisa lebar */
+    .struktur-toolbar-row form:last-child {
+        width: 100% !important;
+        flex-shrink: 1 !important;
+    }
+}
 </style>
 
 <div style="margin-bottom:2rem">
