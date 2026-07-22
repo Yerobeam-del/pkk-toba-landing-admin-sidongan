@@ -9,15 +9,49 @@ class TemplateController extends Controller
 {
     public function index()
     {
-        $query = Template::query();
-        if (request('search')) {
-            $s = request('search');
-            $query->where(fn($q) => $q->where('name', 'like', "%$s%")->orWhere('file_name', 'like', "%$s%"));
-        }
-        if (request('status')) $query->where('status', request('status'));
-        
-        $templates = $query->orderBy('upload_date', 'desc')->orderBy('sort_order')->paginate(20);
-        return view('admin.template.index', compact('templates'));
+        $perPage = request('per_page', 10);
+        $search = request('search', '');
+        $currentTab = request('tab', 'all');
+
+        // Base query dengan pencarian
+        $baseQuery = Template::query()->where(function($q) use ($search) {
+            if ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('file_name', 'like', "%{$search}%");
+            }
+        });
+
+        // 1. Semua Template (dengan pagination)
+        $allTemplates = (clone $baseQuery)
+            ->orderBy('upload_date', 'desc')
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_all');
+
+        // 2. Published (dengan pagination)
+        $publishedTemplates = (clone $baseQuery)
+            ->where('status', 'published')
+            ->orderBy('upload_date', 'desc')
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_published');
+
+        // 3. Draft (dengan pagination)
+        $draftTemplates = (clone $baseQuery)
+            ->where('status', 'draft')
+            ->orderBy('upload_date', 'desc')
+            ->orderBy('sort_order')
+            ->paginate($perPage, ['*'], 'page_draft');
+
+        // Hitung statistik untuk badge
+        $stats = [
+            'total' => Template::count(),
+            'published' => Template::where('status', 'published')->count(),
+            'draft' => Template::where('status', 'draft')->count(),
+        ];
+
+        return view('admin.template.index', compact(
+            'allTemplates', 'publishedTemplates', 'draftTemplates',
+            'stats', 'currentTab', 'search', 'perPage'
+        ));
     }
 
     public function create() { return view('admin.template.create'); }
