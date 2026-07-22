@@ -13,8 +13,48 @@ class BeritaController extends Controller
 {
     public function index()
     {
-        $berita = News::latest()->paginate(10);
-        return view('admin.berita.index', compact('berita'));
+        $perPage = request('per_page', 10);
+        $search = request('search', '');
+        $currentTab = request('tab', 'all');
+
+        // Base query dengan pencarian (judul, ringkasan, atau kategori)
+        $baseQuery = News::query()->where(function($q) use ($search) {
+            if ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhere('excerpt', 'like', "%{$search}%")
+                ->orWhere('category', 'like', "%{$search}%");
+            }
+        });
+
+        // 1. Semua Berita (dengan pagination)
+        $allNews = (clone $baseQuery)
+            ->orderBy('is_published', 'desc')
+            ->latest('created_at')
+            ->paginate($perPage, ['*'], 'page_all');
+
+        // 2. Berita Dipublikasi (dengan pagination)
+        $publishedNews = (clone $baseQuery)
+            ->where('is_published', true)
+            ->latest('published_at')
+            ->paginate($perPage, ['*'], 'page_published');
+
+        // 3. Berita Draft (dengan pagination)
+        $draftNews = (clone $baseQuery)
+            ->where('is_published', false)
+            ->latest('created_at')
+            ->paginate($perPage, ['*'], 'page_draft');
+
+        // Hitung statistik untuk badge
+        $stats = [
+            'total' => News::count(),
+            'published' => News::where('is_published', true)->count(),
+            'draft' => News::where('is_published', false)->count(),
+        ];
+
+        return view('admin.berita.index', compact(
+            'allNews', 'publishedNews', 'draftNews',
+            'stats', 'currentTab', 'search', 'perPage'
+        ));
     }
 
     public function create()
@@ -37,7 +77,7 @@ class BeritaController extends Controller
         // Menambahkan timestamp untuk menjamin unik
         $slug = Str::slug($validated['title']) . '-' . time() . '-' . rand(1000, 9999);
         $validated['slug'] = $slug;
-        
+
         $validated['is_published'] = $request->boolean('is_published');
 
         // Handle published_at
@@ -52,7 +92,7 @@ class BeritaController extends Controller
         }
 
         News::create($validated);
-        
+
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil ditambahkan.');
     }
 
@@ -64,19 +104,19 @@ class BeritaController extends Controller
         $slug = Str::slug($title);
         $originalSlug = $slug;
         $counter = 1;
-        
+
         // ✅ Gunakan 'News::class' atau 'News' saja, JANGAN '\App\Models\News'
         while (News::where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $counter;
             $counter++;
-            
+
             // Safety break
             if ($counter > 100) {
                 $slug = $originalSlug . '-' . uniqid();
                 break;
             }
         }
-        
+
         return $slug;
     }
 
@@ -88,19 +128,19 @@ class BeritaController extends Controller
         $slug = Str::slug($title);
         $originalSlug = $slug;
         $counter = 1;
-        
+
         while (News::where('slug', $slug)
                ->where('id', '!=', $excludeId)
                ->exists()) {
             $slug = $originalSlug . '-' . $counter;
             $counter++;
-            
+
             if ($counter > 100) {
                 $slug = $originalSlug . '-' . uniqid();
                 break;
             }
         }
-        
+
         return $slug;
     }
 
@@ -125,19 +165,19 @@ class BeritaController extends Controller
         $slug = Str::slug($validated['title']);
         $originalSlug = $slug;
         $counter = 1;
-        
+
         while (\App\Models\News::where('slug', $slug)
             ->where('id', '!=', $beritum->id)  // Exclude berita yang sedang diedit
             ->exists()) {
             $slug = $originalSlug . '-' . $counter;
             $counter++;
-            
+
             if ($counter > 1000) {
                 $slug = $originalSlug . '-' . time();
                 break;
             }
         }
-        
+
         $validated['slug'] = $slug;
         $validated['is_published'] = $request->boolean('is_published');
 
@@ -156,7 +196,7 @@ class BeritaController extends Controller
         }
 
         $beritum->update($validated);
-        
+
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diperbarui.');
     }
 
@@ -166,7 +206,7 @@ class BeritaController extends Controller
             Storage::disk('public')->delete($beritum->image_path);
         }
         $beritum->delete();
-        
+
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus.');
     }
 }
