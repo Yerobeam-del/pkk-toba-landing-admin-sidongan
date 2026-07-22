@@ -18,41 +18,65 @@ class SidonganDataController extends Controller
      */
     public function index(Request $request)
     {
-        // Query dasar
-        $query = Document::with(['category', 'creator']);
-        
-        // Filter status
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        
-        // Filter kategori
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
-        }
-        
-        // Filter pencarian
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('subject', 'LIKE', "%{$search}%")
-                  ->orWhere('agenda_number', 'LIKE', "%{$search}%")
-                  ->orWhere('document_number', 'LIKE', "%{$search}%")
-                  ->orWhere('sender', 'LIKE', "%{$search}%");
+        $perPage = request('per_page', 10);
+        $search = request('search', '');
+        $currentTab = request('tab', 'all');
+
+        // Query dasar dengan semua filter (kecuali status)
+        $baseQuery = Document::with(['category', 'creator'])
+            ->when($search, function($q) use ($search) {
+                $q->where(function($q2) use ($search) {
+                    $q2->where('subject', 'LIKE', "%{$search}%")
+                    ->orWhere('agenda_number', 'LIKE', "%{$search}%")
+                    ->orWhere('document_number', 'LIKE', "%{$search}%")
+                    ->orWhere('sender', 'LIKE', "%{$search}%");
+                });
+            })
+            ->when(request('category_id'), function($q) {
+                $q->where('category_id', request('category_id'));
+            })
+            ->when(request('date_from'), function($q) {
+                $q->whereDate('document_date', '>=', request('date_from'));
+            })
+            ->when(request('date_to'), function($q) {
+                $q->whereDate('document_date', '<=', request('date_to'));
             });
-        }
-        
-        // Filter tanggal
-        if ($request->filled('date_from')) {
-            $query->whereDate('document_date', '>=', $request->date_from);
-        }
-        if ($request->filled('date_to')) {
-            $query->whereDate('document_date', '<=', $request->date_to);
-        }
-        
-        // Pagination
-        $documents = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
-        
+
+        // 1. Semua Surat
+        $allDocs = (clone $baseQuery)
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page_all');
+
+        // 2. Menunggu Disposisi
+        $menungguDisposisiDocs = (clone $baseQuery)
+            ->where('status', 'menunggu_disposisi')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page_menunggu_disposisi');
+
+        // 3. Berjalan
+        $berjalanDocs = (clone $baseQuery)
+            ->where('status', 'berjalan')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page_berjalan');
+
+        // 4. Menunggu Verifikasi
+        $menungguVerifikasiDocs = (clone $baseQuery)
+            ->where('status', 'menunggu_verifikasi')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page_menunggu_verifikasi');
+
+        // 5. Selesai
+        $selesaiDocs = (clone $baseQuery)
+            ->where('status', 'selesai')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page_selesai');
+
+        // 6. Diarsipkan
+        $diarsipkanDocs = (clone $baseQuery)
+            ->where('status', 'diarsipkan')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page_diarsipkan');
+
         // Stats
         $stats = [
             'total' => Document::count(),
@@ -64,7 +88,7 @@ class SidonganDataController extends Controller
             'total_laporan' => ActivityReport::count(),
             'total_notifikasi' => Notification::count(),
         ];
-        
+
         // Ukuran storage
         $storageUsed = 0;
         $documentsForSize = Document::whereNotNull('file_path')->get();
@@ -75,12 +99,16 @@ class SidonganDataController extends Controller
         }
         $stats['storage_used'] = $this->formatBytes($storageUsed);
         $stats['storage_bytes'] = $storageUsed;
-        
+
         $categories = DocumentCategory::orderBy('name')->get();
-        
-        return view('admin.sidongan-data.index', compact('documents', 'stats', 'categories'));
+
+        return view('admin.sidongan-data.index', compact(
+            'allDocs', 'menungguDisposisiDocs', 'berjalanDocs',
+            'menungguVerifikasiDocs', 'selesaiDocs', 'diarsipkanDocs',
+            'stats', 'categories', 'currentTab', 'search', 'perPage'
+        ));
     }
-    
+
     /**
      * Proses pembersihan data
      */
@@ -91,14 +119,14 @@ class SidonganDataController extends Controller
             'days' => 'nullable|integer|min:1',
             'confirm' => 'required|accepted',
         ]);
-        
+
         $action = $request->action;
         $deletedCount = 0;
         $deletedFiles = 0;
         $message = '';
-        
+
         DB::beginTransaction();
-        
+
         try {
             switch ($action) {
                 case 'delete_archived':
@@ -116,7 +144,7 @@ class SidonganDataController extends Controller
                     }
                     $message = "{$deletedCount} surat arsip berhasil dihapus ({$deletedFiles} file dihapus dari storage).";
                     break;
-                    
+
                 case 'delete_completed':
                     // Hapus semua surat yang sudah selesai
                     $docs = Document::where('status', 'selesai')->get();
@@ -131,16 +159,16 @@ class SidonganDataController extends Controller
                     }
                     $message = "{$deletedCount} surat selesai berhasil dihapus ({$deletedFiles} file dihapus dari storage).";
                     break;
-                    
+
                 case 'delete_old':
                     // Hapus surat berdasarkan umur (hari)
                     $days = $request->days ?? 365;
                     $cutoffDate = now()->subDays($days);
-                    
+
                     $docs = Document::where('created_at', '<', $cutoffDate)
                         ->whereIn('status', ['selesai', 'diarsipkan'])
                         ->get();
-                    
+
                     foreach ($docs as $doc) {
                         if ($doc->file_path && Storage::disk('public')->exists($doc->file_path)) {
                             Storage::disk('public')->delete($doc->file_path);
@@ -152,11 +180,11 @@ class SidonganDataController extends Controller
                     }
                     $message = "{$deletedCount} surat lama (>{$days} hari) berhasil dihapus ({$deletedFiles} file dihapus dari storage).";
                     break;
-                    
+
                 case 'delete_all_reports':
                     // Hapus semua activity reports
                     $deletedCount = ActivityReport::count();
-                    
+
                     // Hapus file foto laporan
                     $reports = ActivityReport::all();
                     foreach ($reports as $report) {
@@ -172,11 +200,11 @@ class SidonganDataController extends Controller
                             }
                         }
                     }
-                    
+
                     ActivityReport::query()->delete(); // GANTI DARI truncate()
                     $message = "{$deletedCount} laporan kegiatan berhasil dihapus ({$deletedFiles} file foto dihapus).";
                     break;
-                    
+
                 case 'delete_all_notifications':
                     // Hapus semua notifikasi
                     $deletedCount = Notification::count();
@@ -184,12 +212,12 @@ class SidonganDataController extends Controller
                     $message = "{$deletedCount} notifikasi berhasil dihapus.";
                     break;
             }
-            
+
             DB::commit();
-            
+
             return redirect()->route('admin.sidongan-data.index')
                 ->with('success', $message);
-                
+
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('admin.sidongan-data.index')
@@ -204,18 +232,18 @@ class SidonganDataController extends Controller
     {
         // Load document dengan relasi yang benar
         $document->load(['category', 'creator', 'activityReports.creator']);
-        
+
         // Ambil semua notifikasi terkait
         $notifications = Notification::where('related_id', $document->id)
             ->where('related_type', Document::class)
             ->orderBy('created_at', 'desc')
             ->get();
-        
+
         // Stats untuk laporan
         $stats = [
             'total_laporan' => ActivityReport::where('document_id', $document->id)->count(),
         ];
-        
+
         return view('admin.sidongan-data.show', compact('document', 'notifications', 'stats'));
     }
 
@@ -227,7 +255,7 @@ class SidonganDataController extends Controller
         try {
             $report = ActivityReport::findOrFail($reportId);
             $documentId = $report->document_id;
-            
+
             // Hapus file foto
             if ($report->fotos) {
                 $fotos = json_decode($report->fotos, true);
@@ -239,18 +267,18 @@ class SidonganDataController extends Controller
                     }
                 }
             }
-            
+
             $report->delete();
-            
+
             return redirect()->back()
                 ->with('success', 'Laporan kegiatan berhasil dihapus.');
-                
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Gagal menghapus laporan: ' . $e->getMessage());
         }
     }
-    
+
     /**
      * Hapus satu surat tertentu
      */
@@ -261,27 +289,27 @@ class SidonganDataController extends Controller
             if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
                 Storage::disk('public')->delete($document->file_path);
             }
-            
+
             // Hapus activity reports terkait
             ActivityReport::where('document_id', $document->id)->delete();
-            
+
             // Hapus notifikasi terkait
             Notification::where('related_id', $document->id)
                 ->where('related_type', Document::class)
                 ->delete();
-            
+
             // Hapus dokumen
             $document->delete();
-            
+
             return redirect()->route('admin.sidongan-data.index')
                 ->with('success', 'Surat berhasil dihapus permanen.');
-                
+
         } catch (\Exception $e) {
             return redirect()->route('admin.sidongan-data.index')
                 ->with('error', 'Gagal menghapus surat: ' . $e->getMessage());
         }
     }
-    
+
     /**
      * Format bytes ke ukuran yang mudah dibaca
      */
