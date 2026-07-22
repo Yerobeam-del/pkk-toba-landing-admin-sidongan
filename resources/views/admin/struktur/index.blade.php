@@ -21,8 +21,9 @@
 
         /* Memaksa form per-page menyesuaikan lebar */
         .struktur-form-wrapper {
-            width: 100% !important;
-            justify-content: space-between !important;
+            width: auto !important;
+            justify-content: flex-start !important;
+            gap: 0.5rem !important;
         }
 
         /* Header adjustments */
