@@ -43,7 +43,7 @@
                     <div class="capacity-card-subtitle">Maksimal {{ $maxSliders }} gambar dapat diupload</div>
                 </div>
             </div>
-            
+
             <div class="capacity-counter">
                 <div class="counter-number {{ $totalSliders >= $maxSliders ? 'text-danger' : 'text-primary' }}">
                     {{ $totalSliders }}<span style="font-size:1rem;color:var(--text-muted);font-weight:500">/{{ $maxSliders }}</span>
@@ -57,7 +57,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="slider-progress-bar">
             @php
                 $percentage = ($totalSliders / $maxSliders) * 100;
@@ -78,10 +78,10 @@
             <h3 class="add-slide-title">Tambah Slide Baru</h3>
         </div>
         <p class="add-slide-description">Upload gambar background untuk slider beranda. Teks konten tetap menggunakan desain yang sudah ada.</p>
-        
+
         <form action="{{ route('admin.hero-sliders.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            
+
             <div class="form-group">
                 <label class="form-label">Gambar Background <span class="required">*</span></label>
                 <input type="file" name="image" class="form-control" accept="image/*" required>
@@ -137,8 +137,8 @@
 
     {{-- Daftar Slide --}}
     <div class="slider-list-card">
-        <div class="slider-list-header">
-            <div class="slider-list-title">
+        <div class="slider-list-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+            <div class="slider-list-title" style="display:flex;align-items:center;gap:0.75rem">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2">
                     <line x1="8" y1="6" x2="21" y2="6"/>
                     <line x1="8" y1="12" x2="21" y2="12"/>
@@ -147,21 +147,37 @@
                     <line x1="3" y1="12" x2="3.01" y2="12"/>
                     <line x1="3" y1="18" x2="3.01" y2="18"/>
                 </svg>
-                <h3>Daftar Slide</h3>
+                <h3 style="margin:0">Daftar Slide</h3>
             </div>
-            <div class="slider-list-hints">
-                <small class="desktop-only">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="8" y1="6" x2="21" y2="6"/>
-                        <line x1="8" y1="12" x2="21" y2="12"/>
-                        <line x1="8" y1="18" x2="21" y2="18"/>
-                    </svg>
-                    Drag & drop untuk mengurutkan
-                </small>
-                <small class="text-primary">• Slide baru otomatis di urutan terakhir</small>
+            <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+                <div class="slider-list-hints">
+                    <small class="desktop-only">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"/>
+                            <line x1="8" y1="12" x2="21" y2="12"/>
+                            <line x1="8" y1="18" x2="21" y2="18"/>
+                        </svg>
+                        Drag & drop untuk mengurutkan
+                    </small>
+                    <small class="text-primary">• Slide baru otomatis di urutan terakhir</small>
+                </div>
+                {{-- Dropdown Tampilkan --}}
+                <form method="GET" action="{{ route('admin.hero-sliders.index') }}" style="display:flex;align-items:center;gap:0.5rem">
+                    <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
+                    <div style="position:relative">
+                        <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+                            @for($i = 5; $i <= 10; $i++)
+                                <option value="{{ $i }}" {{ $perPage == $i ? 'selected' : '' }}>{{ $i }}</option>
+                            @endfor
+                        </select>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </form>
             </div>
         </div>
-        
+
         <div id="slidersList">
             @forelse($sliders as $slider)
             <div class="slider-item" data-id="{{ $slider->id }}" draggable="true">
@@ -220,7 +236,7 @@
             </div>
             @endforelse
         </div>
-        
+
         {{-- PAGINATION --}}
         @if($sliders->hasPages())
         <div class="pagination-wrapper">
@@ -240,7 +256,7 @@
                 @php
                     $currentPage = $sliders->currentPage();
                     $lastPage = $sliders->lastPage();
-                    
+
                     if ($lastPage <= 5) {
                         $pages = range(1, $lastPage);
                     } else {
@@ -253,7 +269,7 @@
                         }
                     }
                 @endphp
-                
+
                 @foreach($pages as $page)
                     @if($page === '...')
                         <span style="padding: 0.5rem 0.25rem; color: var(--text-muted); font-size: 0.875rem;">...</span>
@@ -276,7 +292,7 @@
                     </button>
                 @endif
             </div>
-            
+
             <div class="pagination-info">
                 Menampilkan <strong>{{ $sliders->firstItem() }}</strong> - <strong>{{ $sliders->lastItem() }}</strong> dari <strong>{{ $totalSliders }}</strong> slide
             </div>
@@ -301,18 +317,18 @@
             @csrf
             @method('PUT')
             <input type="hidden" id="editId" name="id">
-            
+
             <div>
                 <label class="form-label">Gambar (kosongkan jika tidak diubah)</label>
                 <input type="file" name="image" class="form-control" accept="image/*">
                 <img id="editImagePreview" src="" style="max-width:100%;max-height:200px;margin-top:0.75rem;border-radius:10px;display:none;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
             </div>
-            
+
             <div>
                 <label class="form-label">Durasi Tampil (detik)</label>
                 <input type="number" name="display_duration" id="editDuration" class="form-control" min="3" max="30">
             </div>
-            
+
             <div>
                 <label class="checkbox-wrapper">
                     <input type="checkbox" name="is_active" id="editActive" value="1" style="display:none">
@@ -324,7 +340,7 @@
                     <span class="checkbox-label">Aktif</span>
                 </label>
             </div>
-            
+
             <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem;padding-top:1rem;border-top:1px solid #f1f5f9">
                 <button type="button" onclick="closeEditModal()" class="btn" style="background:#f1f5f9;color:#475569">Batal</button>
                 <button type="submit" class="btn btn-primary">
@@ -378,11 +394,11 @@ function moveSlideUp(id) {
     const slidersList = document.getElementById('slidersList');
     const items = [...slidersList.querySelectorAll('.slider-item')];
     const currentIndex = items.findIndex(item => item.dataset.id == id);
-    
+
     if (currentIndex > 0) {
         const currentItem = items[currentIndex];
         const prevItem = items[currentIndex - 1];
-        
+
         slidersList.insertBefore(currentItem, prevItem);
         updateOrder();
         refreshMobileReorderButtons();
@@ -393,11 +409,11 @@ function moveSlideDown(id) {
     const slidersList = document.getElementById('slidersList');
     const items = [...slidersList.querySelectorAll('.slider-item')];
     const currentIndex = items.findIndex(item => item.dataset.id == id);
-    
+
     if (currentIndex < items.length - 1) {
         const currentItem = items[currentIndex];
         const nextItem = items[currentIndex + 1];
-        
+
         slidersList.insertBefore(nextItem, currentItem);
         updateOrder();
         refreshMobileReorderButtons();
@@ -407,7 +423,7 @@ function moveSlideDown(id) {
 function refreshMobileReorderButtons() {
     const slidersList = document.getElementById('slidersList');
     const items = slidersList.querySelectorAll('.slider-item');
-    
+
     items.forEach((item, index) => {
         const mobileReorder = item.querySelector('.mobile-reorder');
         if (mobileReorder) {
@@ -424,23 +440,23 @@ function refreshMobileReorderButtons() {
 function editSlider(id) {
     const item = document.querySelector(`.slider-item[data-id="${id}"]`);
     if (!item) return;
-    
+
     const form = document.getElementById('editForm');
     form.action = `/admin/hero-sliders/${id}`;
-    
+
     document.getElementById('editId').value = id;
-    
+
     const infoText = item.querySelector('.slider-meta').parentElement.textContent;
     document.getElementById('editDuration').value = infoText.match(/(\d+)s/)?.[1] || '5';
-    
+
     const isActive = infoText.includes('Aktif') && !infoText.includes('Nonaktif');
     document.getElementById('editActive').checked = isActive;
     updateCheckboxStyle('editActiveBox', 'editActiveCheck', isActive);
-    
+
     const preview = document.getElementById('editImagePreview');
     preview.src = item.querySelector('img').src;
     preview.style.display = 'block';
-    
+
     document.getElementById('editModal').style.display = 'flex';
 }
 
@@ -456,7 +472,7 @@ function updateCheckboxStyle(boxId, checkId, isChecked) {
     const box = document.getElementById(boxId);
     const check = document.getElementById(checkId);
     if (!box || !check) return;
-    
+
     if (isChecked) {
         box.classList.add('checked');
     } else {
@@ -475,18 +491,18 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCheckboxStyle('isActiveBox', 'isActiveCheck', this.checked);
         });
     }
-    
+
     const editActiveCheckbox = document.getElementById('editActive');
     if (editActiveCheckbox) {
         editActiveCheckbox.addEventListener('change', function() {
             updateCheckboxStyle('editActiveBox', 'editActiveCheck', this.checked);
         });
     }
-    
+
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeEditModal();
     });
-    
+
     addMobileReorderButtons();
     initDragAndDrop();
 });
@@ -494,10 +510,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function addMobileReorderButtons() {
     const slidersList = document.getElementById('slidersList');
     const items = slidersList.querySelectorAll('.slider-item');
-    
+
     items.forEach((item, index) => {
         if (item.querySelector('.mobile-reorder')) return;
-        
+
         const actionsDiv = item.querySelector('.slider-actions');
         const mobileReorder = document.createElement('div');
         mobileReorder.className = 'mobile-reorder';
@@ -509,7 +525,7 @@ function addMobileReorderButtons() {
                 Geser ke Bawah
             </button>
         `;
-        
+
         actionsDiv.after(mobileReorder);
     });
 }
@@ -521,15 +537,15 @@ let draggedItem = null;
 
 function initDragAndDrop() {
     if (window.innerWidth <= 768) return;
-    
+
     const slidersList = document.getElementById('slidersList');
     if (!slidersList) return;
-    
+
     const items = slidersList.querySelectorAll('.slider-item');
-    
+
     items.forEach(item => {
         item.setAttribute('draggable', 'true');
-        
+
         item.addEventListener('dragstart', function(e) {
             draggedItem = this;
             setTimeout(() => {
@@ -538,42 +554,42 @@ function initDragAndDrop() {
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', this.dataset.id);
         });
-        
+
         item.addEventListener('dragend', function(e) {
             this.classList.remove('dragging');
             draggedItem = null;
-            
+
             document.querySelectorAll('.slider-item').forEach(el => {
                 el.classList.remove('drag-over');
             });
-            
+
             updateOrder();
         });
-        
+
         item.addEventListener('dragover', function(e) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
-            
+
             if (this === draggedItem) return;
-            
+
             this.classList.add('drag-over');
         });
-        
+
         item.addEventListener('dragleave', function(e) {
             this.classList.remove('drag-over');
         });
-        
+
         item.addEventListener('drop', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             if (this === draggedItem) return;
-            
+
             this.classList.remove('drag-over');
-            
+
             const rect = this.getBoundingClientRect();
             const midpoint = rect.top + rect.height / 2;
-            
+
             if (e.clientY < midpoint) {
                 slidersList.insertBefore(draggedItem, this);
             } else {
@@ -585,16 +601,16 @@ function initDragAndDrop() {
             }
         });
     });
-    
+
     slidersList.addEventListener('dragover', function(e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
     });
-    
+
     slidersList.addEventListener('drop', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         if (draggedItem && e.target === this) {
             this.appendChild(draggedItem);
             updateOrder();
@@ -604,18 +620,18 @@ function initDragAndDrop() {
 
 async function updateOrder() {
     const order = [...document.querySelectorAll('.slider-item')].map(el => el.dataset.id);
-    
+
     try {
-        const response = await fetch('{{ route('admin.hero-sliders.reorder') }}', { 
-            method: 'POST', 
-            headers: { 
-                'Content-Type': 'application/json', 
+        const response = await fetch('{{ route('admin.hero-sliders.reorder') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'Accept': 'application/json'
-            }, 
-            body: JSON.stringify({ order }) 
+            },
+            body: JSON.stringify({ order })
         });
-        
+
         if (response.ok) {
             console.log('✅ Order updated successfully');
         } else {

@@ -19,11 +19,15 @@ class HeroSliderController extends Controller
      */
     public function index()
     {
-        $sliders = HeroSlider::orderBy('sort_order')->paginate(5); // Pagination 5 item per halaman
+        // Ambil per_page dari request (default 5, max 10)
+        $perPage = request('per_page', 5);
+        $perPage = max(5, min((int)$perPage, self::MAX_SLIDERS));
+
+        $sliders = HeroSlider::orderBy('sort_order')->paginate($perPage);
         $totalSliders = HeroSlider::count();
         $maxSliders = self::MAX_SLIDERS;
-        
-        return view('admin.hero-sliders.index', compact('sliders', 'totalSliders', 'maxSliders'));
+
+        return view('admin.hero-sliders.index', compact('sliders', 'totalSliders', 'maxSliders', 'perPage'));
     }
 
     /**
@@ -101,7 +105,7 @@ class HeroSliderController extends Controller
         if ($heroSlider->image_path && Storage::disk('public')->exists($heroSlider->image_path)) {
             Storage::disk('public')->delete($heroSlider->image_path);
         }
-        
+
         $heroSlider->delete();
 
         return redirect()->route('admin.hero-sliders.index')
