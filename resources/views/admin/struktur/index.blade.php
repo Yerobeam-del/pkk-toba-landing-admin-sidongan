@@ -16,28 +16,34 @@
         justify-content: center !important;
     }
 
-    /* Toolbar: Tampilkan di kanan atas, Search di bawah full width */
+    /* Toolbar container - stack vertical on mobile */
     .struktur-toolbar-row {
         flex-direction: column !important;
-        align-items: flex-end !important; /* Tampilkan rata kanan */
+        align-items: stretch !important;
         gap: 0.75rem !important;
+        width: 100% !important;
     }
 
-    /* Dropdown Tampilkan hanya selebar isinya */
+    /* Dropdown Tampilkan - wrap in its own container */
+    .struktur-perpage-wrapper {
+        display: flex;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
     .struktur-form-wrapper {
         width: auto !important;
         flex-shrink: 0 !important;
     }
 
-    /* Search input memenuhi lebar layar */
-    .struktur-search-input {
-        width: 100% !important;
-    }
-
-    /* Form Search mengambil sisa lebar */
-    .struktur-toolbar-row form:last-child {
+    /* Search input full width */
+    .struktur-search-wrapper {
         width: 100% !important;
         flex-shrink: 1 !important;
+    }
+
+    .struktur-search-input {
+        width: 100% !important;
     }
 }
 </style>
@@ -92,45 +98,48 @@
             @endforeach
         </div>
 
-        {{-- Search Form & Per Page (Ditambahkan class struktur-toolbar-row) --}}
+        {{-- Search Form & Per Page --}}
         <div class="struktur-toolbar-row" style="flex-shrink:0;display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">
             {{-- Per Page Dropdown --}}
-            <form method="GET" action="{{ route('admin.struktur.index') }}" class="struktur-form-wrapper" style="display:flex;align-items:center;gap:0.5rem">
-                <input type="hidden" name="tab" value="{{ $currentTab }}">
-                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-                <div style="position:relative">
-                    <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
-                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
-                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
-                        <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
-                    </select>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
-                        <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                </div>
-            </form>
+            <div class="struktur-perpage-wrapper" style="display:flex;justify-content:flex-end">
+                <form method="GET" action="{{ route('admin.struktur.index') }}" class="struktur-form-wrapper" style="display:flex;align-items:center;gap:0.5rem">
+                    <input type="hidden" name="tab" value="{{ $currentTab }}">
+                    <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
+                    <div style="position:relative">
+                        <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+                            <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                            <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                            <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                            <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
+                        </select>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </form>
+            </div>
 
             {{-- Search Form --}}
-            <form method="GET" action="{{ route('admin.struktur.index') }}" style="flex-shrink:0;flex:1">
-                <input type="hidden" name="tab" value="{{ $currentTab }}">
-                <div style="position:relative">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
-                        <circle cx="11" cy="11" r="8"/>
-                        <path d="m21 21-4.35-4.35"/>
-                    </svg>
-                    {{-- Ditambahkan class struktur-search-input --}}
-                    <input type="text" name="search" value="{{ request('search') }}" class="struktur-search-input" placeholder="Cari nama atau jabatan..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;width:250px;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-                    @if(request('search'))
-                        <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"/>
-                                <line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                        </a>
-                    @endif
-                </div>
-            </form>
+            <div class="struktur-search-wrapper" style="flex:1;min-width:0">
+                <form method="GET" action="{{ route('admin.struktur.index') }}">
+                    <input type="hidden" name="tab" value="{{ $currentTab }}">
+                    <div style="position:relative">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" name="search" value="{{ request('search') }}" class="struktur-search-input" placeholder="Cari nama atau jabatan..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;width:250px;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+                        @if(request('search'))
+                            <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </a>
+                        @endif
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
