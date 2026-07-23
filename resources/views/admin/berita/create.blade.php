@@ -4,6 +4,30 @@
 
 @section('content')
 <style>
+/* Paksa border halus untuk semua input/select/textarea biasa */
+.form-control {
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    border-radius: 8px !important;
+    transition: all 0.2s;
+}
+
+.form-control:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(20,184,166,0.1) !important;
+}
+
+/* Perhalus border CKEditor (Penyebab Utama Border Tebal) */
+.ck.ck-editor__main > .ck-editor__editable {
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    border-radius: 8px !important;
+    transition: all 0.2s;
+}
+
+.ck.ck-editor__main > .ck-editor__editable.ck-focused {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(20,184,166,0.1) !important;
+}
+
 /* Responsive untuk Mobile */
 @media (max-width: 768px) {
     .berita-header {
@@ -11,20 +35,20 @@
         align-items: flex-start !important;
         gap: 1rem !important;
     }
-    
+
     .berita-header h1 {
         font-size: 1.25rem !important;
     }
-    
+
     .berita-header .btn {
         width: 100% !important;
         justify-content: center !important;
     }
-    
+
     .form-grid-2 {
         grid-template-columns: 1fr !important;
     }
-    
+
     .ck-editor__editable {
         min-height: 300px !important;
     }
@@ -44,7 +68,7 @@
 <div class="card">
     <form action="{{ route('admin.berita.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        
+
         {{-- Judul --}}
         <div style="margin-bottom:1.5rem">
             <label style="font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem">Judul Berita *</label>
@@ -68,17 +92,17 @@
         {{-- Excerpt dengan Character Counter --}}
         <div style="margin-bottom:1.5rem">
             <label style="font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem">Ringkasan (Excerpt) *</label>
-            
-            <textarea 
-                name="excerpt" 
-                id="excerptInput" 
-                class="form-control" 
-                rows="3" 
-                maxlength="160" 
-                required 
+
+            <textarea
+                name="excerpt"
+                id="excerptInput"
+                class="form-control"
+                rows="3"
+                maxlength="160"
+                required
                 placeholder="Ringkasan singkat yang akan muncul di listing berita"
             >{{ old('excerpt') }}</textarea>
-            
+
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.4rem;">
                 <small style="color:var(--text-muted); font-size:0.8rem">Maksimal 160 karakter untuk preview optimal</small>
                 <span id="excerptCounter" style="font-size:0.8rem; font-weight:600; color:var(--text-muted); transition: color 0.2s;">0/160</span>
@@ -98,12 +122,12 @@
         <div style="margin-bottom:1.5rem">
             <label style="font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem">Gambar Berita</label>
             <input type="file" name="image" class="form-control" accept="image/*" id="imageInput">
-            
+
             <div id="imagePreview" style="margin-top:1rem;display:none">
                 <img id="previewImg" src="" style="width:100%;max-width:400px;height:auto;border-radius:12px;object-fit:cover;background:#f8fafc">
                 <span style="display:block;font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem">Preview Gambar</span>
             </div>
-            
+
             <small style="color:var(--text-muted);display:block;margin-top:0.4rem;font-size:0.8rem">
                 Format: JPG/PNG/WebP, maksimal 2MB. Ukuran direkomendasikan: 1200x630px
             </small>
@@ -138,7 +162,7 @@
             </button>
         </div>
     </form>
-    
+
     {{-- Validation Errors --}}
     @if($errors->any())
     <div style="margin-top:1.5rem;padding:1rem;background:#fef2f2;border-radius:10px;color:#991b1b">
@@ -177,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'blockQuote', '|',
                 'undo', 'redo'
             ],
-            
+
             heading: {
                 options: [
                     { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -186,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
                 ]
             },
-            
+
             alignment: alignmentConfig,
             height: 500,
             allowedContent: true
@@ -205,9 +229,9 @@ document.addEventListener('DOMContentLoaded', function() {
 function updateCheckboxStyle(boxId, checkId, isChecked) {
     const box = document.getElementById(boxId);
     const check = document.getElementById(checkId);
-    
+
     if (!box || !check) return;
-    
+
     if (isChecked) {
         box.style.background = 'linear-gradient(135deg, #14b8a6, #0d9488)';
         box.style.borderColor = '#14b8a6';
@@ -228,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const isPublishedCheckbox = document.getElementById('isPublished');
     if (isPublishedCheckbox) {
         updateCheckboxStyle('isPublishedBox', 'isPublishedCheck', isPublishedCheckbox.checked);
-        
+
         isPublishedCheckbox.addEventListener('change', function() {
             updateCheckboxStyle('isPublishedBox', 'isPublishedCheck', this.checked);
         });
@@ -267,7 +291,7 @@ document.getElementById('imageInput')?.addEventListener('change', function(e) {
             e.target.value = '';
             return;
         }
-        
+
         const reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById('previewImg').src = e.target.result;
