@@ -15,21 +15,29 @@
         @endif
 
         {{-- Pagination Elements --}}
-        @foreach ($elements as $element)
-            {{-- "Three Dots" Separator --}}
-            @if (is_string($element))
-                <span style="padding:0.5rem 0.25rem;color:var(--text-muted);font-size:0.875rem">{{ $element }}</span>
-            @endif
+        @php
+            $currentPage = $paginator->currentPage();
+            $lastPage = $paginator->lastPage();
+            if ($lastPage <= 5) {
+                $pages = range(1, $lastPage);
+            } else {
+                if ($currentPage <= 3) {
+                    $pages = [1, 2, 3, 4, '...', $lastPage];
+                } elseif ($currentPage >= $lastPage - 2) {
+                    $pages = [1, '...', $lastPage - 3, $lastPage - 2, $lastPage - 1, $lastPage];
+                } else {
+                    $pages = [1, '...', $currentPage - 1, $currentPage, $currentPage + 1, '...', $lastPage];
+                }
+            }
+        @endphp
 
-            {{-- Array Of Links --}}
-            @if (is_array($element))
-                @foreach ($element as $page => $url)
-                    @if ($page == $paginator->currentPage())
-                        <button class="pagination-btn active" aria-current="page">{{ $page }}</button>
-                    @else
-                        <a href="{{ $url }}" class="pagination-btn">{{ $page }}</a>
-                    @endif
-                @endforeach
+        @foreach($pages as $page)
+            @if($page === '...')
+                <span style="padding: 0.5rem 0.25rem; color: var(--text-muted); font-size: 0.875rem;">...</span>
+            @elseif($page == $currentPage)
+                <button class="pagination-btn active" aria-current="page">{{ $page }}</button>
+            @else
+                <a href="{{ $paginator->url($page) }}" class="pagination-btn">{{ $page }}</a>
             @endif
         @endforeach
 
