@@ -515,7 +515,8 @@
                         <span class="nav-text">Manajemen Akun</span>
                     </a>
 
-                    {{-- Data SIDONGAN --}}
+                    {{-- Data SIDONGAN (Hanya untuk Super Admin) --}}
+                    @if(auth()->user()->hasRole('super_admin'))
                     <a href="{{ route('admin.sidongan-data.index') }}" class="nav-item {{ request()->routeIs('admin.sidongan-data.*') ? 'active' : '' }}">
                         <div class="nav-icon-box">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -526,6 +527,7 @@
                         </div>
                         <span class="nav-text">Data SIDONGAN</span>
                     </a>
+                    @endif
                 </div>
                 @endif
             </nav>
