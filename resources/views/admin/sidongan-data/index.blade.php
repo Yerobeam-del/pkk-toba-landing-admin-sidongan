@@ -13,8 +13,25 @@
     .tabs-container::-webkit-scrollbar { height: 4px; }
     .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
     .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+
+    /* Collapse filter grid ke 1 kolom di mobile */
+    .filter-form > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+
     .filter-form { flex-direction: column !important; }
     .filter-form > div, .filter-form select, .filter-form input { width: 100% !important; min-width: 100% !important; }
+
+    /* Button container di filter full width */
+    .filter-form button, .filter-form a[style*="padding"] {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* Cleanup grid collapse */
+    .cleanup-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 </style>
 
@@ -201,7 +218,7 @@
         Pembersihan Data
     </h3>
     <p style="color:var(--text-muted);margin:0 0 1.5rem 0;font-size:0.9rem">Hapus data yang tidak diperlukan untuk mengoptimalkan sistem</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem">
+    <div class="cleanup-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem">
         <form method="POST" action="{{ route('admin.sidongan-data.cleanup') }}" class="cleanup-form" data-title="Hapus Semua Surat Arsip" data-message="Semua surat yang sudah diarsipkan akan dihapus permanen beserta file-nya. Tindakan ini tidak dapat dibatalkan!">
             @csrf
             <input type="hidden" name="action" value="delete_archived">
