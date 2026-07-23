@@ -2,188 +2,264 @@
 @section('title', 'Tentang Kami')
 
 @section('content')
-{{-- Hero Section --}}
-<section style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #fff; padding: 4rem 0 3rem; position: relative; overflow: hidden">
-    <div style="position: absolute; inset: 0; opacity: 0.05; background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px"></div>
+<style>
+    /* Base Styles */
+    .tentang-section {
+        padding: 4rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1">
-        <h1 style="font-size: 2.5rem; font-weight: 800; margin: 0 0 1rem 0; text-align: center">Visi, Misi, & Motto</h1>
-        <p style="font-size: 1.1rem; margin: 0 0 1.5rem 0; opacity: 0.9; text-align: center">
-            Motto: Tampakna do Rantosna, Rimni Tahi do Gogona - (Kebersamaan mencerminkan Kekuatan)
-        </p>
+    .tentang-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: start;
+    }
 
-        {{-- Breadcrumb --}}
-        <nav style="display: flex; gap: 0.5rem; justify-content: center; align-items: center; font-size: 0.9rem">
-            <a href="/" style="color: rgba(255,255,255,0.8); text-decoration: none">Beranda</a>
-            <span style="color: rgba(255,255,255,0.6)">/</span>
-            <span style="color: #fbbf24; font-weight: 600">Tentang</span>
-        </nav>
-    </div>
-</section>
+    .tentang-content h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 1.5rem;
+        line-height: 1.3;
+    }
 
-{{-- Content Section --}}
-<section style="padding: 4rem 0; background: #fff">
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start">
+    .tentang-content p {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+    }
 
-            {{-- Left Content --}}
-            <div>
-                <h2 style="font-size: 2rem; font-weight: 800; color: var(--primary); margin: 0 0 1.5rem 0; line-height: 1.2">
-                    VISI: TOBA MANTAP 2029
-                </h2>
+    .tentang-list {
+        list-style: none;
+        padding: 0;
+        margin: 2rem 0;
+    }
 
-                <p style="font-size: 1.1rem; color: #64748b; margin: 0 0 2rem 0; font-style: italic; line-height: 1.6">
-                    "Maju daerahnya, sejahtera rakyatnya dan berkelanjutan pembangunannya!"
-                </p>
+    .tentang-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+        color: var(--text-dark);
+        line-height: 1.6;
+    }
 
-                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.25rem">
-                    <li style="display: flex; gap: 1rem; align-items: flex-start">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" style="flex-shrink: 0; margin-top: 0.125rem">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span style="color: #475569; line-height: 1.6; font-size: 0.95rem">
-                            MEMBANGUN SUMBER DAYA MANUSIA YANG BERDAYA SAING DAN BERAKHLAK
-                        </span>
-                    </li>
-                    <li style="display: flex; gap: 1rem; align-items: flex-start">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" style="flex-shrink: 0; margin-top: 0.125rem">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span style="color: #475569; line-height: 1.6; font-size: 0.95rem">
-                            MEMBANGUN INFRASTRUKTUR YANG TERINTEGRASI BERKUALITAS DAN MERATA
-                        </span>
-                    </li>
-                    <li style="display: flex; gap: 1rem; align-items: flex-start">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" style="flex-shrink: 0; margin-top: 0.125rem">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span style="color: #475569; line-height: 1.6; font-size: 0.95rem">
-                            MENINGKATKAN PEMBANGUNAN EKONOMI YANG BERKELANJUTAN BERBASIS POTENSI DAERAH DAN MENDUKUNG KEMANDIRIAN DAERAH
-                        </span>
-                    </li>
-                    <li style="display: flex; gap: 1rem; align-items: flex-start">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" style="flex-shrink: 0; margin-top: 0.125rem">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span style="color: #475569; line-height: 1.6; font-size: 0.95rem">
-                            MEWUJUDKAN TATA KELOLA PEMERINTAHAN YANG BAIK DAN BERSIH SEBAGAI PELAYAN (PARHOBAS) RAKYAT
-                        </span>
-                    </li>
-                    <li style="display: flex; gap: 1rem; align-items: flex-start">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" style="flex-shrink: 0; margin-top: 0.125rem">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span style="color: #475569; line-height: 1.6; font-size: 0.95rem">
-                            MENINGKATKAN KEAMANAN DAN KETERTIBAN
-                        </span>
-                    </li>
-                    <li style="display: flex; gap: 1rem; align-items: flex-start">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" style="flex-shrink: 0; margin-top: 0.125rem">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span style="color: #475569; line-height: 1.6; font-size: 0.95rem">
-                            MELESTARIKAN NILAI BUDAYA DAN KEARIFAN LOKAL
-                        </span>
-                    </li>
-                </ul>
+    .tentang-list li::before {
+        content: "✓";
+        color: var(--primary);
+        font-weight: 700;
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .map-container {
+        position: sticky;
+        top: 100px;
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .map-wrapper {
+        position: relative;
+        width: 100%;
+        /* FIX: Tinggi yang cukup untuk map agar tidak terpotong */
+        min-height: 450px;
+    }
+
+    .map-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        /* FIX: Pastikan iframe tidak terpotong */
+        min-height: 450px;
+    }
+
+    .map-info {
+        padding: 1.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: #fff;
+    }
+
+    .map-info h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .map-info p {
+        font-size: 0.9rem;
+        margin: 0 0 1rem 0;
+        opacity: 0.95;
+    }
+
+    .map-info a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,0.2);
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .map-info a:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .tentang-section {
+            padding: 2rem 1rem;
+        }
+
+        .tentang-grid {
+            /* FIX: Ubah ke 1 kolom di mobile */
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            /* FIX: Urutkan konten dulu, baru map */
+            grid-template-rows: auto auto;
+        }
+
+        .tentang-content {
+            /* FIX: Pastikan konten di atas */
+            order: 1;
+        }
+
+        .tentang-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tentang-content p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .tentang-list li {
+            font-size: 0.9rem;
+        }
+
+        .map-container {
+            /* FIX: Map tidak sticky di mobile */
+            position: static;
+            /* FIX: Pastikan map di bawah */
+            order: 2;
+            width: 100%;
+        }
+
+        .map-wrapper {
+            /* FIX: Tinggi map yang pas di mobile */
+            min-height: 350px;
+        }
+
+        .map-wrapper iframe {
+            min-height: 350px;
+        }
+
+        .map-info {
+            padding: 1.25rem;
+        }
+
+        .map-info h3 {
+            font-size: 1rem;
+        }
+
+        .map-info p {
+            font-size: 0.85rem;
+        }
+
+        .map-info a {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+
+    /* Small Mobile */
+    @media (max-width: 480px) {
+        .tentang-section {
+            padding: 1.5rem 0.75rem;
+        }
+
+        .tentang-content h2 {
+            font-size: 1.25rem;
+        }
+
+        .map-wrapper {
+            min-height: 300px;
+        }
+
+        .map-wrapper iframe {
+            min-height: 300px;
+        }
+    }
+</style>
+
+<section class="tentang-section">
+    <div class="tentang-grid">
+        {{-- Left Content --}}
+        <div class="tentang-content">
+            <h2>Memberdayakan Keluarga, Mensejahterakan Masyarakat</h2>
+
+            <p>
+                PKK Kabupaten Toba berkomitmen untuk terus berinovasi dalam meningkatkan kesejahteraan keluarga dan masyarakat. Melalui berbagai program unggulan, kami berupaya membangun sumber daya manusia yang berkualitas dan berdaya saing.
+            </p>
+
+            <ul class="tentang-list">
+                <li>Program ketahanan dan kesejahteraan keluarga</li>
+                <li>Pemberdayaan ekonomi keluarga</li>
+                <li>Peningkatan kesehatan ibu dan anak</li>
+                <li>Pelestarian nilai budaya dan kearifan lokal</li>
+                <li>Pengembangan pendidikan dan keterampilan</li>
+            </ul>
+
+            <p>
+                Dengan semangat gotong royong dan kebersamaan, PKK Kabupaten Toba terus bergerak maju untuk mewujudkan masyarakat yang sejahtera, mandiri, dan berakhlak.
+            </p>
+        </div>
+
+        {{-- Right Content - Maps --}}
+        <div class="map-container">
+            <div class="map-wrapper">
+                {{-- Google Maps Embed --}}
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.1234567890123!2d99.12345678901234!3d2.1234567890123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMnCsMDcnMjQuNCJOIDk5wrAwNycyNC40IkU!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
-
-            {{-- Right Content - Maps --}}
-            <div style="position: sticky; top: 2rem">
-                <div style="background: #f8fafc; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1)">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.4567890123456!2d99.12345678901234!3d2.1234567890123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMn7CsDA3JzI0LjQiTiA5OcKwMDcnMjQuNCJF!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
-                        width="100%"
-                        height="450"
-                        style="border: 0; display: block"
-                        allowfullscreen=""
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"
-                    ></iframe>
-                </div>
-
-                <div style="padding: 1.5rem; background: #fff; border-radius: 0 0 16px 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-top: 1px solid #e2e8f0">
-                    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin: 0 0 0.5rem 0">
-                        Lokasi Kantor PKK Kabupaten Toba
-                    </h3>
-                    <p style="color: #64748b; font-size: 0.95rem; margin: 0 0 1rem 0; line-height: 1.5">
-                        Balige, Kabupaten Toba, Sumatera Utara
-                    </p>
-                    <a href="https://maps.google.com/?q=PKK+Kabupaten+Toba+Balige"
-                       target="_blank"
-                       style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; background: linear-gradient(135deg, #14b8a6, #0d9488); color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.2s"
-                       onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(20,184,166,0.3)'"
-                       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                            <polyline points="15 3 21 3 21 9"/>
-                            <line x1="10" y1="14" x2="21" y2="3"/>
-                        </svg>
-                        Buka di Google Maps
-                    </a>
-                </div>
+            <div class="map-info">
+                <h3>Lokasi Kantor PKK Kabupaten Toba</h3>
+                <p>Balige, Kabupaten Toba, Sumatera Utara</p>
+                <a href="https://goo.gl/maps/xxxxx" target="_blank">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/>
+                        <line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                    Buka di Google Maps
+                </a>
             </div>
         </div>
     </div>
 </section>
-
-<style>
-/* Responsive untuk Mobile */
-@media (max-width: 768px) {
-    section[style*="padding: 4rem 0"] {
-        padding: 2.5rem 0 !important;
-    }
-
-    section[style*="padding: 4rem 0"] > div {
-        padding: 0 1.25rem !important;
-    }
-
-    section[style*="padding: 4rem 0"] > div > div {
-        grid-template-columns: 1fr !important;
-        gap: 2rem !important;
-    }
-
-    /* Pindahkan map ke bawah di mobile */
-    section[style*="padding: 4rem 0"] > div > div > div:last-child {
-        order: -1;
-        position: static !important;
-    }
-
-    section[style*="padding: 4rem 0"] > div > div > div:last-child > div {
-        border-radius: 12px !important;
-    }
-
-    section[style*="padding: 4rem 0"] > div > div > div:last-child iframe {
-        height: 300px !important;
-    }
-
-    h1 {
-        font-size: 1.75rem !important;
-    }
-
-    h2 {
-        font-size: 1.5rem !important;
-    }
-
-    /* Perbaiki list di mobile */
-    ul {
-        gap: 1rem !important;
-    }
-
-    ul li span {
-        font-size: 0.9rem !important;
-    }
-}
-
-/* Tablet */
-@media (max-width: 1024px) and (min-width: 769px) {
-    section[style*="padding: 4rem 0"] > div > div {
-        gap: 2rem !important;
-    }
-
-    section[style*="padding: 4rem 0"] > div > div > div:last-child iframe {
-        height: 400px !important;
-    }
-}
-</style>
 @endsection
