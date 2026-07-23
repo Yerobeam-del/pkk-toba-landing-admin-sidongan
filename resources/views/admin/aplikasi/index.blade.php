@@ -142,7 +142,7 @@ grid-template-columns: 1fr !important;
     </div>
 </div>
 
-{{-- TABS & SEARCH --}}
+{{-- TABS & TAMPILKAN --}}
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:1.5rem;flex-wrap:wrap">
     <div class="tabs-container" style="flex:1;min-width:0;display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem">
         @php
@@ -177,45 +177,50 @@ grid-template-columns: 1fr !important;
         @endforeach
     </div>
 
-    {{-- Search Form & Per Page --}}
-    <div style="flex-shrink:0;display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">
-        {{-- Per Page Dropdown --}}
-        <form method="GET" action="{{ route('admin.aplikasi.index') }}" style="display:flex;align-items:center;gap:0.5rem">
-            <input type="hidden" name="tab" value="{{ $currentTab }}">
-            <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-            <div style="position:relative">
-                <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
-                </select>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
-                    <polyline points="6 9 12 15 18 9"/>
-                </svg>
-            </div>
-        </form>
+    {{-- Dropdown Tampilkan --}}
+    <form method="GET" action="{{ route('admin.aplikasi.index') }}" style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0">
+        <input type="hidden" name="tab" value="{{ $currentTab }}">
+        <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
+        <div style="position:relative">
+            <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+            </select>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                <polyline points="6 9 12 15 18 9"/>
+            </svg>
+        </div>
+    </form>
+</div>
 
-        {{-- Search Form --}}
-        <form method="GET" action="{{ route('admin.aplikasi.index') }}" style="flex-shrink:0">
-            <input type="hidden" name="tab" value="{{ $currentTab }}">
-            <div style="position:relative">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
-                    <circle cx="11" cy="11" r="8"/>
-                    <path d="m21 21-4.35-4.35"/>
-                </svg>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari aplikasi..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;width:250px;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-                @if(request('search'))
-                    <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"/>
-                            <line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                    </a>
-                @endif
-            </div>
-        </form>
-    </div>
+{{-- Search Bar (Full Width) --}}
+<div class="aplikasi-search-bar" style="margin-bottom:1.5rem">
+    <form method="GET" action="{{ route('admin.aplikasi.index') }}">
+        <input type="hidden" name="tab" value="{{ $currentTab }}">
+        <div style="position:relative">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" name="search" value="{{ request('search') }}"
+                   placeholder="Cari aplikasi..."
+                   style="width:100%;padding:0.65rem 1rem 0.65rem 3rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-family:inherit;font-size:0.9rem;background:#fff;transition:all 0.2s"
+                   onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'"
+                   onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+            @if(request('search'))
+                <a href="{{ request()->fullUrlWithQuery(['search' => null, 'tab' => $currentTab]) }}"
+                   style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </a>
+            @endif
+        </div>
+    </form>
 </div>
 
 {{-- Main Card --}}
