@@ -349,9 +349,13 @@
         }
 
         .admin-footer-link {
+            display: inline-flex;
+            align-items: center;
             color: #64748b;
             text-decoration: none;
             transition: color 0.2s;
+            vertical-align: middle;
+            line-height: 1;
         }
 
         .admin-footer-link:hover {
