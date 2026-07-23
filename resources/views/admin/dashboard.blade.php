@@ -20,7 +20,7 @@
                 <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">TOTAL BERITA</p>
                 <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $totalBerita ?? 0 }}</p>
                 <p style="font-size:0.75rem;opacity:0.7;margin:0.25rem 0 0 0">
-                    @php $bulanIni = $statistikBulanIni['berita'] ?? 0; @endphp
+                    @php $bulanIni = ($statistikBulanIni['berita'] ?? 0); @endphp
                     {{ $bulanIni }} bulan ini
                 </p>
             </div>
@@ -65,7 +65,7 @@
                 <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">TOTAL USERS</p>
                 <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $totalUsers ?? 0 }}</p>
                 <p style="font-size:0.75rem;opacity:0.7;margin:0.25rem 0 0 0">
-                    @php $usersBulanIni = $statistikBulanIni['users'] ?? 0; @endphp
+                    @php $usersBulanIni = ($statistikBulanIni['users'] ?? 0); @endphp
                     {{ $usersBulanIni }} bulan ini
                 </p>
             </div>
@@ -122,10 +122,10 @@
             @forelse($beritaTerbaru ?? [] as $berita)
                 <div style="padding:0.75rem;background:#f8fafc;border-radius:8px;border-left:3px solid var(--primary)">
                     <div style="font-weight:600;color:var(--text-dark);font-size:0.9rem;margin-bottom:0.25rem">
-                        {{ Str::limit($berita->title, 50) }}
+                        {{ Str::limit($berita->title ?? 'Tanpa Judul', 50) }}
                     </div>
                     <div style="font-size:0.8rem;color:var(--text-muted)">
-                        {{ $berita->created_at->diffForHumans() }}
+                        {{ $berita->created_at?->diffForHumans() ?? '-' }}
                     </div>
                 </div>
             @empty
@@ -149,11 +149,11 @@
             @forelse($usersTerbaru ?? [] as $user)
                 <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:#f8fafc;border-radius:8px">
                     <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.85rem">
-                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                        {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
                     </div>
                     <div style="flex:1;min-width:0">
                         <div style="font-weight:600;color:var(--text-dark);font-size:0.9rem">
-                            {{ Str::limit($user->name, 30) }}
+                            {{ Str::limit($user->name ?? 'User', 30) }}
                         </div>
                         <div style="font-size:0.75rem;color:var(--text-muted)">
                             {{ $user->role?->display_name ?? '-' }}
