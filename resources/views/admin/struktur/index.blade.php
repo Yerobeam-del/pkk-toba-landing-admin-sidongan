@@ -10,13 +10,27 @@
     .struktur-header {
         flex-direction: column !important;
         align-items: flex-start !important;
+        gap: 1rem !important;
     }
     .struktur-header .btn {
         width: 100% !important;
         justify-content: center !important;
     }
 
-    /* Toolbar container - stack vertical on mobile */
+    /* Tabs container adjustments */
+    .tabs-container {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    .tabs-container::-webkit-scrollbar {
+        height: 4px;
+    }
+    .tabs-container::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 4px;
+    }
+
+    /* Toolbar: Tampilkan di kanan atas, Search di bawah full width */
     .struktur-toolbar-row {
         flex-direction: column !important;
         align-items: stretch !important;
@@ -24,9 +38,9 @@
         width: 100% !important;
     }
 
-    /* Dropdown Tampilkan - wrap in its own container */
+    /* Dropdown Tampilkan rata kanan di mobile */
     .struktur-perpage-wrapper {
-        display: flex;
+        display: flex !important;
         justify-content: flex-end !important;
         width: 100% !important;
     }
@@ -61,9 +75,9 @@
         </a>
     </div>
 
-    {{-- TABS & SEARCH --}}
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:1.5rem;flex-wrap:wrap">
-        <div class="tabs-container" style="flex:1;min-width:0;display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem;overflow-x:auto">
+    {{-- TABS --}}
+    <div style="margin-bottom:1rem">
+        <div class="tabs-container" style="display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem;overflow-x:auto">
             @php
                 $tabs = [
                     'pengurus' => ['label' => 'Pengurus Inti', 'count' => $pengurusCount],
@@ -83,7 +97,8 @@
                         'page_pokja1' => 1,
                         'page_pokja2' => 1,
                         'page_pokja3' => 1,
-                        'page_pokja4' => 1
+                        'page_pokja4' => 1,
+                        'search' => request('search')
                     ]);
                 @endphp
                 <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}"
@@ -97,49 +112,49 @@
                 </a>
             @endforeach
         </div>
+    </div>
 
-        {{-- Search Form & Per Page --}}
-        <div class="struktur-toolbar-row" style="flex-shrink:0;display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">
-            {{-- Per Page Dropdown --}}
-            <div class="struktur-perpage-wrapper" style="display:flex;justify-content:flex-end">
-                <form method="GET" action="{{ route('admin.struktur.index') }}" class="struktur-form-wrapper" style="display:flex;align-items:center;gap:0.5rem">
-                    <input type="hidden" name="tab" value="{{ $currentTab }}">
-                    <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-                    <div style="position:relative">
-                        <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-                            <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
-                            <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
-                            <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
-                            <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
-                        </select>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </div>
-                </form>
-            </div>
+    {{-- Search & Tampilkan --}}
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+        {{-- Search Form --}}
+        <div class="struktur-search-wrapper" style="flex:1;min-width:200px">
+            <form method="GET" action="{{ route('admin.struktur.index') }}">
+                <input type="hidden" name="tab" value="{{ $currentTab }}">
+                <div style="position:relative">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" name="search" value="{{ request('search') }}" class="struktur-search-input" placeholder="Cari nama atau jabatan..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;width:100%;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                    @if(request('search'))
+                        <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </a>
+                    @endif
+                </div>
+            </form>
+        </div>
 
-            {{-- Search Form --}}
-            <div class="struktur-search-wrapper" style="flex:1;min-width:0">
-                <form method="GET" action="{{ route('admin.struktur.index') }}">
-                    <input type="hidden" name="tab" value="{{ $currentTab }}">
-                    <div style="position:relative">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="m21 21-4.35-4.35"/>
-                        </svg>
-                        <input type="text" name="search" value="{{ request('search') }}" class="struktur-search-input" placeholder="Cari nama atau jabatan..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;width:250px;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-                        @if(request('search'))
-                            <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="18" y1="6" x2="6" y2="18"/>
-                                    <line x1="6" y1="6" x2="18" y2="18"/>
-                                </svg>
-                            </a>
-                        @endif
-                    </div>
-                </form>
-            </div>
+        {{-- Per Page Dropdown --}}
+        <div class="struktur-perpage-wrapper" style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0">
+            <form method="GET" action="{{ route('admin.struktur.index') }}" class="struktur-form-wrapper" style="display:flex;align-items:center;gap:0.5rem">
+                <input type="hidden" name="tab" value="{{ $currentTab }}">
+                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
+                <div style="position:relative">
+                    <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
+                    </select>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+            </form>
         </div>
     </div>
 
