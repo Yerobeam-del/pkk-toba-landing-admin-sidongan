@@ -1,265 +1,109 @@
-@extends('layouts.app')
-@section('title', 'Tentang Kami')
-
-@section('content')
-<style>
-    /* Base Styles */
-    .tentang-section {
-        padding: 4rem 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .tentang-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
-        align-items: start;
-    }
-
-    .tentang-content h2 {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        margin-bottom: 1.5rem;
-        line-height: 1.3;
-    }
-
-    .tentang-content p {
-        font-size: 1rem;
-        line-height: 1.8;
-        color: var(--text-muted);
-        margin-bottom: 1.5rem;
-    }
-
-    .tentang-list {
-        list-style: none;
-        padding: 0;
-        margin: 2rem 0;
-    }
-
-    .tentang-list li {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-        font-size: 0.95rem;
-        color: var(--text-dark);
-        line-height: 1.6;
-    }
-
-    .tentang-list li::before {
-        content: "✓";
-        color: var(--primary);
-        font-weight: 700;
-        flex-shrink: 0;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .map-container {
-        position: sticky;
-        top: 100px;
-        background: #fff;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border: 1px solid rgba(0,0,0,0.06);
-    }
-
-    .map-wrapper {
-        position: relative;
-        width: 100%;
-        /* FIX: Tinggi yang cukup untuk map agar tidak terpotong */
-        min-height: 450px;
-    }
-
-    .map-wrapper iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-        /* FIX: Pastikan iframe tidak terpotong */
-        min-height: 450px;
-    }
-
-    .map-info {
-        padding: 1.5rem;
-        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        color: #fff;
-    }
-
-    .map-info h3 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin: 0 0 0.5rem 0;
-    }
-
-    .map-info p {
-        font-size: 0.9rem;
-        margin: 0 0 1rem 0;
-        opacity: 0.95;
-    }
-
-    .map-info a {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #fff;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
-        background: rgba(255,255,255,0.2);
-        border-radius: 8px;
-        transition: all 0.2s;
-    }
-
-    .map-info a:hover {
-        background: rgba(255,255,255,0.3);
-        transform: translateY(-2px);
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-        .tentang-section {
-            padding: 2rem 1rem;
-        }
-
-        .tentang-grid {
-            /* FIX: Ubah ke 1 kolom di mobile */
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            /* FIX: Urutkan konten dulu, baru map */
-            grid-template-rows: auto auto;
-        }
-
-        .tentang-content {
-            /* FIX: Pastikan konten di atas */
-            order: 1;
-        }
-
-        .tentang-content h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tentang-content p {
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        .tentang-list li {
-            font-size: 0.9rem;
-        }
-
-        .map-container {
-            /* FIX: Map tidak sticky di mobile */
-            position: static;
-            /* FIX: Pastikan map di bawah */
-            order: 2;
-            width: 100%;
-        }
-
-        .map-wrapper {
-            /* FIX: Tinggi map yang pas di mobile */
-            min-height: 350px;
-        }
-
-        .map-wrapper iframe {
-            min-height: 350px;
-        }
-
-        .map-info {
-            padding: 1.25rem;
-        }
-
-        .map-info h3 {
-            font-size: 1rem;
-        }
-
-        .map-info p {
-            font-size: 0.85rem;
-        }
-
-        .map-info a {
-            font-size: 0.85rem;
-            padding: 0.4rem 0.8rem;
-        }
-    }
-
-    /* Small Mobile */
-    @media (max-width: 480px) {
-        .tentang-section {
-            padding: 1.5rem 0.75rem;
-        }
-
-        .tentang-content h2 {
-            font-size: 1.25rem;
-        }
-
-        .map-wrapper {
-            min-height: 300px;
-        }
-
-        .map-wrapper iframe {
-            min-height: 300px;
-        }
-    }
-</style>
-
-<section class="tentang-section">
-    <div class="tentang-grid">
-        {{-- Left Content --}}
-        <div class="tentang-content">
-            <h2>Memberdayakan Keluarga, Mensejahterakan Masyarakat</h2>
-
-            <p>
-                PKK Kabupaten Toba berkomitmen untuk terus berinovasi dalam meningkatkan kesejahteraan keluarga dan masyarakat. Melalui berbagai program unggulan, kami berupaya membangun sumber daya manusia yang berkualitas dan berdaya saing.
-            </p>
-
-            <ul class="tentang-list">
-                <li>Program ketahanan dan kesejahteraan keluarga</li>
-                <li>Pemberdayaan ekonomi keluarga</li>
-                <li>Peningkatan kesehatan ibu dan anak</li>
-                <li>Pelestarian nilai budaya dan kearifan lokal</li>
-                <li>Pengembangan pendidikan dan keterampilan</li>
-            </ul>
-
-            <p>
-                Dengan semangat gotong royong dan kebersamaan, PKK Kabupaten Toba terus bergerak maju untuk mewujudkan masyarakat yang sejahtera, mandiri, dan berakhlak.
-            </p>
-        </div>
-
-        {{-- Right Content - Maps --}}
-        <div class="map-container">
-            <div class="map-wrapper">
-                {{-- Google Maps Embed --}}
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.1234567890123!2d99.12345678901234!3d2.1234567890123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMnCsMDcnMjQuNCJOIDk5wrAwNycyNC40IkU!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-            </div>
-            <div class="map-info">
-                <h3>Lokasi Kantor PKK Kabupaten Toba</h3>
-                <p>Balige, Kabupaten Toba, Sumatera Utara</p>
-                <a href="https://goo.gl/maps/xxxxx" target="_blank">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                        <polyline points="15 3 21 3 21 9"/>
-                        <line x1="10" y1="14" x2="21" y2="3"/>
-                    </svg>
-                    Buka di Google Maps
-                </a>
+<div class="page" id="page-tentang" style="display: none;">
+    <div class="page-header" style="background: linear-gradient(135deg, var(--primary), var(--primary-light));">
+        <div class="page-header-content">
+            <h1 id="tentangJudul">Tentang Kami _TEST</h1>
+            <p id="tentangSubjudul">Informasi tentang PKK Kabupaten Toba</p>
+            <div class="breadcrumb">
+                <a onclick="navigateTo('beranda')">Beranda</a><span>/</span><span class="current">Tentang</span>
             </div>
         </div>
     </div>
-</section>
-@endsection
+
+    <section class="info-section" style="padding: 4rem 2rem; background: #fff;">
+        <div class="info-container" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+
+            {{-- Left Content --}}
+            <div class="info-text">
+                <h2 id="tentangHeading" style="font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem; line-height: 1.3;">
+                    Memberdayakan Keluarga, Mensejahterakan Masyarakat
+                </h2>
+                <p id="tentangDeskripsi" style="color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem;">
+                    PKK Kabupaten Toba berkomitmen untuk terus berinovasi...
+                </p>
+
+                <ul id="tentangPrograms" class="info-list" style="list-style: none; padding: 0;">
+                    <li style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; color: #4a5568;">
+                        <svg style="flex-shrink: 0; margin-top: 2px; color: #48bb78; width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>Program ketahanan dan kesejahteraan keluarga</span>
+                    </li>
+                    {{-- More items will be loaded dynamically --}}
+                </ul>
+            </div>
+
+            {{-- Right Content - Maps --}}
+            <div class="info-map" style="position: relative; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.1);">
+                <div id="tentangMaps" style="width: 100%; height: 400px;">
+                    {{-- Maps will be loaded here --}}
+                </div>
+                <div class="info-map-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem; background: linear-gradient(to top, rgba(30, 58, 95, 0.9), transparent); color: #fff;">
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem;">Lokasi Kantor PKK Kabupaten Toba</h3>
+                    <p style="font-size: 0.8rem; opacity: 0.8;">Balige, Kabupaten Toba, Sumatera Utara</p>
+                    <a id="tentangMapsLink" href="#" target="_blank" class="info-map-link" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 0.5rem; color: var(--gold); font-size: 0.82rem; font-weight: 600; text-decoration: none;">
+                        Buka di Google Maps
+                        <svg style="width: 14px; height: 14px; transition: transform 0.3s;" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+// Load Tentang Kami data
+async function loadTentangKami() {
+    try {
+        const response = await fetch('/api/v1/tentang');
+        const result = await response.json();
+
+        if (!result.success) throw new Error(result.message);
+
+        const data = result.data;
+
+        // Update text content
+        document.getElementById('tentangJudul').textContent = data.judul;
+        document.getElementById('tentangSubjudul').textContent = data.subjudul;
+        document.getElementById('tentangHeading').textContent = data.heading;
+        document.getElementById('tentangDeskripsi').textContent = data.deskripsi;
+
+        // Update programs list
+        const programsList = document.getElementById('tentangPrograms');
+        if (data.program_list && data.program_list.length > 0) {
+            programsList.innerHTML = data.program_list.map(program => `
+                <li style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; color: #4a5568;">
+                    <svg style="flex-shrink: 0; margin-top: 2px; color: #48bb78; width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <span>${program}</span>
+                </li>
+            `).join('');
+        }
+
+        // Update maps
+        document.getElementById('tentangMaps').innerHTML = data.maps_embed_code;
+        if (data.maps_link) {
+            document.getElementById('tentangMapsLink').href = data.maps_link;
+            document.getElementById('tentangMapsLink').style.display = 'inline-flex';
+        } else {
+            document.getElementById('tentangMapsLink').style.display = 'none';
+        }
+
+    } catch (error) {
+        console.error('❌ Error loading tentang kami:', error);
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    const page = document.getElementById('page-tentang');
+    if (page && page.style.display !== 'none') {
+        loadTentangKami();
+    }
+});
+
+// Expose for SPA navigation
+window.loadTentangKami = loadTentangKami;
+</script>
