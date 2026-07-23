@@ -241,22 +241,29 @@
         <div class="mobile-card-wrapper">
             @foreach($data as $item)
             <div class="member-card" style="padding:1.25rem;margin-bottom:1rem;background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 8px rgba(0,0,0,0.04)">
-                {{-- Header: Foto + Nama --}}
+                {{-- Header: Logo/Icon + Nama --}}
                 <div class="member-card-header" style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem">
                     @php
-                        $imageColumn = collect($columns)->first(fn($col) => ($col['type'] ?? 'text') === 'image');
+                        // Cari kolom icon/logo (bisa type image atau callback)
+                        $iconColumn = collect($columns)->first(fn($col) => in_array($col['key'], ['icon', 'photo_path', 'logo']));
                         $nameColumn = collect($columns)->first(fn($col) => in_array($col['key'], ['name', 'title', 'subject']));
                     @endphp
 
-                    @if($imageColumn)
+                    @if($iconColumn)
                         @php
-                            $imageValue = data_get($item, $imageColumn['key']);
+                            $iconValue = data_get($item, $iconColumn['key']);
                         @endphp
-                        @if($imageValue)
-                            <img src="{{ asset('storage/' . $imageValue) }}" alt="{{ data_get($item, $imageColumn['alt_key'] ?? 'name') }}" style="width:60px;height:60px;border-radius:10px;object-fit:cover;background:#f8fafc">
-                        @else
-                            <div style="width:60px;height:60px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">
-                                {{ strtoupper(substr(data_get($item, $imageColumn['initial_key'] ?? 'name'), 0, 1)) }}
+                        @if($iconColumn['type'] === 'image')
+                            @if($iconValue)
+                                <img src="{{ asset('storage/' . $iconValue) }}" alt="{{ data_get($item, $iconColumn['alt_key'] ?? 'name') }}" style="width:60px;height:60px;border-radius:10px;object-fit:cover;background:#f8fafc">
+                            @else
+                                <div style="width:60px;height:60px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">
+                                    {{ strtoupper(substr(data_get($item, $iconColumn['initial_key'] ?? 'name'), 0, 1)) }}
+                                </div>
+                            @endif
+                        @elseif($iconColumn['type'] === 'callback' && isset($iconColumn['callback']))
+                            <div style="width:60px;height:60px;border-radius:10px;overflow:hidden;background:#f8fafc">
+                                {!! $iconColumn['callback']($item, $iconValue) !!}
                             </div>
                         @endif
                     @endif
@@ -268,10 +275,10 @@
                     </div>
                 </div>
 
-                {{-- Info Grid: Tampilkan semua kolom kecuali image dan name --}}
+                {{-- Info Grid: Tampilkan semua kolom kecuali icon dan name --}}
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
                     @foreach($columns as $column)
-                        @if(!in_array($column['key'], ['photo_path', 'icon', 'name', 'title', 'subject']))
+                        @if(!in_array($column['key'], ['icon', 'photo_path', 'logo', 'name', 'title', 'subject']))
                             @php
                                 $value = data_get($item, $column['key']);
                                 $columnType = $column['type'] ?? 'text';
@@ -288,6 +295,8 @@
                                             @endif
                                             {{ $value }}
                                         </span>
+                                    @elseif($columnType === 'html')
+                                        {!! $value !!}
                                     @else
                                         {{ $value ?? '-' }}
                                     @endif
@@ -299,6 +308,15 @@
 
                 {{-- Action Buttons --}}
                 <div class="member-card-actions" style="display:flex;gap:0.5rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.06)">
+                    @if(in_array('show', $actions) && $showRoute)
+                        <a href="{{ route($showRoute, $item) }}" class="action-btn btn-show" title="Lihat" style="flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:8px;transition:all 0.2s;cursor:pointer;text-decoration:none" onmouseover="this.style.background='#eff6ff';this.style.color='#2563eb'" onmouseout="this.style.background='transparent';this.style.color='#94a3b8'">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <span style="margin-left:0.5rem;font-weight:600">Lihat</span>
+                        </a>
+                    @endif
                     @if(in_array('edit', $actions) && $editRoute)
                         <a href="{{ route($editRoute, $item) }}" class="action-btn btn-edit" title="Edit" style="flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:8px;transition:all 0.2s;cursor:pointer;text-decoration:none" onmouseover="this.style.background='#eff6ff';this.style.color='#2563eb'" onmouseout="this.style.background='transparent';this.style.color='#94a3b8'">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -322,15 +340,6 @@
                             @csrf
                             @method('DELETE')
                         </form>
-                    @endif
-                    @if(in_array('show', $actions) && $showRoute)
-                        <a href="{{ route($showRoute, $item) }}" class="action-btn btn-show" title="Lihat" style="flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:8px;transition:all 0.2s;cursor:pointer;text-decoration:none" onmouseover="this.style.background='#eff6ff';this.style.color='#2563eb'" onmouseout="this.style.background='transparent';this.style.color='#94a3b8'">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                            </svg>
-                            <span style="margin-left:0.5rem;font-weight:600">Lihat</span>
-                        </a>
                     @endif
                 </div>
             </div>
