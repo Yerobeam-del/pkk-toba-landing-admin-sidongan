@@ -4,6 +4,12 @@
 
 @section('content')
 <style>
+/* FIX: Hilangkan border hitam tebal, ganti dengan border halus */
+.card {
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+}
+
 @media (max-width: 768px) {
     .sidongan-header { flex-direction: column !important; align-items: flex-start !important; gap: 1rem !important; }
     .sidongan-header h1 { font-size: 1.25rem !important; }
@@ -14,23 +20,38 @@
     .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
     .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
 
-    /* Collapse filter grid ke 1 kolom di mobile */
+    /* FIX: Filter form collapse ke 1 kolom */
     .filter-form > div[style*="grid-template-columns"] {
         grid-template-columns: 1fr !important;
     }
 
     .filter-form { flex-direction: column !important; }
-    .filter-form > div, .filter-form select, .filter-form input { width: 100% !important; min-width: 100% !important; }
+    .filter-form > div, .filter-form select, .filter-form input {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
 
-    /* Button container di filter full width */
+    /* FIX: Button container di filter full width */
     .filter-form button, .filter-form a[style*="padding"] {
         width: 100% !important;
         justify-content: center !important;
     }
 
-    /* Cleanup grid collapse */
+    /* FIX: Dropdown Tampilkan full width dan tidak overflow */
+    .filter-form select[name="per_page"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* FIX: Cleanup grid collapse */
     .cleanup-grid {
         grid-template-columns: 1fr !important;
+    }
+
+    /* FIX: Pastikan card tidak overflow */
+    .card {
+        overflow: hidden !important;
+        border: 1px solid rgba(0,0,0,0.06) !important;
     }
 }
 </style>
@@ -182,7 +203,7 @@
                 </a>
             </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:1rem;align-items:end">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:end;margin-bottom:1rem">
             <div>
                 <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Dari Tanggal</label>
                 <input type="date" name="date_from" value="{{ request('date_from') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
@@ -190,22 +211,6 @@
             <div>
                 <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Sampai Tanggal</label>
                 <input type="date" name="date_to" value="{{ request('date_to') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
-            </div>
-            <div style="display:flex;align-items:center;gap:1rem">
-                <form method="GET" action="{{ route('admin.sidongan-data.index') }}" style="display:flex;align-items:center;gap:0.5rem">
-                    <input type="hidden" name="tab" value="{{ $currentTab }}">
-                    <input type="hidden" name="search" value="{{ request('search') }}">
-                    <input type="hidden" name="category_id" value="{{ request('category_id') }}">
-                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
-                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
-                    <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-                    <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;cursor:pointer;background:white">
-                        <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                        <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                        <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                        <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
-                    </select>
-                </form>
             </div>
         </div>
     </form>
