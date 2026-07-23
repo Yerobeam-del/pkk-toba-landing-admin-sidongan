@@ -173,65 +173,6 @@
     </div>
 </div>
 
-{{-- Filter Section --}}
-<div class="card" style="padding:1.25rem;margin-bottom:1.5rem">
-    <form method="GET" action="{{ route('admin.sidongan-data.index') }}" class="filter-form">
-        <input type="hidden" name="tab" value="{{ $currentTab }}">
-
-        {{-- Baris 1: Cari & Kategori --}}
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-            <div>
-                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Cari</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Judul, nomor, pengirim..." style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(20,184,166,0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.08)';this.style.boxShadow='none'">
-            </div>
-            <div>
-                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Kategori</label>
-                <select name="category_id" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;background:#fff;cursor:pointer">
-                    <option value="">Semua Kategori</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-
-        {{-- Baris 2: Tanggal --}}
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-            <div>
-                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Dari Tanggal</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
-            </div>
-            <div>
-                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Sampai Tanggal</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
-            </div>
-        </div>
-
-        {{-- Baris 3: Tombol Filter & Tampilkan (Satu Form, Tanpa Nested) --}}
-        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.06)">
-            <div style="display:flex;gap:0.5rem;flex:1;min-width:200px">
-                <button type="submit" class="btn btn-primary" style="flex:1;padding:0.625rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"><polyline points="20 6 9 17 4 12"/></svg>
-                    Filter
-                </button>
-                <a href="{{ route('admin.sidongan-data.index') }}" style="padding:0.625rem 1rem;background:#f1f5f9;color:var(--text-dark);border:none;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-                </a>
-            </div>
-
-            <div style="display:flex;align-items:center;gap:0.5rem">
-                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-                <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.9rem;cursor:pointer;background:white;min-width:80px">
-                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
-                </select>
-            </div>
-        </div>
-    </form>
-</div>
-
 {{-- Cleanup Section --}}
 <div class="card" style="padding:1.5rem;margin-bottom:1.5rem">
     <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin:0 0 0.5rem 0;display:flex;align-items:center;gap:0.5rem">
@@ -329,6 +270,65 @@
             </div>
         </form>
     </div>
+</div>
+
+{{-- Filter Section --}}
+<div class="card" style="padding:1.25rem;margin-bottom:1.5rem">
+    <form method="GET" action="{{ route('admin.sidongan-data.index') }}" class="filter-form">
+        <input type="hidden" name="tab" value="{{ $currentTab }}">
+
+        {{-- Baris 1: Cari & Kategori --}}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div>
+                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Cari</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Judul, nomor, pengirim..." style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(20,184,166,0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.08)';this.style.boxShadow='none'">
+            </div>
+            <div>
+                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Kategori</label>
+                <select name="category_id" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;background:#fff;cursor:pointer">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        {{-- Baris 2: Tanggal --}}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div>
+                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Dari Tanggal</label>
+                <input type="date" name="date_from" value="{{ request('date_from') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
+            </div>
+            <div>
+                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Sampai Tanggal</label>
+                <input type="date" name="date_to" value="{{ request('date_to') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
+            </div>
+        </div>
+
+        {{-- Baris 3: Tombol Filter & Tampilkan (Satu Form, Tanpa Nested) --}}
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.06)">
+            <div style="display:flex;gap:0.5rem;flex:1;min-width:200px">
+                <button type="submit" class="btn btn-primary" style="flex:1;padding:0.625rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"><polyline points="20 6 9 17 4 12"/></svg>
+                    Filter
+                </button>
+                <a href="{{ route('admin.sidongan-data.index') }}" style="padding:0.625rem 1rem;background:#f1f5f9;color:var(--text-dark);border:none;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                </a>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:0.5rem">
+                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
+                <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.9rem;cursor:pointer;background:white;min-width:80px">
+                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                </select>
+            </div>
+        </div>
+    </form>
 </div>
 
 {{-- TABS --}}
