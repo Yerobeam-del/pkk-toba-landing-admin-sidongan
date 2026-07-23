@@ -109,7 +109,7 @@ class User extends Authenticatable
      */
     public function hasSidonganAccess()
     {
-        return !empty($this->sidongan_role) && 
+        return !empty($this->sidongan_role) &&
                array_key_exists($this->sidongan_role, self::getSidonganRoles());
     }
 
@@ -168,12 +168,12 @@ class User extends Authenticatable
         if (!$this->role) {
             return false;
         }
-        
-        // Administrator selalu punya semua permission
-        if ($this->role->name === 'administrator') {
+
+        // Administrator DAN Super Admin selalu punya semua permission (full access)
+        if (in_array($this->role->name, ['administrator', 'super_admin'])) {
             return true;
         }
-        
+
         return $this->role->hasPermission($permissionName);
     }
 
