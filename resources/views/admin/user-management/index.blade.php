@@ -3,13 +3,46 @@
 @section('page-title', 'Manajemen Akun')
 
 @section('content')
+<style>
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .struktur-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    .struktur-header h1 { font-size: 1.25rem !important; }
+    .struktur-header .btn { width: 100% !important; justify-content: center !important; }
+    .tabs-container { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+    .tabs-container::-webkit-scrollbar { height: 4px; }
+    .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+
+    /* Search & Tampilkan adjustments for mobile */
+    .user-search-wrapper {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    .user-search-input {
+        width: 100% !important;
+    }
+    .user-perpage-wrapper {
+        width: 100% !important;
+        justify-content: flex-end !important;
+    }
+    .user-form-wrapper {
+        width: auto !important;
+    }
+}
+</style>
+
 <div style="margin-bottom:2rem">
-    
+
     {{-- Header Section --}}
-    <div class="struktur-header">
+    <div class="struktur-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap">
         <div style="flex:1;min-width:0">
-            <h1>Manajemen Akun</h1>
-            <p>Kelola akun pengguna dan hak akses aplikasi sistem PKK</p>
+            <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0;letter-spacing:-0.5px">Manajemen Akun</h1>
+            <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Kelola akun pengguna dan hak akses aplikasi sistem PKK</p>
         </div>
         <a href="{{ route('admin.user-management.create') }}" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;white-space:nowrap;flex-shrink:0">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -68,9 +101,9 @@
         </div>
     </div>
 
-    {{-- Search & Pagination Controls --}}
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:1.5rem;flex-wrap:wrap">
-        <div class="tabs-container" style="flex:1;min-width:0;display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem">
+    {{-- TABS --}}
+    <div style="margin-bottom:1rem">
+        <div class="tabs-container" style="display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem;overflow-x:auto">
             @php
                 $tabs = [
                     'all' => 'Semua Pengguna',
@@ -84,7 +117,7 @@
                     $isActive = $tab === $key;
                     $url = request()->fullUrlWithQuery(['tab' => $key, 'page' => 1, 'per_page' => request('per_page', 10)]);
                 @endphp
-                <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};font-weight:600;font-size:0.9rem;transition:all 0.2s" onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)'}" onmouseout="if(!this.classList.contains('active')){this.style.background='transparent'}">
+                <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};white-space:nowrap" onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}" onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
                     {{ $label }}
                     @if($key !== 'all')
                         @php
@@ -100,38 +133,20 @@
                 </a>
             @endforeach
         </div>
-        
-        {{-- Search Form & Per Page --}}
-        <div style="flex-shrink:0;display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">
-            {{-- Per Page Dropdown --}}
-            <form method="GET" action="{{ route('admin.user-management.index') }}" style="display:flex;align-items:center;gap:0.5rem">
+    </div>
+
+    {{-- Search & Tampilkan --}}
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+        {{-- Search Form --}}
+        <div class="user-search-wrapper" style="flex:1;min-width:200px">
+            <form method="GET" action="{{ route('admin.user-management.index') }}">
                 <input type="hidden" name="tab" value="{{ $tab }}">
-                <input type="hidden" name="search" value="{{ request('search') }}">
-                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-                <div style="position:relative">
-                    <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-                        <option value="5" {{ request('per_page', 10) == 5 ? 'selected' : '' }}>5</option>
-                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
-                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
-                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
-                        <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
-                    </select>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
-                        <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                </div>
-            </form>
-            
-            {{-- Search Form --}}
-            <form method="GET" action="{{ route('admin.user-management.index') }}" style="flex-shrink:0">
-                <input type="hidden" name="tab" value="{{ $tab }}">
-                <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
                 <div style="position:relative">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
                         <circle cx="11" cy="11" r="8"/>
                         <path d="m21 21-4.35-4.35"/>
                     </svg>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau email..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;width:250px;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+                    <input type="text" name="search" value="{{ request('search') }}" class="user-search-input" placeholder="Cari nama atau email..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;width:100%;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
                     @if(request('search'))
                         <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -143,12 +158,32 @@
                 </div>
             </form>
         </div>
+
+        {{-- Per Page Dropdown --}}
+        <div class="user-perpage-wrapper" style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0">
+            <form method="GET" action="{{ route('admin.user-management.index') }}" class="user-form-wrapper" style="display:flex;align-items:center;gap:0.5rem">
+                <input type="hidden" name="tab" value="{{ $tab }}">
+                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
+                <div style="position:relative">
+                    <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                        <option value="5" {{ request('per_page', 10) == 5 ? 'selected' : '' }}>5</option>
+                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
+                    </select>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+            </form>
+        </div>
     </div>
 
     {{-- Main Card --}}
     <div class="struktur-card">
         <div class="table-container" style="padding:0">
-            
+
             @php
                 $userColumns = [
                     [
@@ -157,10 +192,10 @@
                         'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
                         'type' => 'callback',
                         'callback' => function($item, $value) {
-                            $avatarHtml = $item->avatar 
-                                ? '<img src="' . asset('storage/' . $item->avatar) . '" style="width:100%;height:100%;object-fit:cover">' 
+                            $avatarHtml = $item->avatar
+                                ? '<img src="' . asset('storage/' . $item->avatar) . '" style="width:100%;height:100%;object-fit:cover">'
                                 : strtoupper(substr($item->name, 0, 1));
-                                
+
                             return '
                                 <div style="display:flex;align-items:center;gap:0.75rem">
                                     <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0">
@@ -180,7 +215,7 @@
                         'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
                     ],
                     [
-                        'key' => 'applications', 
+                        'key' => 'applications',
                         'label' => 'Aplikasi',
                         'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
                         'type' => 'callback',
@@ -228,10 +263,10 @@
                 'rowActions' => function($item) {
                     $html = '';
                     if (auth()->user()->sidongan_role === 'super_admin') {
-                        $statusAction = $item->email_verified_at 
+                        $statusAction = $item->email_verified_at
                             ? '<button type="button" onclick="toggleStatus('.$item->id.', \''.addslashes($item->name).'\', true)" title="Nonaktifkan Akun" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'#fef3c7\';this.style.color=\'#d97706\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>'
                             : '<button type="button" onclick="toggleStatus('.$item->id.', \''.addslashes($item->name).'\', false)" title="Aktifkan Akun" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'#f0fdf4\';this.style.color=\'#16a34a\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>';
-                        
+
                         $html .= $statusAction;
                     }
                     return $html;
@@ -257,7 +292,7 @@ async function toggleStatus(userId, userName, currentStatus) {
         } else {
             if (!confirm(`Apakah Anda yakin ingin ${action} akun "${userName}"?`)) return;
         }
-        
+
         const response = await fetch(`/admin/user-management/${userId}/toggle-status`, {
             method: 'POST',
             headers: {
@@ -266,7 +301,7 @@ async function toggleStatus(userId, userName, currentStatus) {
                 'Content-Type': 'application/json'
             }
         });
-        
+
         const data = await response.json();
         if (data.success) {
             if (typeof Toast !== 'undefined') Toast.success(data.message);

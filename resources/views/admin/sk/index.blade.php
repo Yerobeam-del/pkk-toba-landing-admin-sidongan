@@ -18,6 +18,22 @@
     .tabs-container::-webkit-scrollbar { height: 4px; }
     .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
     .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+
+    /* Search & Tampilkan adjustments for mobile */
+    .sk-search-wrapper {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    .sk-search-input {
+        width: 100% !important;
+    }
+    .sk-perpage-wrapper {
+        width: 100% !important;
+        justify-content: flex-end !important;
+    }
+    .sk-form-wrapper {
+        width: auto !important;
+    }
 }
 </style>
 
@@ -70,9 +86,9 @@
     </div>
 </div>
 
-{{-- TABS & SEARCH --}}
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:1.5rem;flex-wrap:wrap">
-    <div class="tabs-container" style="flex:1;min-width:0;display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem">
+{{-- TABS --}}
+<div style="margin-bottom:1rem">
+    <div class="tabs-container" style="display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem;overflow-x:auto">
         @php
             $tabs = [
                 'all' => ['label' => 'Semua Dokumen', 'count' => $stats['total']],
@@ -92,9 +108,9 @@
                 ]);
             @endphp
             <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}"
-            style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }}"
-            onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}"
-            onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
+               style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};white-space:nowrap"
+               onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}"
+               onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
                 {{ $tabData['label'] }}
                 @if($tabData['count'] > 0)
                     <span style="background:rgba(0,0,0,0.05);color:var(--text-muted);padding:2px 8px;border-radius:12px;font-size:0.75rem">{{ $tabData['count'] }}</span>
@@ -102,35 +118,20 @@
             </a>
         @endforeach
     </div>
+</div>
 
-    {{-- Search Form & Per Page --}}
-    <div style="flex-shrink:0;display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">
-        {{-- Per Page Dropdown --}}
-        <form method="GET" action="{{ route('admin.sk.index') }}" style="display:flex;align-items:center;gap:0.5rem">
-            <input type="hidden" name="tab" value="{{ $currentTab }}">
-            <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-            <div style="position:relative">
-                <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='#8b5cf6';this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
-                </select>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
-                    <polyline points="6 9 12 15 18 9"/>
-                </svg>
-            </div>
-        </form>
-
-        {{-- Search Form --}}
-        <form method="GET" action="{{ route('admin.sk.index') }}" style="flex-shrink:0">
+{{-- Search & Tampilkan --}}
+<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+    {{-- Search Form --}}
+    <div class="sk-search-wrapper" style="flex:1;min-width:200px">
+        <form method="GET" action="{{ route('admin.sk.index') }}">
             <input type="hidden" name="tab" value="{{ $currentTab }}">
             <div style="position:relative">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
                     <circle cx="11" cy="11" r="8"/>
                     <path d="m21 21-4.35-4.35"/>
                 </svg>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama dokumen..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;width:250px;transition:all 0.2s" onfocus="this.style.borderColor='#8b5cf6';this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+                <input type="text" name="search" value="{{ request('search') }}" class="sk-search-input" placeholder="Cari nama dokumen..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;width:100%;transition:all 0.2s" onfocus="this.style.borderColor='#8b5cf6';this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
                 @if(request('search'))
                     <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -139,6 +140,25 @@
                         </svg>
                     </a>
                 @endif
+            </div>
+        </form>
+    </div>
+
+    {{-- Per Page Dropdown --}}
+    <div class="sk-perpage-wrapper" style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0">
+        <form method="GET" action="{{ route('admin.sk.index') }}" class="sk-form-wrapper" style="display:flex;align-items:center;gap:0.5rem">
+            <input type="hidden" name="tab" value="{{ $currentTab }}">
+            <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
+            <div style="position:relative">
+                <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='#8b5cf6';this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                </select>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
             </div>
         </form>
     </div>
