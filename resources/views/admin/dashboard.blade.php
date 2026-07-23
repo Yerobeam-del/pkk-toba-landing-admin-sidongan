@@ -25,7 +25,7 @@
     </div>
 
     {{-- Total Desa --}}
-    <div class="stat-card" style="background:linear-gradient(135deg,#38a169,#2f855a);color:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+    {{--<div class="stat-card" style="background:linear-gradient(135deg,#38a169,#2f855a);color:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
         <div style="display:flex;align-items:flex-start;gap:1rem">
             <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -36,7 +36,7 @@
                 <p style="font-size:0.75rem;opacity:0.7;margin:0.25rem 0 0 0">Desa & Kelurahan</p>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     {{-- Pengurus --}}
     <div class="stat-card" style="background:linear-gradient(135deg,#ed8936,#dd6b20);color:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
@@ -82,8 +82,8 @@
             </div>
             <span>Tambah Berita</span>
         </a>
-        
-        <a href="{{ route('admin.desa.index') }}" class="quick-action-btn">
+
+        {{-- <a href="{{ route('admin.desa.index') }}" class="quick-action-btn">
             <div class="action-icon" style="background: rgba(234, 179, 8, 0.1); color: #eab308;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -91,8 +91,8 @@
                 </svg>
             </div>
             <span>Kelola Desa</span>
-        </a>
-        
+        </a> --}}
+
         <a href="{{ route('admin.struktur.index') }}" class="quick-action-btn">
             <div class="action-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -104,7 +104,7 @@
             </div>
             <span>Struktur Organisasi</span>
         </a>
-        
+
         <a href="{{ route('admin.template.index') }}" class="quick-action-btn">
             <div class="action-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
