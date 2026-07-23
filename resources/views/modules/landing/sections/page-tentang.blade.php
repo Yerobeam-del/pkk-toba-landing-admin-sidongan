@@ -44,16 +44,13 @@
         border-radius: 24px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.1);
         background: #fff;
-        /* FIX: Tambahkan padding bottom untuk ruang kontrol map */
-        padding-bottom: 80px;
     }
 
     .tentang-map-frame {
         width: 100%;
-        height: 450px; /* FIX: Tinggi yang cukup */
+        height: 450px; /* FIX: Ditingkatkan agar kontrol/panah map tidak terpotong */
         border-radius: 24px;
-        /* FIX: Hapus overflow hidden agar kontrol map tidak terpotong */
-        overflow: visible;
+        overflow: hidden;
     }
 
     /* FIX: Paksa iframe mengisi container dan abaikan style inline dari API */
@@ -61,8 +58,6 @@
         width: 100% !important;
         height: 100% !important;
         border: none !important;
-        /* FIX: Pastikan iframe tidak terpotong */
-        overflow: visible !important;
     }
 
     .tentang-map-overlay {
@@ -75,8 +70,6 @@
         color: #fff;
         border-bottom-left-radius: 24px;
         border-bottom-right-radius: 24px;
-        /* FIX: Pastikan overlay di atas map */
-        z-index: 10;
     }
 
     /* Mobile Responsive Fixes */
@@ -94,8 +87,6 @@
         .tentang-map-wrapper {
             order: 2; /* FIX: Map muncul di bawah pada mobile */
             margin-top: 1rem;
-            /* FIX: Kurangi padding di mobile */
-            padding-bottom: 70px;
         }
 
         .tentang-text h2 {
