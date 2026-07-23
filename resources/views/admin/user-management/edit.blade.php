@@ -8,19 +8,19 @@
     .form-grid-2 {
         grid-template-columns: 1fr !important;
     }
-    
+
     .permission-grid {
         grid-template-columns: 1fr !important;
     }
-    
+
     .email-input-group {
         flex-direction: column !important;
     }
-    
+
     .email-input-group input[type="text"] {
         width: 100% !important;
     }
-    
+
     .email-domain {
         width: 100% !important;
         text-align: center !important;
@@ -53,15 +53,15 @@
     <form action="{{ route('admin.user-management.update', $user) }}" method="POST">
         @csrf
         @method('PUT')
-        
+
         <div style="display:grid;gap:1.5rem">
-            
+
             {{-- Nama Lengkap (Full Width) --}}
             <div>
                 <label style="font-weight:600;display:block;margin-bottom:0.5rem">Nama Lengkap *</label>
                 <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}" required>
             </div>
-            
+
             {{-- Grid 2 Kolom: Email & Phone --}}
             <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
                 {{-- Email --}}
@@ -72,7 +72,7 @@
                         $emailUsername = $emailParts[0] ?? '';
                     @endphp
                     <div class="email-input-group" style="display:flex;align-items:center;gap:0.5rem">
-                        <input type="text" id="email_username" name="email_username" placeholder="username" 
+                        <input type="text" id="email_username" name="email_username" placeholder="username"
                             value="{{ old('email_username', $emailUsername) }}"
                             style="flex:1;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;outline:none"
                             onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='#e2e8f0'" required>
@@ -83,14 +83,14 @@
                     <input type="hidden" name="email" id="email_full" value="{{ old('email', $user->email) }}">
                     <small style="color:var(--text-muted);margin-top:0.25rem;display:block">Email otomatis: username@pkk-toba.id</small>
                 </div>
-                
+
                 {{-- Phone --}}
                 <div>
                     <label style="font-weight:600;display:block;margin-bottom:0.5rem">Nomor Telepon</label>
                     <input type="text" name="phone_number" class="form-control" value="{{ old('phone_number', $user->phone_number) }}">
                 </div>
             </div>
-            
+
             {{-- Grid 2 Kolom: Password & Confirm --}}
             <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
                 <div>
@@ -98,7 +98,7 @@
                     <input type="password" name="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah">
                     <small style="color:var(--text-muted);display:block;margin-top:0.25rem">Kosongkan jika tidak ingin mengubah</small>
                 </div>
-                
+
                 <div>
                     <label style="font-weight:600;display:block;margin-bottom:0.5rem">Konfirmasi Password Baru</label>
                     <input type="password" name="password_confirmation" class="form-control">
@@ -113,16 +113,19 @@
                     <select name="role_id" id="roleSelect" class="form-control" required onchange="togglePermissionSection()">
                         <option value="">-- Pilih Role --</option>
                         @foreach($roles as $role)
-                            <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }}>
-                                {{ $role->display_name }} - {{ $role->description }}
-                            </option>
+                            {{-- Hanya tampilkan Super Admin jika user yang login adalah Super Admin --}}
+                            @if(auth()->user()->hasRole('super_admin') || $role->name !== 'super_admin')
+                                <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }}>
+                                    {{ $role->display_name }} - {{ $role->description }}
+                                </option>
+                            @endif
                         @endforeach
                     </select>
                     <small style="color:var(--text-muted);display:block;margin-top:0.25rem">
                         Administrator: Akses penuh | Anggota: Akses terbatas
                     </small>
                 </div>
-                
+
                 {{-- SIDONGAN Role --}}
                 <div id="sidonganRoleSection" style="display:none">
                     <label style="font-weight:600;display:block;margin-bottom:0.5rem">Peran di SIDONGAN</label>
@@ -138,7 +141,7 @@
                         Pilih peran untuk akses SIDONGAN
                     </small>
                 </div>
-                                
+
                 {{-- SIEDA Role (Conditional) --}}
                 <div id="siedaRoleSection" style="display:none">
                     <label style="font-weight:600;display:block;margin-bottom:0.5rem">Peran di SIEDA</label>
@@ -159,7 +162,7 @@
                             <i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>
                             Wilayah Akses SIEDA
                         </h4>
-                        
+
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                             {{-- Kecamatan Dropdown --}}
                             <div id="kecamatanField">
@@ -173,7 +176,7 @@
                                     Operator: Akses semua desa di kecamatan ini
                                 </small>
                             </div>
-                            
+
                             {{-- Kelurahan Dropdown --}}
                             <div id="kelurahanField" style="display: none;">
                                 <label style="font-weight: 600; display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">
@@ -195,7 +198,7 @@
             <div id="permissionSection" style="display:none;border:1px solid var(--border);border-radius:8px;padding:1.25rem;background:#f8fafc">
                 <label style="font-weight:600;display:block;margin-bottom:0.5rem">Permission Akses <span style="color:#ef4444">*</span></label>
                 <small style="color:var(--text-muted);display:block;margin-bottom:1rem">Pilih modul yang bisa diakses user ini</small>
-                
+
                 <div class="permission-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1rem">
                     @foreach($permissions as $group => $perms)
                         <div style="padding:1rem;background:#fff;border-radius:8px;border:1px solid var(--border)">
@@ -206,8 +209,8 @@
                                 @foreach($perms as $perm)
                                     @if($perm->name !== 'publish-berita')
                                     <label class="custom-checkbox-label" style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.4rem 0.5rem;border-radius:6px;transition:all 0.2s" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                                        <input type="checkbox" name="permissions[]" value="{{ $perm->id }}" 
-                                            class="permission-checkbox custom-checkbox-input" 
+                                        <input type="checkbox" name="permissions[]" value="{{ $perm->id }}"
+                                            class="permission-checkbox custom-checkbox-input"
                                             data-group="{{ $group }}"
                                             {{ in_array($perm->id, $userPermissions) ? 'checked' : '' }}
                                             style="display:none">
@@ -225,16 +228,16 @@
                     @endforeach
                 </div>
             </div>
-            
+
             {{-- Aplikasi yang Diakses --}}
             <div>
                 <label style="font-weight:600;display:block;margin-bottom:0.5rem">Aplikasi yang Diakses</label>
                 <div style="border:1px solid var(--border);border-radius:8px;padding:1rem;max-height:250px;overflow-y:auto;background:#f8fafc">
                     @forelse($applications as $app)
                     <label class="custom-checkbox-label" style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.5rem;border-radius:6px;transition:all 0.2s;margin-bottom:0.25rem" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='transparent'">
-                        <input type="checkbox" name="applications[]" value="{{ $app->id }}" 
-                            class="application-checkbox custom-checkbox-input" 
-                            data-app-name="{{ $app->name }}" 
+                        <input type="checkbox" name="applications[]" value="{{ $app->id }}"
+                            class="application-checkbox custom-checkbox-input"
+                            data-app-name="{{ $app->name }}"
                             data-app-short="{{ $app->short_name }}"
                             {{ in_array($app->id, $userApplications) ? 'checked' : '' }}
                             style="display:none">
@@ -251,7 +254,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:flex-end;padding-top:1rem;border-top:1px solid var(--border)">
             <a href="{{ route('admin.user-management.index') }}" class="btn" style="background:#f8fafc;color:var(--text-dark)">Batal</a>
             <button type="submit" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
@@ -272,15 +275,15 @@
 // ==========================================
 function initCustomCheckboxes() {
     const checkboxes = document.querySelectorAll('.custom-checkbox-input');
-    
+
     checkboxes.forEach(checkbox => {
         const label = checkbox.closest('.custom-checkbox-label');
         const box = label.querySelector('.custom-checkbox-box');
         const check = label.querySelector('.custom-checkbox-check');
-        
+
         // Set initial state (penting untuk edit - checkbox yang sudah checked)
         updateCustomCheckbox(box, check, checkbox.checked);
-        
+
         // On change
         checkbox.addEventListener('change', function() {
             updateCustomCheckbox(box, check, this.checked);
@@ -290,7 +293,7 @@ function initCustomCheckboxes() {
 
 function updateCustomCheckbox(box, check, isChecked) {
     if (!box || !check) return;
-    
+
     if (isChecked) {
         box.style.background = 'linear-gradient(135deg, #14b8a6, #0d9488)';
         box.style.borderColor = '#14b8a6';
@@ -323,7 +326,7 @@ function togglePermissionSection() {
     const permissionSection = document.getElementById('permissionSection');
     const selectedOption = roleSelect.options[roleSelect.selectedIndex];
     const roleName = selectedOption ? selectedOption.text.toLowerCase() : '';
-    
+
     if (roleName.includes('anggota')) {
         permissionSection.style.display = 'block';
     } else {
@@ -348,28 +351,28 @@ document.getElementById('email_username').addEventListener('input', updateEmail)
 document.addEventListener('DOMContentLoaded', function() {
     // Init email
     updateEmail();
-    
+
     // Init permission section
     togglePermissionSection();
-    
+
     // Init custom checkboxes
     initCustomCheckboxes();
-    
+
     // SIDONGAN Role Logic
     const checkboxes = document.querySelectorAll('input[name="applications[]"]');
     const sidonganRoleSection = document.getElementById('sidonganRoleSection');
     const sidonganRoleSelect = document.getElementById('sidonganRole');
-    
+
     function checkSidonganStatus() {
         let isSidonganChecked = false;
-        
+
         checkboxes.forEach(checkbox => {
             const appShort = (checkbox.dataset.appShort || '').toLowerCase();
             if (appShort === 'sidongan' && checkbox.checked) {
                 isSidonganChecked = true;
             }
         });
-        
+
         if (isSidonganChecked) {
             sidonganRoleSection.style.display = 'block';
             if (sidonganRoleSelect) sidonganRoleSelect.required = true;
@@ -381,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
+
     // SIEDA Role Logic
     const siedaRoleSection = document.getElementById('siedaRoleSection');
     const siedaRoleSelect = document.getElementById('siedaRole');
@@ -412,14 +415,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const siedaKelurahanSelect = document.getElementById('siedaKelurahan');
     const kecamatanField = document.getElementById('kecamatanField');
     const kelurahanField = document.getElementById('kelurahanField');
-    
+
     // Load Kecamatan from API
     async function loadKecamatan() {
         try {
             // Kabupaten Toba code is 12.12
             const response = await fetch('/api/v1/wilayah/districts/12.12');
             const result = await response.json();
-            
+
             if (result.success && result.data) {
                 siedaKecamatanSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
                 result.data.forEach(kec => {
@@ -435,18 +438,18 @@ document.addEventListener('DOMContentLoaded', function() {
             siedaKecamatanSelect.innerHTML = '<option value="">Gagal memuat data</option>';
         }
     }
-    
+
     // Load Kelurahan based on Kecamatan
     async function loadKelurahan(districtCode) {
         if (!districtCode) {
             siedaKelurahanSelect.innerHTML = '<option value="">-- Pilih Desa/Kelurahan --</option>';
             return;
         }
-        
+
         try {
             const response = await fetch(`/api/v1/wilayah/villages/${districtCode}`);
             const result = await response.json();
-            
+
             if (result.success && result.data) {
                 siedaKelurahanSelect.innerHTML = '<option value="">-- Pilih Desa/Kelurahan --</option>';
                 result.data.forEach(kel => {
@@ -461,15 +464,15 @@ document.addEventListener('DOMContentLoaded', function() {
             siedaKelurahanSelect.innerHTML = '<option value="">Gagal memuat data</option>';
         }
     }
-    
+
     // Handle SIEDA Role Change
     function handleSiedaRoleChange() {
         const selectedRole = siedaRoleSelect ? siedaRoleSelect.value : '';
-        
+
         if (selectedRole === 'operator' || selectedRole === 'kader') {
             siedaWilayahSection.style.display = 'block';
             loadKecamatan();
-            
+
             if (selectedRole === 'operator') {
                 // Operator: hanya pilih kecamatan
                 kecamatanField.style.display = 'block';
@@ -492,12 +495,12 @@ document.addEventListener('DOMContentLoaded', function() {
             siedaKelurahanSelect.value = '';
         }
     }
-    
+
     // Event listener for SIEDA role change
     if (siedaRoleSelect) {
         siedaRoleSelect.addEventListener('change', handleSiedaRoleChange);
     }
-    
+
     // Event listener for Kecamatan change
     if (siedaKecamatanSelect) {
         siedaKecamatanSelect.addEventListener('change', function() {
@@ -506,7 +509,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Call on initial load if editing
     if (siedaRoleSelect && siedaRoleSelect.value) {
         handleSiedaRoleChange();
@@ -515,13 +518,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Pre-fill values for edit
     if (siedaRoleSelect && siedaRoleSelect.value) {
         handleSiedaRoleChange();
-        
+
         // Pre-fill kecamatan
         const savedKecamatan = "{{ old('sieda_kecamatan', $user->sieda_kecamatan) }}";
         if (savedKecamatan && siedaKecamatanSelect) {
             setTimeout(() => {
                 siedaKecamatanSelect.value = savedKecamatan;
-                
+
                 // If kader, load kelurahan
                 if (siedaRoleSelect.value === 'kader') {
                     loadKelurahan(savedKecamatan).then(() => {
@@ -541,11 +544,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial check
     checkSiedaStatus();
-    
+
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', checkSidonganStatus);
     });
-    
+
     checkSidonganStatus();
 });
 </script>
