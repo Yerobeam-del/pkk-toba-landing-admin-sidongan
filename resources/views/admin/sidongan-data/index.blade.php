@@ -213,6 +213,23 @@
                 <input type="date" name="date_to" value="{{ request('date_to') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
             </div>
         </div>
+
+        <div style="display:flex;justify-content:flex-end;align-items:center;gap:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(0,0,0,0.06)">
+            <form method="GET" action="{{ route('admin.sidongan-data.index') }}" style="display:flex;align-items:center;gap:0.5rem">
+                <input type="hidden" name="tab" value="{{ $currentTab }}">
+                <input type="hidden" name="search" value="{{ request('search') }}">
+                <input type="hidden" name="category_id" value="{{ request('category_id') }}">
+                <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
+                <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.9rem;cursor:pointer;background:white;min-width:80px">
+                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                </select>
+            </form>
+        </div>
     </form>
 </div>
 
