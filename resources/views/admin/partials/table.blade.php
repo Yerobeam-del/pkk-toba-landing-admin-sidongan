@@ -241,39 +241,47 @@
         <div class="mobile-card-wrapper">
             @foreach($data as $item)
             <div class="member-card" style="padding:1.25rem;margin-bottom:1rem;background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 8px rgba(0,0,0,0.04)">
-                {{-- Header: Logo/Icon + Nama --}}
-                <div class="member-card-header" style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem">
-                    @php
-                        // Cari kolom icon/logo (bisa type image atau callback)
-                        $iconColumn = collect($columns)->first(fn($col) => in_array($col['key'], ['icon', 'photo_path', 'logo']));
-                        $nameColumn = collect($columns)->first(fn($col) => in_array($col['key'], ['name', 'title', 'subject']));
-                    @endphp
 
-                    @if($iconColumn)
-                        @php
-                            $iconValue = data_get($item, $iconColumn['key']);
-                        @endphp
+                {{-- Nama Aplikasi di Atas (Center) --}}
+                @php
+                    $nameColumn = collect($columns)->first(fn($col) => in_array($col['key'], ['name', 'title', 'subject']));
+                @endphp
+                @if($nameColumn)
+                    <div style="text-align:center;margin-bottom:1rem">
+                        <div style="font-weight:700;color:var(--text-dark);font-size:1.05rem;line-height:1.3">
+                            {{ data_get($item, $nameColumn['key']) }}
+                        </div>
+                        @if($nameColumn['key'] === 'name' && $item->short_name)
+                            <div style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem">{{ $item->short_name }}</div>
+                        @endif
+                    </div>
+                @endif
+
+                {{-- Icon/Logo di Tengah --}}
+                @php
+                    $iconColumn = collect($columns)->first(fn($col) => in_array($col['key'], ['icon', 'photo_path', 'logo']));
+                @endphp
+                @if($iconColumn)
+                    @php
+                        $iconValue = data_get($item, $iconColumn['key']);
+                    @endphp
+                    <div style="display:flex;justify-content:center;margin-bottom:1.25rem">
                         @if($iconColumn['type'] === 'image')
                             @if($iconValue)
-                                <img src="{{ asset('storage/' . $iconValue) }}" alt="{{ data_get($item, $iconColumn['alt_key'] ?? 'name') }}" style="width:60px;height:60px;border-radius:10px;object-fit:cover;background:#f8fafc">
+                                <img src="{{ asset('storage/' . $iconValue) }}" alt="{{ $nameColumn ? data_get($item, $nameColumn['key']) : 'Icon' }}"
+                                     style="width:80px;height:80px;border-radius:12px;object-fit:cover;background:#f8fafc;box-shadow:0 4px 12px rgba(0,0,0,0.08)">
                             @else
-                                <div style="width:60px;height:60px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem">
-                                    {{ strtoupper(substr(data_get($item, $iconColumn['initial_key'] ?? 'name'), 0, 1)) }}
+                                <div style="width:80px;height:80px;border-radius:12px;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.08)">
+                                    {{ strtoupper(substr($nameColumn ? data_get($item, $nameColumn['key']) : 'X', 0, 2)) }}
                                 </div>
                             @endif
                         @elseif($iconColumn['type'] === 'callback' && isset($iconColumn['callback']))
-                            <div style="width:60px;height:60px;border-radius:10px;overflow:hidden;background:#f8fafc">
+                            <div style="width:80px;height:80px;border-radius:12px;overflow:hidden;background:#f8fafc;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center">
                                 {!! $iconColumn['callback']($item, $iconValue) !!}
                             </div>
                         @endif
-                    @endif
-
-                    <div style="flex:1;min-width:0">
-                        @if($nameColumn)
-                            <div style="font-weight:700;color:var(--text-dark);margin-bottom:0.25rem;font-size:1.05rem">{{ data_get($item, $nameColumn['key']) }}</div>
-                        @endif
                     </div>
-                </div>
+                @endif
 
                 {{-- Info Grid: Tampilkan semua kolom kecuali icon dan name --}}
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
