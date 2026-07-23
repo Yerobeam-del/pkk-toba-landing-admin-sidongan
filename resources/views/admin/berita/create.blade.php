@@ -4,30 +4,6 @@
 
 @section('content')
 <style>
-/* Paksa border halus untuk semua input/select/textarea biasa */
-.form-control {
-    border: 1px solid rgba(0, 0, 0, 0.06) !important;
-    border-radius: 8px !important;
-    transition: all 0.2s;
-}
-
-.form-control:focus {
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(20,184,166,0.1) !important;
-}
-
-/* Perhalus border CKEditor (Penyebab Utama Border Tebal) */
-.ck.ck-editor__main > .ck-editor__editable {
-    border: 1px solid rgba(0, 0, 0, 0.06) !important;
-    border-radius: 8px !important;
-    transition: all 0.2s;
-}
-
-.ck.ck-editor__main > .ck-editor__editable.ck-focused {
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(20,184,166,0.1) !important;
-}
-
 /* Responsive untuk Mobile */
 @media (max-width: 768px) {
     .berita-header {

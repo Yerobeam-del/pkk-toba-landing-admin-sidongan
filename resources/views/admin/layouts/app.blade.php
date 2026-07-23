@@ -33,7 +33,6 @@
             --sidebar-active: rgba(20,184,166,0.15);
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
-            --border: #334155;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
