@@ -148,8 +148,15 @@
 
     {{-- PAGINATION DESKTOP - Otomatis muncul jika data adalah paginator --}}
     @if($isPaginator && $paginator->hasPages())
-    <div style="margin-top:1.5rem;padding:1rem;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
-        <div style="display:flex;gap:0.4rem">
+    <div style="margin-top:1.5rem;padding:1rem 1.5rem;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+
+        {{-- Info "Menampilkan..." di SEBELAH KIRI --}}
+        <div style="font-size:0.85rem;color:var(--text-muted)">
+            Menampilkan <strong>{{ $paginator->firstItem() }}</strong> - <strong>{{ $paginator->lastItem() }}</strong> dari <strong>{{ $paginator->total() }}</strong> data
+        </div>
+
+        {{-- Tombol Pagination di SEBELAH KANAN --}}
+        <div style="display:flex;gap:0.4rem;align-items:center">
             @php
                 $currentPage = $paginator->currentPage();
                 $lastPage = $paginator->lastPage();
@@ -216,10 +223,6 @@
                 </button>
             @endif
         </div>
-
-        <div style="font-size:0.85rem;color:var(--text-muted)">
-            Menampilkan <strong>{{ $paginator->firstItem() }}</strong> - <strong>{{ $paginator->lastItem() }}</strong> dari <strong>{{ $paginator->total() }}</strong> data
-        </div>div>
     </div>
     @endif
 
