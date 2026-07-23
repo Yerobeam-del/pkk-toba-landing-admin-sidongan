@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
-
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use Illuminate\Http\Request;
@@ -19,8 +17,8 @@ class ApplicationController extends Controller
         $baseQuery = Application::query()->where(function($q) use ($search) {
             if ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                ->orWhere('short_name', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
+                  ->orWhere('short_name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
             }
         });
 
@@ -79,7 +77,6 @@ class ApplicationController extends Controller
     {
         $maxSortOrder = Application::max('sort_order') ?? 0;
         $nextSortOrder = $maxSortOrder + 1;
-
         return view('admin.aplikasi.create', compact('nextSortOrder'));
     }
 
@@ -116,13 +113,11 @@ class ApplicationController extends Controller
                 ->where('is_active', true)
                 ->where('status', 'active')
                 ->count();
-
             if ($currentBerandaCount >= 2) {
                 return redirect()->back()
                     ->withInput()
                     ->withErrors(['show_in_quick_access' => 'Maksimal hanya 2 aplikasi yang bisa tampil di Beranda.']);
             }
-
             $validated['show_in_quick_access'] = 1;
         } else {
             $validated['show_in_quick_access'] = 0;
@@ -183,21 +178,18 @@ class ApplicationController extends Controller
 
         // Validasi maksimal 2 aplikasi di Beranda (kecuali aplikasi yang sedang diedit)
         if ($request->has('show_in_quick_access')) {
-            // Jika aplikasi ini sebelumnya sudah dicentang Beranda, skip validasi
             if (!$aplikasi->show_in_quick_access) {
                 $currentBerandaCount = Application::where('show_in_quick_access', true)
                     ->where('is_active', true)
                     ->where('status', 'active')
                     ->where('id', '!=', $aplikasi->id)
                     ->count();
-
                 if ($currentBerandaCount >= 2) {
                     return redirect()->back()
                         ->withInput()
                         ->withErrors(['show_in_quick_access' => 'Maksimal hanya 2 aplikasi yang bisa tampil di Beranda.']);
                 }
             }
-
             $validated['show_in_quick_access'] = 1;
         } else {
             $validated['show_in_quick_access'] = 0;
@@ -212,7 +204,6 @@ class ApplicationController extends Controller
         }
 
         $aplikasi->update($validated);
-
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil diperbarui.');
     }
 
@@ -221,9 +212,7 @@ class ApplicationController extends Controller
         if ($aplikasi->icon) {
             Storage::disk('public')->delete($aplikasi->icon);
         }
-
         $aplikasi->delete();
-
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil dihapus.');
     }
 }
