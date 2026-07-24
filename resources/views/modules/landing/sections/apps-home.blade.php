@@ -7,12 +7,12 @@
             max-width: 1200px !important;
             margin: 0 auto !important;
         }
-        
+
         .apps-section-header {
             text-align: center;
             margin-bottom: 3rem;
         }
-        
+
         .apps-section-label {
             display: inline-block;
             font-size: 0.8rem;
@@ -25,14 +25,14 @@
             border-radius: 20px;
             margin-bottom: 1rem;
         }
-        
+
         .apps-section-title {
             font-size: 2.2rem;
             font-weight: 800;
             color: #0f766e;
             margin-bottom: 0.8rem;
         }
-        
+
         .apps-section-desc {
             font-size: 1rem;
             color: #718096;
@@ -40,7 +40,7 @@
             margin: 0 auto;
             line-height: 1.7;
         }
-        
+
         @media (max-width: 768px) {
             .apps-home-grid {
                 grid-template-columns: 1fr !important;
@@ -50,12 +50,12 @@
                 font-size: 1.8rem;
             }
         }
-        
+
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.5); }
             50% { box-shadow: 0 0 0 8px rgba(72, 187, 120, 0); }
         }
-        
+
         @keyframes pulse-orange {
             0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
             50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
@@ -98,32 +98,32 @@ let appsLoaded = false;
 
 async function loadApps() {
     if (appsLoaded) return;
-    
+
     const loadingEl = document.getElementById('apps-loading');
     const gridEl = document.getElementById('apps-grid');
     const emptyEl = document.getElementById('apps-empty');
-    
+
     try {
         const response = await fetch('/api/v1/applications');
         const result = await response.json();
-        
+
         loadingEl.style.display = 'none';
-        
+
         // GABUNGKAN: active + maintenance + FILTER show_in_quick_access
         const activeApps = (result.data.active || []).filter(app => app.show_in_quick_access == true);
         const maintenanceApps = (result.data.maintenance || []).filter(app => app.show_in_quick_access == true);
         const allApps = [...activeApps, ...maintenanceApps];
-        
+
         console.log('📊 Total apps:', allApps.length);
         console.log('Active:', activeApps.length, 'Maintenance:', maintenanceApps.length);
-        
+
         if (result.success && allApps.length > 0) {
             gridEl.style.display = 'grid';
-            
+
             gridEl.innerHTML = allApps.map((app, index) => {
                 // CEK STATUS MAINTENANCE
                 const isMaintenance = app.status === 'maintenance';
-                
+
                 // ✅ ARRAY 10 WARNA UNTUK APLIKASI
                 const appColors = [
                     { primary: '#2563eb', bg: 'linear-gradient(135deg, #dbeafe, #eff6ff)', btnBg: '#2563eb', circle: '#bfdbfe' },      // Biru (SIEDA)
@@ -137,11 +137,11 @@ async function loadApps() {
                     { primary: '#4338ca', bg: 'linear-gradient(135deg, #e0e7ff, #eef2ff)', btnBg: '#4338ca', circle: '#c7d2fe' },      // Indigo
                     { primary: '#be185d', bg: 'linear-gradient(135deg, #fce7f3, #fdf2f8)', btnBg: '#be185d', circle: '#f9a8d4' }       // Rose
                 ];
-                
+
                 // Tentukan warna berdasarkan short_name atau index
                 const appName = (app.short_name || app.name || '').toLowerCase();
                 let colorIndex = 0;
-                
+
                 if (appName.includes('sieda') || appName.includes('e-dasawisma')) {
                     colorIndex = 0; // Biru
                 } else if (appName.includes('sidongan')) {
@@ -150,11 +150,11 @@ async function loadApps() {
                     // Gunakan index aplikasi untuk warna (loop 10 warna)
                     colorIndex = (index % 10);
                 }
-                
+
                 const colors = appColors[colorIndex];
-                
+
                 const iconUrl = app.icon ? '/storage/' + app.icon.replace(/^(storage\/|public\/)/i, '') : null;
-                
+
                 const features = Array.isArray(app.features) ? app.features.slice(0, 5) : [];
                 const featuresHtml = features.map(f => `
                     <li style="display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 0.9rem; color: ${isMaintenance ? '#94a3b8' : '#4a5568'};">
@@ -164,33 +164,29 @@ async function loadApps() {
                         ${f}
                     </li>
                 `).join('');
-                
-                const iconHtml = iconUrl 
+
+                const iconHtml = iconUrl
                     ? `<img src="${iconUrl}" alt="${app.short_name}" style="width: 100%; height: 100%; object-fit: contain; padding: 10px; ${isMaintenance ? 'filter: grayscale(100%) brightness(1.3);' : 'filter: brightness(0) invert(1);'}">`
                     : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 2rem;">${(app.short_name || 'A').charAt(0)}</div>`;
-                
+
                 // URL APLIKASI
                 const appUrl = app.url || '#';
-                
+
                 return `
-                <div style="${isMaintenance ? 'pointer-events: none; cursor: not-allowed;' : ''}">
-                    <article style="
-                        background: #fff; 
-                        border-radius: 20px; 
-                        overflow: hidden; 
-                        box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
-                        border: 1px solid rgba(0,0,0,0.04); 
-                        transition: all 0.4s ease; 
-                        display: flex; 
-                        flex-direction: column; 
+                <a href="${isMaintenance ? '#' : appUrl}" class="app-card-home ${cardClass} ${isMaintenance ? 'maintenance-mode' : ''}" style="
+                        background: #fff;
+                        border-radius: 20px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+                        border: 1px solid rgba(0,0,0,0.04);
+                        transition: all 0.4s ease;
+                        display: flex;
+                        flex-direction: column;
                         height: 100%;
-                        ${isMaintenance ? 'filter: grayscale(80%); opacity: 0.85;' : 'cursor: pointer;'}
+                        ${isMaintenance ? 'filter: grayscale(80%); opacity: 0.85; pointer-events: none; cursor: not-allowed;' : 'cursor: pointer;'}
                         position: relative;
-                    "
-                    ${!isMaintenance ? `onclick="window.location.href='${appUrl}'"
-                    onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 60px rgba(0,0,0,0.12)'"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)'"` : ''}>
-                        
+                    " ${!isMaintenance ? `onclick="window.location.href='${appUrl}'"` : ''}>
+
                         ${isMaintenance ? `
                         <div style="position:absolute;top:1rem;right:1rem;background:rgba(245,158,11,0.9);color:#fff;padding:0.4rem 0.8rem;border-radius:20px;font-size:0.7rem;font-weight:700;display:flex;align-items:center;gap:0.4rem;z-index:10;box-shadow:0 2px 8px rgba(245,158,11,0.3);">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -198,33 +194,33 @@ async function loadApps() {
                             </svg>
                             MAINTENANCE
                         </div>` : ''}
-                        
-                        <div style="position: relative; padding: 2.5rem 2.5rem 1.5rem; overflow: hidden; background: ${isMaintenance ? '#f1f5f9' : colors.bg};">
+
+                        <div style="position: relative; padding: 2.5rem 2.5rem 1.5rem; overflow: hidden; background: ${isMaintenance ? '#f1f5f9' : colors.bg}; pointer-events: none;">
                             <div style="position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; border-radius: 50%; background: ${isMaintenance ? '#cbd5e1' : colors.circle}; opacity: ${isMaintenance ? '0.2' : '0.4'};"></div>
-                            
+
                             <div style="width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 8px 25px rgba(0,0,0,0.1); background: ${isMaintenance ? '#94a3b8' : colors.primary}; position: relative; z-index: 2;">
                                 ${iconHtml}
                             </div>
                         </div>
-                        
-                        <div style="padding: 2rem 2.5rem 2rem; flex: 1; display: flex; flex-direction: column;">
+
+                        <div style="padding: 2rem 2.5rem 2rem; flex: 1; display: flex; flex-direction: column; pointer-events: none;">
                             <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.3rem; color: ${isMaintenance ? '#64748b' : colors.primary};">${app.short_name || app.name}</h3>
                             <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1rem; font-weight: 500;">${app.name || ''}</p>
                             <p style="color: ${isMaintenance ? '#94a3b8' : '#4a5568'}; line-height: 1.7; margin-bottom: 1.5rem; font-size: 0.95rem;">${app.description || ''}</p>
                             ${features.length ? `<ul style="list-style: none; margin: 0; padding: 0; margin-bottom: 2rem;">${featuresHtml}</ul>` : ''}
                         </div>
-                        
-                        <div style="padding: 1.5rem 2.5rem; border-top: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between;">
+
+                        <div style="padding: 1.5rem 2.5rem; border-top: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; pointer-events: none;">
                             <span style="
-                                display: inline-flex; 
-                                align-items: center; 
-                                gap: 8px; 
-                                padding: 12px 28px; 
-                                border-radius: 14px; 
-                                font-weight: 600; 
-                                font-size: 0.9rem; 
-                                background: ${isMaintenance ? '#94a3b8' : colors.btnBg}; 
-                                color: #fff; 
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 8px;
+                                padding: 12px 28px;
+                                border-radius: 14px;
+                                font-weight: 600;
+                                font-size: 0.9rem;
+                                background: ${isMaintenance ? '#94a3b8' : colors.btnBg};
+                                color: #fff;
                                 text-decoration: none;
                                 cursor: ${isMaintenance ? 'not-allowed' : 'pointer'};
                             ">
@@ -238,14 +234,13 @@ async function loadApps() {
                                 ${isMaintenance ? 'Dalam Perbaikan' : 'Aktif'}
                             </div>
                         </div>
-                    </article>
-                </div>
+                </a>
                 `;
             }).join('');
         } else {
             emptyEl.style.display = 'block';
         }
-        
+
         appsLoaded = true;
     } catch (error) {
         console.error('Error:', error);

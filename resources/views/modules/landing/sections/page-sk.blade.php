@@ -17,7 +17,7 @@
             <div class="sk-header">
                 <div class="sk-header-top">
                     <h2 class="sk-section-title">Daftar Dokumen</h2>
-                    
+
                     {{-- CONTROLS: Search di kiri, Dropdown di kanan --}}
                     <div class="sk-header-controls">
                         {{-- Search Box - DI KIRI --}}
@@ -28,7 +28,7 @@
                             </svg>
                             <input type="text" id="searchInput" class="sk-search-input" placeholder="Cari dokumen...">
                         </div>
-                        
+
                         {{-- Per Page Selector - DI KANAN --}}
                         <div class="sk-perpage-selector">
                             <label for="perPageSelect" class="sk-perpage-label">
@@ -131,7 +131,7 @@
                         </svg>
                     </button>
                 </div>
-                
+
                 <div class="sk-pagination-info" id="paginationInfo"></div>
             </div>
 
@@ -146,30 +146,30 @@
                         <polyline points="10 9 9 9 8 9"/>
                     </svg>
                 </div>
-                
+
                 {{-- Title --}}
                 <h3 class="sk-empty-title" id="emptyStateTitle">Belum Ada Dokumen</h3>
-                
+
                 {{-- Search Term Display (box terpisah) --}}
                 <div id="emptyStateSearchTerm" class="sk-empty-search-term" style="display:none"></div>
-                
+
                 {{-- Message --}}
                 <p class="sk-empty-text" id="emptyStateText">
-                    Dokumen SK dan surat resmi akan segera diunggah. 
+                    Dokumen SK dan surat resmi akan segera diunggah.
                     Silakan kunjungi kembali nanti untuk update terbaru.
                 </p>
-                
+
                 {{-- Tombol 1: Kembali ke Beranda --}}
-                <a id="btnBackToHome" onclick="if(typeof navigateTo==='function')navigateTo('beranda')" class="sk-back-btn">
+                <a id="btnBackToHome" href="#" onclick="if(typeof navigateTo==='function')navigateTo('beranda'); return false;" class="sk-back-btn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                     </svg>
                     Kembali ke Beranda
                 </a>
-                
+
                 {{-- Tombol 2: Tampilkan Semua Dokumen --}}
-                <button id="btnShowAllDocs" onclick="clearSearchAndShowAll()" class="sk-back-btn sk-btn-secondary" style="display:none">
+                <button type="button" id="btnShowAllDocs" onclick="clearSearchAndShowAll()" class="sk-back-btn sk-btn-secondary" style="display:none">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                         <path d="M3 3v5h5"/>
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load per_page dari localStorage
     const savedPerPage = localStorage.getItem('sk_per_page') || '5';
     currentPerPage = parseInt(savedPerPage);
-    
+
     const perPageSelect = document.getElementById('perPageSelect');
     if (perPageSelect) {
         perPageSelect.value = currentPerPage;
@@ -204,10 +204,10 @@ function changePerPage(value) {
     localStorage.setItem('sk_per_page', currentPerPage);
     currentSearchTerm = '';
     originalSearchTerm = ''; // ← Reset juga (variable dari navigation.js)
-    
+
     const searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.value = '';
-    
+
     if (typeof loadSKDocuments === 'function') {
         loadSKDocuments(1);
     }
@@ -219,9 +219,9 @@ if (searchInput) {
     searchInput.addEventListener('input', function(e) {
         const term = e.target.value; // ← Preserve original case
         originalSearchTerm = term;   // ← Gunakan variable dari navigation.js
-        
+
         clearTimeout(searchTimeout);
-        
+
         searchTimeout = setTimeout(() => {
             currentSearchTerm = term.toLowerCase().trim(); // ← Untuk API (case-insensitive)
             if (typeof loadSKDocuments === 'function') {

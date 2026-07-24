@@ -209,7 +209,7 @@
             <h1 id="tentangJudul" style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">Tentang Kami</h1>
             <p id="tentangSubjudul" style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 1rem;">Informasi tentang PKK Kabupaten Toba</p>
             <div class="breadcrumb" style="display: flex; justify-content: center; gap: 0.5rem; font-size: 0.9rem;">
-                <a onclick="navigateTo('beranda')" style="color: #fff; text-decoration: none; opacity: 0.8; cursor: pointer;">Beranda</a>
+                <a href="#" onclick="navigateTo('beranda'); return false;" style="color: #fff; text-decoration: none; opacity: 0.8; cursor: pointer;">Beranda</a>
                 <span style="opacity: 0.6;">/</span>
                 <span class="current" style="font-weight: 600;">Tentang</span>
             </div>
@@ -275,7 +275,7 @@
                     <p id="tentangMapsAddress">
                         Jl. D.I Panjaitan No.1, Napitupulu, Kec. Balige, Kabupaten Toba, Sumatera Utara
                     </p>
-                    <a id="tentangMapsLink" href="https://goo.gl/maps/xxxxx" target="_blank" rel="noopener noreferrer">
+                    <a id="tentangMapsLink" href="https://goo.gl/maps/xxxxx" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:0.5rem;min-height:44px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                             <polyline points="15 3 21 3 21 9"/>

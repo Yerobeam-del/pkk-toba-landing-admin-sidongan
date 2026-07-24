@@ -1,26 +1,26 @@
 <footer class="footer">
     <div class="footer-container">
-        
+
         {{-- Title --}}
         <div class="footer-title-section">
             <h2 class="footer-title">PKK Kabupaten Toba</h2>
         </div>
-        
+
         {{-- Main Content: 2 Columns --}}
         <div class="footer-main">
-            
+
             {{-- Left Column: Logo + Info --}}
             <div class="footer-left">
                 <div class="footer-brand-row">
                     <img src="{{ asset('assets/landing/images/Logo-PKK-Transparent.png') }}" alt="PKK Logo" class="footer-brand-logo">
-                    
+
                     <div class="footer-info">
                         <p class="footer-address">
                             Jl. D. I. Panjaitan, No. 1, Balige,<br>
                             Kabupaten Toba,<br>
                             Sumatera Utara 22311
                         </p>
-                        
+
                         <div class="footer-contact">
                             <h3 class="footer-contact-title">Contact Us:</h3>
                             <div class="footer-contact-links">
@@ -42,13 +42,13 @@
                     </div>
                 </div>
             </div>
-            
+
             {{-- Right Column: Logo Kabupaten Toba --}}
             <div class="footer-right">
                 <img src="{{ asset('assets/landing/images/Logo-Kabupaten-Toba-Transparent.png') }}" alt="Kabupaten Toba Logo" class="footer-secondary-logo">
             </div>
         </div>
-        
+
         {{-- Quick Access Section - Dynamic from Database --}}
         @php
             // Ambil aplikasi yang aktif, status active, DAN show_in_footer = true
@@ -64,7 +64,7 @@
             <h3 class="quick-access-title">Quick Access</h3>
             <div class="quick-access-links">
                 @foreach($quickAccessApps as $app)
-                <a href="{{ $app->url ?? '#' }}" target="_blank" class="quick-access-item" title="{{ $app->name }}">
+                <a href="{{ $app->url ?? '#' }}" target="_blank" class="quick-access-item" title="{{ $app->name }}" style="min-height:44px;">
                     @if($app->icon)
                         <img src="{{ asset('storage/' . $app->icon) }}" alt="{{ $app->short_name }}" class="app-icon">
                     @else
@@ -81,11 +81,11 @@
             </div>
         </div>
         @endif
-        
+
         {{-- Bottom Copyright --}}
         <div class="footer-bottom">
             <p class="footer-copyright">Copyright © {{ date('Y') }} PKK Kabupaten Toba. All Rights Reserved.</p>
         </div>
-        
+
     </div>
 </footer>

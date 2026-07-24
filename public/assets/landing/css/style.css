@@ -554,6 +554,118 @@ a,
 .news-card-link * {
     -webkit-tap-highlight-color: transparent;
 }
+
+.page-header .breadcrumb a,
+.news-back-btn,
+.sk-back-btn,
+.template-back-btn,
+.template-preview-open-btn,
+.template-preview-download-btn,
+.template-card-btn,
+.news-share-btn,
+.news-related-link,
+.footer-contact-link,
+.quick-access-item,
+.navbar-brand,
+.nav-link,
+.hamburger,
+.hero-cta,
+.quick-access-card,
+.app-card-home,
+.news-card,
+.news-card-full,
+.news-card-link,
+.template-card,
+.template-pagination-btn,
+.sk-pagination-btn,
+.news-pagination-btn,
+.filter-btn,
+.tab-btn {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.page-header .breadcrumb a,
+.news-back-btn,
+.sk-back-btn,
+.template-back-btn,
+.template-preview-open-btn,
+.template-preview-download-btn,
+.template-card-btn,
+.news-share-btn,
+.news-related-link,
+.footer-contact-link,
+.quick-access-item,
+.navbar-brand,
+.nav-link,
+.hamburger,
+.hero-cta,
+.quick-access-card,
+.app-card-home,
+.news-card,
+.news-card-full,
+.news-card-link,
+.template-card,
+.template-pagination-btn,
+.sk-pagination-btn,
+.news-pagination-btn,
+.filter-btn,
+.tab-btn {
+    min-height: 44px;
+}
+
+.quick-access-card,
+.app-card-home,
+.news-card,
+.news-card-full,
+.news-card-link,
+.template-card {
+    width: 100%;
+    overflow: hidden;
+}
+
+.page-header .breadcrumb a,
+.news-back-btn,
+.sk-back-btn,
+.template-back-btn,
+.template-preview-open-btn,
+.template-preview-download-btn,
+.template-card-btn,
+.news-share-btn,
+.news-related-link,
+.footer-contact-link,
+.quick-access-item,
+.nav-link,
+.hamburger,
+.hero-cta,
+.template-pagination-btn,
+.sk-pagination-btn,
+.news-pagination-btn,
+.filter-btn,
+.tab-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.news-card,
+.news-card-full,
+.news-card-link,
+.quick-access-card,
+.app-card-home,
+.template-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-access-card > *,
+.app-card-home > *,
+.news-card > *,
+.news-card-full > *,
+.news-card-link > *,
+.template-card > * {
+    pointer-events: none;
+}
 .news-home-more { text-align: center; margin-top: 3rem; }
 .btn-see-all { display: inline-flex; align-items: center; gap: 8px; padding: 12px 32px; background: var(--news-color); color: #fff; border-radius: 50px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.3s ease; cursor: pointer; border: none; font-family: inherit; }
 .btn-see-all:hover { background: #1a4731; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(39, 103, 73, 0.3); }

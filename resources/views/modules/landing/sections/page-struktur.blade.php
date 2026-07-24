@@ -8,7 +8,7 @@
             </div>
         </div>
     </div>
-    
+
     <section class="struktur-section">
         <div class="struktur-wrapper">
             <div class="struktur-scroll">
@@ -31,7 +31,7 @@
                                 <div class="org-name" id="name-ketua-pembina">Data belum diisi</div>
                             </div>
                         </div>
-                        
+
                         <div class="org-card-wrapper" id="wrapper-ketua-pkk">
                             <div class="top-v-line"></div>
                             <div class="org-card highlight ketua-center-card">
@@ -48,7 +48,7 @@
                                 <div class="org-name" id="name-ketua-pkk" style="font-size:0.78rem;">Data belum diisi</div>
                             </div>
                         </div>
-                        
+
                         <div class="org-card-wrapper" id="wrapper-staf-ahli">
                             <div class="top-v-line"></div>
                             <div class="org-card highlight staff-combined-card">
@@ -84,7 +84,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- ROW 2: Sekretaris & Bendahara -->
                     <div class="struktur-row" id="row-sekben">
                         <div class="org-card-wrapper">
@@ -118,9 +118,9 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="struktur-row-gap" aria-hidden="true"></div>
-                    
+
                     <!-- ROW 3: Ketua Pokja -->
                     <div class="struktur-row" id="row-pokja">
                         <div class="org-card-wrapper">
@@ -200,7 +200,7 @@
 
                 @foreach($pokjaConfig as $pokja)
                 <div class="pokja-section {{ $pokja['color'] }}">
-                    <div class="pokja-header" onclick="togglePokja('{{ $pokja['id'] }}')">
+                    <button type="button" class="pokja-header" onclick="togglePokja('{{ $pokja['id'] }}')">
                         <div class="pokja-number {{ $pokja['color'] }}">{{ $pokja['num'] }}</div>
                         <div>
                             <div class="pokja-title">{{ $pokja['title'] }}</div>
@@ -209,7 +209,7 @@
                         <div class="toggle-icon" id="icon-{{ $pokja['id'] }}">
                             <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
                         </div>
-                    </div>
+                    </button>
                     <div class="pokja-content" id="{{ $pokja['id'] }}">
                         <div class="pokja-members" id="members-{{ $pokja['id'] }}">
                             <div class="member-card"><div class="org-position">Ketua</div><div class="org-name">Data belum diisi</div></div>
@@ -238,21 +238,21 @@ function forceRedrawConnectors() {
 async function loadStrukturData() {
     if (strukturDataLoaded) return;
     console.log('Fetching struktur data...');
-    
+
     try {
         const response = await fetch('/api/v1/struktur');
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        
+
         const result = await response.json();
         if (!result.success) throw new Error(result.message);
-        
+
         const { pengurus_inti, pokja } = result.data;
         populateStrukturDOM(pengurus_inti || [], pokja || []);
-        
+
         setTimeout(() => {
             forceRedrawConnectors();
         }, 150);
-        
+
         strukturDataLoaded = true;
         console.log('Struktur populated successfully');
     } catch (error) {
@@ -265,17 +265,17 @@ function populateStrukturDOM(pengurus, pokjaList) {
         const nameEl = document.getElementById(nameId);
         const imgEl = document.getElementById(imgId);
         const phEl = document.getElementById(placeholderId);
-        
+
         // Jika ada data dan nama
         if (data && data.name) {
             nameEl.textContent = data.name;
-            
+
             if (data.photo) {
                 // Ada foto → tampilkan foto, sembunyikan placeholder
                 imgEl.src = data.photo;
                 imgEl.style.display = 'block';
                 phEl.style.display = 'none';
-                
+
                 // Jika foto gagal load, tampilkan placeholder
                 imgEl.onerror = function() {
                     this.style.display = 'none';
@@ -300,7 +300,7 @@ function populateStrukturDOM(pengurus, pokjaList) {
     setCard('name-ketua-pkk', 'img-ketua-pkk', 'placeholder-ketua-pkk', findPos(pengurus, 'Ketua TP PKK'));
     setCard('name-sekretaris', 'img-sekretaris', 'placeholder-sekretaris', findPos(pengurus, 'Sekretaris'));
     setCard('name-bendahara', 'img-bendahara', 'placeholder-bendahara', findPos(pengurus, 'Bendahara'));
-    
+
     // Staf Ahli 1 & 2
     const stafAhli1 = pengurus.find(p => p.position === 'Staf Ahli 1');
     const stafAhli2 = pengurus.find(p => p.position === 'Staf Ahli 2');
@@ -316,11 +316,11 @@ function populateStrukturDOM(pengurus, pokjaList) {
     // Anggota Pokja Sections
     const pokjaIds = ['pokja1', 'pokja2', 'pokja3', 'pokja4'];
     const positionHierarchy = ['Ketua', 'Wakil Ketua', 'Sekretaris', 'Sekretaris Pokja', 'Anggota'];
-    
+
     pokjaIds.forEach((id, idx) => {
         const container = document.getElementById('members-' + id);
         if (!container) return;
-        
+
         const members = pokjaList[idx]?.members || [];
 
         members.sort((a, b) => {
@@ -328,16 +328,16 @@ function populateStrukturDOM(pengurus, pokjaList) {
             const orderB = positionHierarchy.indexOf(b.position);
             return (orderA === -1 ? 99 : orderA) - (orderB === -1 ? 99 : orderB);
         });
-        
+
         if (members.length === 0) return;
-        
+
         container.innerHTML = members.map(m => {
             const pos = m.position.toLowerCase();
             const isStruktural = pos.includes('ketua') || pos.includes('wakil') || pos.includes('sekretaris');
             const roleClass = isStruktural ? (pos.includes('ketua') ? 'pos-ketua' : (pos.includes('wakil') ? 'pos-wakil' : 'pos-sekretaris')) : 'pos-anggota';
-            
+
             const initials = m.name ? m.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '';
-            
+
             let avatarContent = '';
             if (m.photo) {
                 avatarContent = '<img src="' + m.photo + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';">';
@@ -345,7 +345,7 @@ function populateStrukturDOM(pengurus, pokjaList) {
             } else {
                 avatarContent = '<div class="avatar-placeholder" style="width:100%;height:100%; background:linear-gradient(135deg,#cbd5e1,#94a3b8); display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">' + (initials || '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>') + '</div>';
             }
-            
+
             return '<div class="member-card ' + roleClass + '">' +
                 '<div class="org-avatar">' + avatarContent + '</div>' +
                 '<div class="org-position">' + m.position + '</div>' +
@@ -384,37 +384,37 @@ function drawMobileConnectors() {
     // 1. Hapus SVG lama agar tidak menumpuk (double lines)
     const oldSvg = document.getElementById('mobileTreeSvg');
     if (oldSvg) oldSvg.remove();
-    
+
     // Hanya jalankan di mobile
     if (window.innerWidth > 768) return;
-    
+
     const wrapper = document.querySelector('.struktur-wrapper');
     if (!wrapper) return;
-    
+
     // 2. Buat SVG baru
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.id = 'mobileTreeSvg';
     svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible;';
-    
+
     const wrapperRect = wrapper.getBoundingClientRect();
     const wrapperHeight = wrapper.scrollHeight;
     const wrapperWidth = wrapper.offsetWidth;
     svg.setAttribute('viewBox', '0 0 ' + wrapperWidth + ' ' + wrapperHeight);
-    
+
     wrapper.style.position = 'relative';
     wrapper.insertBefore(svg, wrapper.firstChild);
-    
+
     // 3. Helper: Dapatkan koordinat VISUAL CARD, bukan wrapper
     function getCardPos(wrapperId) {
         const wrapperEl = document.getElementById(wrapperId);
         if (!wrapperEl) return null;
-        
+
         // Cari elemen kartu visual di dalam wrapper
         // Prioritas: .org-card (umum), atau .staff-combined-card (khusus staf ahli)
-        const cardEl = wrapperEl.querySelector('.staff-combined-card') || 
-                       wrapperEl.querySelector('.org-card') || 
+        const cardEl = wrapperEl.querySelector('.staff-combined-card') ||
+                       wrapperEl.querySelector('.org-card') ||
                        wrapperEl;
-        
+
         const r = cardEl.getBoundingClientRect();
         return {
             cx: r.left + r.width / 2 - wrapperRect.left,
@@ -426,7 +426,7 @@ function drawMobileConnectors() {
             height: r.height
         };
     }
-    
+
     // Helper gambar garis
     function drawLine(x1, y1, x2, y2, color = '#0f6b63', width = 2.5) {
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -439,7 +439,7 @@ function drawMobileConnectors() {
         line.setAttribute('stroke-linecap', 'round');
         svg.appendChild(line);
     }
-    
+
     // Helper gambar titik persimpangan
     function drawCircle(cx, cy, r = 4, color = '#0f6b63') {
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -449,12 +449,12 @@ function drawMobileConnectors() {
         circle.setAttribute('fill', color);
         svg.appendChild(circle);
     }
-    
+
     // 4. Ambil posisi semua kartu visual
     const ketuaPembina = getCardPos('wrapper-ketua-pembina');
     const ketuaPkk = getCardPos('wrapper-ketua-pkk');
     const stafAhli = getCardPos('wrapper-staf-ahli');
-    
+
     // Row Sekretaris & Bendahara
     const sekbenWrappers = document.querySelectorAll('#row-sekben .org-card-wrapper');
     const sekben = [];
@@ -469,7 +469,7 @@ function drawMobileConnectors() {
             width: r.width
         });
     });
-    
+
     // Row Ketua Pokja
     const pokjaWrappers = document.querySelectorAll('#row-pokja .org-card-wrapper');
     const pokja = [];
@@ -484,7 +484,7 @@ function drawMobileConnectors() {
             width: r.width
         });
     });
-    
+
     // 5. Tentukan posisi Backbone (Garis Utama Vertikal)
     // Hitung jarak paling kiri dari semua kartu visual
     const allLefts = [];
@@ -492,27 +492,27 @@ function drawMobileConnectors() {
     if (stafAhli) allLefts.push(stafAhli.left);
     sekben.forEach(function(s) { allLefts.push(s.left); });
     pokja.forEach(function(p) { allLefts.push(p.left); });
-    
+
     const minLeft = Math.min.apply(null, allLefts);
     const backboneX = minLeft - 20; // Jarak 20px di sebelah kiri kartu
-    
+
     // ===== 1. Garis Ketua Pembina → Ketua TP PKK =====
     if (ketuaPembina && ketuaPkk) {
         // Menghubungkan BOTTOM kartu atas ke TOP kartu bawah (Presisi)
         drawLine(ketuaPembina.cx, ketuaPembina.bottom, ketuaPkk.cx, ketuaPkk.top);
     }
-    
+
     // ===== 2. Koneksi Ketua TP PKK ke Backbone =====
     if (ketuaPkk) {
         const pkkMidY = ketuaPkk.top + ketuaPkk.height / 2; // Tengah vertikal kartu
-        
+
         // Garis horizontal dari SISI KIRI kartu ke backbone
         drawLine(ketuaPkk.left, pkkMidY, backboneX, pkkMidY);
-        
+
         // Titik persimpangan di backbone
         drawCircle(backboneX, pkkMidY, 5);
     }
-    
+
     // ===== 3. Garis Backbone Vertikal =====
     if (ketuaPkk) {
         // Cari titik cabang paling bawah (di atas Pokja baris terakhir)
@@ -520,49 +520,49 @@ function drawMobileConnectors() {
         if (stafAhli) allBranchPoints.push(stafAhli.top - 15);
         sekben.forEach(function(s) { allBranchPoints.push(s.top - 15); });
         pokja.forEach(function(p) { allBranchPoints.push(p.top - 15); });
-        
+
         const lastBranchY = Math.max.apply(null, allBranchPoints);
-        
+
         // Garis vertikal dari titik sambung Ketua TP PKK ke titik cabang terakhir
         drawLine(backboneX, ketuaPkk.top + ketuaPkk.height / 2, backboneX, lastBranchY);
     }
-    
+
     // ===== 4. Cabang ke Staf Ahli =====
     if (stafAhli) {
         const branchY = stafAhli.top - 15; // 15px di atas kartu
-        
+
         // Garis horizontal dari backbone ke TENGAH kartu Staf Ahli
         drawLine(backboneX, branchY, stafAhli.cx, branchY);
-        
+
         // Titik persimpangan
         drawCircle(backboneX, branchY, 4);
-        
+
         // Titik di atas kartu
         drawCircle(stafAhli.cx, branchY, 3);
-        
+
         // Garis vertikal pendek turun ke ATAS kartu
         drawLine(stafAhli.cx, branchY, stafAhli.cx, stafAhli.top);
     }
-    
+
     // ===== 5. Cabang ke Sekretaris & Bendahara =====
     if (sekben.length >= 2) {
         const branchY = sekben[0].top - 15;
-        
+
         // Garis horizontal dari backbone ke TENGAH Bendahara (kartu terakhir)
         drawLine(backboneX, branchY, sekben[1].cx, branchY);
-        
+
         // Titik persimpangan
         drawCircle(backboneX, branchY, 4);
-        
+
         // Titik di atas masing-masing kartu
         drawCircle(sekben[0].cx, branchY, 3);
         drawCircle(sekben[1].cx, branchY, 3);
-        
+
         // Garis vertikal turun ke kartu
         drawLine(sekben[0].cx, branchY, sekben[0].cx, sekben[0].top);
         drawLine(sekben[1].cx, branchY, sekben[1].cx, sekben[1].top);
     }
-    
+
     // ===== 6. Cabang ke Pokja I-IV =====
     if (pokja.length >= 2) {
         // Kelompokkan berdasarkan baris
@@ -572,20 +572,20 @@ function drawMobileConnectors() {
             if (!rows[rowKey]) rows[rowKey] = [];
             rows[rowKey].push(p);
         });
-        
+
         const rowKeys = Object.keys(rows).sort(function(a, b) { return parseInt(a) - parseInt(b); });
-        
+
         rowKeys.forEach(function(key) {
             const rowPokjas = rows[key];
             const lastPokja = rowPokjas[rowPokjas.length - 1];
             const branchY = rowPokjas[0].top - 15;
-            
+
             // Garis horizontal dari backbone ke TENGAH kartu terakhir di baris ini
             drawLine(backboneX, branchY, lastPokja.cx, branchY);
-            
+
             // Titik persimpangan
             drawCircle(backboneX, branchY, 4);
-            
+
             // Garis vertikal ke masing-masing kartu di baris ini
             rowPokjas.forEach(function(p) {
                 drawCircle(p.cx, branchY, 3);
