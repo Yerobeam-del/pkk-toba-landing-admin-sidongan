@@ -198,6 +198,15 @@
                         <span style="font-weight: 600;">Tips:</span>
                         <span>Gunakan mouse/touch untuk zoom dan geser peta</span>
                     </div>
+                    <div style="width: 1px; height: 20px; background: var(--border);"></div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M3 9h18"/>
+                            <path d="M9 21V9"/>
+                        </svg>
+                        <span>Klik tombol Layers di pojok kanan atas untuk ganti tampilan</span>
+                    </div>
                 </div>
             </div>
         </div>
