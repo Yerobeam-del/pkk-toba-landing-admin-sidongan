@@ -2603,3 +2603,29 @@ input, select, textarea {
         justify-content: center !important;
     }
 }
+
+/* ==========================================
+   FIX: NEWS CARD HOME CLICKABLE AREA
+   ========================================== */
+.news-card-home {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 1 !important;
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+/* Paksa semua elemen di dalam card untuk meneruskan klik ke parent (.news-card-home) */
+.news-card-home * {
+    pointer-events: none !important;
+}
+
+/* Pastikan gambar tidak menghalangi klik */
+.news-card-home img {
+    pointer-events: none !important;
+    user-select: none !important;
+    -webkit-user-drag: none !important;
+}

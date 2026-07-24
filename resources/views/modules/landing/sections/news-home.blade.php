@@ -15,30 +15,30 @@
         @endphp
 
         @forelse($recentNews as $news)
-        {{-- Card dengan data-link untuk JavaScript --}}
+        {{-- Card dengan class news-card-home dan data-link untuk JavaScript --}}
         <article class="news-card-home"
                  data-link="{{ route('news.show', $news->slug ?? $news->id) }}"
-                 style="background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: transform 0.3s; cursor: pointer; position: relative;"
+                 style="background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: transform 0.3s;"
                  onmouseover="this.style.transform='translateY(-5px)'"
                  onmouseout="this.style.transform='translateY(0)'">
 
-            {{-- Wrapper untuk mencegah klik pada gambar --}}
-            <div style="pointer-events: none;">
-                <img src="{{ $news->image_path ? asset('storage/' . $news->image_path) : 'https://via.placeholder.com/400x200?text=No+Image' }}"
-                    alt="{{ $news->title }}"
-                    style="width: 100%; height: 200px; object-fit: cover; display: block;">
-            </div>
+            <img src="{{ $news->image_path ? asset('storage/' . $news->image_path) : 'https://via.placeholder.com/400x200?text=No+Image' }}"
+                 alt="{{ $news->title }}"
+                 style="width: 100%; height: 200px; object-fit: cover; display: block;">
 
-            <div style="padding: 1.5rem; pointer-events: none;">
+            <div style="padding: 1.5rem;">
                 <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.75rem;">
                     {{ $news->published_at?->format('d M Y') ?? '-' }}
                 </div>
-                <span style="display: inline-block; padding: 0.25rem 0.75rem; background: rgba(39,103,73,0.1); color: #276749; border-radius: 50px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem; pointer-events: auto;">
+
+                <span style="display: inline-block; padding: 0.25rem 0.75rem; background: rgba(39,103,73,0.1); color: #276749; border-radius: 50px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem;">
                     {{ $news->category ?? 'Umum' }}
                 </span>
+
                 <h3 style="font-size: 1.15rem; font-weight: 700; color: #1e293b; margin: 0 0 0.5rem 0;">
                     {{ Str::limit($news->title, 60) }}
                 </h3>
+
                 <p style="color: #64748b; font-size: 0.9rem; line-height: 1.6; margin: 0;">
                     {{ Str::limit($news->excerpt ?? $news->content, 100) }}
                 </p>
