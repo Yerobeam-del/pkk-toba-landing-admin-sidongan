@@ -2174,181 +2174,188 @@ body:has(.news-detail-wrapper) #newsModal,
 }
 
 /* ==========================================
-   FIX: MOBILE TOUCH OPTIMIZATION
+   FIX: MOBILE TOUCH - SOLUSI KOMPREHENSIF
    ========================================== */
 
-/* Fix untuk semua kartu berita dan elemen klik */
-.news-card,
-.news-card-full,
-.news-card-link,
-.news-related-card,
-.quick-access-card,
-.app-card-home,
-.coming-home-card,
-.template-card,
-.desa-card,
-.member-card,
-.org-card,
-.pokja-section,
-.btn-see-all,
-.news-back-btn,
-.sk-back-btn,
-.template-back-btn,
-.hero-cta,
-.floating-trigger,
-.floating-menu-item,
-.quick-access-item,
-.news-share-btn,
-.news-pagination-btn,
-.sk-pagination-btn,
-.template-pagination-btn,
-.sk-action-btn,
-.template-card-btn,
-.filter-btn,
-.tab-btn {
+/* Base touch optimization untuk SEMUA elemen interaktif */
+a, button, [onclick], .news-card, .news-card-full, .news-card-link,
+.news-related-card, .quick-access-card, .quick-access-item,
+.app-card-home, .coming-home-card, .template-card, .desa-card,
+.member-card, .org-card, .pokja-section, .btn-see-all,
+.news-back-btn, .sk-back-btn, .template-back-btn, .hero-cta,
+.floating-trigger, .floating-menu-item, .news-share-btn,
+.news-pagination-btn, .sk-pagination-btn, .template-pagination-btn,
+.sk-action-btn, .template-card-btn, .filter-btn, .tab-btn,
+.footer-contact-link, .breadcrumb a, .navbar-links a {
     touch-action: manipulation !important;
     -webkit-tap-highlight-color: transparent !important;
-    -webkit-touch-callout: none !important;
     cursor: pointer !important;
     position: relative;
     z-index: 1;
 }
 
-/* Fix untuk child elements agar tidak menyerap klik */
-.news-card > *,
-.news-card-full > *,
-.news-card-link > *,
-.news-related-card > * {
-    pointer-events: none !important;
+/* PENTING: Jangan gunakan pointer-events: none pada child! */
+/* Hapus semua rule pointer-events: none yang ada di file ini */
+
+/* Fix untuk news cards - pastikan seluruh area bisa diklik */
+.news-card, .news-card-full, .news-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }
 
-/* Kecualikan link dan button di dalam kartu */
-.news-card a,
-.news-card button,
-.news-card-full a,
-.news-card-full button,
-.news-card-link a,
-.news-card-link button,
-.news-related-card a,
-.news-related-card button {
+.news-card *, .news-card-full *, .news-card-link *,
+.news-related-card * {
+    pointer-events: auto !important; /* KEMBALIKAN ke auto! */
+}
+
+/* Fix untuk app cards - seluruh kartu bisa diklik */
+.app-card-home, .coming-home-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+}
+
+.app-card-home *, .coming-home-card * {
     pointer-events: auto !important;
 }
 
-/* Fix untuk gambar di dalam kartu berita */
-.news-card-image,
-.news-card-image-wrapper img,
-.news-related-image {
-    pointer-events: none !important;
-    user-select: none !important;
-    -webkit-user-drag: none !important;
+/* Fix untuk quick access cards */
+.quick-access-card, .quick-access-item {
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }
 
-/* Fix untuk text di dalam kartu agar tidak ter-select saat tap */
-.news-card-title,
-.news-card-excerpt,
-.news-card-date,
-.news-card-category,
-.news-card-readmore,
-.news-related-title,
-.news-related-excerpt {
-    user-select: none !important;
-    -webkit-user-select: none !important;
+.quick-access-card *, .quick-access-item * {
+    pointer-events: auto !important;
 }
 
-/* Fix untuk pagination buttons */
-.news-pagination-btn:active,
-.sk-pagination-btn:active,
-.template-pagination-btn:active {
-    transform: scale(0.95) !important;
+/* Fix untuk footer links */
+.footer-contact-link, .footer-contact-link * {
+    pointer-events: auto !important;
 }
 
-/* Fix untuk semua buttons di landing page */
-button,
-.btn,
-.btn-primary,
-.btn-see-all,
-.news-back-btn,
-.sk-back-btn,
-.template-back-btn,
-.hero-cta,
-.floating-trigger,
-.quick-access-item,
-.news-share-btn,
-.sk-action-btn,
-.template-card-btn,
-.filter-btn,
-.tab-btn {
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
-    user-select: none !important;
-    -webkit-user-select: none !important;
+/* Fix untuk floating button - pastikan menu benar-benar hilang */
+.floating-menu {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none !important; /* Menu yang tertutup TIDAK bisa diklik */
 }
 
-/* Fix untuk links yang harus bisa diklik */
-a {
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1) !important;
+.floating-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto !important; /* Menu yang terbuka BISA diklik */
+}
+
+.floating-menu-item {
+    pointer-events: auto !important;
+}
+
+/* Fix untuk trigger button - selalu bisa diklik */
+.floating-trigger {
+    pointer-events: auto !important;
+    z-index: 1001 !important; /* Pastikan di atas menu */
+}
+
+/* Fix untuk hero CTA */
+.hero-cta {
+    display: inline-flex;
+    text-decoration: none;
+}
+
+/* Fix untuk breadcrumb */
+.breadcrumb a {
+    pointer-events: auto !important;
 }
 
 /* Fix untuk navbar links di mobile */
 .navbar-links a {
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
-    padding: 12px 14px !important; /* Perbesar area tap di mobile */
+    padding: 12px 14px !important; /* Perbesar area tap */
+    display: block;
 }
 
 /* Fix untuk hamburger menu */
 .hamburger {
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
-    padding: 10px !important; /* Perbesar area tap */
+    padding: 10px !important;
+    z-index: 1002 !important;
 }
 
-/* Fix untuk floating button */
-.floating-trigger {
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
-}
-
-.floating-menu-item {
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
-}
-
-/* Fix untuk form elements di mobile */
-input,
-select,
-textarea {
+/* Fix untuk form elements */
+input, select, textarea {
     touch-action: manipulation !important;
     font-size: 16px !important; /* Mencegah zoom di iOS */
 }
 
-/* Fix untuk modal dan overlay */
-.modal-overlay,
-.template-preview-modal-overlay {
-    touch-action: manipulation !important;
-}
-
 /* Fix untuk scrollable containers */
-.tabs-container,
-.sk-table-container,
-.struktur-scroll {
+.tabs-container, .sk-table-container, .struktur-scroll {
     -webkit-overflow-scrolling: touch !important;
-    touch-action: pan-x !important;
 }
 
-/* Fix untuk news card hover effect di mobile */
-@media (hover: none) and (pointer: coarse) {
-    .news-card:hover,
-    .news-card-full:hover,
-    .news-related-card:hover {
-        transform: none !important;
+/* Mobile specific fixes */
+@media (max-width: 768px) {
+    /* Perbesar area tap untuk semua tombol */
+    .btn-see-all, .news-back-btn, .sk-back-btn, .template-back-btn {
+        padding: 14px 28px !important;
+        min-height: 48px !important;
     }
 
-    .news-card:active,
-    .news-card-full:active,
-    .news-related-card:active {
-        transform: scale(0.98) !important;
-        opacity: 0.9 !important;
+    /* Perbesar area tap untuk pagination */
+    .news-pagination-btn, .sk-pagination-btn, .template-pagination-btn {
+        min-width: 44px !important;
+        min-height: 44px !important;
+        padding: 10px 14px !important;
+    }
+
+    /* Perbesar area tap untuk filter dan tab buttons */
+    .filter-btn, .tab-btn {
+        min-height: 44px !important;
+        padding: 10px 20px !important;
+    }
+
+    /* Perbesar area tap untuk quick access */
+    .quick-access-item {
+        min-height: 48px !important;
+        padding: 12px 16px !important;
+    }
+
+    /* Perbesar area tap untuk footer links */
+    .footer-contact-link {
+        padding: 8px 0 !important;
+    }
+
+    /* Pastikan floating button tidak meninggalkan jejak */
+    .floating-app-btn {
+        z-index: 999 !important;
+    }
+
+    .floating-menu {
+        pointer-events: none !important;
+    }
+
+    .floating-menu.open {
+        pointer-events: auto !important;
+    }
+
+    .floating-trigger {
+        z-index: 1001 !important;
+    }
+}
+
+/* Small mobile fixes */
+@media (max-width: 480px) {
+    .hero-cta {
+        padding: 14px 28px !important;
+        font-size: 1rem !important;
+    }
+
+    .quick-access-item {
+        width: 100% !important;
+        justify-content: center !important;
     }
 }
