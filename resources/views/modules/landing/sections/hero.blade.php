@@ -4,10 +4,10 @@
         {{-- Fallback jika JS gagal load --}}
         <div class="hero-bg-slide active" style="background-image: url('{{ asset('assets/landing/images/Background_1.jpg') }}')"></div>
     </div>
-    
+
     {{-- 2. Overlay --}}
     <div class="hero-bg-overlay"></div>
-    
+
     {{-- 3. Particles --}}
     <div class="hero-particles" id="particles"></div>
 
@@ -18,26 +18,26 @@
             <div class="hero-badge-dot"></div>
             <span>Portal Resmi Digital</span>
         </div>
-        
+
         {{-- Logo --}}
         <div class="hero-logo-container">
             <img src="{{ asset('assets/landing/images/PKK-Logo.png') }}" alt="PKK Logo" class="hero-logo">
             <div class="hero-logo-glow"></div>
         </div>
-        
+
         {{-- Heading --}}
         <h1>
             Selamat Datang di Portal<br>
             <span class="highlight">PKK Kabupaten Toba</span>
         </h1>
-        
+
         {{-- Subtitle --}}
         <p class="hero-subtitle">
             Melayani masyarakat Kabupaten Toba melalui transformasi digital untuk pemberdayaan keluarga dan kesejahteraan masyarakat yang lebih baik.
         </p>
-        
+
         {{-- CTA Button --}}
-        <a onclick="scrollToQuickAccess()" class="hero-cta">
+        <a href="#quickAccess" onclick="scrollToQuickAccess(); return false;" class="hero-cta">
             <span>Jelajahi Layanan</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M7 17l9.2-9.2M17 17V7.8H7.8"/>
