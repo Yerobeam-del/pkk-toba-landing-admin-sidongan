@@ -4,7 +4,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 4rem;
-        align-items: center;
+        align-items: start; /* Changed from center to start */
         max-width: 1200px;
         margin: 0 auto;
         padding: 4rem 2rem;
@@ -13,13 +13,13 @@
     .tentang-text h2 {
         font-size: 2rem;
         font-weight: 800;
-        color: var(--primary);
+        color: #14b8a6; /* Explicit teal color */
         margin-bottom: 1rem;
         line-height: 1.3;
     }
 
     .tentang-text p {
-        color: var(--text-muted);
+        color: #64748b; /* Explicit gray color - visible */
         line-height: 1.8;
         margin-bottom: 1.5rem;
         font-size: 1rem;
@@ -28,6 +28,7 @@
     .tentang-list {
         list-style: none;
         padding: 0;
+        margin: 2rem 0;
     }
 
     .tentang-list li {
@@ -35,8 +36,17 @@
         align-items: flex-start;
         gap: 12px;
         padding: 10px 0;
-        color: #4a5568;
+        color: #334155; /* Explicit dark gray - visible */
         font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .tentang-list li svg {
+        flex-shrink: 0;
+        margin-top: 2px;
+        color: #14b8a6; /* Green checkmark */
+        width: 20px;
+        height: 20px;
     }
 
     .tentang-map-wrapper {
@@ -46,30 +56,79 @@
         background: #fff;
     }
 
+    .tentang-map-header {
+        background: linear-gradient(135deg, #14b8a6, #0f766e);
+        color: #fff;
+        padding: 1.5rem 2rem;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .tentang-map-header h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #fff; /* Explicit white */
+    }
+
+    .tentang-map-header p {
+        font-size: 0.95rem;
+        margin: 0 0 1rem 0;
+        color: rgba(255,255,255,0.95); /* Explicit white with opacity */
+    }
+
+    .tentang-map-header a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #fff; /* Explicit white */
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,0.2);
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
     .tentang-map-frame {
         width: 100%;
-        height: 450px; /* FIX: Ditingkatkan agar kontrol/panah map tidak terpotong */
-        border-radius: 24px;
+        height: 500px;
+        border-radius: 0 0 16px 16px;
         overflow: hidden;
     }
 
-    /* FIX: Paksa iframe mengisi container dan abaikan style inline dari API */
     .tentang-map-frame iframe {
         width: 100% !important;
         height: 100% !important;
         border: none !important;
     }
 
-    .tentang-map-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 2rem;
-        background: linear-gradient(to top, rgba(30, 58, 95, 0.95), transparent);
-        color: #fff;
-        border-bottom-left-radius: 24px;
-        border-bottom-right-radius: 24px;
+    .tentang-tips {
+        background: #f8fafc;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .tentang-tips > div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #64748b; /* Explicit gray */
+        font-size: 0.85rem;
+    }
+
+    .tentang-tips .divider {
+        width: 1px;
+        height: 20px;
+        background: #e2e8f0;
     }
 
     /* Mobile Responsive Fixes */
@@ -81,11 +140,23 @@
         }
 
         .tentang-text {
-            order: 1; /* FIX: Teks muncul di atas pada mobile */
+            order: 1;
+        }
+
+        .tentang-text h2 {
+            font-size: 1.5rem;
+        }
+
+        .tentang-text p {
+            font-size: 0.95rem;
+        }
+
+        .tentang-list li {
+            font-size: 0.9rem;
         }
 
         .tentang-map-wrapper {
-            order: 2; /* Map di bawah pada mobile */
+            order: 2;
             margin-top: 2rem;
         }
 
@@ -103,23 +174,22 @@
         }
 
         .tentang-map-frame {
-            height: 350px !important; /* Lebih pendek di mobile */
+            height: 350px !important;
             border-radius: 0 0 12px 12px;
         }
 
-        .tentang-map-wrapper > div:last-child {
+        .tentang-tips {
             padding: 0.75rem 1rem;
-            font-size: 0.8rem;
         }
 
-        .tentang-map-wrapper > div:last-child > div {
+        .tentang-tips > div {
             flex-direction: column;
             align-items: flex-start;
             gap: 0.5rem;
         }
 
-        .tentang-map-wrapper > div:last-child > div > div[style*="width: 1px"] {
-            display: none; /* Hilangkan divider di mobile */
+        .tentang-tips .divider {
+            display: none;
         }
     }
 </style>
