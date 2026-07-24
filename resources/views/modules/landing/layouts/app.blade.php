@@ -153,19 +153,21 @@
                     ? new Date(news.published_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
                     : new Date(news.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 
-                return `<div class="news-card" onclick="openNewsModalBySlug('${news.slug}')">
+                const newsUrl = news.slug ? `/berita/${news.slug}` : `/berita/${news.id}`;
+
+                return `<a href="${newsUrl}" class="news-card" style="display:block;width:100%;height:100%;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">
                     <img src="${imgUrl}" alt="${news.title}" class="news-card-image" onerror="this.src='/assets/landing/images/berita/default.jpg'">
                     <div class="news-card-body">
                         <div class="news-card-date">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                             ${date}
                         </div>
-                        <span class="news-card-category">${news.category}</span>
+                        <span class="news-card-category">${news.category || 'Umum'}</span>
                         <h3 class="news-card-title">${news.title}</h3>
-                        <p class="news-card-excerpt">${news.excerpt}</p>
+                        <p class="news-card-excerpt">${news.excerpt || ''}</p>
                         <span class="news-card-link">Baca Selengkapnya<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                     </div>
-                </div>`;
+                </a>`;
             }
 
             async function populateNewsHome() {
