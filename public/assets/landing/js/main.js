@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     document.addEventListener('click', function(e) {
         // A. News Cards (Berita Terkini)
-        const newsCard = e.target.closest('.news-card, .news-card-full, .news-card-link, .news-related-card');
+        const newsCard = e.target.closest('.news-card, .news-card-full, .news-card-link, .news-related-card, .news-card-home');
         if (newsCard && newsCard.tagName !== 'A') {
             const link = newsCard.querySelector('a') || newsCard.getAttribute('data-link');
             if (link) {
