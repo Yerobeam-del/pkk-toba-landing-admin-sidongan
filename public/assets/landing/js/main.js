@@ -3,7 +3,7 @@ console.log('Main JS Loaded');
 document.addEventListener('DOMContentLoaded', function() {
 
     // ==========================================
-    // 1. FLOATING BUTTON HANDLER (Fix: Hilangkan Jejak Klik)
+    // 1. FLOATING BUTTON HANDLER (Fix: Tanpa Delay - Jejak Langsung Hilang)
     // ==========================================
     const floatingBtn = document.querySelector('.floating-app-btn');
     const floatingTrigger = document.querySelector('.floating-trigger');
@@ -18,37 +18,28 @@ document.addEventListener('DOMContentLoaded', function() {
             isMenuOpen = !isMenuOpen;
 
             if (isMenuOpen) {
+                // Buka menu
                 floatingMenu.classList.add('open');
                 floatingTrigger.classList.add('open');
                 if (floatingBtn) floatingBtn.classList.add('open');
-                floatingMenu.style.pointerEvents = 'auto';
+                floatingMenu.style.pointerEvents = 'auto'; // Aktifkan klik segera
             } else {
+                // Tutup menu - JEJAK LANGSUNG HILANG TANPA DELAY
                 floatingMenu.classList.remove('open');
                 floatingTrigger.classList.remove('open');
                 if (floatingBtn) floatingBtn.classList.remove('open');
-
-                // PENTING: Nonaktifkan area klik setelah animasi selesai (400ms)
-                setTimeout(() => {
-                    if (!floatingBtn.classList.contains('open')) {
-                        floatingMenu.style.pointerEvents = 'none';
-                    }
-                }, 400);
+                floatingMenu.style.pointerEvents = 'none'; // Nonaktifkan klik SEGERA
             }
         });
 
-        // Tutup menu jika user klik di area kosong (bukan di dalam tombol)
+        // Tutup menu saat klik di luar
         document.addEventListener('click', function(e) {
             if (isMenuOpen && floatingBtn && !floatingBtn.contains(e.target)) {
                 isMenuOpen = false;
                 floatingMenu.classList.remove('open');
                 floatingTrigger.classList.remove('open');
                 if (floatingBtn) floatingBtn.classList.remove('open');
-
-                setTimeout(() => {
-                    if (!floatingBtn.classList.contains('open')) {
-                        floatingMenu.style.pointerEvents = 'none';
-                    }
-                }, 400);
+                floatingMenu.style.pointerEvents = 'none'; // Nonaktifkan klik SEGERA
             }
         });
     }
