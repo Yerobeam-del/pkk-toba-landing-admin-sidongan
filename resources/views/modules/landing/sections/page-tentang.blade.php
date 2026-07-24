@@ -161,15 +161,15 @@
             {{-- Right Content - Maps --}}
             <div class="tentang-map-wrapper">
                 {{-- Map Info Header --}}
-                <div class="tentang-map-header" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; padding: 1.5rem 2rem; border-radius: 16px 16px 0 0;">
-                    <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
+                <div class="tentang-map-header" style="background: linear-gradient(135deg, #14b8a6, #0f766e); color: #fff; padding: 1.5rem 2rem; border-radius: 16px 16px 0 0;">
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.75rem; color: #fff;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                             <circle cx="12" cy="10" r="3"/>
                         </svg>
                         Lokasi Kantor PKK Kabupaten Toba
                     </h3>
-                    <p style="font-size: 0.95rem; opacity: 0.95; margin: 0 0 1rem 0;">
+                    <p style="font-size: 0.95rem; opacity: 0.95; margin: 0 0 1rem 0; color: #fff;">
                         Jl. D.I Panjaitan No.1, Napitupulu, Kec. Balige, Kabupaten Toba, Sumatera Utara
                     </p>
                     <a href="https://goo.gl/maps/xxxxx" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 8px; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(0)'">
