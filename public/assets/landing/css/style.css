@@ -2629,3 +2629,41 @@ input, select, textarea {
     user-select: none !important;
     -webkit-user-drag: none !important;
 }
+
+/* ==========================================
+   FIX: FLOATING BUTTON OVERLAP NEWS CARDS
+   ========================================== */
+
+/* Turunkan z-index floating button agar tidak menutupi kartu berita */
+.floating-app-btn {
+    z-index: 99 !important; /* Turunkan dari 999 ke 99 */
+    pointer-events: none !important; /* Nonaktifkan klik pada container */
+}
+
+/* Aktifkan klik hanya pada trigger dan menu item */
+.floating-trigger,
+.floating-menu-item {
+    pointer-events: auto !important;
+}
+
+/* Pastikan menu tertutup tidak menutupi kartu */
+.floating-menu {
+    pointer-events: none !important;
+}
+
+.floating-menu.open {
+    pointer-events: auto !important;
+}
+
+/* Pastikan kartu berita di atas floating button */
+.news-home-section,
+.news-home-grid,
+.news-card-home {
+    position: relative !important;
+    z-index: 100 !important; /* Lebih tinggi dari floating button */
+}
+
+/* Fix untuk kartu yang terpotong */
+.news-card-home {
+    overflow: hidden !important;
+}
