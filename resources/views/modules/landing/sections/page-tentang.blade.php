@@ -85,36 +85,41 @@
         }
 
         .tentang-map-wrapper {
-            order: 2; /* FIX: Map muncul di bawah pada mobile */
-            margin-top: 1rem;
+            order: 2; /* Map di bawah pada mobile */
+            margin-top: 2rem;
         }
 
-        .tentang-text h2 {
-            font-size: 1.5rem;
+        .tentang-map-header {
+            padding: 1.25rem 1rem;
+            border-radius: 12px 12px 0 0;
         }
 
-        .tentang-text p {
-            font-size: 0.95rem;
+        .tentang-map-header h3 {
+            font-size: 1.1rem;
         }
 
-        .tentang-list li {
-            font-size: 0.9rem;
+        .tentang-map-header p {
+            font-size: 0.85rem;
         }
 
         .tentang-map-frame {
-            height: 350px; /* FIX: Tinggi disesuaikan agar proporsional di mobile */
+            height: 350px !important; /* Lebih pendek di mobile */
+            border-radius: 0 0 12px 12px;
         }
 
-        .tentang-map-overlay {
-            padding: 1.5rem;
-        }
-
-        .tentang-map-overlay h3 {
-            font-size: 1rem;
-        }
-
-        .tentang-map-overlay p {
+        .tentang-map-wrapper > div:last-child {
+            padding: 0.75rem 1rem;
             font-size: 0.8rem;
+        }
+
+        .tentang-map-wrapper > div:last-child > div {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .tentang-map-wrapper > div:last-child > div > div[style*="width: 1px"] {
+            display: none; /* Hilangkan divider di mobile */
         }
     }
 </style>
@@ -155,18 +160,53 @@
 
             {{-- Right Content - Maps --}}
             <div class="tentang-map-wrapper">
-                <div id="tentangMaps" class="tentang-map-frame">
+                {{-- Map Info Header --}}
+                <div class="tentang-map-header" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; padding: 1.5rem 2rem; border-radius: 16px 16px 0 0;">
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Lokasi Kantor PKK Kabupaten Toba
+                    </h3>
+                    <p style="font-size: 0.95rem; opacity: 0.95; margin: 0 0 1rem 0;">
+                        Jl. D.I Panjaitan No.1, Napitupulu, Kec. Balige, Kabupaten Toba, Sumatera Utara
+                    </p>
+                    <a href="https://goo.gl/maps/xxxxx" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 8px; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(0)'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                            <polyline points="15 3 21 3 21 9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        Buka di Google Maps
+                    </a>
+                </div>
+
+                {{-- Interactive Map Container --}}
+                <div id="tentangMaps" class="tentang-map-frame" style="width: 100%; height: 500px; border-radius: 0 0 16px 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.1);">
                     {{-- Maps will be loaded here --}}
                 </div>
-                <div class="tentang-map-overlay">
-                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; color: #fff;">Lokasi Kantor PKK Kabupaten Toba</h3>
-                    <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem; color: #fff;">Balige, Kabupaten Toba, Sumatera Utara</p>
-                    <a id="tentangMapsLink" href="#" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; color: #fbbf24; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: gap 0.3s;" onmouseover="this.style.gap='10px'" onmouseout="this.style.gap='6px'">
-                        Buka di Google Maps
-                        <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+
+                {{-- Map Controls Info --}}
+                <div style="background: #f8fafc; padding: 1rem 1.5rem; border-radius: 8px; margin-top: 1rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
                         </svg>
-                    </a>
+                        <span style="font-weight: 600;">Tips:</span>
+                        <span>Gunakan mouse/touch untuk zoom dan geser peta</span>
+                    </div>
+                    <div style="width: 1px; height: 20px; background: var(--border);"></div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M3 9h18"/>
+                            <path d="M9 21V9"/>
+                        </svg>
+                        <span>Klik tombol Layers di pojok kanan atas untuk ganti tampilan</span>
+                    </div>
                 </div>
             </div>
         </div>
