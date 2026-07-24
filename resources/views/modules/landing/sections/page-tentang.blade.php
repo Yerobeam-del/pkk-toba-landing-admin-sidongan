@@ -160,19 +160,19 @@
 
             {{-- Right Content - Maps --}}
             <div class="tentang-map-wrapper">
-                {{-- Map Info Header --}}
+                {{-- Map Info Header - DINAMIS dari Database --}}
                 <div class="tentang-map-header" style="background: linear-gradient(135deg, #14b8a6, #0f766e); color: #fff; padding: 1.5rem 2rem; border-radius: 16px 16px 0 0;">
-                    <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.75rem; color: #fff;">
+                    <h3 id="tentangMapsTitle" style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.75rem; color: #fff;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                             <circle cx="12" cy="10" r="3"/>
                         </svg>
                         Lokasi Kantor PKK Kabupaten Toba
                     </h3>
-                    <p style="font-size: 0.95rem; opacity: 0.95; margin: 0 0 1rem 0; color: #fff;">
+                    <p id="tentangMapsAddress" style="font-size: 0.95rem; opacity: 0.95; margin: 0 0 1rem 0; color: #fff;">
                         Jl. D.I Panjaitan No.1, Napitupulu, Kec. Balige, Kabupaten Toba, Sumatera Utara
                     </p>
-                    <a href="https://goo.gl/maps/xxxxx" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 8px; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(0)'">
+                    <a id="tentangMapsLink" href="https://goo.gl/maps/xxxxx" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 8px; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(0)'">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                             <polyline points="15 3 21 3 21 9"/>
@@ -198,15 +198,6 @@
                         <span style="font-weight: 600;">Tips:</span>
                         <span>Gunakan mouse/touch untuk zoom dan geser peta</span>
                     </div>
-                    <div style="width: 1px; height: 20px; background: var(--border);"></div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/>
-                            <path d="M3 9h18"/>
-                            <path d="M9 21V9"/>
-                        </svg>
-                        <span>Klik tombol Layers di pojok kanan atas untuk ganti tampilan</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -225,17 +216,17 @@ async function loadTentangKami() {
         const data = result.data;
 
         // Update text content
-        document.getElementById('tentangJudul').textContent = data.judul;
-        document.getElementById('tentangSubjudul').textContent = data.subjudul;
-        document.getElementById('tentangHeading').textContent = data.heading;
-        document.getElementById('tentangDeskripsi').textContent = data.deskripsi;
+        document.getElementById('tentangJudul').textContent = data.judul || 'Tentang Kami';
+        document.getElementById('tentangSubjudul').textContent = data.subjudul || 'Informasi tentang PKK Kabupaten Toba';
+        document.getElementById('tentangHeading').textContent = data.heading || 'Memberdayakan Keluarga, Mensejahterakan Masyarakat';
+        document.getElementById('tentangDeskripsi').textContent = data.deskripsi || 'PKK Kabupaten Toba berkomitmen untuk terus berinovasi...';
 
         // Update programs list
         const programsList = document.getElementById('tentangPrograms');
         if (data.program_list && data.program_list.length > 0) {
             programsList.innerHTML = data.program_list.map(program => `
                 <li>
-                    <svg style="flex-shrink: 0; margin-top: 2px; color: #48bb78; width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"/>
                     </svg>
                     <span>${program}</span>
@@ -244,12 +235,17 @@ async function loadTentangKami() {
         }
 
         // Update maps
-        document.getElementById('tentangMaps').innerHTML = data.maps_embed_code;
+        const mapsContainer = document.getElementById('tentangMaps');
+        if (data.maps_embed_code) {
+            mapsContainer.innerHTML = data.maps_embed_code;
+        }
+
+        // Update maps link
         if (data.maps_link) {
-            document.getElementById('tentangMapsLink').href = data.maps_link;
-            document.getElementById('tentangMapsLink').style.display = 'inline-flex';
-        } else {
-            document.getElementById('tentangMapsLink').style.display = 'none';
+            const mapsLink = document.getElementById('tentangMapsLink');
+            if (mapsLink) {
+                mapsLink.href = data.maps_link;
+            }
         }
 
     } catch (error) {
