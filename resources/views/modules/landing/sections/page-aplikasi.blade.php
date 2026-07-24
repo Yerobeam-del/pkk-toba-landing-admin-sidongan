@@ -8,13 +8,13 @@
             </div>
         </div>
     </div>
-    
+
     <div id="aplikasi-loading" style="text-align: center; padding: 4rem 2rem;">
         <div style="font-size: 1.2rem; color: var(--text-muted);">Memuat data aplikasi...</div>
     </div>
-    
+
     <section class="apps-full-section" id="aplikasi-content" style="display: none;">
-        
+
         {{-- SECTION: APLIKASI AKTIF --}}
         <div class="section-header" id="active-section-header">
             <div class="section-label">Aplikasi Aktif</div>
@@ -35,8 +35,8 @@ let aplikasiDataLoaded = false;
 
 function getIconHtml(app, size = 40) {
     return `
-    <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" 
-         stroke="rgba(255,255,255,0.95)" stroke-width="2" 
+    <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"
+         stroke="rgba(255,255,255,0.95)" stroke-width="2"
          stroke-linecap="round" stroke-linejoin="round">
         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
         <line x1="8" y1="21" x2="16" y2="21"/>
@@ -81,22 +81,22 @@ function renderActiveApps(apps) {
         console.error('Container active-apps-grid not found!');
         return;
     }
-    
+
     console.log('📊 Rendering apps:', apps);
-    
-    if (!apps || apps.length === 0) { 
+
+    if (!apps || apps.length === 0) {
         console.log('No apps to render, showing empty state');
         container.innerHTML = renderEmptyActiveState();
         const activeHeader = document.getElementById('active-section-header');
         if (activeHeader) activeHeader.style.display = 'none';
-        return; 
+        return;
     }
-    
+
     const activeCardTemplate = (app, index) => {
         // CEK STATUS MAINTENANCE - PASTIKAN BENAR
         const isMaintenance = app.status === 'maintenance';
         console.log(`App ${index}: ${app.short_name} - Status: ${app.status} - Is Maintenance: ${isMaintenance}`);
-                
+
         // ARRAY 10 WARNA UNTUK APLIKASI
         const appColors = [
             { primary: '#2563eb', bg: 'linear-gradient(135deg, #dbeafe, #eff6ff)', circle: '#bfdbfe', btn: '#2563eb' },      // Biru (SIEDA)
@@ -130,17 +130,17 @@ function renderActiveApps(apps) {
 
         // Ambil warna yang sesuai
         const colors = appColors[colorIndex];
-        
+
         // Build image URL
         let imgUrl = null;
         if (app.icon) {
             const cleanPath = app.icon.replace(/^(storage\/|public\/|app\/public\/)/i, '');
             imgUrl = '/storage/' + cleanPath;
         }
-        
+
         // Features list
         const features = Array.isArray(app.features) ? app.features.slice(0, 5) : [];
-        const featuresHtml = features.length > 0 
+        const featuresHtml = features.length > 0
             ? features.map(f => `
                 <li style="display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 0.9rem; color: ${isMaintenance ? '#94a3b8' : '#4a5568'};">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${isMaintenance ? '#94a3b8' : colors.primary}" stroke-width="2.5" style="flex-shrink: 0;">
@@ -157,13 +157,13 @@ function renderActiveApps(apps) {
                     Fitur unggulan aplikasi
                 </li>
             `;
-        
+
         // Icon HTML dengan fallback
         let iconHtml = '';
         if (imgUrl) {
             iconHtml = `
-                <img src="${imgUrl}" 
-                    alt="${app.short_name || app.name}" 
+                <img src="${imgUrl}"
+                    alt="${app.short_name || app.name}"
                     style="width:100%;height:100%;object-fit:contain;display:block;padding:10px;${isMaintenance ? 'filter: grayscale(100%) brightness(1.3) !important;' : ''}"
                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
                 <div class="placeholder-icon" style="display:none;width:50px;height:50px;align-items:center;justify-content:center;">
@@ -173,13 +173,13 @@ function renderActiveApps(apps) {
         } else {
             iconHtml = `<div class="placeholder-icon" style="width:50px;height:50px;display:flex;align-items:center;justify-content:center;${isMaintenance ? 'filter: grayscale(100%) brightness(1.5) !important;' : ''}">${getIconHtml(app, 40)}</div>`;
         }
-        
+
         // RENDER CARD DENGAN MAINTENANCE MODE
         // URL APLIKASI
         const appUrl = app.url || '#';
 
         return `
-        <div class="app-card-home ${cardClass} ${isMaintenance ? 'maintenance-mode' : ''}" 
+        <a href="${isMaintenance ? '#' : appUrl}" class="app-card-home ${cardClass} ${isMaintenance ? 'maintenance-mode' : ''}"
             style="
                 ${isMaintenance ? 'filter: grayscale(80%) !important; opacity: 0.85 !important; pointer-events: none !important; cursor: not-allowed !important;' : 'cursor: pointer;'}
                 background: #fff;
@@ -187,12 +187,15 @@ function renderActiveApps(apps) {
                 overflow: hidden;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.08);
                 transition: all 0.3s ease;
+                text-decoration: none;
+                color: inherit;
+                display: flex;
+                flex-direction: column;
+                min-height: 100%;
             "
-            ${!isMaintenance ? `onclick="window.location.href='${appUrl}'"
-            onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 60px rgba(0,0,0,0.12)'"
-            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)'"` : ''}>
-            
-            <div class="app-card-header" style="position: relative; overflow: hidden; background: ${isMaintenance ? '#f1f5f9' : colors.bg};">
+            ${!isMaintenance ? `onclick="window.location.href='${appUrl}'"` : ''}>
+
+            <div class="app-card-header" style="position: relative; overflow: hidden; background: ${isMaintenance ? '#f1f5f9' : colors.bg}; pointer-events: none;">
                 <div style="position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; border-radius: 50%; background: ${isMaintenance ? '#cbd5e1' : colors.circle}; opacity: ${isMaintenance ? '0.2' : '0.4'};"></div>
                 <div class="app-icon-wrapper" style="${isMaintenance ? 'filter: grayscale(100%) brightness(1.2) !important;' : ''}">
                     ${iconHtml}
@@ -205,15 +208,15 @@ function renderActiveApps(apps) {
                     MAINTENANCE
                 </div>` : ''}
             </div>
-            
-            <div class="app-card-body" style="padding-top: 2rem;">
+
+            <div class="app-card-body" style="padding-top: 2rem; pointer-events: none;">
                 <h3 class="app-name" style="${isMaintenance ? 'color: #64748b;' : ''}">${app.short_name || app.name || 'Aplikasi'}</h3>
                 <p class="app-fullname" style="color: #64748b;">${app.name || ''}</p>
                 <p class="app-description" style="color: #64748b;">${app.description || 'Sistem informasi digital terpadu PKK Kabupaten Toba.'}</p>
                 <ul class="app-features">${featuresHtml}</ul>
             </div>
-            
-            <div class="app-card-footer" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-top: 1px solid #f1f5f9;">
+
+            <div class="app-card-footer" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-top: 1px solid #f1f5f9; pointer-events: none;">
                 <span class="app-btn" style="
                     display: inline-flex;
                     align-items: center;
@@ -253,9 +256,9 @@ function renderActiveApps(apps) {
                     ${isMaintenance ? 'Dalam Perbaikan' : 'Aktif'}
                 </div>
             </div>
-        </div>`;
+        </a>`;
     };
-    
+
     const html = apps.map((app, i) => activeCardTemplate(app, i)).join('');
     console.log('Generated HTML length:', html.length);
     container.innerHTML = html;
@@ -266,47 +269,47 @@ function renderActiveApps(apps) {
 // ==========================================
 async function loadAplikasiData() {
     if (aplikasiDataLoaded) return;
-    
+
     const loadingEl = document.getElementById('aplikasi-loading');
     const contentEl = document.getElementById('aplikasi-content');
     const activeGrid = document.getElementById('active-apps-grid');
     const activeHeader = document.getElementById('active-section-header');
-    
+
     try {
         const response = await fetch('/api/v1/applications');
         const result = await response.json();
-        
+
         if (!result.success) throw new Error(result.message);
-        
+
         // GABUNGKAN: active + maintenance
         const activeApps = result.data.active || [];
         const maintenanceApps = result.data.maintenance || [];
         const allApps = [...activeApps, ...maintenanceApps];
-        
+
         console.log('📊 Total apps:', allApps.length);
         console.log('Active:', activeApps.length, 'Maintenance:', maintenanceApps.length);
-        
+
         if (allApps && allApps.length > 0) {
             renderActiveApps(allApps);
         } else {
             if (activeGrid) activeGrid.innerHTML = renderEmptyActiveState();
             if (activeHeader) activeHeader.style.display = 'none';
         }
-        
+
         if (loadingEl) loadingEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'block';
-        
+
         aplikasiDataLoaded = true;
-        
+
     } catch (error) {
         console.error('Error loading aplikasi:', error);
-        
+
         if (activeGrid) activeGrid.innerHTML = renderEmptyActiveState();
         if (activeHeader) activeHeader.style.display = 'none';
-        
+
         if (loadingEl) loadingEl.style.display = 'none';
         if (contentEl) contentEl.style.display = 'block';
-        
+
         aplikasiDataLoaded = true;
     }
 }
@@ -321,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     observer.observe(document.body, { childList: true, subtree: true });
-    
+
     const page = document.getElementById('page-aplikasi');
     if (page && page.classList.contains('active')) {
         setTimeout(() => loadAplikasiData(), 100);

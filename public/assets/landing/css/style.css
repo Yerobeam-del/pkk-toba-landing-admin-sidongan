@@ -110,6 +110,7 @@ a,
     border: 2px solid rgba(255, 255, 255, 0.3);
     letter-spacing: 0.3px;
     z-index: 5;
+    touch-action: manipulation;
 }
 
 .hero-cta:hover {
@@ -129,6 +130,7 @@ a,
 .hero-cta svg {
     transition: transform 0.3s ease;
     flex-shrink: 0;
+    pointer-events: none;
 }
 
 .hero-cta:hover svg {
@@ -345,6 +347,7 @@ a,
 .quick-access-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
 .quick-access-card { background: #fff; border-radius: 20px; padding: 2rem 1.5rem; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s ease; cursor: pointer; text-decoration: none; color: inherit; }
 .quick-access-card:hover { transform: translateY(-6px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+.quick-access-card { display: flex; flex-direction: column; min-height: 100%; touch-action: manipulation; }
 .quick-access-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
 .quick-access-icon svg { width: 26px; height: 26px; color: #fff; }
 .quick-access-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }

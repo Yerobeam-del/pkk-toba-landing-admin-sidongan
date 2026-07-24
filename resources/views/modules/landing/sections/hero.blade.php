@@ -37,7 +37,7 @@
         </p>
 
         {{-- CTA Button --}}
-        <a href="#quickAccess" onclick="scrollToQuickAccess(); return false;" class="hero-cta">
+        <a href="#quickAccess" onclick="scrollToQuickAccess(); return false;" class="hero-cta" role="button" aria-label="Jelajahi Layanan">
             <span>Jelajahi Layanan</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M7 17l9.2-9.2M17 17V7.8H7.8"/>
@@ -64,6 +64,17 @@ window.scrollToQuickAccess = function() {
 };
 
 document.addEventListener('DOMContentLoaded', async function() {
+    const heroCta = document.querySelector('.hero-cta');
+    if (heroCta) {
+        const activateHeroCta = function(event) {
+            event.preventDefault();
+            window.scrollToQuickAccess();
+        };
+
+        heroCta.addEventListener('click', activateHeroCta);
+        heroCta.addEventListener('touchend', activateHeroCta, { passive: false });
+    }
+
     try {
         const response = await fetch('/api/v1/hero-slider');
         const result = await response.json();

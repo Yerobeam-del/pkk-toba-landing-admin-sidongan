@@ -5,7 +5,7 @@
         .navbar {
             position: fixed; top: 0; left: 0; right: 0;
             z-index: 1000;
-            background: transparent; 
+            background: transparent;
             transition: all 0.3s ease;
         }
         .navbar.scrolled {
@@ -46,7 +46,7 @@
             opacity: 0; visibility: hidden; transform: translateY(-10px);
             transition: all 0.3s ease;
             z-index: 999;
-            display: flex; flex-direction: column; gap: 0.5rem; 
+            display: flex; flex-direction: column; gap: 0.5rem;
         }
         .mobile-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
         .mobile-menu .nav-link {
@@ -66,14 +66,14 @@
     </style>
 
     <div class="navbar-inner">
-        <div class="navbar-brand" onclick="handleNavClick(event, 'beranda')">
+        <a href="{{ route('landing.home') }}" class="navbar-brand" onclick="handleNavBrandClick(event)">
             <img src="{{ asset('assets/landing/images/PKK-Logo.png') }}" alt="Logo" class="navbar-logo">
             <div class="navbar-title">
                 <span>PKK KAB. TOBA</span>
                 <span>Kabupaten Toba, Sumatera Utara</span>
             </div>
-        </div>
-        
+        </a>
+
         {{-- Menu Desktop --}}
         <ul class="navbar-links" id="navLinks">
             <li><a href="{{ route('landing.home') }}" onclick="handleNavClick(event, 'beranda')" class="nav-link" data-page="beranda">Beranda</a></li>
@@ -127,17 +127,17 @@
     // ==========================================
     function handleNavClick(event, pageId) {
         event.preventDefault();
-        
+
         console.log('🔗 Navigation clicked:', pageId);
         console.log('📍 Is SPA?', isSPA());
         console.log('📍 Is Laravel Route?', isLaravelRoute());
-        
-        // Tutup mobile menu jika terbuka
-        toggleMobileMenu();
-        
+
+        // Tutup mobile menu jika terbuka tanpa menyalakan ulang
+        closeMobileMenu();
+
         // Update active nav
         updateActiveNav(pageId);
-        
+
         if (pageId === 'beranda') {
             // Selalu ke homepage untuk beranda
             window.location.href = '{{ route("landing.home") }}';
@@ -154,7 +154,7 @@
             // Jika di Laravel route, redirect ke SPA dengan hash
             window.location.href = '{{ route("landing.home") }}#' + pageId;
         }
-        
+
         return false;
     }
 
@@ -166,6 +166,24 @@
         const menu = document.getElementById('mobileMenu');
         if (btn) btn.classList.toggle('active');
         if (menu) menu.classList.toggle('open');
+    }
+
+    function closeMobileMenu() {
+        const btn = document.getElementById('hamburgerBtn');
+        const menu = document.getElementById('mobileMenu');
+        if (btn) btn.classList.remove('active');
+        if (menu) menu.classList.remove('open');
+    }
+
+    function handleNavBrandClick(event) {
+        event.preventDefault();
+        closeMobileMenu();
+        if (window.location.pathname !== '{{ route("landing.home") }}') {
+            window.location.href = '{{ route("landing.home") }}';
+            return false;
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return false;
     }
 
     // ==========================================
@@ -198,9 +216,9 @@
         // Determine active page from hash or path
         const hash = window.location.hash.replace('#', '');
         const path = getCurrentPath();
-        
+
         let currentPage = 'beranda';
-        
+
         if (hash) {
             currentPage = hash;
         } else if (path.includes('/berita')) {
@@ -212,15 +230,15 @@
         } else if (path.includes('/desa')) {
             currentPage = 'desa';
         }
-        
+
         updateActiveNav(currentPage);
-        
+
         // Apply scroll effect
         if (window.scrollY > 50) {
             const nav = document.getElementById('navbar');
             if (nav) nav.classList.add('scrolled');
         }
-        
+
         console.log('🎯 Navbar initialized. Current page:', currentPage);
     });
 
@@ -230,17 +248,17 @@
     window.addEventListener('popstate', () => {
         const hash = window.location.hash.replace('#', '');
         const path = getCurrentPath();
-        
+
         let currentPage = 'beranda';
-        
+
         if (hash) {
             currentPage = hash;
         } else if (path.includes('/berita')) {
             currentPage = 'berita';
         }
-        
+
         updateActiveNav(currentPage);
-        
+
         // If in SPA, navigate to page
         if (isSPA() && typeof navigateTo === 'function' && hash) {
             navigateTo(hash);
