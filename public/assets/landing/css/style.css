@@ -2173,3 +2173,182 @@ body:has(.news-detail-wrapper) #newsModal,
     .footer-copyright { font-size: 0.75rem; }
 }
 
+/* ==========================================
+   FIX: MOBILE TOUCH OPTIMIZATION
+   ========================================== */
+
+/* Fix untuk semua kartu berita dan elemen klik */
+.news-card,
+.news-card-full,
+.news-card-link,
+.news-related-card,
+.quick-access-card,
+.app-card-home,
+.coming-home-card,
+.template-card,
+.desa-card,
+.member-card,
+.org-card,
+.pokja-section,
+.btn-see-all,
+.news-back-btn,
+.sk-back-btn,
+.template-back-btn,
+.hero-cta,
+.floating-trigger,
+.floating-menu-item,
+.quick-access-item,
+.news-share-btn,
+.news-pagination-btn,
+.sk-pagination-btn,
+.template-pagination-btn,
+.sk-action-btn,
+.template-card-btn,
+.filter-btn,
+.tab-btn {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    cursor: pointer !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* Fix untuk child elements agar tidak menyerap klik */
+.news-card > *,
+.news-card-full > *,
+.news-card-link > *,
+.news-related-card > * {
+    pointer-events: none !important;
+}
+
+/* Kecualikan link dan button di dalam kartu */
+.news-card a,
+.news-card button,
+.news-card-full a,
+.news-card-full button,
+.news-card-link a,
+.news-card-link button,
+.news-related-card a,
+.news-related-card button {
+    pointer-events: auto !important;
+}
+
+/* Fix untuk gambar di dalam kartu berita */
+.news-card-image,
+.news-card-image-wrapper img,
+.news-related-image {
+    pointer-events: none !important;
+    user-select: none !important;
+    -webkit-user-drag: none !important;
+}
+
+/* Fix untuk text di dalam kartu agar tidak ter-select saat tap */
+.news-card-title,
+.news-card-excerpt,
+.news-card-date,
+.news-card-category,
+.news-card-readmore,
+.news-related-title,
+.news-related-excerpt {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+/* Fix untuk pagination buttons */
+.news-pagination-btn:active,
+.sk-pagination-btn:active,
+.template-pagination-btn:active {
+    transform: scale(0.95) !important;
+}
+
+/* Fix untuk semua buttons di landing page */
+button,
+.btn,
+.btn-primary,
+.btn-see-all,
+.news-back-btn,
+.sk-back-btn,
+.template-back-btn,
+.hero-cta,
+.floating-trigger,
+.quick-access-item,
+.news-share-btn,
+.sk-action-btn,
+.template-card-btn,
+.filter-btn,
+.tab-btn {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+/* Fix untuk links yang harus bisa diklik */
+a {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Fix untuk navbar links di mobile */
+.navbar-links a {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    padding: 12px 14px !important; /* Perbesar area tap di mobile */
+}
+
+/* Fix untuk hamburger menu */
+.hamburger {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    padding: 10px !important; /* Perbesar area tap */
+}
+
+/* Fix untuk floating button */
+.floating-trigger {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+.floating-menu-item {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Fix untuk form elements di mobile */
+input,
+select,
+textarea {
+    touch-action: manipulation !important;
+    font-size: 16px !important; /* Mencegah zoom di iOS */
+}
+
+/* Fix untuk modal dan overlay */
+.modal-overlay,
+.template-preview-modal-overlay {
+    touch-action: manipulation !important;
+}
+
+/* Fix untuk scrollable containers */
+.tabs-container,
+.sk-table-container,
+.struktur-scroll {
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x !important;
+}
+
+/* Fix untuk news card hover effect di mobile */
+@media (hover: none) and (pointer: coarse) {
+    .news-card:hover,
+    .news-card-full:hover,
+    .news-related-card:hover {
+        transform: none !important;
+    }
+
+    .news-card:active,
+    .news-card-full:active,
+    .news-related-card:active {
+        transform: scale(0.98) !important;
+        opacity: 0.9 !important;
+    }
+}
