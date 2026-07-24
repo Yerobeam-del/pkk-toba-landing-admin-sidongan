@@ -1,15 +1,9 @@
-Saya mengerti masalahnya! Teks di sebelah kiri menjadi berantakan karena map sekarang lebih tinggi (ada header), dan `align-items: center` membuat teks "melayang" di tengah.
-
-Berikut perbaikannya. **Ganti seluruh bagian CSS dan struktur** di file `resources/views/modules/landing/sections/page-tentang.blade.php`:
-
-```blade
 <style>
-    /* Tentang Page Specific Styles */
     .tentang-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 4rem;
-        align-items: start; /* FIX: Ubah dari center ke start */
+        align-items: start;
         max-width: 1200px;
         margin: 0 auto;
         padding: 4rem 2rem;
@@ -161,7 +155,7 @@ Berikut perbaikannya. **Ganti seluruh bagian CSS dan struktur** di file `resourc
         .tentang-map-wrapper {
             order: 2;
             margin-top: 2rem;
-            position: static; /* FIX: Tidak sticky di mobile */
+            position: static;
         }
 
         .tentang-text h2 {
@@ -265,10 +259,6 @@ Berikut perbaikannya. **Ganti seluruh bagian CSS dan struktur** di file `resourc
                         <span>Pengembangan pendidikan dan keterampilan</span>
                     </li>
                 </ul>
-
-                <p style="margin-top: 2rem; font-style: italic; color: #64748b; padding: 1rem; background: #f8fafc; border-radius: 8px; border-left: 4px solid var(--primary);">
-                    Dengan semangat gotong royong dan kebersamaan, PKK Kabupaten Toba terus bergerak maju untuk mewujudkan masyarakat yang sejahtera, mandiri, dan berakhlak.
-                </p>
             </div>
 
             {{-- Right Content - Maps --}}
@@ -309,15 +299,6 @@ Berikut perbaikannya. **Ganti seluruh bagian CSS dan struktur** di file `resourc
                             <line x1="12" y1="8" x2="12.01" y2="8"/>
                         </svg>
                         <span><strong>Tips:</strong> Gunakan mouse/touch untuk zoom dan geser peta</span>
-                    </div>
-                    <div class="divider"></div>
-                    <div>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/>
-                            <path d="M3 9h18"/>
-                            <path d="M9 21V9"/>
-                        </svg>
-                        <span>Klik tombol Layers di pojok kanan atas untuk ganti tampilan</span>
                     </div>
                 </div>
             </div>
