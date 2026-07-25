@@ -581,7 +581,19 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .member-card.pos-anggota .org-position { color: #4a5568 !important; font-weight: 500; }
 .member-card.pos-anggota .org-avatar { border: 2px solid #4a5568 !important; }
 .struktur-tree, .struktur-row, .top3-tree { position: relative; transform: translateZ(0); will-change: auto; }
-.connector-line, .org-line, .tree-connector { stroke: var(--primary); stroke-width: 2; fill: none; shape-rendering: geometricPrecision; }
+.connector-line, .org-line, .tree-connector {
+    stroke: var(--primary);
+    stroke-width: 2;
+    fill: none;
+    shape-rendering: geometricPrecision;
+}
+.top-v-line {
+    /* Garis vertikal */
+}
+
+.top-h-line {
+    /* Garis horizontal */
+}
 .org-card-wrapper { position: relative; display: inline-block; min-height: 150px; }
 .struktur-section { transform: translate3d(0, 0, 0); backface-visibility: hidden; }
 
