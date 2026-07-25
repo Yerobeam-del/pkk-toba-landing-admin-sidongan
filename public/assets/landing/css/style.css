@@ -577,13 +577,33 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .pokja-number.p3 { background: linear-gradient(135deg, #38a169, #68d391) !important; }
 .pokja-number.p4 { background: linear-gradient(135deg, #d69e2e, #f6e05e) !important; }
 
-/* Title & Subtitle container - centered */
+/* Title & Subtitle - benar-benar center dengan absolute positioning */
 .pokja-header > div:nth-child(2) {
     text-align: center !important;
-    flex: 0 1 auto !important;
-    max-width: 70% !important;
-    margin: 0 auto !important;
-    display: block !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    max-width: 65% !important;
+    margin: 0 !important;
+    pointer-events: none !important; /* Agar tidak menghalangi klik */
+}
+
+.pokja-title,
+.pokja-subtitle {
+    pointer-events: auto !important; /* Kembalikan klik pada teks */
+}
+
+/* Nomor Pokja - tetap di kiri */
+.pokja-number {
+    margin-right: 1rem !important;
+    flex-shrink: 0 !important;
+}
+
+/* Toggle icon - tetap di kanan */
+.toggle-icon {
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
 }
 
 .pokja-title {
