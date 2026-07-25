@@ -580,8 +580,10 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 /* Title & Subtitle container - centered */
 .pokja-header > div:nth-child(2) {
     text-align: center !important;
-    flex: 1 !important;
-    max-width: 80% !important;
+    flex: 0 1 auto !important;
+    max-width: 70% !important;
+    margin: 0 auto !important;
+    display: block !important;
 }
 
 .pokja-title {
