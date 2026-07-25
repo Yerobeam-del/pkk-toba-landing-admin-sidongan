@@ -512,13 +512,15 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
     border: 2px solid rgba(0,0,0,0.06) !important;
     overflow: hidden !important;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .pokja-section:hover {
     box-shadow: 0 8px 30px rgba(0,0,0,0.12) !important;
+    transform: translateY(-2px) !important;
 }
 
+/* Header - Full width border & centered */
 .pokja-header {
     background: #fff !important;
     border-radius: 0 !important;
@@ -527,22 +529,31 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     box-shadow: none !important;
     border: none !important;
     border-bottom: 2px solid rgba(0,0,0,0.06) !important;
+    /* Full width border */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
+    justify-content: center !important; /* Center content */
     gap: 1rem !important;
-    transition: all 0.3s ease !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
 }
 
 .pokja-header:hover {
     background: #f8fafc !important;
 }
 
+/* Warna border header sesuai Pokja */
 .pokja-section.p1 .pokja-header { border-bottom-color: #e53e3e !important; }
 .pokja-section.p2 .pokja-header { border-bottom-color: #3182ce !important; }
 .pokja-section.p3 .pokja-header { border-bottom-color: #38a169 !important; }
 .pokja-section.p4 .pokja-header { border-bottom-color: #d69e2e !important; }
 
+/* Nomor Pokja */
 .pokja-number {
     width: 48px !important;
     height: 48px !important;
@@ -554,6 +565,11 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     font-size: 1.2rem !important;
     color: #fff !important;
     flex-shrink: 0 !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.pokja-header:hover .pokja-number {
+    transform: scale(1.05) !important;
 }
 
 .pokja-number.p1 { background: linear-gradient(135deg, #e53e3e, #fc8181) !important; }
@@ -561,12 +577,20 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .pokja-number.p3 { background: linear-gradient(135deg, #38a169, #68d391) !important; }
 .pokja-number.p4 { background: linear-gradient(135deg, #d69e2e, #f6e05e) !important; }
 
+/* Title & Subtitle container - centered */
+.pokja-header > div:nth-child(2) {
+    text-align: center !important;
+    flex: 1 !important;
+    max-width: 80% !important;
+}
+
 .pokja-title {
     font-size: 1.1rem !important;
     font-weight: 700 !important;
     margin: 0 !important;
     line-height: 1.3 !important;
     color: #1e293b !important;
+    transition: color 0.3s ease !important;
 }
 
 .pokja-subtitle {
@@ -574,8 +598,14 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     color: #64748b !important;
     margin: 0.25rem 0 0 0 !important;
     line-height: 1.4 !important;
+    transition: color 0.3s ease !important;
 }
 
+.pokja-header:hover .pokja-title {
+    color: var(--primary) !important;
+}
+
+/* Toggle icon */
 .toggle-icon {
     width: 32px !important;
     height: 32px !important;
@@ -584,18 +614,29 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    transition: transform 0.3s ease !important;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease !important;
     margin-left: auto !important;
     flex-shrink: 0 !important;
+}
+
+.pokja-header:hover .toggle-icon {
+    background: #e2e8f0 !important;
 }
 
 .toggle-icon.collapsed {
     transform: rotate(-90deg) !important;
 }
 
+.toggle-icon svg {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Content container dengan smooth animation */
 .pokja-content {
     overflow: hidden !important;
-    transition: max-height 0.5s ease, opacity 0.3s ease !important;
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
     max-height: 3000px !important;
     opacity: 1 !important;
     padding: 2rem !important;
@@ -607,6 +648,7 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     padding: 0 2rem !important;
 }
 
+/* Grid members */
 .pokja-members {
     display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
@@ -617,6 +659,7 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     padding: 0 !important;
 }
 
+/* Member card dengan smooth animation */
 .member-card {
     background: #fff !important;
     border-radius: 12px !important;
@@ -624,7 +667,7 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     text-align: center !important;
     box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
     border: 2px solid rgba(0,0,0,0.06) !important;
-    transition: all 0.3s ease !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
     width: 100% !important;
     max-width: 200px !important;
     min-height: 200px !important;
@@ -635,8 +678,8 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 }
 
 .member-card:hover {
-    transform: translateY(-4px) !important;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+    transform: translateY(-6px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
 }
 
 .member-card .org-avatar {
@@ -650,6 +693,11 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     align-items: center !important;
     justify-content: center !important;
     flex-shrink: 0 !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.member-card:hover .org-avatar {
+    transform: scale(1.05) !important;
 }
 
 .member-card .org-avatar img {
@@ -666,6 +714,7 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     margin-bottom: 0.5rem !important;
     line-height: 1.3 !important;
     color: #475569 !important;
+    transition: color 0.3s ease !important;
 }
 
 .member-card .org-name {
@@ -674,6 +723,7 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     line-height: 1.4 !important;
     color: #1e293b !important;
     word-wrap: break-word !important;
+    transition: color 0.3s ease !important;
 }
 
 /* Warna border member struktural sesuai Pokja */
@@ -757,13 +807,10 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 
     .pokja-title {
         font-size: 1rem !important;
-        flex: 1 !important;
     }
 
     .pokja-subtitle {
         font-size: 0.8rem !important;
-        width: 100% !important;
-        margin-top: 0.5rem !important;
     }
 
     .toggle-icon {
