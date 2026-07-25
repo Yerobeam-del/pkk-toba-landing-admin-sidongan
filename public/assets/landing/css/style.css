@@ -2630,40 +2630,50 @@ input, select, textarea {
     -webkit-user-drag: none !important;
 }
 
-/* ==========================================
-   FIX: FLOATING BUTTON OVERLAP NEWS CARDS
-   ========================================== */
+   /* ==========================================
+      FIX: FLOATING BUTTON VISIBLE TAPI TIDAK MEMBLOKIR KLIK
+      ========================================== */
 
-/* Turunkan z-index floating button agar tidak menutupi kartu berita */
-.floating-app-btn {
-    z-index: 99 !important; /* Turunkan dari 999 ke 99 */
-    pointer-events: none !important; /* Nonaktifkan klik pada container */
-}
+   /* 1. Floating button tetap di paling atas secara VISUAL */
+   .floating-app-btn {
+       position: fixed !important;
+       bottom: 2rem !important;
+       right: 2rem !important;
+       z-index: 999 !important; /* TETAP TINGGI agar tidak tertimpa */
+       display: flex !important;
+       flex-direction: column !important;
+       align-items: flex-end !important;
+       gap: 12px !important;
 
-/* Aktifkan klik hanya pada trigger dan menu item */
-.floating-trigger,
-.floating-menu-item {
-    pointer-events: auto !important;
-}
+       /* RAHASIA: Biarkan klik "tembus" melewati area kosong container ini */
+       pointer-events: none !important;
+   }
 
-/* Pastikan menu tertutup tidak menutupi kartu */
-.floating-menu {
-    pointer-events: none !important;
-}
+   /* 2. HANYA tombol trigger yang bisa diklik */
+   .floating-trigger {
+       pointer-events: auto !important;
+       z-index: 1000 !important;
+   }
 
-.floating-menu.open {
-    pointer-events: auto !important;
-}
+   /* 3. Menu saat tertutup TIDAK bisa diklik */
+   .floating-menu {
+       pointer-events: none !important;
+   }
 
-/* Pastikan kartu berita di atas floating button */
-.news-home-section,
-.news-home-grid,
-.news-card-home {
-    position: relative !important;
-    z-index: 100 !important; /* Lebih tinggi dari floating button */
-}
+   /* 4. Menu saat terbuka BISA diklik */
+   .floating-menu.open {
+       pointer-events: auto !important;
+   }
 
-/* Fix untuk kartu yang terpotong */
-.news-card-home {
-    overflow: hidden !important;
-}
+   /* 5. Item di dalam menu BISA diklik */
+   .floating-menu-item {
+       pointer-events: auto !important;
+   }
+
+   /* 6. Kembalikan z-index kartu berita ke normal */
+   .news-home-section,
+   .news-home-grid,
+   .news-card-home {
+       position: relative;
+       z-index: 1 !important; /* Normal, biarkan floating button di atasnya secara visual */
+   }
