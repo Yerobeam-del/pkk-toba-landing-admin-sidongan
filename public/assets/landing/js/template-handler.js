@@ -12,12 +12,12 @@ async function loadTemplatesFromAPI() {
     try {
         const response = await fetch('/api/v1/templates');
         const result = await response.json();
-        
+
         if (!result.success) throw new Error(result.message || 'API error');
-        
+
         // Filter only published templates
         window.templateData = (result.data || []).filter(tpl => tpl.status === 'published');
-        
+
         _renderTemplates(window.templateData);
     } catch (error) {
         console.error('❌ Failed to load templates:', error);
@@ -34,32 +34,32 @@ function _renderTemplates(templates) {
     const loading = document.getElementById('templateLoading');
     const empty = document.getElementById('templateEmpty');
     const tbody = document.getElementById('templateBody');
-    
+
     if (!grid || !loading || !empty || !tbody) {
         console.error('❌ Template elements not found');
         return;
     }
-    
+
     // Hide loading
     loading.style.display = 'none';
-    
+
     // Empty state
     if (!templates || templates.length === 0) {
         grid.style.display = 'none';
         empty.style.display = 'block';
         return;
     }
-    
+
     // Show table
     empty.style.display = 'none';
     grid.style.display = 'block';
-    
+
     // Render rows
     tbody.innerHTML = templates.map((tpl, i) => {
         const ext = tpl.file_name ? tpl.file_name.split('.').pop().toUpperCase() : 'FILE';
         const date = tpl.formatted_date || (tpl.upload_date ? new Date(tpl.upload_date).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) : '-');
         const size = tpl.file_size || '-';
-        
+
         return `
             <tr style="border-bottom:1px solid #e2e8f0" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
                 <td style="padding:1rem 1.5rem;color:#64748b">${i + 1}</td>
@@ -89,18 +89,18 @@ function _renderTemplates(templates) {
  */
 function handleTemplateSearch(searchTerm) {
     const term = searchTerm.toLowerCase().trim();
-    
+
     if (term === '') {
         _renderTemplates(window.templateData);
         return;
     }
-    
-    const filtered = window.templateData.filter(t => 
+
+    const filtered = window.templateData.filter(t =>
         (t.name && t.name.toLowerCase().includes(term)) ||
         (t.file_name && t.file_name.toLowerCase().includes(term)) ||
         (t.description && t.description.toLowerCase().includes(term))
     );
-    
+
     _renderTemplates(filtered);
 }
 
@@ -108,12 +108,17 @@ function handleTemplateSearch(searchTerm) {
  * Initialize page
  */
 function initTemplatePage() {
+    const tbody = document.getElementById('templateBody');
+    if (!tbody) {
+        return;
+    }
+
     // Setup search
     const searchInput = document.getElementById('templateSearchInput');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => handleTemplateSearch(e.target.value));
     }
-    
+
     // Load data
     loadTemplatesFromAPI();
 }

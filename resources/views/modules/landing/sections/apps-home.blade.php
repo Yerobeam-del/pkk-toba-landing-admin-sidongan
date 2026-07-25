@@ -109,50 +109,41 @@ async function loadApps() {
 
         loadingEl.style.display = 'none';
 
-        // GABUNGKAN: active + maintenance + FILTER show_in_quick_access
         const activeApps = (result.data.active || []).filter(app => app.show_in_quick_access == true);
         const maintenanceApps = (result.data.maintenance || []).filter(app => app.show_in_quick_access == true);
         const allApps = [...activeApps, ...maintenanceApps];
-
-        console.log('📊 Total apps:', allApps.length);
-        console.log('Active:', activeApps.length, 'Maintenance:', maintenanceApps.length);
 
         if (result.success && allApps.length > 0) {
             gridEl.style.display = 'grid';
 
             gridEl.innerHTML = allApps.map((app, index) => {
-                // CEK STATUS MAINTENANCE
                 const isMaintenance = app.status === 'maintenance';
 
-                // ✅ ARRAY 10 WARNA UNTUK APLIKASI
                 const appColors = [
-                    { primary: '#2563eb', bg: 'linear-gradient(135deg, #dbeafe, #eff6ff)', btnBg: '#2563eb', circle: '#bfdbfe' },      // Biru (SIEDA)
-                    { primary: '#dc2626', bg: 'linear-gradient(135deg, #fee2e2, #fef2f2)', btnBg: '#dc2626', circle: '#fecaca' },      // Merah (SIDONGAN)
-                    { primary: '#7c3aed', bg: 'linear-gradient(135deg, #ede9fe, #f5f3ff)', btnBg: '#7c3aed', circle: '#ddd6fe' },      // Ungu
-                    { primary: '#059669', bg: 'linear-gradient(135deg, #d1fae5, #ecfdf5)', btnBg: '#059669', circle: '#a7f3d0' },      // Hijau
-                    { primary: '#d97706', bg: 'linear-gradient(135deg, #fef3c7, #fffbeb)', btnBg: '#d97706', circle: '#fde68a' },      // Kuning/Orange
-                    { primary: '#db2777', bg: 'linear-gradient(135deg, #fce7f3, #fdf2f8)', btnBg: '#db2777', circle: '#fbcfe8' },      // Pink
-                    { primary: '#0891b2', bg: 'linear-gradient(135deg, #cffafe, #ecfeff)', btnBg: '#0891b2', circle: '#a5f3fc' },      // Cyan
-                    { primary: '#7c2d12', bg: 'linear-gradient(135deg, #ffedd5, #fff7ed)', btnBg: '#7c2d12', circle: '#fed7aa' },      // Brown
-                    { primary: '#4338ca', bg: 'linear-gradient(135deg, #e0e7ff, #eef2ff)', btnBg: '#4338ca', circle: '#c7d2fe' },      // Indigo
-                    { primary: '#be185d', bg: 'linear-gradient(135deg, #fce7f3, #fdf2f8)', btnBg: '#be185d', circle: '#f9a8d4' }       // Rose
+                    { primary: '#2563eb', bg: 'linear-gradient(135deg, #dbeafe, #eff6ff)', btnBg: '#2563eb', circle: '#bfdbfe' },
+                    { primary: '#dc2626', bg: 'linear-gradient(135deg, #fee2e2, #fef2f2)', btnBg: '#dc2626', circle: '#fecaca' },
+                    { primary: '#7c3aed', bg: 'linear-gradient(135deg, #ede9fe, #f5f3ff)', btnBg: '#7c3aed', circle: '#ddd6fe' },
+                    { primary: '#059669', bg: 'linear-gradient(135deg, #d1fae5, #ecfdf5)', btnBg: '#059669', circle: '#a7f3d0' },
+                    { primary: '#d97706', bg: 'linear-gradient(135deg, #fef3c7, #fffbeb)', btnBg: '#d97706', circle: '#fde68a' },
+                    { primary: '#db2777', bg: 'linear-gradient(135deg, #fce7f3, #fdf2f8)', btnBg: '#db2777', circle: '#fbcfe8' },
+                    { primary: '#0891b2', bg: 'linear-gradient(135deg, #cffafe, #ecfeff)', btnBg: '#0891b2', circle: '#a5f3fc' },
+                    { primary: '#7c2d12', bg: 'linear-gradient(135deg, #ffedd5, #fff7ed)', btnBg: '#7c2d12', circle: '#fed7aa' },
+                    { primary: '#4338ca', bg: 'linear-gradient(135deg, #e0e7ff, #eef2ff)', btnBg: '#4338ca', circle: '#c7d2fe' },
+                    { primary: '#be185d', bg: 'linear-gradient(135deg, #fce7f3, #fdf2f8)', btnBg: '#be185d', circle: '#f9a8d4' }
                 ];
 
-                // Tentukan warna berdasarkan short_name atau index
                 const appName = (app.short_name || app.name || '').toLowerCase();
                 let colorIndex = 0;
 
                 if (appName.includes('sieda') || appName.includes('e-dasawisma')) {
-                    colorIndex = 0; // Biru
+                    colorIndex = 0;
                 } else if (appName.includes('sidongan')) {
-                    colorIndex = 1; // Merah
+                    colorIndex = 1;
                 } else {
-                    // Gunakan index aplikasi untuk warna (loop 10 warna)
                     colorIndex = (index % 10);
                 }
 
                 const colors = appColors[colorIndex];
-
                 const iconUrl = app.icon ? '/storage/' + app.icon.replace(/^(storage\/|public\/)/i, '') : null;
 
                 const features = Array.isArray(app.features) ? app.features.slice(0, 5) : [];
@@ -169,11 +160,10 @@ async function loadApps() {
                     ? `<img src="${iconUrl}" alt="${app.short_name}" style="width: 100%; height: 100%; object-fit: contain; padding: 10px; ${isMaintenance ? 'filter: grayscale(100%) brightness(1.3);' : 'filter: brightness(0) invert(1);'}">`
                     : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 2rem;">${(app.short_name || 'A').charAt(0)}</div>`;
 
-                // URL APLIKASI
                 const appUrl = app.url || '#';
 
                 return `
-                <a href="${isMaintenance ? '#' : appUrl}" class="app-card-home ${cardClass} ${isMaintenance ? 'maintenance-mode' : ''}" style="
+                <a href="${isMaintenance ? '#' : appUrl}" class="app-card-home app-color-${colorIndex} ${isMaintenance ? 'maintenance-mode' : ''}" style="
                         background: #fff;
                         border-radius: 20px;
                         overflow: hidden;
