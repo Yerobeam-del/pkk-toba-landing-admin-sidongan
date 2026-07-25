@@ -188,7 +188,7 @@
             </div>
 
             <!-- POKJA SECTIONS (Static Structure, Dynamic Content) -->
-            <div style="max-width:1300px;margin:0 auto;">
+            <div class="pokja-sections-wrapper" style="max-width:1300px;margin:0 auto;">
                 @php
                     $pokjaConfig = [
                         ['id'=>'pokja1', 'num'=>'I', 'title'=>'Pokja I — Penghayatan & Pengamalan Pancasila', 'sub'=>'Mengelola program Penghayatan dan Pengamalan Pancasila  dan Program Gotong Royong', 'color'=>'p1'],
@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// DRAW MOBILE TREE CONNECTORS - ULTIMATE FIX
+// DRAW MOBILE TREE CONNECTORS - FIXED
 // ==========================================
 function drawMobileConnectors() {
     // 1. Hapus SVG lama agar tidak menumpuk (double lines)
@@ -399,20 +399,31 @@ function drawMobileConnectors() {
     const wrapper = document.querySelector('.struktur-wrapper');
     if (!wrapper) return;
 
-    // 2. Buat SVG baru
+    // 2. Hitung tinggi HANYA untuk struktur utama (TANPA Pokja sections)
+    const strukturTree = document.querySelector('.struktur-tree');
+    const pokjaSections = document.querySelector('.pokja-sections-wrapper');
+
+    let wrapperHeight = wrapper.scrollHeight;
+
+    // Jika ada Pokja sections, kurangi tingginya dari perhitungan
+    if (pokjaSections) {
+        const strukturHeight = strukturTree ? strukturTree.scrollHeight : 0;
+        const gapHeight = 50; // Gap antara struktur dan Pokja
+        wrapperHeight = strukturHeight + gapHeight;
+    }
+
+    const wrapperWidth = wrapper.offsetWidth;
+
+    // 3. Buat SVG baru
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.id = 'mobileTreeSvg';
-    svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible;';
-
-    const wrapperRect = wrapper.getBoundingClientRect();
-    const wrapperHeight = wrapper.scrollHeight;
-    const wrapperWidth = wrapper.offsetWidth;
+    svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:' + wrapperHeight + 'px;pointer-events:none;z-index:1;overflow:visible;';
     svg.setAttribute('viewBox', '0 0 ' + wrapperWidth + ' ' + wrapperHeight);
 
     wrapper.style.position = 'relative';
     wrapper.insertBefore(svg, wrapper.firstChild);
 
-    // 3. Helper: Dapatkan koordinat VISUAL CARD, bukan wrapper
+    // 4. Helper: Dapatkan koordinat VISUAL CARD, bukan wrapper
     function getCardPos(wrapperId) {
         const wrapperEl = document.getElementById(wrapperId);
         if (!wrapperEl) return null;
@@ -424,6 +435,8 @@ function drawMobileConnectors() {
                        wrapperEl;
 
         const r = cardEl.getBoundingClientRect();
+        const wrapperRect = wrapper.getBoundingClientRect();
+
         return {
             cx: r.left + r.width / 2 - wrapperRect.left,
             top: r.top - wrapperRect.top,
@@ -458,7 +471,7 @@ function drawMobileConnectors() {
         svg.appendChild(circle);
     }
 
-    // 4. Ambil posisi semua kartu visual
+    // 5. Ambil posisi semua kartu visual
     const ketuaPembina = getCardPos('wrapper-ketua-pembina');
     const ketuaPkk = getCardPos('wrapper-ketua-pkk');
     const stafAhli = getCardPos('wrapper-staf-ahli');
@@ -469,6 +482,7 @@ function drawMobileConnectors() {
     sekbenWrappers.forEach(function(w) {
         const card = w.querySelector('.org-card') || w;
         const r = card.getBoundingClientRect();
+        const wrapperRect = wrapper.getBoundingClientRect();
         sekben.push({
             cx: r.left + r.width / 2 - wrapperRect.left,
             top: r.top - wrapperRect.top,
@@ -484,6 +498,7 @@ function drawMobileConnectors() {
     pokjaWrappers.forEach(function(w) {
         const card = w.querySelector('.org-card') || w;
         const r = card.getBoundingClientRect();
+        const wrapperRect = wrapper.getBoundingClientRect();
         pokja.push({
             cx: r.left + r.width / 2 - wrapperRect.left,
             top: r.top - wrapperRect.top,
@@ -493,7 +508,7 @@ function drawMobileConnectors() {
         });
     });
 
-    // 5. Tentukan posisi Backbone (Garis Utama Vertikal)
+    // 6. Tentukan posisi Backbone (Garis Utama Vertikal)
     // Hitung jarak paling kiri dari semua kartu visual
     const allLefts = [];
     if (ketuaPkk) allLefts.push(ketuaPkk.left);
