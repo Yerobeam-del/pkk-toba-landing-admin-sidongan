@@ -362,6 +362,14 @@ function togglePokja(pokjaId) {
         const isHidden = content.style.display === 'none' || !content.style.display;
         content.style.display = isHidden ? 'block' : 'none';
         icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+
+        // Redraw garis penghubung setelah toggle
+        setTimeout(() => {
+            if (typeof drawMobileConnectors === 'function') {
+                drawMobileConnectors();
+            }
+            window.dispatchEvent(new Event('resize'));
+        }, 400);
     }
 }
 
