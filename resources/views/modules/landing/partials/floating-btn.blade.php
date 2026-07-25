@@ -16,15 +16,15 @@ $floatingApps = \App\Models\Application::where('is_active', true)
            target="{{ $app->url && $app->url !== '#' ? '_blank' : '_self' }}"
            class="floating-menu-item"
            style="pointer-events: auto;">
-            <span class="floating-menu-label">{{ $app->name }}</span>
+            <span class="floating-menu-label">{{ $app->short_name ?? $app->name }}</span>
             <div class="floating-menu-icon">
                 @if($app->icon)
                     <img src="{{ asset('storage/' . $app->icon) }}"
                          alt="{{ $app->short_name }}"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <span style="display:none;">{{ substr($app->short_name, 0, 2) }}</span>
+                    <span style="display:none;">{{ substr($app->short_name ?? 'AP', 0, 2) }}</span>
                 @else
-                    <span>{{ substr($app->short_name, 0, 2) }}</span>
+                    <span>{{ substr($app->short_name ?? 'AP', 0, 2) }}</span>
                 @endif
             </div>
         </a>
