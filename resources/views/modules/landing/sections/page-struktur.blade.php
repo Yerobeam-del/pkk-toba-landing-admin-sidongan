@@ -601,7 +601,7 @@ function drawMobileConnectors() {
         rowKeys.forEach(function(key) {
             const rowPokjas = rows[key];
             const lastPokja = rowPokjas[rowPokjas.length - 1];
-            const branchY = rowPokjas[0].top - 15;
+            const branchY = rowPokjas[0].top - 25;
 
             // Garis horizontal dari backbone ke TENGAH kartu terakhir di baris ini
             drawLine(backboneX, branchY, lastPokja.cx, branchY);
