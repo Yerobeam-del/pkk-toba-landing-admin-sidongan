@@ -586,36 +586,47 @@ function drawMobileConnectors() {
         drawLine(sekben[1].cx, branchY, sekben[1].cx, sekben[1].top);
     }
 
-    // ===== 6. Cabang ke Pokja I-IV =====
-    if (pokja.length >= 2) {
-        // Kelompokkan berdasarkan baris
-        const rows = {};
-        pokja.forEach(function(p) {
-            const rowKey = Math.round(p.top / 50) * 50;
-            if (!rows[rowKey]) rows[rowKey] = [];
-            rows[rowKey].push(p);
+// ===== 6. Cabang ke Pokja I-IV =====
+if (pokja.length >= 2) {
+    // Kelompokkan berdasarkan baris
+    const rows = {};
+    pokja.forEach(function(p) {
+        const rowKey = Math.round(p.top / 50) * 50;
+        if (!rows[rowKey]) rows[rowKey] = [];
+        rows[rowKey].push(p);
+    });
+
+    const rowKeys = Object.keys(rows).sort(function(a, b) { return parseInt(a) - parseInt(b); });
+
+    rowKeys.forEach(function(key, rowIndex) {
+        const rowPokjas = rows[key];
+        const lastPokja = rowPokjas[rowPokjas.length - 1];
+
+        // Jarak berbeda untuk mobile dan desktop
+        let spacing;
+        if (window.innerWidth <= 768) {
+            // MOBILE: Baris pertama 6px, baris kedua 30px
+            spacing = rowIndex === 0 ? 6 : 30;
+        } else {
+            // DESKTOP: Semua baris 15px
+            spacing = 15;
+        }
+
+        const branchY = rowPokjas[0].top - spacing;
+
+        // Garis horizontal dari backbone ke tengah kartu terakhir
+        drawLine(backboneX, branchY, lastPokja.cx, branchY);
+
+        // Titik persimpangan
+        drawCircle(backboneX, branchY, 4);
+
+        // Garis vertikal ke masing-masing kartu
+        rowPokjas.forEach(function(p) {
+            drawCircle(p.cx, branchY, 3);
+            drawLine(p.cx, branchY, p.cx, p.top);
         });
-
-        const rowKeys = Object.keys(rows).sort(function(a, b) { return parseInt(a) - parseInt(b); });
-
-        rowKeys.forEach(function(key) {
-            const rowPokjas = rows[key];
-            const lastPokja = rowPokjas[rowPokjas.length - 1];
-            const branchY = rowPokjas[0].top - 15;
-
-            // Garis horizontal dari backbone ke TENGAH kartu terakhir di baris ini
-            drawLine(backboneX, branchY, lastPokja.cx, branchY);
-
-            // Titik persimpangan
-            drawCircle(backboneX, branchY, 4);
-
-            // Garis vertikal ke masing-masing kartu di baris ini
-            rowPokjas.forEach(function(p) {
-                drawCircle(p.cx, branchY, 3);
-                drawLine(p.cx, branchY, p.cx, p.top);
-            });
-        });
-    }
+    });
+}
 }
 
 // Event Listeners untuk Redraw
