@@ -1,333 +1,322 @@
-<div class="page" id="page-aplikasi" style="display: none;">
-    <div class="page-header" style="background: linear-gradient(135deg, var(--primary), var(--primary-light));">
+<div class="page" id="page-aplikasi">
+    <div class="page-header">
         <div class="page-header-content">
-            <h1>Aplikasi & Sistem</h1>
+            <h1>Aplikasi & Layanan</h1>
             <p>Sistem informasi digital PKK Kabupaten Toba</p>
             <div class="breadcrumb">
-                <a onclick="navigateTo('beranda')">Beranda</a><span>/</span><span class="current">Aplikasi</span>
+                <a onclick="navigateTo('beranda')">Beranda</a>
+                <span>/</span>
+                <span class="current">Aplikasi</span>
             </div>
         </div>
     </div>
 
-    <div id="aplikasi-loading" style="text-align: center; padding: 4rem 2rem;">
-        <div style="font-size: 1.2rem; color: var(--text-muted);">Memuat data aplikasi...</div>
-    </div>
+    <section class="apps-landing-section">
+        <div class="apps-container">
 
-    <section class="apps-full-section" id="aplikasi-content" style="display: none;">
+            {{-- SEARCH BAR --}}
+            <div class="search-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input type="text" id="globalSearch" class="search-input" placeholder="Cari aplikasi atau layanan...">
+            </div>
 
-        {{-- SECTION: APLIKASI AKTIF --}}
-        <div class="section-header" id="active-section-header">
-            <div class="section-label">Aplikasi Aktif</div>
-            <h2 class="section-title">Sistem yang Tersedia</h2>
-        </div>
-        <div class="apps-full-grid" id="active-apps-grid">
-            <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-muted);">Memuat aplikasi aktif...</div>
+            {{-- SECTION: APLIKASI --}}
+            <div class="category-block" id="block-aplikasi">
+                <div class="section-head">
+                    <span class="badge-app">APLIKASI AKTIF</span>
+                    <h2 class="section-title">Sistem yang Tersedia</h2>
+                    <p class="section-desc">Akses berbagai aplikasi digital untuk mendukung kinerja PKK</p>
+                </div>
+
+                <div class="carousel-wrapper">
+                    <button class="nav-btn prev-btn" onclick="scrollCarousel('track-aplikasi', -1)">&#10094;</button>
+                    <div class="carousel-track" id="track-aplikasi">
+                        {{-- Cards will be injected here by JS --}}
+                        <div class="loading-state">Memuat data aplikasi...</div>
+                    </div>
+                    <button class="nav-btn next-btn" onclick="scrollCarousel('track-aplikasi', 1)">&#10095;</button>
+                </div>
+
+                <div class="see-all-wrapper">
+                    <button class="btn-see-all" onclick="openModal('modal-aplikasi')">
+                        Lihat Semua Aplikasi
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            {{-- SECTION: LAYANAN --}}
+            <div class="category-block" id="block-layanan">
+                <div class="section-head">
+                    <span class="badge-lay">LAYANAN DIGITAL</span>
+                    <h2 class="section-title">Layanan Publik</h2>
+                    <p class="section-desc">Layanan mandiri yang dapat diakses oleh masyarakat dan pengurus</p>
+                </div>
+
+                <div class="carousel-wrapper">
+                    <button class="nav-btn prev-btn" onclick="scrollCarousel('track-layanan', -1)">&#10094;</button>
+                    <div class="carousel-track" id="track-layanan">
+                        {{-- Cards will be injected here by JS --}}
+                        <div class="loading-state">Memuat data layanan...</div>
+                    </div>
+                    <button class="nav-btn next-btn" onclick="scrollCarousel('track-layanan', 1)">&#10095;</button>
+                </div>
+
+                <div class="see-all-wrapper">
+                    <button class="btn-see-all btn-layanan" onclick="openModal('modal-layanan')">
+                        Lihat Semua Layanan
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+
         </div>
     </section>
+
+    {{-- MODAL: SEMUA APLIKASI --}}
+    <div id="modal-aplikasi" class="modal-overlay" onclick="closeModalOutside(event, 'modal-aplikasi')">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Semua Aplikasi</h3>
+                <button class="modal-close" onclick="closeModal('modal-aplikasi')">&times;</button>
+            </div>
+            <div class="modal-grid" id="grid-aplikasi"></div>
+        </div>
+    </div>
+
+    {{-- MODAL: SEMUA LAYANAN --}}
+    <div id="modal-layanan" class="modal-overlay" onclick="closeModalOutside(event, 'modal-layanan')">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Semua Layanan</h3>
+                <button class="modal-close" onclick="closeModal('modal-layanan')">&times;</button>
+            </div>
+            <div class="modal-grid" id="grid-layanan"></div>
+        </div>
+    </div>
 </div>
 
+<style>
+    /* CSS Khusus Halaman Aplikasi */
+    .apps-landing-section { padding: 4rem 2rem; background: var(--bg-light); min-height: 80vh; }
+    .apps-container { max-width: 1200px; margin: 0 auto; }
+
+    /* Search Bar */
+    .search-wrapper { position: relative; max-width: 600px; margin: 0 auto 3rem auto; }
+    .search-icon { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--text-muted); }
+    .search-input { width: 100%; padding: 1rem 1.25rem 1rem 3.5rem; border: 2px solid #e2e8f0; border-radius: 50px; font-size: 1rem; font-family: inherit; transition: all 0.3s ease; background: #fff; }
+    .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(15, 107, 99, 0.1); }
+
+    /* Category Block */
+    .category-block { margin-bottom: 2rem; }
+    .section-head { text-align: center; margin-bottom: 2.5rem; }
+    .badge-app { display: inline-block; padding: 0.4rem 1rem; background: rgba(15, 107, 99, 0.1); color: var(--primary); border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 1rem; }
+    .badge-lay { display: inline-block; padding: 0.4rem 1rem; background: rgba(214, 158, 46, 0.1); color: #d69e2e; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 1rem; }
+    .section-title { font-size: 2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; }
+    .section-desc { font-size: 1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+    /* Carousel */
+    .carousel-wrapper { position: relative; display: flex; align-items: center; gap: 1rem; }
+    .carousel-track { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 1rem 0.5rem; flex: 1; scroll-behavior: smooth; }
+    .carousel-track::-webkit-scrollbar { display: none; }
+    .nav-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #e2e8f0; background: #fff; color: var(--text-dark); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; flex-shrink: 0; z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .nav-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); transform: scale(1.05); }
+
+    /* App Card in Carousel */
+    .app-card-slide { flex: 0 0 320px; scroll-snap-align: start; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; }
+    .app-card-slide:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+    .app-card-slide.hidden { display: none !important; }
+    .slide-header { padding: 2rem; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); text-align: center; position: relative; overflow: hidden; }
+    .slide-header.layanan-bg { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); }
+    .slide-icon { width: 70px; height: 70px; border-radius: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    .slide-icon.lay-icon { background: linear-gradient(135deg, #d97706, #f59e0b); }
+    .slide-icon img { width: 40px; height: 40px; object-fit: contain; filter: brightness(0) invert(1); }
+    .slide-icon span { color: #fff; font-weight: 800; font-size: 1.2rem; }
+    .slide-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+    .slide-name { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 0.25rem; }
+    .slide-name.lay-name { color: #d97706; }
+    .slide-fullname { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 500; }
+    .slide-desc { font-size: 0.9rem; color: #4a5568; line-height: 1.5; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .slide-link { display: block; text-align: center; margin-top: 1rem; padding: 0.75rem; background: var(--primary); color: #fff; text-decoration: none; border-radius: 10px; font-weight: 600; transition: background 0.3s; }
+    .slide-link.lay-link { background: #d97706; }
+    .slide-link:hover { opacity: 0.9; }
+
+    /* See All Button */
+    .see-all-wrapper { text-align: center; margin-top: 2rem; }
+    .btn-see-all { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--primary); color: #fff; border: none; border-radius: 50px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: inherit; }
+    .btn-see-all:hover { background: var(--primary-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 107, 99, 0.3); }
+    .btn-layanan { background: #d97706; }
+    .btn-layanan:hover { background: #b45309; box-shadow: 0 6px 20px rgba(217, 119, 6, 0.3); }
+
+    .section-divider { height: 1px; background: #e2e8f0; margin: 3rem 0; }
+    .loading-state { width: 100%; text-align: center; padding: 2rem; color: var(--text-muted); }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 2rem; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: #fff; border-radius: 20px; width: 100%; max-width: 900px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: modalSlideUp 0.3s ease; overflow: hidden; }
+    @keyframes modalSlideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
+    .modal-header h3 { font-size: 1.25rem; font-weight: 700; color: var(--text-dark); margin: 0; }
+    .modal-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: #e2e8f0; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+    .modal-close:hover { background: #cbd5e1; color: var(--text-dark); }
+    .modal-grid { padding: 2rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; overflow-y: auto; }
+    .modal-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #f8fafc; border-radius: 12px; text-decoration: none; color: inherit; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
+    .modal-card:hover { background: #fff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(15, 107, 99, 0.1); transform: translateX(5px); }
+    .modal-card.lay-card:hover { border-color: #d97706; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.1); }
+    .modal-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .modal-icon.lay-icon { background: linear-gradient(135deg, #d97706, #f59e0b); }
+    .modal-icon img { width: 24px; height: 24px; object-fit: contain; filter: brightness(0) invert(1); }
+    .modal-icon span { color: #fff; font-weight: 800; font-size: 0.9rem; }
+    .modal-info h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin: 0 0 0.25rem 0; }
+    .modal-info p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+
+    @media (max-width: 768px) {
+        .app-card-slide { flex: 0 0 280px; }
+        .nav-btn { display: none; } /* Hide arrows on mobile, rely on swipe */
+        .modal-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
 <script>
-let aplikasiDataLoaded = false;
+document.addEventListener('DOMContentLoaded', function() {
+    let appsData = { aplikasi: [], layanan: [] };
+    let autoScrollIntervals = {};
 
-// ==========================================
-// HELPER FUNCTIONS
-// ==========================================
+    // 1. Fetch Data
+    fetch('/api/v1/applications')
+        .then(res => res.json())
+        .then(result => {
+            if (result.success) {
+                appsData.aplikasi = result.data.aplikasi.active || [];
+                appsData.layanan = result.data.layanan.active || [];
 
-function getIconHtml(app, size = 40) {
-    return `
-    <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"
-         stroke="rgba(255,255,255,0.95)" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-        <line x1="8" y1="21" x2="16" y2="21"/>
-        <line x1="12" y1="17" x2="12" y2="21"/>
-    </svg>
-    `;
-}
+                renderSection('aplikasi', appsData.aplikasi);
+                renderSection('layanan', appsData.layanan);
 
-function buildImageUrl(iconPath) {
-    if (!iconPath) return null;
-    const cleanPath = iconPath.replace(/^(storage\/|public\/|app\/public\/)/i, '');
-    return '/storage/' + cleanPath;
-}
+                startAutoScroll('track-aplikasi');
+                startAutoScroll('track-layanan');
+            }
+        })
+        .catch(err => console.error('Error loading apps:', err));
 
-// Empty state untuk APLIKASI AKTIF
-function renderEmptyActiveState() {
-    return `
-    <div style="grid-column: 1 / -1; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem; min-height: 50vh; margin: 0 auto;">
-        <div style="width: 120px; height: 120px; margin: 0 auto 2rem; background: linear-gradient(135deg, rgba(15,107,99,0.1), rgba(20,184,166,0.1)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0f6b63" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8;">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                <line x1="8" y1="21" x2="16" y2="21"/>
-                <line x1="12" y1="17" x2="12" y2="21"/>
-            </svg>
-        </div>
-        <h3 style="font-size: 1.75rem; font-weight: 800; color: #1e293b; margin: 0 0 0.75rem 0;">Belum Ada Aplikasi Aktif</h3>
-        <p style="color: #64748b; font-size: 1.05rem; line-height: 1.7; margin: 0 auto 2rem; max-width: 500px;">Tim kami sedang mempersiapkan sistem digital untuk meningkatkan pelayanan PKK Kabupaten Toba. Silakan kunjungi kembali nanti untuk update terbaru.</p>
-        <a onclick="navigateTo('beranda')" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 2rem; background: linear-gradient(135deg, #0f6b63, #14b8a6); color: #fff; border-radius: 12px; font-weight: 600; text-decoration: none; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(15,107,99,0.3);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(15,107,99,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(15,107,99,0.3)'">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            Kembali ke Beranda
-        </a>
-    </div>
-    `;
-}
+    // 2. Render Function
+    function renderSection(type, data) {
+        const track = document.getElementById(`track-${type}`);
+        const grid = document.getElementById(`grid-${type}`);
+        const isLayanan = type === 'layanan';
 
-// ==========================================
-// ✅ RENDER APLIKASI AKTIF (FIXED VERSION)
-// ==========================================
-function renderActiveApps(apps) {
-    const container = document.getElementById('active-apps-grid');
-    if (!container) {
-        console.error('Container active-apps-grid not found!');
-        return;
+        if (data.length === 0) {
+            track.innerHTML = '<div class="loading-state">Tidak ada data tersedia.</div>';
+            grid.innerHTML = '<div class="loading-state">Tidak ada data tersedia.</div>';
+            return;
+        }
+
+        // Render Carousel (Max 4 items)
+        track.innerHTML = data.slice(0, 4).map(app => createCardHTML(app, isLayanan)).join('');
+
+        // Render Modal Grid (All items)
+        grid.innerHTML = data.map(app => createModalCardHTML(app, isLayanan)).join('');
     }
 
-    console.log('📊 Rendering apps:', apps);
-
-    if (!apps || apps.length === 0) {
-        console.log('No apps to render, showing empty state');
-        container.innerHTML = renderEmptyActiveState();
-        const activeHeader = document.getElementById('active-section-header');
-        if (activeHeader) activeHeader.style.display = 'none';
-        return;
-    }
-
-    const activeCardTemplate = (app, index) => {
-        // CEK STATUS MAINTENANCE - PASTIKAN BENAR
-        const isMaintenance = app.status === 'maintenance';
-        console.log(`App ${index}: ${app.short_name} - Status: ${app.status} - Is Maintenance: ${isMaintenance}`);
-
-        // ARRAY 10 WARNA UNTUK APLIKASI
-        const appColors = [
-            { primary: '#2563eb', bg: 'linear-gradient(135deg, #dbeafe, #eff6ff)', circle: '#bfdbfe', btn: '#2563eb' },      // Biru (SIEDA)
-            { primary: '#dc2626', bg: 'linear-gradient(135deg, #fee2e2, #fef2f2)', circle: '#fecaca', btn: '#dc2626' },      // Merah (SIDONGAN)
-            { primary: '#7c3aed', bg: 'linear-gradient(135deg, #ede9fe, #f5f3ff)', circle: '#ddd6fe', btn: '#7c3aed' },      // Ungu
-            { primary: '#059669', bg: 'linear-gradient(135deg, #d1fae5, #ecfdf5)', circle: '#a7f3d0', btn: '#059669' },      // Hijau
-            { primary: '#d97706', bg: 'linear-gradient(135deg, #fef3c7, #fffbeb)', circle: '#fde68a', btn: '#d97706' },      // Kuning/Orange
-            { primary: '#db2777', bg: 'linear-gradient(135deg, #fce7f3, #fdf2f8)', circle: '#fbcfe8', btn: '#db2777' },      // Pink
-            { primary: '#0891b2', bg: 'linear-gradient(135deg, #cffafe, #ecfeff)', circle: '#a5f3fc', btn: '#0891b2' },      // Cyan
-            { primary: '#7c2d12', bg: 'linear-gradient(135deg, #ffedd5, #fff7ed)', circle: '#fed7aa', btn: '#7c2d12' },      // Brown/Orange gelap
-            { primary: '#4338ca', bg: 'linear-gradient(135deg, #e0e7ff, #eef2ff)', circle: '#c7d2fe', btn: '#4338ca' },      // Indigo
-            { primary: '#be185d', bg: 'linear-gradient(135deg, #fce7f3, #fdf2f8)', circle: '#f9a8d4', btn: '#be185d' }       // Rose/Pink gelap
-        ];
-
-        // Tentukan class dan warna berdasarkan short_name
-        const appName = (app.short_name || app.name || '').toLowerCase().trim();
-        let colorIndex = 0;
-        let cardClass = '';
-
-        if (appName.includes('sieda') || appName.includes('e-dasawisma')) {
-            cardClass = 'sieda';
-            colorIndex = 0; // Biru
-        } else if (appName.includes('sidongan')) {
-            cardClass = 'SIDONGAN';
-            colorIndex = 1; // Merah
-        } else {
-            // Gunakan index aplikasi untuk warna (loop 10 warna)
-            colorIndex = (index % 10);
-            cardClass = `app-color-${colorIndex}`;
-        }
-
-        // Ambil warna yang sesuai
-        const colors = appColors[colorIndex];
-
-        // Build image URL
-        let imgUrl = null;
-        if (app.icon) {
-            const cleanPath = app.icon.replace(/^(storage\/|public\/|app\/public\/)/i, '');
-            imgUrl = '/storage/' + cleanPath;
-        }
-
-        // Features list
-        const features = Array.isArray(app.features) ? app.features.slice(0, 5) : [];
-        const featuresHtml = features.length > 0
-            ? features.map(f => `
-                <li style="display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 0.9rem; color: ${isMaintenance ? '#94a3b8' : '#4a5568'};">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${isMaintenance ? '#94a3b8' : colors.primary}" stroke-width="2.5" style="flex-shrink: 0;">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    ${f}
-                </li>
-            `).join('')
-            : `
-                <li style="display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 0.9rem; color: ${isMaintenance ? '#94a3b8' : '#4a5568'};">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${isMaintenance ? '#94a3b8' : colors.primary}" stroke-width="2.5" style="flex-shrink: 0;">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    Fitur unggulan aplikasi
-                </li>
-            `;
-
-        // Icon HTML dengan fallback
-        let iconHtml = '';
-        if (imgUrl) {
-            iconHtml = `
-                <img src="${imgUrl}"
-                    alt="${app.short_name || app.name}"
-                    style="width:100%;height:100%;object-fit:contain;display:block;padding:10px;${isMaintenance ? 'filter: grayscale(100%) brightness(1.3) !important;' : ''}"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                <div class="placeholder-icon" style="display:none;width:50px;height:50px;align-items:center;justify-content:center;">
-                    ${getIconHtml(app, 40)}
-                </div>
-            `;
-        } else {
-            iconHtml = `<div class="placeholder-icon" style="width:50px;height:50px;display:flex;align-items:center;justify-content:center;${isMaintenance ? 'filter: grayscale(100%) brightness(1.5) !important;' : ''}">${getIconHtml(app, 40)}</div>`;
-        }
-
-        // RENDER CARD DENGAN MAINTENANCE MODE
-        // URL APLIKASI
-        const appUrl = app.url || '#';
+    function createCardHTML(app, isLayanan) {
+        const iconHtml = app.icon
+            ? `<img src="/storage/${app.icon}" alt="${app.short_name}">`
+            : `<span>${app.short_name.substring(0, 2)}</span>`;
+        const bgClass = isLayanan ? 'layanan-bg' : '';
+        const iconClass = isLayanan ? 'lay-icon' : '';
+        const nameClass = isLayanan ? 'lay-name' : '';
+        const linkClass = isLayanan ? 'lay-link' : '';
 
         return `
-        <a href="${isMaintenance ? '#' : appUrl}" class="app-card-home ${cardClass} ${isMaintenance ? 'maintenance-mode' : ''}"
-            style="
-                ${isMaintenance ? 'filter: grayscale(80%) !important; opacity: 0.85 !important; pointer-events: none !important; cursor: not-allowed !important;' : 'cursor: pointer;'}
-                background: #fff;
-                border-radius: 16px;
-                overflow: hidden;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-                transition: all 0.3s ease;
-                text-decoration: none;
-                color: inherit;
-                display: flex;
-                flex-direction: column;
-                min-height: 100%;
-            "
-            ${!isMaintenance ? `onclick="window.location.href='${appUrl}'"` : ''}>
-
-            <div class="app-card-header" style="position: relative; overflow: hidden; background: ${isMaintenance ? '#f1f5f9' : colors.bg}; pointer-events: none;">
-                <div style="position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; border-radius: 50%; background: ${isMaintenance ? '#cbd5e1' : colors.circle}; opacity: ${isMaintenance ? '0.2' : '0.4'};"></div>
-                <div class="app-icon-wrapper" style="${isMaintenance ? 'filter: grayscale(100%) brightness(1.2) !important;' : ''}">
-                    ${iconHtml}
-                </div>
-                ${isMaintenance ? `
-                <div style="position:absolute;top:1rem;right:1rem;background:rgba(245,158,11,0.9);color:#fff;padding:0.4rem 0.8rem;border-radius:20px;font-size:0.7rem;font-weight:700;display:flex;align-items:center;gap:0.4rem;z-index:10;box-shadow:0 2px 8px rgba(245,158,11,0.3);">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-                    </svg>
-                    MAINTENANCE
-                </div>` : ''}
+        <div class="app-card-slide" data-name="${app.name.toLowerCase()}" data-short="${app.short_name.toLowerCase()}">
+            <div class="slide-header ${bgClass}">
+                <div class="slide-icon ${iconClass}">${iconHtml}</div>
             </div>
-
-            <div class="app-card-body" style="padding-top: 2rem; pointer-events: none;">
-                <h3 class="app-name" style="${isMaintenance ? 'color: #64748b;' : ''}">${app.short_name || app.name || 'Aplikasi'}</h3>
-                <p class="app-fullname" style="color: #64748b;">${app.name || ''}</p>
-                <p class="app-description" style="color: #64748b;">${app.description || 'Sistem informasi digital terpadu PKK Kabupaten Toba.'}</p>
-                <ul class="app-features">${featuresHtml}</ul>
+            <div class="slide-body">
+                <h3 class="slide-name ${nameClass}">${app.short_name}</h3>
+                <p class="slide-fullname">${app.name}</p>
+                <p class="slide-desc">${app.description || 'Tidak ada deskripsi.'}</p>
+                <a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="slide-link ${linkClass}">Akses ${app.short_name}</a>
             </div>
+        </div>`;
+    }
 
-            <div class="app-card-footer" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-top: 1px solid #f1f5f9; pointer-events: none;">
-                <span class="app-btn" style="
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    padding: 0.75rem 1.25rem;
-                    background: ${isMaintenance ? '#94a3b8' : colors.btn};
-                    color: #fff;
-                    border: none;
-                    border-radius: 10px;
-                    font-weight: 600;
-                    cursor: ${isMaintenance ? 'not-allowed' : 'pointer'};
-                    transition: all 0.3s;
-                ">
-                    ${isMaintenance ? 'Sedang Dalam Perbaikan' : `Akses ${app.short_name || 'Aplikasi'}`}
-                    ${!isMaintenance ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>` : ''}
-                </span>
-                <div class="app-status" style="
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 6px;
-                    padding: 6px 12px;
-                    background: ${isMaintenance ? 'rgba(245,158,11,0.1)' : 'rgba(34,197,94,0.1)'};
-                    border-radius: 20px;
-                    font-size: 0.75rem;
-                    font-weight: 600;
-                    color: ${isMaintenance ? '#f59e0b' : '#22c55e'};
-                ">
-                    <div class="app-status-dot" style="
-                        width: 7px;
-                        height: 7px;
-                        background: ${isMaintenance ? '#f59e0b' : '#22c55e'};
-                        border-radius: 50%;
-                        ${isMaintenance ? '' : 'animation: pulse 2s infinite;'}
-                    "></div>
-                    ${isMaintenance ? 'Dalam Perbaikan' : 'Aktif'}
-                </div>
+    function createModalCardHTML(app, isLayanan) {
+        const iconHtml = app.icon
+            ? `<img src="/storage/${app.icon}" alt="${app.short_name}">`
+            : `<span>${app.short_name.substring(0, 2)}</span>`;
+        const iconClass = isLayanan ? 'lay-icon' : '';
+        const cardClass = isLayanan ? 'lay-card' : '';
+
+        return `
+        <a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="modal-card ${cardClass}">
+            <div class="modal-icon ${iconClass}">${iconHtml}</div>
+            <div class="modal-info">
+                <h4>${app.short_name}</h4>
+                <p>${app.name}</p>
             </div>
         </a>`;
+    }
+
+    // 3. Carousel Logic
+    window.scrollCarousel = function(trackId, direction) {
+        const track = document.getElementById(trackId);
+        const scrollAmount = 340; // Approx card width + gap
+        track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
     };
 
-    const html = apps.map((app, i) => activeCardTemplate(app, i)).join('');
-    console.log('Generated HTML length:', html.length);
-    container.innerHTML = html;
-}
+    function startAutoScroll(trackId) {
+        const track = document.getElementById(trackId);
+        if (!track) return;
 
-// ==========================================
-// LOAD DATA & INIT
-// ==========================================
-async function loadAplikasiData() {
-    if (aplikasiDataLoaded) return;
+        autoScrollIntervals[trackId] = setInterval(() => {
+            if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+                track.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                window.scrollCarousel(trackId, 1);
+            }
+        }, 5000);
 
-    const loadingEl = document.getElementById('aplikasi-loading');
-    const contentEl = document.getElementById('aplikasi-content');
-    const activeGrid = document.getElementById('active-apps-grid');
-    const activeHeader = document.getElementById('active-section-header');
-
-    try {
-        const response = await fetch('/api/v1/applications');
-        const result = await response.json();
-
-        if (!result.success) throw new Error(result.message);
-
-        // GABUNGKAN: active + maintenance
-        const activeApps = result.data.active || [];
-        const maintenanceApps = result.data.maintenance || [];
-        const allApps = [...activeApps, ...maintenanceApps];
-
-        console.log('📊 Total apps:', allApps.length);
-        console.log('Active:', activeApps.length, 'Maintenance:', maintenanceApps.length);
-
-        if (allApps && allApps.length > 0) {
-            renderActiveApps(allApps);
-        } else {
-            if (activeGrid) activeGrid.innerHTML = renderEmptyActiveState();
-            if (activeHeader) activeHeader.style.display = 'none';
-        }
-
-        if (loadingEl) loadingEl.style.display = 'none';
-        if (contentEl) contentEl.style.display = 'block';
-
-        aplikasiDataLoaded = true;
-
-    } catch (error) {
-        console.error('Error loading aplikasi:', error);
-
-        if (activeGrid) activeGrid.innerHTML = renderEmptyActiveState();
-        if (activeHeader) activeHeader.style.display = 'none';
-
-        if (loadingEl) loadingEl.style.display = 'none';
-        if (contentEl) contentEl.style.display = 'block';
-
-        aplikasiDataLoaded = true;
+        track.addEventListener('mouseenter', () => clearInterval(autoScrollIntervals[trackId]));
+        track.addEventListener('mouseleave', () => startAutoScroll(trackId));
     }
-}
 
-// Auto-load when page becomes active
-document.addEventListener('DOMContentLoaded', () => {
-    const observer = new MutationObserver(() => {
-        const page = document.getElementById('page-aplikasi');
-        if (page && page.classList.contains('active') && !aplikasiDataLoaded) {
-            setTimeout(() => loadAplikasiData(), 100);
-            observer.disconnect();
-        }
+    // 4. Search Logic
+    document.getElementById('globalSearch').addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase().trim();
+        const allCards = document.querySelectorAll('.app-card-slide');
+
+        allCards.forEach(card => {
+            const name = card.getAttribute('data-name');
+            const short = card.getAttribute('data-short');
+            if (name.includes(term) || short.includes(term)) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
     });
-    observer.observe(document.body, { childList: true, subtree: true });
 
-    const page = document.getElementById('page-aplikasi');
-    if (page && page.classList.contains('active')) {
-        setTimeout(() => loadAplikasiData(), 100);
-    }
+    // 5. Modal Logic
+    window.openModal = function(modalId) {
+        document.getElementById(modalId).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeModal = function(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    window.closeModalOutside = function(event, modalId) {
+        if (event.target.id === modalId) {
+            window.closeModal(modalId);
+        }
+    };
 });
 </script>

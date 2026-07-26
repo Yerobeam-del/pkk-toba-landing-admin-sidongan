@@ -91,8 +91,26 @@ Route::domain('pkktoba.id')->group(function () {
 
     Route::get('/api/v1/applications', function () {
         try {
-            $allApps = \App\Models\Application::where('category', 'aplikasi')->whereIn('status', ['active', 'maintenance'])->orderBy('sort_order')->get();
-            return response()->json(['success' => true, 'data' => ['active' => $allApps->filter(fn($app) => $app->status === 'active')->values(), 'maintenance' => $allApps->filter(fn($app) => $app->status === 'maintenance')->values()]]);
+            // Ambil semua aplikasi dan layanan yang active/maintenance
+            $allApps = \App\Models\Application::whereIn('category', ['aplikasi', 'layanan'])
+                ->whereIn('status', ['active', 'maintenance'])
+                ->orderBy('category')
+                ->orderBy('sort_order')
+                ->get();
+
+            // Grouping data
+            $groupedData = [
+                'aplikasi' => [
+                    'active' => $allApps->where('category', 'aplikasi')->where('status', 'active')->values(),
+                    'maintenance' => $allApps->where('category', 'aplikasi')->where('status', 'maintenance')->values(),
+                ],
+                'layanan' => [
+                    'active' => $allApps->where('category', 'layanan')->where('status', 'active')->values(),
+                    'maintenance' => $allApps->where('category', 'layanan')->where('status', 'maintenance')->values(),
+                ]
+            ];
+
+            return response()->json(['success' => true, 'data' => $groupedData]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
