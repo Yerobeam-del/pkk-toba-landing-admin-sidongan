@@ -109,9 +109,22 @@ async function loadApps() {
 
         loadingEl.style.display = 'none';
 
-        const activeApps = (result.data.active || []).filter(app => app.show_in_quick_access == true);
-        const maintenanceApps = (result.data.maintenance || []).filter(app => app.show_in_quick_access == true);
-        const allApps = [...activeApps, ...maintenanceApps];
+        // Beranda hanya menampung 2 kartu (grid repeat(2, 1fr)), sesuai batas di
+        // Admin Panel > Manajemen Aplikasi. Validasi admin hanya menghitung aplikasi
+        // berstatus 'active', jadi batas ini ditegakkan lagi di sini agar aplikasi
+        // 'maintenance' tidak menambah kartu melebihi 2.
+        const MAKS_KARTU_BERANDA = 2;
+
+        // API mengelompokkan data per kategori: { aplikasi: {active, maintenance, development}, layanan: {...} }
+        // Beranda menggabungkan semua kategori, lalu disaring lewat toggle show_in_quick_access dari admin.
+        const groups = result.data || {};
+        const collect = (status) => Object.values(groups).flatMap(group => group?.[status] || []);
+
+        const activeApps = collect('active').filter(app => app.show_in_quick_access);
+        const maintenanceApps = collect('maintenance').filter(app => app.show_in_quick_access);
+
+        // Aktif diprioritaskan, maintenance hanya mengisi sisa slot
+        const allApps = [...activeApps, ...maintenanceApps].slice(0, MAKS_KARTU_BERANDA);
 
         if (result.success && allApps.length > 0) {
             gridEl.style.display = 'grid';

@@ -91,49 +91,44 @@ Route::domain(config('app.landing_domain'))->group(function () {
 
     Route::get('/api/v1/applications', function () {
         try {
+            // Aplikasi berstatus 'development' selalu di-set is_active = 0 oleh
+            // ApplicationController, jadi flag itu hanya relevan untuk status
+            // 'active' dan 'maintenance'.
             $allApps = \App\Models\Application::whereIn('category', ['aplikasi', 'layanan'])
-                ->where('is_active', true)
-                ->whereIn('status', ['active', 'maintenance'])
+                ->where(function ($q) {
+                    $q->where(function ($sub) {
+                        $sub->whereIn('status', ['active', 'maintenance'])->where('is_active', true);
+                    })->orWhere('status', 'development');
+                })
                 ->orderBy('category')
                 ->orderBy('sort_order')
                 ->get();
 
-            $groupedData = [
-                'aplikasi' => [
-                    'active' => $allApps->where('category', 'aplikasi')->where('status', 'active')->map(function($app) {
-                        return [
-                            'id' => $app->id,
-                            'name' => $app->name,
-                            'short_name' => $app->short_name,
-                            'description' => $app->description,
-                            'url' => $app->url,
-                            'icon' => $app->icon,
-                            'category' => $app->category,
-                            'status' => $app->status,
-                            'features' => $app->features ?? [], // Pastikan features dikirim
-                            'color_index' => $app->id % 10, // Untuk variasi warna (0-9)
-                        ];
-                    })->values(),
-                    'maintenance' => $allApps->where('category', 'aplikasi')->where('status', 'maintenance')->values(),
-                ],
-                'layanan' => [
-                    'active' => $allApps->where('category', 'layanan')->where('status', 'active')->map(function($app) {
-                        return [
-                            'id' => $app->id,
-                            'name' => $app->name,
-                            'short_name' => $app->short_name,
-                            'description' => $app->description,
-                            'url' => $app->url,
-                            'icon' => $app->icon,
-                            'category' => $app->category,
-                            'status' => $app->status,
-                            'features' => $app->features ?? [],
-                            'color_index' => $app->id % 10,
-                        ];
-                    })->values(),
-                    'maintenance' => $allApps->where('category', 'layanan')->where('status', 'maintenance')->values(),
-                ]
+            $mapApp = fn($app) => [
+                'id' => $app->id,
+                'name' => $app->name,
+                'short_name' => $app->short_name,
+                'description' => $app->description,
+                'url' => $app->url,
+                'icon' => $app->icon,
+                'category' => $app->category,
+                'status' => $app->status,
+                'status_label' => $app->status_label,
+                'features' => $app->features ?? [],
+                'color_index' => $app->id % 10, // Untuk variasi warna (0-9)
+                'show_in_quick_access' => (bool) $app->show_in_quick_access, // Dipakai section beranda
             ];
+
+            $groupedData = [];
+            foreach (['aplikasi', 'layanan'] as $category) {
+                $byCategory = $allApps->where('category', $category);
+                foreach (['active', 'maintenance', 'development'] as $status) {
+                    $groupedData[$category][$status] = $byCategory
+                        ->where('status', $status)
+                        ->map($mapApp)
+                        ->values();
+                }
+            }
 
             return response()->json(['success' => true, 'data' => $groupedData]);
         } catch (\Exception $e) {

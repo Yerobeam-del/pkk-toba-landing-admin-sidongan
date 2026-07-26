@@ -25,9 +25,9 @@
             {{-- SECTION: APLIKASI --}}
             <div class="category-block" id="block-aplikasi">
                 <div class="section-head">
-                    <span class="badge-app">APLIKASI AKTIF</span>
+                    <span class="badge-app">APLIKASI</span>
                     <h2 class="section-title">Sistem yang Tersedia</h2>
-                    <p class="section-desc">Akses berbagai aplikasi digital untuk mendukung kinerja PKK</p>
+                    <p class="section-desc">Akses berbagai aplikasi digital untuk mendukung kinerja PKK, termasuk yang sedang diperbaiki dan yang akan segera hadir</p>
                 </div>
 
                 <div class="carousel-wrapper">
@@ -53,7 +53,7 @@
                 <div class="section-head">
                     <span class="badge-lay">LAYANAN DIGITAL</span>
                     <h2 class="section-title">Layanan Publik</h2>
-                    <p class="section-desc">Layanan mandiri yang dapat diakses oleh masyarakat dan pengurus</p>
+                    <p class="section-desc">Layanan mandiri yang dapat diakses oleh masyarakat dan pengurus, termasuk yang sedang diperbaiki dan yang akan segera hadir</p>
                 </div>
 
                 <div class="carousel-wrapper">
@@ -149,6 +149,20 @@ document.addEventListener('DOMContentLoaded', function() {
         grid.innerHTML = data.map(app => createModalCardHTML(app, isLayanan)).join('');
     }
 
+    // Ikon + teks per status non-aktif. Dipakai bersama oleh kartu carousel dan modal.
+    const STATUS_META = {
+        maintenance: {
+            label: 'Dalam Maintenance',
+            note: 'Sedang Diperbaiki',
+            icon: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`
+        },
+        development: {
+            label: 'Dalam Pengembangan',
+            note: 'Segera Hadir',
+            icon: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M3 12h3m12 0h3M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1"/></svg>`
+        }
+    };
+
     function createCardHTML(app, isLayanan) {
         const iconHtml = app.icon
             ? `<img src="/storage/${app.icon}" alt="${app.short_name}">`
@@ -159,6 +173,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const nameClass = isLayanan ? 'lay-name' : '';
         const linkClass = isLayanan ? 'lay-link' : '';
         const colorClass = `app-color-${app.color_index || 0}`;
+
+        const status = app.status || 'active';
+        const meta = STATUS_META[status];
+        const stateClass = meta ? `is-${status}` : '';
 
         // Render features jika ada
         const featuresHtml = app.features && app.features.length > 0
@@ -172,9 +190,20 @@ document.addEventListener('DOMContentLoaded', function() {
             `).join('')}</ul>`
             : '';
 
+        // Badge status di pojok header, hanya untuk non-aktif
+        const badgeHtml = meta
+            ? `<span class="slide-status-badge status-${status}">${meta.icon}${meta.label}</span>`
+            : '';
+
+        // Aplikasi non-aktif tidak bisa diklik: tombol diganti keterangan status
+        const actionHtml = meta
+            ? `<span class="slide-link is-disabled" aria-disabled="true">${meta.icon}${meta.note}</span>`
+            : `<a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="slide-link ${linkClass}">Akses ${app.short_name}</a>`;
+
         return `
-        <div class="app-card-slide ${colorClass}" data-name="${app.name.toLowerCase()}" data-short="${app.short_name.toLowerCase()}">
+        <div class="app-card-slide ${colorClass} ${stateClass}" data-name="${app.name.toLowerCase()}" data-short="${app.short_name.toLowerCase()}" data-status="${status}">
             <div class="slide-header ${bgClass}">
+                ${badgeHtml}
                 <div class="slide-icon ${iconClass}">${iconHtml}</div>
             </div>
             <div class="slide-body">
@@ -182,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="slide-fullname">${app.name}</p>
                 <p class="slide-desc">${app.description || 'Tidak ada deskripsi.'}</p>
                 ${featuresHtml}
-                <a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="slide-link ${linkClass}">Akses ${app.short_name}</a>
+                ${actionHtml}
             </div>
         </div>`;
     }
@@ -195,14 +224,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const cardClass = isLayanan ? 'lay-card' : '';
         const colorClass = `app-color-${app.color_index || 0}`;
 
-        return `
-        <a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="modal-card ${cardClass} ${colorClass}">
+        const status = app.status || 'active';
+        const meta = STATUS_META[status];
+
+        const inner = `
             <div class="modal-icon ${iconClass}">${iconHtml}</div>
             <div class="modal-info">
                 <h4>${app.short_name}</h4>
                 <p>${app.name}</p>
-            </div>
-        </a>`;
+                ${meta ? `<span class="modal-status status-${status}">${meta.icon}${meta.note}</span>` : ''}
+            </div>`;
+
+        // Non-aktif dirender sebagai div, bukan anchor, agar benar-benar tidak bisa diklik
+        return meta
+            ? `<div class="modal-card ${cardClass} ${colorClass} is-${status}" aria-disabled="true">${inner}</div>`
+            : `<a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="modal-card ${cardClass} ${colorClass}">${inner}</a>`;
     }
 
     // 3. Carousel Logic yang Lebih Baik & Tidak Bertabrakan

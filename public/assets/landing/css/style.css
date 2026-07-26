@@ -1726,7 +1726,6 @@ body:has(.news-detail-wrapper) #newsModal,
 .slide-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; background: var(--primary); color: #fff; border-radius: 14px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.3s ease; margin-top: 1rem; }
 .slide-link.lay-link { background: #d97706; }
 .slide-link:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
-
 /* See All Button */
 .see-all-wrapper { text-align: center; margin-top: 2rem; }
 .btn-see-all-apps { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--primary); color: #fff; border: none; border-radius: 50px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: inherit; }
@@ -1863,3 +1862,64 @@ APLIKASI CAROUSEL - FEATURES & COLORS
 .modal-card.app-color-7 .modal-icon { background: linear-gradient(135deg, #7c2d12, #ea580c) !important; }
 .modal-card.app-color-8 .modal-icon { background: linear-gradient(135deg, #4338ca, #6366f1) !important; }
 .modal-card.app-color-9 .modal-icon { background: linear-gradient(135deg, #be185d, #ec4899) !important; }
+
+/* ============================================
+   STATUS: MAINTENANCE & DEVELOPMENT
+   Kartu non-aktif tetap tampil, tapi tidak bisa diinteraksikan.
+   ============================================ */
+
+/* Badge status di pojok kanan atas header kartu */
+.slide-status-badge { position: absolute; top: 12px; right: 12px; z-index: 3; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+.slide-status-badge.status-maintenance { background: #64748b; color: #fff; }
+.slide-status-badge.status-development { background: #7c3aed; color: #fff; }
+
+/* Tombol yang dinonaktifkan, menggantikan .slide-link */
+.slide-link.is-disabled { display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: not-allowed; pointer-events: none; user-select: none; }
+.slide-link.is-disabled:hover { transform: none; box-shadow: none; opacity: 1; }
+
+/* --- MAINTENANCE: abu-abu, tidak bisa diinteraksikan --- */
+.app-card-slide.is-maintenance { background: #f8fafc; border-color: #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.app-card-slide.is-maintenance:hover { transform: none; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.app-card-slide.is-maintenance .slide-header,
+.app-card-slide.is-maintenance .slide-header.layanan-bg { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); }
+.app-card-slide.is-maintenance .slide-header::before { background: #94a3b8 !important; }
+.app-card-slide.is-maintenance .slide-icon,
+.app-card-slide.is-maintenance .slide-icon.lay-icon { background: linear-gradient(135deg, #94a3b8, #cbd5e1) !important; box-shadow: none; }
+.app-card-slide.is-maintenance .slide-icon img { filter: brightness(0) invert(1) opacity(0.85); }
+.app-card-slide.is-maintenance .slide-name,
+.app-card-slide.is-maintenance .slide-name.lay-name { color: #475569 !important; }
+.app-card-slide.is-maintenance .slide-fullname,
+.app-card-slide.is-maintenance .slide-desc { color: #94a3b8; }
+.app-card-slide.is-maintenance .app-features li { color: #94a3b8; }
+.app-card-slide.is-maintenance .app-features li svg { stroke: #cbd5e1 !important; }
+/* !important diperlukan untuk mengalahkan palet .app-color-N di bawah */
+.app-card-slide.is-maintenance .slide-link.is-disabled { background: #cbd5e1 !important; color: #64748b !important; }
+
+/* --- DEVELOPMENT: sneak peek, warna tetap hidup tapi tidak bisa diklik --- */
+.app-card-slide.is-development { position: relative; background: #fff; border: 1px dashed #c4b5fd; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.08); }
+.app-card-slide.is-development:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(124, 58, 237, 0.15); }
+.app-card-slide.is-development .slide-header,
+.app-card-slide.is-development .slide-header.layanan-bg { background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); }
+.app-card-slide.is-development .slide-header::before { background: #7c3aed !important; }
+.app-card-slide.is-development .slide-icon,
+.app-card-slide.is-development .slide-icon.lay-icon { background: linear-gradient(135deg, #7c3aed, #a78bfa) !important; }
+.app-card-slide.is-development .slide-name,
+.app-card-slide.is-development .slide-name.lay-name { color: #6d28d9 !important; }
+.app-card-slide.is-development .app-features li svg { stroke: #a78bfa !important; }
+.app-card-slide.is-development .slide-link.is-disabled { background: #ede9fe !important; color: #6d28d9 !important; border: 1px solid #ddd6fe; }
+
+/* Status di dalam modal "Lihat Semua" */
+.modal-status { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; padding: 3px 10px; border-radius: 50px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+.modal-status.status-maintenance { background: #e2e8f0; color: #475569; }
+.modal-status.status-development { background: #ede9fe; color: #6d28d9; }
+.modal-card.is-maintenance,
+.modal-card.is-development { cursor: not-allowed; pointer-events: none; }
+.modal-card.is-maintenance { background: #f1f5f9; border-color: #e2e8f0; }
+.modal-card.is-maintenance .modal-icon { filter: grayscale(1); opacity: 0.7; }
+.modal-card.is-maintenance h4, .modal-card.is-maintenance p { color: #94a3b8; }
+.modal-card.is-development { background: #faf9ff; border-color: #ddd6fe; border-style: dashed; }
+
+/* Aksesibilitas: hormati preferensi pengguna yang mengurangi animasi */
+@media (prefers-reduced-motion: reduce) {
+    .app-card-slide.is-development:hover { transform: none; }
+}
