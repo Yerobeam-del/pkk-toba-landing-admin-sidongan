@@ -179,10 +179,20 @@ document.addEventListener('DOMContentLoaded', function() {
         </a>`;
     }
 
-    // 3. Carousel Logic
+    // 3. Carousel Logic yang Lebih Baik & Tidak Bertabrakan
     window.scrollCarousel = function(trackId, direction) {
         const track = document.getElementById(trackId);
-        const scrollAmount = 340; // Lebar card + gap
+        if (!track) return;
+
+        const card = track.querySelector('.app-card-slide');
+        if (!card) return;
+
+        // Hitung lebar card + gap (1.5rem = 24px) secara dinamis
+        const scrollAmount = card.offsetWidth + 24;
+
+        // Hentikan auto-scroll sementara agar tidak bertabrakan dengan kontrol user
+        resetAutoScroll(trackId);
+
         track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
     };
 
@@ -191,21 +201,54 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!track) return;
 
         const cards = track.querySelectorAll('.app-card-slide');
-        if (cards.length <= 3) return; // Jangan auto-scroll jika item sedikit
+        if (cards.length <= 1) return; // Jangan auto-scroll jika hanya 1 item
+
+        // Hapus interval lama jika ada
+        if (autoScrollIntervals[trackId]) {
+            clearInterval(autoScrollIntervals[trackId]);
+        }
 
         autoScrollIntervals[trackId] = setInterval(() => {
+            const card = track.querySelector('.app-card-slide');
+            if (!card) return;
+
+            const scrollAmount = card.offsetWidth + 24;
             const maxScroll = track.scrollWidth - track.clientWidth;
+
+            // Jika sudah di akhir, kembali ke awal dengan smooth (Looping)
             if (track.scrollLeft >= maxScroll - 10) {
                 track.scrollTo({ left: 0, behavior: 'smooth' });
             } else {
-                window.scrollCarousel(trackId, 1);
+                track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             }
-        }, 5000);
-
-        // Pause saat hover
-        track.addEventListener('mouseenter', () => clearInterval(autoScrollIntervals[trackId]));
-        track.addEventListener('mouseleave', () => startAutoScroll(trackId));
+        }, 4000); // 4 detik durasi yang nyaman dan masuk akal
     }
+
+    function resetAutoScroll(trackId) {
+        if (autoScrollIntervals[trackId]) {
+            clearInterval(autoScrollIntervals[trackId]);
+        }
+        // Mulai lagi setelah 5 detik agar user punya waktu melihat hasil kliknya
+        setTimeout(() => {
+            startAutoScroll(trackId);
+        }, 5000);
+    }
+
+    // Pause auto-scroll saat mouse berada di atas carousel (User sedang melihat/mengklik)
+    ['track-aplikasi', 'track-layanan'].forEach(trackId => {
+        const track = document.getElementById(trackId);
+        if (!track) return;
+
+        track.addEventListener('mouseenter', () => {
+            if (autoScrollIntervals[trackId]) {
+                clearInterval(autoScrollIntervals[trackId]);
+            }
+        });
+
+        track.addEventListener('mouseleave', () => {
+            startAutoScroll(trackId);
+        });
+    });
 
     // 4. Search Logic
     document.getElementById('globalSearch').addEventListener('input', function(e) {
