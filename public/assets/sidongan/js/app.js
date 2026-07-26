@@ -231,3 +231,85 @@ function toggleSuratMenu(event) {
         }
     }
 }
+
+// ==========================================================
+// PEMILIH WAKTU (sd-timepicker)
+// ==========================================================
+// Menambahkan panel "pilihan cepat" pada <input type="time">.
+// Input aslinya tidak diganti, jadi pengiriman form, validasi peramban,
+// dan pemilih waktu bawaan ponsel tetap berjalan seperti biasa.
+// Dipasang dengan delegasi event agar komponen yang muncul belakangan
+// (mis. setelah render ulang) tetap ikut tertangani.
+(function () {
+    'use strict';
+
+    const tutupSemua = (kecuali) => {
+        document.querySelectorAll('[data-timepicker]').forEach((tp) => {
+            if (tp === kecuali) return;
+            const panel = tp.querySelector('[data-timepicker-panel]');
+            const tombol = tp.querySelector('[data-timepicker-toggle]');
+            if (panel) panel.hidden = true;
+            if (tombol) tombol.setAttribute('aria-expanded', 'false');
+        });
+    };
+
+    const tandaiTerpilih = (tp) => {
+        const input = tp.querySelector('[data-timepicker-input]');
+        if (!input) return;
+        tp.querySelectorAll('[data-timepicker-option]').forEach((opt) => {
+            const cocok = opt.dataset.timepickerOption === input.value;
+            opt.setAttribute('aria-selected', cocok ? 'true' : 'false');
+        });
+    };
+
+    // Gulirkan panel ke pilihan yang sedang aktif agar tidak perlu mencari
+    const gulirKeTerpilih = (tp) => {
+        const terpilih = tp.querySelector('[data-timepicker-option][aria-selected="true"]');
+        const wadah = tp.querySelector('.sd-timepicker-options');
+        if (terpilih && wadah) wadah.scrollTop = terpilih.offsetTop - wadah.clientHeight / 2 + terpilih.clientHeight / 2;
+    };
+
+    document.addEventListener('click', function (e) {
+        const tombol = e.target.closest('[data-timepicker-toggle]');
+        const opsi = e.target.closest('[data-timepicker-option]');
+        const didalam = e.target.closest('[data-timepicker]');
+
+        if (tombol) {
+            const tp = tombol.closest('[data-timepicker]');
+            const panel = tp.querySelector('[data-timepicker-panel]');
+            const akanDibuka = panel.hidden;
+            tutupSemua(tp);
+            panel.hidden = !akanDibuka;
+            tombol.setAttribute('aria-expanded', akanDibuka ? 'true' : 'false');
+            if (akanDibuka) { tandaiTerpilih(tp); gulirKeTerpilih(tp); }
+            return;
+        }
+
+        if (opsi) {
+            const tp = opsi.closest('[data-timepicker]');
+            const input = tp.querySelector('[data-timepicker-input]');
+            input.value = opsi.dataset.timepickerOption;
+            // Beri tahu skrip lain (mis. penghitung durasi) bahwa nilainya berubah
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            tandaiTerpilih(tp);
+            tp.querySelector('[data-timepicker-panel]').hidden = true;
+            tp.querySelector('[data-timepicker-toggle]').setAttribute('aria-expanded', 'false');
+            return;
+        }
+
+        // Klik di luar menutup semua panel
+        if (!didalam) tutupSemua(null);
+    });
+
+    // Esc menutup panel yang terbuka
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') tutupSemua(null);
+    });
+
+    // Jaga penanda tetap sinkron bila nilai diubah lewat kolom input langsung
+    document.addEventListener('input', function (e) {
+        const input = e.target.closest('[data-timepicker-input]');
+        if (input) tandaiTerpilih(input.closest('[data-timepicker]'));
+    });
+})();

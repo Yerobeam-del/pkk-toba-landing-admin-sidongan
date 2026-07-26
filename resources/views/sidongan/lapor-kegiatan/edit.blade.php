@@ -1,9 +1,12 @@
 @extends('sidongan.layouts.app')
-@section('title', 'Buat Laporan Kegiatan - SIDONGAN')
+@section('title', 'Edit Laporan Kegiatan - SIDONGAN')
 
 @section('content')
 @php
-    // ✅ Ambil URL kembali dari session
+    // Surat induk laporan ini (boleh null bila laporan dibuat tanpa surat)
+    $document = $report->document ?? null;
+
+    // Ambil URL kembali dari session
     $backUrl = session('lapor_kegiatan_back_url', route('sidongan.lapor_kegiatan.index'));
     
     // Validasi URL - pastikan bukan halaman create/edit/preview
@@ -108,8 +111,8 @@
                     <i class="fas fa-clipboard-list" style="font-size: 1.5rem; color: white;"></i>
                 </div>
                 <div>
-                    <h1 class="form-header" style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.25rem 0;">Buat Laporan Kegiatan</h1>
-                    <p style="font-size: 0.875rem; opacity: 0.95; margin: 0;">Isi data kegiatan yang telah dilaksanakan</p>
+                    <h1 class="form-header" style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.25rem 0;">Edit Laporan Kegiatan</h1>
+                    <p style="font-size: 0.875rem; opacity: 0.95; margin: 0;">Perbarui data laporan kegiatan Anda</p>
                 </div>
             </div>
             
@@ -292,14 +295,39 @@
                 </div>
             </div>
 
-            <form action="{{ route('sidongan.lapor_kegiatan.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('sidongan.lapor_kegiatan.update', $report->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 
                 @if($document)
                 <input type="hidden" name="document_id" value="{{ $document->id }}">
                 @endif
 
                 <div style="padding: 1.5rem;">
+
+                    {{-- Catatan penolakan dari Ketua.
+                         Ditampilkan paling atas karena inilah alasan laporan perlu diperbaiki. --}}
+                    @if($report->status === 'ditolak')
+                    <div style="margin-bottom: 1.5rem; padding: 1rem 1.25rem; background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid #ef4444; border-radius: 0.5rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-circle-exclamation" style="color: #ef4444;"></i>
+                            <strong style="color: #b91c1c; font-size: 0.9rem;">Laporan ini dikembalikan oleh Ketua</strong>
+                        </div>
+                        @if($report->catatan_verifikasi)
+                            <p style="margin: 0; font-size: 0.875rem; color: #7f1d1d; line-height: 1.6;">
+                                Catatan: &ldquo;{{ $report->catatan_verifikasi }}&rdquo;
+                            </p>
+                        @else
+                            <p style="margin: 0; font-size: 0.875rem; color: #7f1d1d;">
+                                Tidak ada catatan yang disertakan.
+                            </p>
+                        @endif
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.8rem; color: #991b1b;">
+                            Setelah diperbaiki dan disimpan, laporan otomatis masuk antrean verifikasi lagi.
+                        </p>
+                    </div>
+                    @endif
+
                     {{-- Nama Kegiatan --}}
                     <div style="margin-bottom: 1.25rem;">
                         <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">
@@ -318,7 +346,7 @@
                         <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">
                             Tanggal Kegiatan <span style="color: #ef4444;">*</span>
                         </label>
-                        <input type="date" name="kegiatan_tanggal" required value="{{ old('kegiatan_tanggal') }}"
+                        <input type="date" name="kegiatan_tanggal" required value="{{ old('kegiatan_tanggal', optional($report->kegiatan_tanggal)->format('Y-m-d')) }}"
                             style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s; box-sizing: border-box;"
                             onfocus="this.style.borderColor='#0891b2'; this.style.boxShadow='0 0 0 3px rgba(8,145,178,0.1)'"
                             onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
@@ -334,8 +362,8 @@
                         </label>
 
                         <div class="time-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <x-sidongan.time-picker name="start_time" label="Jam Mulai" id="startTime" />
-                            <x-sidongan.time-picker name="end_time" label="Jam Selesai" id="endTime" />
+                            <x-sidongan.time-picker name="start_time" label="Jam Mulai" id="startTime" :value="substr($report->start_time, 0, 5)" />
+                            <x-sidongan.time-picker name="end_time" label="Jam Selesai" id="endTime" :value="substr($report->end_time, 0, 5)" />
                         </div>
 
                         {{-- Umpan balik langsung: durasi bila urutannya benar, peringatan bila terbalik.
@@ -416,7 +444,7 @@
                                     placeholder="Masukkan alamat lengkap kegiatan"
                                     style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; resize: vertical; box-sizing: border-box;"
                                     onfocus="this.style.borderColor='#0891b2'; this.style.boxShadow='0 0 0 3px rgba(8,145,178,0.1)'" 
-                                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">{{ old('alamat_lengkap') }}</textarea>
+                                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">{{ old('alamat_lengkap', $report->alamat_lengkap) }}</textarea>
                             @error('alamat_lengkap') <p style="font-size: 0.75rem; color: #ef4444; margin-top: 0.25rem;">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -429,7 +457,7 @@
                         <textarea name="deskripsi" rows="4" placeholder="Jelaskan detail kegiatan yang dilaksanakan, peserta, hasil yang dicapai, dll..." required
                                 style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s; resize: vertical; box-sizing: border-box;" 
                                 onfocus="this.style.borderColor='#0891b2'; this.style.boxShadow='0 0 0 3px rgba(8,145,178,0.1)'" 
-                                onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">{{ old('deskripsi') }}</textarea>
+                                onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">{{ old('deskripsi', $report->deskripsi) }}</textarea>
                         @error('deskripsi') <p style="font-size: 0.75rem; color: #ef4444; margin-top: 0.25rem;">{{ $message }}</p> @enderror
                     </div>
 
@@ -438,6 +466,29 @@
                         <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">
                             Dokumentasi Kegiatan (Foto) <span style="color: #64748b; font-weight: 400;">(Maksimal 10 foto)</span>
                         </label>
+
+                        {{-- Foto yang sudah tersimpan + peringatan.
+                             Controller mengganti SELURUH foto lama begitu ada berkas baru diunggah,
+                             jadi pengguna harus tahu ini sebelum memilih berkas. --}}
+                        @php $fotoLama = is_string($report->fotos) ? (json_decode($report->fotos, true) ?? []) : ($report->fotos ?? []); @endphp
+                        @if(count($fotoLama))
+                        <div style="margin-bottom: 0.75rem; padding: 0.875rem 1rem; background: #fffbeb; border: 1px solid #fde68a; border-radius: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.625rem;">
+                                <i class="fas fa-triangle-exclamation" style="color: #d97706;"></i>
+                                <strong style="font-size: 0.85rem; color: #92400e;">Saat ini ada {{ count($fotoLama) }} foto tersimpan</strong>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 0.5rem; margin-bottom: 0.625rem;">
+                                @foreach($fotoLama as $f)
+                                    <img src="{{ asset('storage/' . $f) }}" alt="Foto tersimpan"
+                                         style="width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 0.375rem; border: 1px solid #fde68a;">
+                                @endforeach
+                            </div>
+                            <p style="margin: 0; font-size: 0.8rem; color: #92400e; line-height: 1.6;">
+                                Biarkan kosong bila foto di atas tidak ingin diubah.
+                                Jika Anda memilih berkas baru, <strong>seluruh foto lama akan digantikan</strong>.
+                            </p>
+                        </div>
+                        @endif
                         <div id="dropZone" style="border: 2px dashed #e2e8f0; border-radius: 0.75rem; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.25s ease; background: #f8fafc;">
                             
                             {{-- Default State --}}
@@ -496,7 +547,7 @@
                                     onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(8,145,178,0.3)'" 
                                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(8,145,178,0.2)'">
                                 <i class="fas fa-paper-plane"></i>
-                                <span>Kirim Laporan</span>
+                                <span>Simpan Perubahan</span>
                             </button>
                         </div>
                     </div>
@@ -872,7 +923,43 @@
     }
     
     // Load provinsi saat halaman dimuat
-    loadProvinsi();
+    // ==========================================
+    // PRA-PILIH WILAYAH TERSIMPAN (khusus halaman edit)
+    // ==========================================
+    // Dropdown wilayah diisi bertingkat lewat API, jadi nilai tersimpan hanya bisa
+    // dipilih setelah tiap tingkat selesai dimuat. Rantai await di bawah menjaga
+    // urutannya: provinsi -> kabupaten -> kecamatan -> kelurahan.
+    (async function praPilihWilayah() {
+        const tersimpan = {
+            provinsi:  @json(old('provinsi',  $report->provinsi)),
+            kabupaten: @json(old('kabupaten', $report->kabupaten)),
+            kecamatan: @json(old('kecamatan', $report->kecamatan)),
+            kelurahan: @json(old('kelurahan', $report->kelurahan)),
+        };
+
+        // Pilih nilai pada <select>, lalu kembalikan kode wilayahnya untuk tingkat berikutnya
+        const pilih = (select, nilai) => {
+            if (!select || !nilai) return null;
+            select.value = nilai;
+            const opsi = select.options[select.selectedIndex];
+            return opsi ? opsi.dataset.code : null;
+        };
+
+        await loadProvinsi();
+        const kodeProv = pilih(provinsiSelect, tersimpan.provinsi);
+        if (!kodeProv) return;
+
+        await loadKabupaten(kodeProv);
+        const kodeKab = pilih(kabupatenSelect, tersimpan.kabupaten);
+        if (!kodeKab) return;
+
+        await loadKecamatan(kodeKab);
+        const kodeKec = pilih(kecamatanSelect, tersimpan.kecamatan);
+        if (!kodeKec) return;
+
+        await loadKelurahan(kodeKec);
+        pilih(kelurahanSelect, tersimpan.kelurahan);
+    })();
 
     // ==========================================
     // WAKTU KEGIATAN: umpan balik durasi & urutan jam
