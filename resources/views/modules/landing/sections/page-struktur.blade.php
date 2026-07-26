@@ -598,10 +598,13 @@ function drawMobileConnectors() {
 
         const rowKeys = Object.keys(rows).sort(function(a, b) { return parseInt(a) - parseInt(b); });
 
-        rowKeys.forEach(function(key) {
+        rowKeys.forEach(function(key, rowIndex) {
             const rowPokjas = rows[key];
             const lastPokja = rowPokjas[rowPokjas.length - 1];
-            const branchY = rowPokjas[0].top - 5;
+
+            // Tambah jarak untuk baris kedua (Ketua III & IV)
+            const extraSpacing = rowIndex === 1 ? 40 : 15;  // Baris ke-2: 40px, Baris ke-1: 15px
+            const branchY = rowPokjas[0].top - extraSpacing;
 
             // Garis horizontal dari backbone ke TENGAH kartu terakhir di baris ini
             drawLine(backboneX, branchY, lastPokja.cx, branchY);
