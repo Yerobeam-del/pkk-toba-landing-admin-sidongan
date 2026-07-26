@@ -469,3 +469,153 @@ body {
         padding-bottom: 9rem; /* Ruang untuk footer mobile kecil (3 baris) */
     }
 }
+
+/* ============================================================
+   PERBAIKAN TAMPILAN MOBILE
+   Halaman SIDONGAN banyak memakai gaya inline (padding, grid,
+   font-size), sehingga aturan di sini butuh !important untuk
+   bisa menimpanya. Ditempatkan di akhir berkas agar selalu menang.
+   ============================================================ */
+@media (max-width: 768px) {
+
+    /* --- Ruang layar: sebelumnya 24px padding area + 24px padding kartu
+           memakan 96px dari lebar 375px (26% layar) --- */
+    .content-area {
+        padding-left: 0.875rem !important;
+        padding-right: 0.875rem !important;
+        padding-top: 1rem !important;
+    }
+
+    /* Kartu & panel yang padding-nya di-set inline 1.5rem */
+    .content-area [style*="padding: 1.5rem"],
+    .content-area [style*="padding:1.5rem"] {
+        padding: 1rem !important;
+    }
+
+    /* --- Grid: apa pun definisi kolomnya (repeat(), 2fr 1fr, dst)
+           dijadikan satu kolom. Memakai pencocokan properti, bukan nilainya,
+           agar grid baru ikut tertangani tanpa perlu menambah aturan. --- */
+    .content-area [style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Kartu statistik tetap 2 kolom supaya halaman tidak terlalu memanjang.
+       Aturan ini harus SETELAH aturan 1 kolom di atas agar menang. */
+    .stats-grid,
+    .content-area [style*="grid-template-columns"]:has(> .stats-card) {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem !important;
+    }
+    .stats-card { padding: 1rem !important; }
+
+    /* --- Input: font 16px mencegah iOS auto-zoom saat field difokus,
+           tinggi 44px memenuhi target sentuh --- */
+    .content-area input,
+    .content-area select,
+    .content-area textarea {
+        font-size: 16px !important;
+        min-height: 44px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .content-area textarea { min-height: 96px !important; }
+
+    /* --- Target sentuh tombol & tautan aksi --- */
+    .content-area button,
+    .content-area .btn,
+    .content-area a.btn,
+    .content-area .toggle-btn {
+        min-height: 44px !important;
+    }
+
+    /* Baris tombol jadi menumpuk & selebar layar */
+    .content-area form button[type="submit"],
+    .content-area form .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* --- Teks terlalu kecil dinaikkan agar terbaca --- */
+    .content-area [style*="font-size: 0.7rem"],
+    .content-area [style*="font-size:0.7rem"],
+    .content-area [style*="font-size: 0.75rem"],
+    .content-area [style*="font-size:0.75rem"] {
+        font-size: 0.8rem !important;
+    }
+
+    /* --- Judul halaman --- */
+    .content-area h1 { font-size: 1.35rem !important; }
+    .content-area h2 { font-size: 1.15rem !important; }
+}
+
+/* ============================================================
+   TABEL -> KARTU DI MOBILE
+   Tabel daftar surat punya 9 kolom (~1090px). Di layar 375px itu
+   berarti menggeser sekitar 4 layar penuh. Di bawah 768px tiap baris
+   dijadikan kartu, dengan nama kolom diambil dari atribut data-label
+   pada masing-masing <td>.
+   ============================================================ */
+@media (max-width: 768px) {
+    .sd-table-wrap { overflow-x: visible !important; }
+
+    .sd-table-wrap table,
+    .sd-table-wrap tbody,
+    .sd-table-wrap tr,
+    .sd-table-wrap td {
+        display: block !important;
+        width: auto !important;
+    }
+
+    /* Judul kolom tidak diperlukan lagi karena sudah jadi label per baris */
+    .sd-table-wrap thead { display: none !important; }
+
+    .sd-table-wrap tr {
+        background: #fff;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px;
+        margin-bottom: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .sd-table-wrap td {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.6rem 0 !important;
+        text-align: right !important;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.875rem;
+    }
+    .sd-table-wrap tr td:last-child { border-bottom: none; }
+
+    /* Nama kolom di sisi kiri */
+    .sd-table-wrap td::before {
+        content: attr(data-label);
+        flex-shrink: 0;
+        text-align: left;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+    }
+    /* Sel tanpa data-label (mis. baris "tidak ada data") tampil polos */
+    .sd-table-wrap td:not([data-label]) { display: block !important; text-align: center !important; }
+    .sd-table-wrap td:not([data-label])::before { content: none; }
+
+    /* Kolom aksi: tombol menempati lebar penuh di bawah label */
+    .sd-table-wrap td[data-label="Aksi"],
+    .sd-table-wrap td[data-label="Aksi Terakhir"],
+    .sd-table-wrap td[data-label="Disposisi"] {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: left !important;
+        gap: 0.4rem;
+    }
+    .sd-table-wrap td[data-label="Aksi"]::before,
+    .sd-table-wrap td[data-label="Aksi Terakhir"]::before,
+    .sd-table-wrap td[data-label="Disposisi"]::before { text-align: left; }
+    .sd-table-wrap td[data-label="Aksi"] > * { justify-content: flex-start; }
+}

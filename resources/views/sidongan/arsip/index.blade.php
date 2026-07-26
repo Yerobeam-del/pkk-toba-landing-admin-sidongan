@@ -341,7 +341,7 @@
     {{-- Tabel Arsip --}}
     <div style="background: white; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; overflow: hidden;" class="animate-slide-in">
         @if(isset($documents) && $documents->count() > 0)
-        <div style="overflow-x: auto;">
+        <div class="sd-table-wrap" style="overflow-x: auto;">
 <table style="width: 100%; border-collapse: collapse;">
     <thead style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">
         <tr>
@@ -387,29 +387,29 @@
     <tbody>
         @foreach($documents as $index => $doc)
         <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
-            <td style="padding: 1rem; text-align: center; font-weight: 600; color: #64748b; font-size: 0.875rem;">
+            <td data-label="No" style="padding: 1rem; text-align: center; font-weight: 600; color: #64748b; font-size: 0.875rem;">
                 {{ $documents->firstItem() + $index }}
             </td>
-            <td style="padding: 1rem; font-weight: 600; color: #8b5cf6; font-family: monospace; font-size: 0.875rem;">
+            <td data-label="No. Agenda" style="padding: 1rem; font-weight: 600; color: #8b5cf6; font-family: monospace; font-size: 0.875rem;">
                 {{ $doc->agenda_number ?? '-' }}
             </td>
             
-            <td style="padding: 1rem;">
+            <td data-label="Perihal" style="padding: 1rem;">
                 <div style="font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;">{{ Str::limit($doc->subject ?? $doc->title, 60) }}</div>
                 @if($doc->sender)
                 <div style="font-size: 0.75rem; color: #64748b;">{{ $doc->sender }}</div>
                 @endif
             </td>
             
-            <td style="padding: 1rem; color: #475569; font-size: 0.875rem;">
+            <td data-label="No. Surat" style="padding: 1rem; color: #475569; font-size: 0.875rem;">
                 {{ $doc->document_number ?? '-' }}
             </td>
             
-            <td style="padding: 1rem; color: #475569; font-size: 0.875rem;">
+            <td data-label="Tanggal" style="padding: 1rem; color: #475569; font-size: 0.875rem;">
                 {{ $doc->document_date ? $doc->document_date->locale('id')->translatedFormat('d F Y') : '-' }}
             </td>
             
-            <td style="padding: 1rem;">
+            <td data-label="Disposisi" style="padding: 1rem;">
                 @php
                     $disposisiData = is_string($doc->disposisi_data) ? json_decode($doc->disposisi_data, true) : $doc->disposisi_data;
                 @endphp
@@ -438,7 +438,7 @@
                 @endif
             </td>
             
-            <td style="padding: 1rem; white-space: nowrap;">
+            <td data-label="Aksi" style="padding: 1rem; white-space: nowrap;">
                 <div style="display: flex; gap: 0.5rem; justify-content: center;">
                     <a href="{{ route('sidongan.documents.show', $doc) }}" 
                     style="display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: #dbeafe; color: #2563eb; border-radius: 0.375rem; text-decoration: none; transition: all 0.2s;"
