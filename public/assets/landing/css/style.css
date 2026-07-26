@@ -1717,7 +1717,12 @@ body:has(.news-detail-wrapper) #newsModal,
 .slide-name { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 0.25rem; }
 .slide-name.lay-name { color: #d97706; }
 .slide-fullname { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 500; }
-.slide-desc { font-size: 0.9rem; color: #4a5568; line-height: 1.5; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.slide-desc {
+    font-size: 0.9rem;
+    color: #4a5568;
+    line-height: 1.6;
+    flex: 1;
+}
 .slide-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; background: var(--primary); color: #fff; border-radius: 14px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.3s ease; margin-top: 1rem; }
 .slide-link.lay-link { background: #d97706; }
 .slide-link:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }

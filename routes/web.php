@@ -24,7 +24,7 @@ Route::get('/api/v1/health', function () {
 // ======================================================================
 // 1. ROUTES KHUSUS DOMAIN: pkktoba.id (Landing Page & Admin Panel)
 // ======================================================================
-Route::domain('pkktoba.id')->group(function () {
+Route::domain(config('app.landing_domain'))->group(function () {
 
     // ================= API: LANDING PAGE =================
     Route::get('/api/v1/news', function (Request $request) {
@@ -342,7 +342,7 @@ Route::domain('pkktoba.id')->group(function () {
 // ======================================================================
 // 2. ROUTES KHUSUS DOMAIN: sidongan.pkktoba.id (Aplikasi SIDONGAN)
 // ======================================================================
-Route::domain('sidongan.pkktoba.id')->group(function () {
+Route::domain(config('app.sidongan_domain'))->group(function () {
 
     // ================= API: SIDONGAN PUBLIC =================
     Route::get('/api/v1/sidongan/documents', function () {

@@ -108,8 +108,18 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(res => res.json())
         .then(result => {
             if (result.success) {
-                appsData.aplikasi = result.data.aplikasi.active || [];
-                appsData.layanan = result.data.layanan.active || [];
+
+                appsData.aplikasi = [
+                    ...(result.data.aplikasi.active || []),
+                    ...(result.data.aplikasi.maintenance || []),
+                    ...(result.data.aplikasi.development || [])
+                ];
+
+                appsData.layanan = [
+                    ...(result.data.layanan.active || []),
+                    ...(result.data.layanan.maintenance || []),
+                    ...(result.data.layanan.development || [])
+                ];
 
                 renderSection('aplikasi', appsData.aplikasi);
                 renderSection('layanan', appsData.layanan);

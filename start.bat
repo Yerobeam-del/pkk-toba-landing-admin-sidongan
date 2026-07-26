@@ -7,55 +7,48 @@ echo   PKK Kabupaten Toba - Start Script
 echo ============================================
 echo.
 
-REM Cek apakah ngrok ada
-where ngrok >nul 2>nul
+echo [1/3] Cek MySQL...
+powershell -NoProfile -Command "if (Test-NetConnection -ComputerName 127.0.0.1 -Port 3306 -InformationLevel Quiet) { exit 0 } else { exit 1 }" >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    color 0C
-    echo [ERROR] ngrok tidak ditemukan!
-    echo.
-    echo Download dari: https://ngrok.com/download
-    echo Atau install via: scoop install ngrok
+    color 0E
+    echo       [!] MySQL belum jalan di port 3306.
+    echo           Buka Laragon lalu klik "Start All", kemudian jalankan ulang script ini.
     echo.
     pause
     exit /b 1
 )
+echo       [OK] MySQL siap
+echo.
 
-echo [1/3] Membersihkan cache Laravel...
+echo [2/3] Membersihkan cache Laravel...
 php artisan config:clear >nul 2>&1
 php artisan cache:clear >nul 2>&1
 php artisan view:clear >nul 2>&1
+php artisan route:clear >nul 2>&1
 echo       [OK] Cache dibersihkan
 echo.
 
-echo [2/3] Starting Laravel Server...
-start "Laravel Server" cmd /k "php artisan serve"
+echo [3/3] Starting Laravel Server...
+start "Laravel Server" cmd /k "php artisan serve --host=127.0.0.1 --port=8000"
 timeout /t 3 /nobreak >nul
-echo       [OK] Laravel running at http://127.0.0.1:8000
-echo.
-
-echo [3/3] Starting Ngrok Tunnel...
-start "Ngrok Tunnel" cmd /k "ngrok http 8000"
-timeout /t 3 /nobreak >nul
-echo       [OK] Ngrok started
+echo       [OK] Server jalan di port 8000
 echo.
 
 echo ============================================
-echo   SETUP SELESAI!
+echo   SIAP DIGUNAKAN!
 echo ============================================
 echo.
-echo   Langkah selanjutnya:
+echo   Landing page : http://pkktoba.localhost:8000
+echo   Admin panel  : http://pkktoba.localhost:8000/admin
+echo   SIDONGAN     : http://sidongan.pkktoba.localhost:8000
 echo.
-echo   1. Buka http://127.0.0.1:4040 di browser
-echo      untuk melihat URL ngrok Anda
-echo.
-echo   2. Copy URL ngrok (contoh: https://xxx.ngrok-free.app)
-echo.
-echo   3. Update APP_URL di file .env dengan URL ngrok
-echo.
-echo   4. Jalankan: php artisan config:clear
-echo.
-echo   5. Buka URL ngrok di browser untuk test preview
+echo   Catatan: domain lokal diatur lewat LANDING_DOMAIN dan
+echo   SIDONGAN_DOMAIN di file .env. Browser otomatis mengarahkan
+echo   *.localhost ke 127.0.0.1, jadi file hosts tidak perlu diubah.
 echo.
 echo ============================================
 echo.
+
+start http://pkktoba.localhost:8000
+
 pause

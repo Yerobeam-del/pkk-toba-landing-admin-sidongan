@@ -56,6 +56,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Domains
+    |--------------------------------------------------------------------------
+    |
+    | Aplikasi ini dipisah per domain: landing page + admin panel di domain
+    | utama, dan SIDONGAN di subdomain. Nilai default adalah domain produksi.
+    | Untuk development lokal, override lewat .env supaya bisa diakses tanpa
+    | perlu mengubah file hosts (butuh hak Administrator).
+    |
+    */
+
+    'landing_domain' => env('LANDING_DOMAIN', 'pkktoba.id'),
+
+    'sidongan_domain' => env('SIDONGAN_DOMAIN', 'sidongan.pkktoba.id'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |
