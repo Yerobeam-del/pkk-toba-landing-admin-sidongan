@@ -35,7 +35,7 @@
         <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0">Edit Akun</h1>
         <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Update informasi akun {{ $user->name }}</p>
     </div>
-    <a href="{{ route('admin.user-management.index') }}" class="btn">← Kembali</a>
+    <x-admin.back-button :href="route('admin.user-management.index')" />
 </div>
 
 @if($errors->any())
@@ -266,7 +266,7 @@
         </div>
 
         <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:flex-end;padding-top:1rem;border-top:1px solid var(--border)">
-            <a href="{{ route('admin.user-management.index') }}" class="btn" style="background:#f8fafc;color:var(--text-dark)">Batal</a>
+            <x-admin.cancel-button :href="route('admin.user-management.index')" />
             <button type="submit" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>

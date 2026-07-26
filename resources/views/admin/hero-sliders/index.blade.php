@@ -342,7 +342,7 @@
             </div>
 
             <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem;padding-top:1rem;border-top:1px solid #f1f5f9">
-                <button type="button" onclick="closeEditModal()" class="btn" style="background:#f1f5f9;color:#475569">Batal</button>
+                <button type="button" onclick="closeEditModal()" class="btn btn-cancel">Batal</button>
                 <button type="submit" class="btn btn-primary">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>

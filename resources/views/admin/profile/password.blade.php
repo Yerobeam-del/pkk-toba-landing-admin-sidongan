@@ -9,9 +9,7 @@
         <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0">Ubah Password</h1>
         <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Perbarui password akun Anda</p>
     </div>
-    <a href="{{ route('admin.profile.edit') }}" class="btn" style="background:#f1f5f9;color:#475569">
-        ← Kembali ke Profil
-    </a>
+    <x-admin.back-button :href="route('admin.profile.edit')" label="Kembali ke Profil" />
 </div>
 
 @if(session('success'))

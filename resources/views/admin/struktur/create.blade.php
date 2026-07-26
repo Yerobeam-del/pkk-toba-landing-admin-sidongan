@@ -185,10 +185,7 @@
         <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0;letter-spacing:-0.5px">Tambah Anggota</h1>
         <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Tambahkan data anggota baru ke dalam struktur organisasi</p>
     </div>
-    <a href="{{ route('admin.struktur.index') }}" class="btn" style="background:#f8fafc;color:var(--text-dark);white-space:nowrap;flex-shrink:0;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;transition:all 0.2s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        <span class="desktop-only">Kembali</span>
-    </a>
+    <x-admin.back-button :href="route('admin.struktur.index')" />
 </div>
 
 {{-- Form Card --}}
@@ -254,7 +251,7 @@
 
         {{-- Action Buttons --}}
         <div style="display:flex;gap:0.75rem;justify-content:flex-end;padding-top:1.5rem;border-top:1px solid rgba(0,0,0,0.06)">
-            <a href="{{ route('admin.struktur.index') }}" class="btn" style="background:#f1f5f9;color:#475569;padding:0.75rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem" onmouseover="this.style.background='#e2e8f0';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='translateY(0)'">Batal</a>
+            <x-admin.cancel-button :href="route('admin.struktur.index')" />
             <button type="submit" class="btn btn-primary" id="submitBtn" style="background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;padding:0.75rem 2rem;border:none;border-radius:8px;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;box-shadow:0 4px 12px rgba(20,184,166,0.3)" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 20px rgba(20,184,166,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(20,184,166,0.3)'">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
                 Simpan Data
@@ -290,7 +287,7 @@
                 Drag untuk geser, scroll untuk zoom
             </div>
             <div style="display:flex;gap:0.75rem;justify-content:flex-end">
-                <button type="button" onclick="closeCropModal()" class="btn" style="background:#f1f5f9;color:#475569;white-space:nowrap;padding:0.75rem 1.5rem;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:0.9rem;transition:all 0.2s" onmouseover="this.style.background='#e2e8f0';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='translateY(0)'">Batal</button>
+                <button type="button" onclick="closeCropModal()" class="btn btn-cancel">Batal</button>
                 <button type="button" onclick="applyCrop()" class="btn btn-primary" style="background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;white-space:nowrap;padding:0.75rem 1.5rem;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:0.9rem;transition:all 0.2s;box-shadow:0 4px 12px rgba(20,184,166,0.3)" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 20px rgba(20,184,166,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(20,184,166,0.3)'">Terapkan Crop</button>
             </div>
         </div>

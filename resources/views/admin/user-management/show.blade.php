@@ -19,7 +19,7 @@
             </a>
         @endif
         
-        <a href="{{ route('admin.user-management.index') }}" class="btn" style="background:#f1f5f9;color:#475569">Kembali</a>
+        <x-admin.back-button :href="route('admin.user-management.index')" />
     </div>
 </div>
 

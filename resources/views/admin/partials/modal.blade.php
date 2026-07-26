@@ -12,7 +12,7 @@
             {{-- Dynamic form content will be injected here --}}
         </div>
         <div class="modal-footer">
-            <button class="btn btn-outline" onclick="closeModal()">Batal</button>
+            <button type="button" class="btn btn-cancel" onclick="closeModal()">Batal</button>
             <button class="btn btn-primary" id="saveBtn">Simpan</button>
         </div>
     </div>

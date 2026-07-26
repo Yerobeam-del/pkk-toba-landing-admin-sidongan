@@ -5,12 +5,7 @@
 @section('content')
 
 <div style="margin-bottom:1.5rem">
-    <a href="{{ route('admin.sidongan-data.index') }}" style="display:inline-flex;align-items:center;gap:0.5rem;color:var(--text-muted);text-decoration:none;margin-bottom:1rem;transition:color 0.2s"
-       onmouseover="this.style.color='var(--primary)'"
-       onmouseout="this.style.color='var(--text-muted)'">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        Kembali ke Daftar Surat
-    </a>
+    <x-admin.back-button :href="route('admin.sidongan-data.index')" label="Kembali ke Daftar Surat" />
 </div>
 
 {{-- Info Surat --}}

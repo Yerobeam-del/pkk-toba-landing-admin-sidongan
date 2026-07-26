@@ -142,6 +142,21 @@ body {
 .btn-primary { background: var(--primary); color: #fff; text-decoration: none; }
 .btn-primary:hover { background: var(--primary-dark); text-decoration: none; }
 
+/* Tombol sekunder netral, dipakai lewat partial agar seragam:
+   .btn-back   -> "Kembali" di header (admin.partials.back-button)
+   .btn-cancel -> "Batal" di kaki form & modal (admin.partials.cancel-button) */
+/* Tanpa border agar tingginya persis sama dengan .btn-primary di sebelahnya;
+   kontras latar sudah cukup untuk membedakannya dari kartu putih. */
+.btn-back, .btn-cancel {
+  background: #f1f5f9; color: var(--text-dark);
+  border: none; text-decoration: none;
+}
+.btn-back:hover, .btn-cancel:hover {
+  background: #e2e8f0; color: var(--text-dark); text-decoration: none;
+}
+.btn-back { white-space: nowrap; flex-shrink: 0; }
+.btn-back svg { width: 18px; height: 18px; flex-shrink: 0; }
+
 /* FIX: Card border diperhalus */
 .card {
   background: var(--card-bg);
