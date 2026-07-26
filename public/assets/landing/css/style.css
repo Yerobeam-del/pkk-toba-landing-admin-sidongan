@@ -158,29 +158,31 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     gap: 12px !important;
     pointer-events: none !important;
 }
+/* Kelas .open hanya dipasang di .floating-app-btn (container) oleh
+   toggleFloatingMenu() di floating-btn.blade.php. Aturan turunannya ada di
+   blok ".floating-app-btn.open ..." di bawah. */
 .floating-menu { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none !important; }
-.floating-menu.open { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto !important; }
 .floating-menu-item { display: flex; align-items: center; gap: 10px; text-decoration: none; transition: all 0.3s ease; pointer-events: auto !important; }
 .floating-menu-item:hover { transform: translateX(-5px); }
 .floating-menu-label { background: #fff; padding: 6px 14px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; transition: all 0.3s ease; }
-.floating-menu-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.15); transition: all 0.3s ease; }
-.floating-menu-icon.sieda-icon, .floating-menu-icon.SIDONGAN-icon { background: linear-gradient(135deg, var(--primary), var(--primary-light)); }
-.floating-menu-icon svg { width: 22px; height: 22px; color: #fff; }
-.floating-menu-item:hover .floating-menu-label { background: var(--primary); color: #fff; }
+.floating-menu-item:hover .floating-menu-label { background: var(--fab-c, var(--primary)); color: #fff; }
 .floating-menu-item:hover .floating-menu-icon { transform: scale(1.1); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
 .floating-trigger { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 25px rgba(30, 58, 95, 0.4); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 10; pointer-events: auto !important; }
 .floating-trigger:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(15, 107, 99, 0.5); }
-.floating-trigger.open { transform: rotate(45deg); background: linear-gradient(135deg, var(--primary), var(--primary-light)); box-shadow: 0 8px 30px rgba(15, 107, 99, 0.45); }
+.floating-app-btn.open .floating-trigger { box-shadow: 0 8px 30px rgba(15, 107, 99, 0.45); }
 .floating-trigger svg { width: 26px; height: 26px; color: #fff; transition: transform 0.3s ease; }
 .floating-trigger-pulse { position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--primary-light); animation: floatingPulse 2s infinite; }
-.floating-trigger.open .floating-trigger-pulse { display: none; }
+.floating-app-btn.open .floating-trigger-pulse { display: none; }
 @keyframes floatingPulse { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.4); opacity: 0; } }
 
 /* Floating Button Icon Improvements */
 .floating-menu-icon img { width: 32px !important; height: 32px !important; object-fit: contain !important; filter: brightness(0) invert(1) !important; border-radius: 4px; }
 .floating-menu-icon span { color: #fff !important; font-weight: 700 !important; font-size: 1.1rem !important; letter-spacing: 0.5px; text-transform: uppercase; }
-.floating-menu-icon { width: 48px !important; height: 48px !important; border-radius: 14px !important; display: flex !important; align-items: center !important; justify-content: center !important; background: linear-gradient(135deg, var(--primary), var(--primary-light)) !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; transition: all 0.3s ease !important; flex-shrink: 0; }
-.floating-menu-item:hover .floating-menu-icon { transform: scale(1.1) !important; box-shadow: 0 8px 25px rgba(15, 107, 99, 0.4) !important; }
+/* --fab-c / --fab-c-2 di-set inline per item oleh floating-btn.blade.php,
+   berasal dari kolom `color` di Admin Panel > Manajemen Aplikasi.
+   Fallback ke warna PKK bila aplikasi belum diberi warna. */
+.floating-menu-icon { width: 48px !important; height: 48px !important; border-radius: 14px !important; display: flex !important; align-items: center !important; justify-content: center !important; background: linear-gradient(135deg, var(--fab-c, var(--primary)), var(--fab-c-2, var(--primary-light))) !important; box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important; transition: all 0.3s ease !important; flex-shrink: 0; }
+.floating-menu-item:hover .floating-menu-icon { transform: scale(1.1) !important; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important; }
 .floating-menu-icon:not(:has(img)) { position: relative; }
 .floating-menu-icon:not(:has(img)) span { opacity: 0; position: absolute; width: 0; height: 0; overflow: hidden; }
 .floating-menu-icon:not(:has(img))::before { content: ''; position: absolute; width: 28px; height: 28px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='7' height='7' rx='1'/%3E%3Crect x='14' y='3' width='7' height='7' rx='1'/%3E%3Crect x='14' y='14' width='7' height='7' rx='1'/%3E%3Crect x='3' y='14' width='7' height='7' rx='1'/%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; background-position: center; }

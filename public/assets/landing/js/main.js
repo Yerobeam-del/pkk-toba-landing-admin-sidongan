@@ -3,46 +3,13 @@ console.log('Main JS Loaded');
 document.addEventListener('DOMContentLoaded', function() {
 
     // ==========================================
-    // 1. FLOATING BUTTON HANDLER (Fix: Tanpa Delay - Jejak Langsung Hilang)
+    // 1. FLOATING BUTTON
     // ==========================================
-    const floatingBtn = document.querySelector('.floating-app-btn');
-    const floatingTrigger = document.querySelector('.floating-trigger');
-    const floatingMenu = document.querySelector('.floating-menu');
-
-    if (floatingTrigger && floatingMenu) {
-        let isMenuOpen = false;
-
-        floatingTrigger.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            isMenuOpen = !isMenuOpen;
-
-            if (isMenuOpen) {
-                // Buka menu
-                floatingMenu.classList.add('open');
-                floatingTrigger.classList.add('open');
-                if (floatingBtn) floatingBtn.classList.add('open');
-                floatingMenu.style.pointerEvents = 'auto'; // Aktifkan klik segera
-            } else {
-                // Tutup menu - JEJAK LANGSUNG HILANG TANPA DELAY
-                floatingMenu.classList.remove('open');
-                floatingTrigger.classList.remove('open');
-                if (floatingBtn) floatingBtn.classList.remove('open');
-                floatingMenu.style.pointerEvents = 'none'; // Nonaktifkan klik SEGERA
-            }
-        });
-
-        // Tutup menu saat klik di luar
-        document.addEventListener('click', function(e) {
-            if (isMenuOpen && floatingBtn && !floatingBtn.contains(e.target)) {
-                isMenuOpen = false;
-                floatingMenu.classList.remove('open');
-                floatingTrigger.classList.remove('open');
-                if (floatingBtn) floatingBtn.classList.remove('open');
-                floatingMenu.style.pointerEvents = 'none'; // Nonaktifkan klik SEGERA
-            }
-        });
-    }
+    // Handler-nya ada di partial floating-btn.blade.php (toggleFloatingMenu),
+    // menyatu dengan markup-nya. Dulu ada handler kedua di sini yang menyimpan
+    // state sendiri (isMenuOpen) sehingga bisa desinkron dari DOM: setelah menu
+    // tertutup oleh scroll, klik berikutnya justru tidak membuka menu.
+    // Jangan tambahkan listener floating button di file ini lagi.
 
     // ==========================================
     // 2. HERO CTA (Tombol Jelajahi Layanan)

@@ -82,26 +82,18 @@ function toggleMenu() {
     if (hamburger) hamburger.classList.toggle('active');
 }
 
+// Floating button: kelas .open HANYA dipasang di container #floatingAppBtn.
+// Dulu file ini juga mendefinisikan toggleFloatingMenu() yang menaruh .open di
+// menu & trigger, dan karena navigation.js dimuat paling akhir, definisi itu
+// menimpa milik floating-btn.blade.php. Akibatnya ada tiga implementasi yang
+// saling bertabrakan. Sekarang toggle-nya hanya ada di blade partial;
+// di sini disisakan closeFloatingMenu() saja karena dipakai saat pindah halaman.
 function closeFloatingMenu() {
+    const container = document.getElementById('floatingAppBtn');
     const menu = document.getElementById('floatingMenu');
-    const trigger = document.getElementById('floatingTrigger');
-    if (menu) menu.classList.remove('open');
-    if (trigger) trigger.classList.remove('open');
+    if (container) container.classList.remove('open');
+    if (menu) menu.style.pointerEvents = 'none';
 }
-
-function toggleFloatingMenu() {
-    const menu = document.getElementById('floatingMenu');
-    const trigger = document.getElementById('floatingTrigger');
-    if (menu) menu.classList.toggle('open');
-    if (trigger) trigger.classList.toggle('open');
-}
-
-document.addEventListener('click', function(e) {
-    const floatingBtn = document.getElementById('floatingAppBtn');
-    if (floatingBtn && !floatingBtn.contains(e.target)) {
-        closeFloatingMenu();
-    }
-});
 
 // ==========================================
 // CLEAR SEARCH AND SHOW ALL DOCUMENTS

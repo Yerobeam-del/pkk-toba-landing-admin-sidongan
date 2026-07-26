@@ -1,10 +1,18 @@
 @php
-// Query aplikasi yang aktif, status active, DAN show_in_floating = true
-$floatingApps = \App\Models\Application::where('is_active', true)
-    ->where('status', 'active')
-    ->where('show_in_floating', true)
-    ->orderBy('sort_order')
-    ->get();
+    // $floatingApps disediakan oleh FloatingButtonComposer (lihat AppServiceProvider).
+    // Jangan query ulang di sini — dulu ada @php yang menimpanya sehingga
+    // composer-nya tidak pernah berpengaruh.
+
+    // Warna diturunkan dari kolom `color` di Admin Panel > Manajemen Aplikasi.
+    // Rumusnya sama dengan halaman Aplikasi & beranda agar seluruh landing page konsisten.
+    $fabWarna = function ($hex, $rasioPutih) {
+        $hex = ltrim($hex, '#');
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+        $m = fn($v) => (int) round($v + (255 - $v) * $rasioPutih);
+        return sprintf('rgb(%d, %d, %d)', $m($r), $m($g), $m($b));
+    };
 @endphp
 
 {{-- Floating App Button --}}
@@ -12,10 +20,11 @@ $floatingApps = \App\Models\Application::where('is_active', true)
     {{-- Menu Items --}}
     <div class="floating-menu" id="floatingMenu" style="pointer-events: none;">
         @forelse($floatingApps as $app)
+        @php $warna = $app->effective_color; @endphp
         <a href="{{ $app->url && $app->url !== '#' ? $app->url : '#' }}"
            target="{{ $app->url && $app->url !== '#' ? '_blank' : '_self' }}"
            class="floating-menu-item"
-           style="pointer-events: auto;">
+           style="pointer-events: auto; --fab-c: {{ $warna }}; --fab-c-2: {{ $fabWarna($warna, 0.28) }};">
             <span class="floating-menu-label">{{ $app->short_name ?? $app->name }}</span>
             <div class="floating-menu-icon">
                 @if($app->icon)
