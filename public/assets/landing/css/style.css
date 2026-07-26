@@ -1754,3 +1754,107 @@ body:has(.news-detail-wrapper) #newsModal,
     .nav-btn { display: none; } /* Hide arrows on mobile, rely on swipe */
     .modal-grid { grid-template-columns: 1fr; }
 }
+
+/* ==========================================
+APLIKASI CAROUSEL - FEATURES & COLORS
+========================================== */
+
+/* Features List */
+.app-features {
+    list-style: none !important;
+    margin: 1rem 0 1.5rem 0 !important;
+    padding: 0 !important;
+    border-top: 1px solid rgba(0,0,0,0.05) !important;
+    padding-top: 1rem !important;
+}
+
+.app-features li {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 6px 0 !important;
+    font-size: 0.85rem !important;
+    color: #4a5568 !important;
+    line-height: 1.4 !important;
+}
+
+.app-features li svg {
+    flex-shrink: 0 !important;
+    width: 18px !important;
+    height: 18px !important;
+    stroke: var(--primary) !important;
+}
+
+.app-card-slide.app-color-0 .app-features li svg { stroke: #2563eb !important; }
+.app-card-slide.app-color-1 .app-features li svg { stroke: #dc2626 !important; }
+.app-card-slide.app-color-2 .app-features li svg { stroke: #7c3aed !important; }
+.app-card-slide.app-color-3 .app-features li svg { stroke: #059669 !important; }
+.app-card-slide.app-color-4 .app-features li svg { stroke: #d97706 !important; }
+.app-card-slide.app-color-5 .app-features li svg { stroke: #db2777 !important; }
+.app-card-slide.app-color-6 .app-features li svg { stroke: #0891b2 !important; }
+.app-card-slide.app-color-7 .app-features li svg { stroke: #7c2d12 !important; }
+.app-card-slide.app-color-8 .app-features li svg { stroke: #4338ca !important; }
+.app-card-slide.app-color-9 .app-features li svg { stroke: #be185d !important; }
+
+/* Color Variations for Cards */
+.app-card-slide.app-color-0 .slide-name { color: #2563eb !important; }
+.app-card-slide.app-color-0 .slide-icon { background: linear-gradient(135deg, #2563eb, #3b82f6) !important; }
+.app-card-slide.app-color-0 .slide-header { background: linear-gradient(135deg, #dbeafe, #eff6ff) !important; }
+.app-card-slide.app-color-0 .slide-link { background: #2563eb !important; }
+
+.app-card-slide.app-color-1 .slide-name { color: #dc2626 !important; }
+.app-card-slide.app-color-1 .slide-icon { background: linear-gradient(135deg, #dc2626, #ef4444) !important; }
+.app-card-slide.app-color-1 .slide-header { background: linear-gradient(135deg, #fee2e2, #fef2f2) !important; }
+.app-card-slide.app-color-1 .slide-link { background: #dc2626 !important; }
+
+.app-card-slide.app-color-2 .slide-name { color: #7c3aed !important; }
+.app-card-slide.app-color-2 .slide-icon { background: linear-gradient(135deg, #7c3aed, #8b5cf6) !important; }
+.app-card-slide.app-color-2 .slide-header { background: linear-gradient(135deg, #ede9fe, #f5f3ff) !important; }
+.app-card-slide.app-color-2 .slide-link { background: #7c3aed !important; }
+
+.app-card-slide.app-color-3 .slide-name { color: #059669 !important; }
+.app-card-slide.app-color-3 .slide-icon { background: linear-gradient(135deg, #059669, #10b981) !important; }
+.app-card-slide.app-color-3 .slide-header { background: linear-gradient(135deg, #d1fae5, #ecfdf5) !important; }
+.app-card-slide.app-color-3 .slide-link { background: #059669 !important; }
+
+.app-card-slide.app-color-4 .slide-name { color: #d97706 !important; }
+.app-card-slide.app-color-4 .slide-icon { background: linear-gradient(135deg, #d97706, #f59e0b) !important; }
+.app-card-slide.app-color-4 .slide-header { background: linear-gradient(135deg, #fef3c7, #fffbeb) !important; }
+.app-card-slide.app-color-4 .slide-link { background: #d97706 !important; }
+
+.app-card-slide.app-color-5 .slide-name { color: #db2777 !important; }
+.app-card-slide.app-color-5 .slide-icon { background: linear-gradient(135deg, #db2777, #ec4899) !important; }
+.app-card-slide.app-color-5 .slide-header { background: linear-gradient(135deg, #fce7f3, #fdf2f8) !important; }
+.app-card-slide.app-color-5 .slide-link { background: #db2777 !important; }
+
+.app-card-slide.app-color-6 .slide-name { color: #0891b2 !important; }
+.app-card-slide.app-color-6 .slide-icon { background: linear-gradient(135deg, #0891b2, #06b6d4) !important; }
+.app-card-slide.app-color-6 .slide-header { background: linear-gradient(135deg, #cffafe, #ecfeff) !important; }
+.app-card-slide.app-color-6 .slide-link { background: #0891b2 !important; }
+
+.app-card-slide.app-color-7 .slide-name { color: #7c2d12 !important; }
+.app-card-slide.app-color-7 .slide-icon { background: linear-gradient(135deg, #7c2d12, #ea580c) !important; }
+.app-card-slide.app-color-7 .slide-header { background: linear-gradient(135deg, #ffedd5, #fff7ed) !important; }
+.app-card-slide.app-color-7 .slide-link { background: #7c2d12 !important; }
+
+.app-card-slide.app-color-8 .slide-name { color: #4338ca !important; }
+.app-card-slide.app-color-8 .slide-icon { background: linear-gradient(135deg, #4338ca, #6366f1) !important; }
+.app-card-slide.app-color-8 .slide-header { background: linear-gradient(135deg, #e0e7ff, #eef2ff) !important; }
+.app-card-slide.app-color-8 .slide-link { background: #4338ca !important; }
+
+.app-card-slide.app-color-9 .slide-name { color: #be185d !important; }
+.app-card-slide.app-color-9 .slide-icon { background: linear-gradient(135deg, #be185d, #ec4899) !important; }
+.app-card-slide.app-color-9 .slide-header { background: linear-gradient(135deg, #fce7f3, #fdf2f8) !important; }
+.app-card-slide.app-color-9 .slide-link { background: #be185d !important; }
+
+/* Modal Color Variations */
+.modal-card.app-color-0 .modal-icon { background: linear-gradient(135deg, #2563eb, #3b82f6) !important; }
+.modal-card.app-color-1 .modal-icon { background: linear-gradient(135deg, #dc2626, #ef4444) !important; }
+.modal-card.app-color-2 .modal-icon { background: linear-gradient(135deg, #7c3aed, #8b5cf6) !important; }
+.modal-card.app-color-3 .modal-icon { background: linear-gradient(135deg, #059669, #10b981) !important; }
+.modal-card.app-color-4 .modal-icon { background: linear-gradient(135deg, #d97706, #f59e0b) !important; }
+.modal-card.app-color-5 .modal-icon { background: linear-gradient(135deg, #db2777, #ec4899) !important; }
+.modal-card.app-color-6 .modal-icon { background: linear-gradient(135deg, #0891b2, #06b6d4) !important; }
+.modal-card.app-color-7 .modal-icon { background: linear-gradient(135deg, #7c2d12, #ea580c) !important; }
+.modal-card.app-color-8 .modal-icon { background: linear-gradient(135deg, #4338ca, #6366f1) !important; }
+.modal-card.app-color-9 .modal-icon { background: linear-gradient(135deg, #be185d, #ec4899) !important; }

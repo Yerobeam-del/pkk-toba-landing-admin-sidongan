@@ -100,11 +100,37 @@ Route::domain('pkktoba.id')->group(function () {
 
             $groupedData = [
                 'aplikasi' => [
-                    'active' => $allApps->where('category', 'aplikasi')->where('status', 'active')->values(),
+                    'active' => $allApps->where('category', 'aplikasi')->where('status', 'active')->map(function($app) {
+                        return [
+                            'id' => $app->id,
+                            'name' => $app->name,
+                            'short_name' => $app->short_name,
+                            'description' => $app->description,
+                            'url' => $app->url,
+                            'icon' => $app->icon,
+                            'category' => $app->category,
+                            'status' => $app->status,
+                            'features' => $app->features ?? [], // Pastikan features dikirim
+                            'color_index' => $app->id % 10, // Untuk variasi warna (0-9)
+                        ];
+                    })->values(),
                     'maintenance' => $allApps->where('category', 'aplikasi')->where('status', 'maintenance')->values(),
                 ],
                 'layanan' => [
-                    'active' => $allApps->where('category', 'layanan')->where('status', 'active')->values(),
+                    'active' => $allApps->where('category', 'layanan')->where('status', 'active')->map(function($app) {
+                        return [
+                            'id' => $app->id,
+                            'name' => $app->name,
+                            'short_name' => $app->short_name,
+                            'description' => $app->description,
+                            'url' => $app->url,
+                            'icon' => $app->icon,
+                            'category' => $app->category,
+                            'status' => $app->status,
+                            'features' => $app->features ?? [],
+                            'color_index' => $app->id % 10,
+                        ];
+                    })->values(),
                     'maintenance' => $allApps->where('category', 'layanan')->where('status', 'maintenance')->values(),
                 ]
             ];

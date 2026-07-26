@@ -143,13 +143,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const iconHtml = app.icon
             ? `<img src="/storage/${app.icon}" alt="${app.short_name}">`
             : `<span>${app.short_name.substring(0, 2)}</span>`;
+
         const bgClass = isLayanan ? 'layanan-bg' : '';
         const iconClass = isLayanan ? 'lay-icon' : '';
         const nameClass = isLayanan ? 'lay-name' : '';
         const linkClass = isLayanan ? 'lay-link' : '';
+        const colorClass = `app-color-${app.color_index || 0}`;
+
+        // Render features jika ada
+        const featuresHtml = app.features && app.features.length > 0
+            ? `<ul class="app-features">${app.features.slice(0, 4).map(f => `
+                <li>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    ${f}
+                </li>
+            `).join('')}</ul>`
+            : '';
 
         return `
-        <div class="app-card-slide" data-name="${app.name.toLowerCase()}" data-short="${app.short_name.toLowerCase()}">
+        <div class="app-card-slide ${colorClass}" data-name="${app.name.toLowerCase()}" data-short="${app.short_name.toLowerCase()}">
             <div class="slide-header ${bgClass}">
                 <div class="slide-icon ${iconClass}">${iconHtml}</div>
             </div>
@@ -157,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h3 class="slide-name ${nameClass}">${app.short_name}</h3>
                 <p class="slide-fullname">${app.name}</p>
                 <p class="slide-desc">${app.description || 'Tidak ada deskripsi.'}</p>
+                ${featuresHtml}
                 <a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="slide-link ${linkClass}">Akses ${app.short_name}</a>
             </div>
         </div>`;
@@ -168,9 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
             : `<span>${app.short_name.substring(0, 2)}</span>`;
         const iconClass = isLayanan ? 'lay-icon' : '';
         const cardClass = isLayanan ? 'lay-card' : '';
+        const colorClass = `app-color-${app.color_index || 0}`;
 
         return `
-        <a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="modal-card ${cardClass}">
+        <a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="modal-card ${cardClass} ${colorClass}">
             <div class="modal-icon ${iconClass}">${iconHtml}</div>
             <div class="modal-info">
                 <h4>${app.short_name}</h4>
