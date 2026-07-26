@@ -8,7 +8,7 @@
     @include('modules.landing.sections.quick-access')
     @include('modules.landing.sections.apps-home')
     @include('modules.landing.sections.news-home')
-    @include('modules.landing.sections.stats')
+    {{-- @include('modules.landing.sections.stats') --}}
 </div>
 
 @include('modules.landing.sections.page-struktur')

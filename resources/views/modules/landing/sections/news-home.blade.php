@@ -28,7 +28,7 @@
 
             <div style="padding: 1.5rem;">
                 <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.75rem;">
-                    {{ $news->published_at?->format('d M Y') ?? '-' }}
+                    {{ $news->published_at?->locale('id')->translatedFormat('d F Y') ?? '-' }}
                 </div>
 
                 <span style="display: inline-block; padding: 0.25rem 0.75rem; background: rgba(39,103,73,0.1); color: #276749; border-radius: 50px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem;">

@@ -191,10 +191,10 @@
             <div class="pokja-sections-wrapper" style="max-width:1300px;margin:0 auto;">
                 @php
                     $pokjaConfig = [
-                        ['id'=>'pokja1', 'num'=>'I', 'title'=>'Pokja I — Penghayatan & Pengamalan Pancasila', 'sub'=>'Mengelola program Penghayatan dan Pengamalan Pancasila  dan Program Gotong Royong', 'color'=>'p1'],
-                        ['id'=>'pokja2', 'num'=>'II', 'title'=>'Pokja II — Pendidikan, Keterampilan & Pengembangan Kehidupan Berkoperasi', 'sub'=>'Mengelola Program Pendidikan dan Ketrampilan dan Pengembangan Kehidupan Berkoperasi', 'color'=>'p2'],
-                        ['id'=>'pokja3', 'num'=>'III', 'title'=>'Pokja III — Pangan, Sandang, Perumahan & Tatalaksana Rumah Tangga', 'sub'=>'Mengelola program Pangan, Sandang, Perumahan dan Tata Laksana Rumah Tangga', 'color'=>'p3'],
-                        ['id'=>'pokja4', 'num'=>'IV', 'title'=>'Pokja IV — Kesehatan, Kelestarian Lingkungan Hidup & Perencanaan Sehat', 'sub'=>'Mengelola Program Kesehatan, Kelestarian Lingkungan Hidup dan Perencnaan Sehat', 'color'=>'p4']
+                        ['id'=>'pokja1', 'num'=>'I', 'title'=>'POKJA I — Penghayatan & Pengamalan Pancasila', 'sub'=>'Mengelola program Penghayatan dan Pengamalan Pancasila  dan Program Gotong Royong', 'color'=>'p1'],
+                        ['id'=>'pokja2', 'num'=>'II', 'title'=>'POKJA II — Pendidikan, Keterampilan & Pengembangan Kehidupan Berkoperasi', 'sub'=>'Mengelola Program Pendidikan dan Ketrampilan dan Pengembangan Kehidupan Berkoperasi', 'color'=>'p2'],
+                        ['id'=>'pokja3', 'num'=>'III', 'title'=>'POKJA III — Pangan, Sandang, Perumahan & Tatalaksana Rumah Tangga', 'sub'=>'Mengelola program Pangan, Sandang, Perumahan dan Tata Laksana Rumah Tangga', 'color'=>'p3'],
+                        ['id'=>'pokja4', 'num'=>'IV', 'title'=>'POKJA IV — Kesehatan, Kelestarian Lingkungan Hidup & Perencanaan Sehat', 'sub'=>'Mengelola Program Kesehatan, Kelestarian Lingkungan Hidup dan Perencnaan Sehat', 'color'=>'p4']
                     ];
                 @endphp
 
