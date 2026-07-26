@@ -8,7 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 50%, #ffffff 100%);
+            background: linear-gradient(180deg, #fef2f2 0%, #fee2e2 50%, #ffffff 100%);
             height: 100vh;
             overflow: hidden;
             display: flex;
@@ -22,7 +22,7 @@
             background: #fff;
             border-radius: 100px;
             opacity: 0.9;
-            box-shadow: 0 10px 30px rgba(217, 119, 6, 0.08);
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.08);
             z-index: 1;
         }
         .cloud::before, .cloud::after {
@@ -59,7 +59,7 @@
             background: rgba(255, 255, 255, 0.92);
             padding: 2.5rem 3.5rem;
             border-radius: 24px;
-            box-shadow: 0 25px 70px rgba(217, 119, 6, 0.15);
+            box-shadow: 0 25px 70px rgba(220, 38, 38, 0.15);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.8);
             max-width: 720px; 
@@ -106,7 +106,7 @@
         }
         .dynamic-msg {
             font-weight: 700;
-            color: #b45309;
+            color: #b91c1c;
             display: block;
             margin-bottom: 0.6rem;
             font-size: 1.15rem;
@@ -137,10 +137,10 @@
         .url-info {
             margin-top: 1.5rem;
             padding: 0.75rem 1rem;
-            background: rgba(254, 243, 199, 0.5);
+            background: rgba(254, 226, 226, 0.5);
             border-radius: 8px;
             font-size: 0.85rem;
-            color: #92400e;
+            color: #991b1b;
             word-break: break-all;
         }
 

@@ -75,7 +75,7 @@
             width: 72px;
             height: 72px;
             margin: 0 auto 1.25rem;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -83,9 +83,9 @@
             animation: pulseGlow 2.5s infinite;
         }
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { box-shadow: 0 0 0 18px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 18px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
         }
         .rate-icon svg { width: 36px; height: 36px; color: #ffffff; }
 
@@ -94,7 +94,7 @@
             font-weight: 800;
             margin-bottom: 0.25rem;
             letter-spacing: -2px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
