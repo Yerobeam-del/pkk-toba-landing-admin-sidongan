@@ -91,14 +91,13 @@ Route::domain('pkktoba.id')->group(function () {
 
     Route::get('/api/v1/applications', function () {
         try {
-            // Ambil semua aplikasi dan layanan yang active/maintenance
             $allApps = \App\Models\Application::whereIn('category', ['aplikasi', 'layanan'])
+                ->where('is_active', true)
                 ->whereIn('status', ['active', 'maintenance'])
                 ->orderBy('category')
                 ->orderBy('sort_order')
                 ->get();
 
-            // Grouping data
             $groupedData = [
                 'aplikasi' => [
                     'active' => $allApps->where('category', 'aplikasi')->where('status', 'active')->values(),
