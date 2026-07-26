@@ -125,12 +125,12 @@ function markAllAsRead() {
         if (data.success) {
             location.reload();
         } else {
-            alert('Gagal menandai notifikasi sebagai dibaca');
+            Toast.error('Gagal menandai notifikasi sebagai dibaca');
         }
     })
     .catch(err => {
         console.error('Error:', err);
-        alert('Terjadi kesalahan');
+        Toast.error('Terjadi kesalahan');
     });
 }
 

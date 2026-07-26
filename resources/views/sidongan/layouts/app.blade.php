@@ -51,11 +51,13 @@
         </div>
     </div>
 
+    {{-- Toast Notifications.
+         Dimuat SEBELUM app.js dan skrip halaman karena keduanya memanggil
+         Toast untuk pesan validasi & konfirmasi (menggantikan alert/confirm bawaan). --}}
+    @include('sidongan.partials.toast')
+
     <!-- SIDONGAN JS -->
     <script src="{{ asset('assets/sidongan/js/app.js') }}"></script>
-
-    {{-- Toast Notifications --}}
-    @include('sidongan.partials.toast')
 
     @stack('scripts')
 </body>

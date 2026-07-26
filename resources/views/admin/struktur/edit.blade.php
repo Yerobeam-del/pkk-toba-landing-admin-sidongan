@@ -367,7 +367,7 @@ function handlePhotoUpload(event) {
         if (typeof Toast !== 'undefined') {
             Toast.error('Ukuran foto terlalu besar. Maksimal 2MB.');
         } else {
-            alert('Ukuran foto terlalu besar. Maksimal 2MB.');
+            Toast.warning('Ukuran foto terlalu besar. Maksimal 2MB.');
         }
         event.target.value = '';
         return;
@@ -438,7 +438,7 @@ function openCropModal() {
         if (typeof Toast !== 'undefined') {
             Toast.warning('Silakan upload foto terlebih dahulu.');
         } else {
-            alert('Silakan upload foto terlebih dahulu.');
+            Toast.warning('Silakan upload foto terlebih dahulu.');
         }
         return;
     }
@@ -447,7 +447,7 @@ function openCropModal() {
         if (typeof Toast !== 'undefined') {
             Toast.error('Cropper.js belum ter-load. Silakan refresh halaman.');
         } else {
-            alert('Cropper.js belum ter-load. Silakan refresh halaman.');
+            Toast.warning('Cropper.js belum ter-load. Silakan refresh halaman.');
         }
         console.error('Cropper.js is not loaded!');
         return;
@@ -505,7 +505,7 @@ function initializeCropper(imageSrc) {
             if (typeof Toast !== 'undefined') {
                 Toast.error('Gagal menginisialisasi crop tool.');
             } else {
-                alert('Gagal menginisialisasi crop tool.');
+                Toast.error('Gagal menginisialisasi crop tool.');
             }
         }
     };
@@ -536,7 +536,7 @@ function applyCrop() {
         if (typeof Toast !== 'undefined') {
             Toast.warning('Crop tool belum siap. Silakan coba lagi.');
         } else {
-            alert('Crop tool belum siap. Silakan coba lagi.');
+            Toast.warning('Crop tool belum siap. Silakan coba lagi.');
         }
         return;
     }
@@ -571,7 +571,7 @@ function applyCrop() {
         if (typeof Toast !== 'undefined') {
             Toast.error('Gagal menerapkan crop. Silakan coba lagi.');
         } else {
-            alert('Gagal menerapkan crop. Silakan coba lagi.');
+            Toast.error('Gagal menerapkan crop. Silakan coba lagi.');
         }
     }
 }

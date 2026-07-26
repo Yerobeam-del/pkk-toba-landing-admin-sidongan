@@ -106,7 +106,7 @@
     {{-- Actions --}}
     @if($unreadCount > 0)
     <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;" class="animate-slide-in" style="animation-delay: 0.2s;">
-        <button onclick="markAllAsRead()" 
+        <button onclick="hapusSemuaNotifikasi()" 
                 class="btn-action"
                 style="background: white; border: 2px solid #ea580c; color: #ea580c; padding: 0.625rem 1.25rem; border-radius: 0.625rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 2px 8px rgba(234, 88, 12, 0.1);">
             <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,8 +214,16 @@ function markAsRead(notificationId, element) {
     });
 }
 
-function markAllAsRead() {
-    if(confirm('Apakah Anda yakin ingin menghapus semua notifikasi?')) {
+// Nama sengaja dibedakan dari markAllAsRead() di app.js yang dipakai
+// popup lonceng. Dulu keduanya bernama sama sehingga app.js menimpanya
+// dan konfirmasi di halaman ini tidak pernah muncul.
+function hapusSemuaNotifikasi() {
+    Toast.confirm(
+        'Semua notifikasi akan ditandai terbaca dan dihapus dari daftar.',
+        { title: 'Hapus Semua Notifikasi?', confirmText: 'Ya, Hapus', cancelText: 'Batal', type: 'danger' }
+    ).then(function (setuju) {
+        if (!setuju) return;
+        {
         fetch('/sidongan/notifications/mark-all-read', {
             method: 'POST',
             headers: {
@@ -240,7 +248,8 @@ function markAllAsRead() {
                 }, 500);
             }
         });
-    }
+        }
+    });
 }
 </script>
 

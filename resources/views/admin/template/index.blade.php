@@ -286,11 +286,6 @@ if (typeof window.confirmDeleteItem === 'undefined') {
                     if (form) form.submit();
                 }
             });
-        } else {
-            if (confirm(`Hapus template "${name}"?`)) {
-                const form = document.getElementById('delete-form-' + id);
-                if (form) form.submit();
-            }
         }
     };
 }

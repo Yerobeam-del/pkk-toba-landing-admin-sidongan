@@ -1,5 +1,6 @@
 {{-- Toast Notification System --}}
-<script src="{{ asset('assets/admin/js/toast.js') }}"></script>
+{{-- Berkasnya di assets/shared karena dipakai bersama Admin Panel & SIDONGAN --}}
+<script src="{{ asset('assets/shared/js/toast.js') }}"></script>
 
 {{-- Auto Show Toast from Session --}}
 <script>

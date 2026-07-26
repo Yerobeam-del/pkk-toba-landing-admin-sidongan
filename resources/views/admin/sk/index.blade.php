@@ -303,11 +303,6 @@ if (typeof window.confirmDeleteItem === 'undefined') {
                     if (form) form.submit();
                 }
             });
-        } else {
-            if (confirm(`Hapus dokumen "${name}"?`)) {
-                const form = document.getElementById('delete-form-' + id);
-                if (form) form.submit();
-            }
         }
     };
 }

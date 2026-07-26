@@ -351,7 +351,7 @@ function removeFeature(btn) {
     const currentCount = container.querySelectorAll('.feature-item').length;
     
     if (currentCount <= 2) {
-        alert('Minimal harus ada 2 poin fitur');
+        Toast.warning('Minimal harus ada 2 poin fitur');
         return;
     }
     

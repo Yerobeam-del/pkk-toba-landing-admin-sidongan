@@ -535,8 +535,6 @@ document.querySelectorAll('.cleanup-form').forEach(form => {
             }).then((confirmed) => {
                 if (confirmed) this.submit();
             });
-        } else {
-            if (confirm(message)) this.submit();
         }
     });
 });
@@ -557,12 +555,6 @@ function confirmDeleteItem(id, name) {
                 form.submit();
             }
         });
-    } else {
-        if (confirm(`Hapus surat "${name}"?`)) {
-            const form = document.getElementById('deleteForm');
-            form.action = `/admin/sidongan-data/${id}`;
-            form.submit();
-        }
     }
 }
 </script>

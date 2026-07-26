@@ -627,7 +627,7 @@
             if (typeof Toast !== 'undefined') {
                 Toast.error(`Maksimal hanya ${MAX_FILES} foto. Anda sudah memilih ${selectedFiles.length} foto.`);
             } else {
-                alert(`Maksimal hanya ${MAX_FILES} foto. Anda sudah memilih ${selectedFiles.length} foto.`);
+                Toast.warning(`Maksimal hanya ${MAX_FILES} foto. Anda sudah memilih ${selectedFiles.length} foto.`);
             }
             return;
         }
@@ -639,7 +639,7 @@
                 if (typeof Toast !== 'undefined') {
                     Toast.error(validation.message);
                 } else {
-                    alert(validation.message);
+                    Toast.warning(validation.message);
                 }
                 return;
             }

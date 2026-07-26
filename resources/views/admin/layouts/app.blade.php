@@ -721,7 +721,8 @@
     </script>
 
     {{-- Toast Notification System --}}
-    <script src="{{ asset('assets/admin/js/toast.js') }}"></script>
+    {{-- Toast dipakai bersama Admin Panel & SIDONGAN, jadi berkasnya di assets/shared --}}
+    <script src="{{ asset('assets/shared/js/toast.js') }}"></script>
 
     {{-- Auto Show Session Messages --}}
     @if(session('success'))

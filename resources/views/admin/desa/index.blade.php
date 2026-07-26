@@ -497,21 +497,18 @@ function toggleKecamatan(id) {
 // Delete dengan Toast.confirm
 async function deleteDesa(id, name) {
     try {
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            const confirmed = await Toast.confirm(
-                `Desa <strong>"${name}"</strong> akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.`,
-                {
-                    title: 'Hapus Desa?',
-                    confirmText: 'Ya, Hapus',
-                    cancelText: 'Batal',
-                    type: 'danger'
-                }
-            );
-            
-            if (!confirmed) return;
-        } else {
-            if (!confirm(`Hapus desa "${name}"?`)) return;
-        }
+        // Toast dimuat global di layout, jadi tidak perlu cadangan confirm() bawaan
+        const confirmed = await Toast.confirm(
+            `Desa <strong>"${name}"</strong> akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.`,
+            {
+                title: 'Hapus Desa?',
+                confirmText: 'Ya, Hapus',
+                cancelText: 'Batal',
+                type: 'danger'
+            }
+        );
+
+        if (!confirmed) return;
         
         console.log('🗑️ Deleting desa:', id);
         
@@ -543,7 +540,7 @@ async function deleteDesa(id, name) {
         if (typeof Toast !== 'undefined') {
             Toast.error(errorMsg);
         } else {
-            alert('❌ ' + errorMsg);
+            Toast.error('❌ ' + errorMsg);
         }
     }
 }

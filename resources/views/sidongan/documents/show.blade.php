@@ -160,7 +160,7 @@
                 @endphp
 
                 @if($currentUser && $currentUser->hasSidonganRole('sekretaris') && $canArchive)
-                <form action="{{ route('sidongan.documents.archive', $document) }}" method="POST" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin mengarsipkan surat ini?\n\nSurat yang sudah diarsipkan akan dipindahkan ke arsip dan tidak akan muncul di daftar surat aktif.')">
+                <form action="{{ route('sidongan.documents.archive', $document) }}" method="POST" style="display: inline;" onsubmit="event.preventDefault(); const f = this; Toast.confirm('Surat yang diarsipkan akan dipindahkan ke arsip dan tidak lagi muncul di daftar surat aktif.', { title: 'Arsipkan Surat?', confirmText: 'Ya, Arsipkan', cancelText: 'Batal', type: 'warning' }).then(function (setuju) { if (setuju) f.submit(); }); return false;">
                     @csrf
                     @method('PATCH')
                     <button type="submit" class="ds-btn ds-btn-archive">

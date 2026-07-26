@@ -291,7 +291,7 @@ document.getElementById('imageInput')?.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         if (file.size > 2 * 1024 * 1024) {
-            alert('Ukuran gambar terlalu besar. Maksimal 2MB.');
+            Toast.warning('Ukuran gambar terlalu besar. Maksimal 2MB.');
             e.target.value = '';
             return;
         }

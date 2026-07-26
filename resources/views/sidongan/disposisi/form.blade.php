@@ -497,7 +497,7 @@ function toggleCustomAction() {
 document.querySelector('form').addEventListener('submit', function(e) {
     if (document.querySelectorAll('input[name="target_roles[]"]:checked').length === 0) {
         e.preventDefault();
-        alert('Pilih minimal satu tujuan disposisi!');
+        Toast.warning('Pilih minimal satu tujuan disposisi!');
         return false;
     }
     
@@ -506,7 +506,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     
     if (actionSelect.value === 'Lainnya' && !customInput.value.trim()) {
         e.preventDefault();
-        alert('Silakan masukkan tindakan/instruksi lainnya!');
+        Toast.warning('Silakan masukkan tindakan/instruksi lainnya!');
         customInput.focus();
         return false;
     }

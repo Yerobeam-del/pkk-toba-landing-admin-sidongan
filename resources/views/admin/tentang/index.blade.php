@@ -230,7 +230,7 @@ function removeProgram(btn) {
         if (typeof Toast !== 'undefined') {
             Toast.warning('Minimal harus ada 1 program');
         } else {
-            alert('Minimal harus ada 1 program');
+            Toast.warning('Minimal harus ada 1 program');
         }
         return;
     }

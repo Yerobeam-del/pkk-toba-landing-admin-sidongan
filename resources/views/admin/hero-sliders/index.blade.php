@@ -373,12 +373,12 @@ async function confirmDeleteWithToast(id, name) {
                 }
             );
             if (confirmed) submitDelete(id);
-        } else {
-            if (confirm(`Hapus slide "${name}"?`)) submitDelete(id);
         }
     } catch (error) {
+        // Jangan jatuh ke confirm() bawaan: penghapusan dibatalkan dan
+        // pengguna diberi tahu lewat Toast agar tampilannya seragam.
         console.error('Error:', error);
-        if (confirm(`Hapus slide "${name}"?`)) submitDelete(id);
+        Toast.error('Gagal menampilkan konfirmasi. Silakan coba lagi.');
     }
 }
 

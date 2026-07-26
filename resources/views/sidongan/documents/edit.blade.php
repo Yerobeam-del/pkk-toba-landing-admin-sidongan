@@ -283,7 +283,7 @@
                 if (typeof Toast !== 'undefined') {
                     Toast.error('Tanggal surat tidak boleh lebih dari hari ini!');
                 } else {
-                    alert('Tanggal surat tidak boleh lebih dari hari ini!');
+                    Toast.warning('Tanggal surat tidak boleh lebih dari hari ini!');
                 }
                 dateInput.style.borderColor = '#ef4444';
                 return false;
@@ -310,7 +310,7 @@
                 if (typeof Toast !== 'undefined') {
                     Toast.error('Tanggal surat tidak boleh lebih dari hari ini!');
                 } else {
-                    alert('Tanggal surat tidak boleh lebih dari hari ini!');
+                    Toast.warning('Tanggal surat tidak boleh lebih dari hari ini!');
                 }
                 document.getElementById('document_date').focus();
                 document.getElementById('document_date').style.borderColor = '#ef4444';
@@ -403,7 +403,7 @@
                 if (typeof Toast !== 'undefined') {
                     Toast.error(validation.message);
                 } else {
-                    alert(validation.message);
+                    Toast.warning(validation.message);
                 }
                 fileInput.value = '';
                 return;
@@ -423,7 +423,7 @@
                 if (typeof Toast !== 'undefined') {
                     Toast.error(validation.message);
                 } else {
-                    alert(validation.message);
+                    Toast.warning(validation.message);
                 }
                 e.target.value = '';
                 return;
@@ -474,10 +474,15 @@
     // ==========================================
     function confirmDeleteFile(event) {
         event.stopPropagation();
-        if (confirm('Apakah Anda yakin ingin menghapus lampiran file ini?')) {
+        const form = event.target.closest('form');
+        Toast.confirm(
+            'Lampiran file pada surat ini akan dihapus.',
+            { title: 'Hapus Lampiran?', confirmText: 'Ya, Hapus', cancelText: 'Batal', type: 'danger' }
+        ).then(function (setuju) {
+            if (!setuju) return;
             document.getElementById('deleteFileInput').value = '1';
-            event.target.closest('form').submit();
-        }
+            form.submit();
+        });
     }
 </script>
 @endsection

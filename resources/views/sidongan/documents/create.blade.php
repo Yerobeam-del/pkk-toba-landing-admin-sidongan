@@ -368,7 +368,7 @@
             if (typeof Toast !== 'undefined') {
                 Toast.error('Saran Sekretaris harus diisi!');
             } else {
-                alert('Saran Sekretaris harus diisi!');
+                Toast.warning('Saran Sekretaris harus diisi!');
             }
             document.getElementById('suggestion').focus();
             document.getElementById('suggestion').style.borderColor = '#ef4444';
@@ -386,7 +386,7 @@
                 if (typeof Toast !== 'undefined') {
                     Toast.error('Tanggal diterima tidak boleh lebih dari hari ini!');
                 } else {
-                    alert('Tanggal diterima tidak boleh lebih dari hari ini!');
+                    Toast.warning('Tanggal diterima tidak boleh lebih dari hari ini!');
                 }
                 document.getElementById('agenda_date').focus();
                 document.getElementById('agenda_date').style.borderColor = '#ef4444';
@@ -489,7 +489,7 @@
                 if (typeof Toast !== 'undefined') {
                     Toast.error(validation.message);
                 } else {
-                    alert(validation.message);
+                    Toast.warning(validation.message);
                 }
                 fileInput.value = '';
                 return;
@@ -510,7 +510,7 @@
                 if (typeof Toast !== 'undefined') {
                     Toast.error(validation.message);
                 } else {
-                    alert(validation.message);
+                    Toast.warning(validation.message);
                 }
                 e.target.value = '';
                 return;

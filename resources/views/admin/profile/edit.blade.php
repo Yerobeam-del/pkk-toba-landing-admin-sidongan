@@ -168,14 +168,14 @@ function openCropper(event) {
     
     // Validasi ukuran file (2MB)
     if (file.size > 2 * 1024 * 1024) {
-        alert('Ukuran file terlalu besar. Maksimal 2MB.');
+        Toast.warning('Ukuran file terlalu besar. Maksimal 2MB.');
         event.target.value = '';
         return;
     }
     
     // Validasi tipe file
     if (!file.type.match('image.*')) {
-        alert('File harus berupa gambar (JPG/PNG/WebP).');
+        Toast.warning('File harus berupa gambar (JPG/PNG/WebP).');
         event.target.value = '';
         return;
     }

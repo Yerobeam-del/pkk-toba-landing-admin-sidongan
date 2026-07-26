@@ -179,7 +179,7 @@ fileInput?.addEventListener('change', function(e) {
     if (file) {
         // Validate file size (10MB max)
         if (file.size > 10 * 1024 * 1024) {
-            alert('Ukuran file terlalu besar. Maksimal 10MB.');
+            Toast.warning('Ukuran file terlalu besar. Maksimal 10MB.');
             e.target.value = '';
             return;
         }

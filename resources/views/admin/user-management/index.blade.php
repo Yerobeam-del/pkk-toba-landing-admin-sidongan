@@ -283,15 +283,12 @@
 async function toggleStatus(userId, userName, currentStatus) {
     const action = currentStatus ? 'menonaktifkan' : 'mengaktifkan';
     try {
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            const confirmed = await Toast.confirm(
-                `Apakah Anda yakin ingin <strong>${action}</strong> akun <strong>"${userName}"</strong>?`,
-                { title: 'Konfirmasi Perubahan Status', confirmText: 'Ya, Ubah', cancelText: 'Batal', type: 'warning' }
-            );
-            if (!confirmed) return;
-        } else {
-            if (!confirm(`Apakah Anda yakin ingin ${action} akun "${userName}"?`)) return;
-        }
+        // Toast dimuat global di layout, jadi tidak perlu cadangan confirm() bawaan
+        const confirmed = await Toast.confirm(
+            `Apakah Anda yakin ingin <strong>${action}</strong> akun <strong>"${userName}"</strong>?`,
+            { title: 'Konfirmasi Perubahan Status', confirmText: 'Ya, Ubah', cancelText: 'Batal', type: 'warning' }
+        );
+        if (!confirmed) return;
 
         const response = await fetch(`/admin/user-management/${userId}/toggle-status`, {
             method: 'POST',
@@ -308,12 +305,12 @@ async function toggleStatus(userId, userName, currentStatus) {
             setTimeout(() => location.reload(), 1000);
         } else {
             if (typeof Toast !== 'undefined') Toast.error(data.message);
-            else alert(data.message);
+            else Toast.warning(data.message);
         }
     } catch (error) {
         console.error('Error:', error);
         if (typeof Toast !== 'undefined') Toast.error('Terjadi kesalahan saat mengubah status akun');
-        else alert('Terjadi kesalahan saat mengubah status akun');
+        else Toast.error('Terjadi kesalahan saat mengubah status akun');
     }
 }
 </script>

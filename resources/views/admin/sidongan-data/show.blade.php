@@ -416,7 +416,8 @@
             {{-- Delete Button --}}
             <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.06);text-align:right">
                 <form method="POST" action="{{ route('admin.sidongan-data.report.delete', $report->id) }}" 
-                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus laporan ini?')"
+                      {{-- this.submit() melewati onsubmit, jadi tidak terjadi pengulangan --}}
+                      onsubmit="event.preventDefault(); const f = this; Toast.confirm('Laporan kegiatan ini akan dihapus permanen.', { title: 'Hapus Laporan?', confirmText: 'Ya, Hapus', cancelText: 'Batal', type: 'danger' }).then(function (setuju) { if (setuju) f.submit(); }); return false;"
                       style="display:inline">
                     @csrf
                     @method('DELETE')
