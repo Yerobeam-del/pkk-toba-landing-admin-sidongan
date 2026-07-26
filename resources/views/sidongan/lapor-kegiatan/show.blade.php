@@ -34,7 +34,7 @@
                 </div>
             </div>
             
-            <div class="dl-header-actions">
+            <div class="dl-header-actions sd-header-actions">
                 @if($canVerify)
                 <a href="{{ route('sidongan.verifikasi.form', $report->id) }}" class="dl-btn dl-btn-verify">
                     <i class="fas fa-clipboard-check"></i>
@@ -42,7 +42,7 @@
                 </a>
                 @endif
                 
-                <a href="{{ $backUrl }}" class="dl-btn dl-btn-back">
+                <a href="{{ $backUrl }}" class="dl-btn dl-btn-back sd-btn-back">
                     <i class="fas fa-arrow-left"></i>
                     <span>Kembali</span>
                 </a>
@@ -286,7 +286,7 @@
         <i class="fas fa-times"></i>
     </button>
     
-    <div class="dl-gallery-container" onclick="event.stopPropagation()">
+    <div class="dl-gallery-container sd-lightbox" onclick="event.stopPropagation()">
         <div class="dl-gallery-image-wrapper">
             <img id="galleryImage" class="dl-gallery-image" src="" alt="Dokumentasi">
         </div>
@@ -390,7 +390,13 @@
             prevBtn.style.display = 'flex';
             nextBtn.style.display = 'flex';
         }
-        
+
+        // Tandai galeri berfoto tunggal; CSS mobile yang menyembunyikan penanda & thumbnail
+        const wadahGaleri = document.querySelector('.dl-gallery-container');
+        if (wadahGaleri) {
+            wadahGaleri.classList.toggle('sd-lightbox-tunggal', galleryFotos.length <= 1);
+        }
+
         updateThumbnails();
     }
     

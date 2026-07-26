@@ -57,7 +57,7 @@
                 <p>Informasi lengkap surat masuk</p>
             </div>
             
-            <div class="ds-header-actions">
+            <div class="ds-header-actions sd-header-actions">
                 @php
                     // Ambil URL kembali dari session
                     $backUrl = session('document_back_url');
@@ -80,7 +80,7 @@
                     }
                 @endphp
 
-                <a href="{{ $backUrl }}" class="ds-btn ds-btn-back">
+                <a href="{{ $backUrl }}" class="ds-btn ds-btn-back sd-btn-back">
                     <i class="fas fa-arrow-left"></i>
                     <span>Kembali</span>
                 </a>
@@ -946,7 +946,7 @@
         <i class="fas fa-times"></i>
     </button>
     
-    <div class="dl-gallery-container" onclick="event.stopPropagation()">
+    <div class="dl-gallery-container sd-lightbox" onclick="event.stopPropagation()">
         <div class="dl-gallery-image-wrapper">
             <img id="galleryImage" class="dl-gallery-image" src="" alt="Dokumentasi">
         </div>
@@ -1103,7 +1103,13 @@
             if (prevBtn) prevBtn.style.display = 'flex';
             if (nextBtn) nextBtn.style.display = 'flex';
         }
-        
+
+        // Tandai galeri berfoto tunggal; CSS mobile yang menyembunyikan penanda & thumbnail
+        const wadahGaleri = document.querySelector('.dl-gallery-container');
+        if (wadahGaleri) {
+            wadahGaleri.classList.toggle('sd-lightbox-tunggal', currentGallery.fotos.length <= 1);
+        }
+
         updateThumbnails();
     }
     

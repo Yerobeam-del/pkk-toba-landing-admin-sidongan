@@ -85,7 +85,7 @@
     }
 </style>
 
-<div style="padding: 0 1.5rem;">
+<div class="sd-page" style="padding: 0 1.5rem;">
     {{-- Header Section --}}
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;" class="animate-slide-in">
         <div>
@@ -394,7 +394,7 @@
                 {{ $doc->agenda_number ?? '-' }}
             </td>
             
-            <td data-label="Perihal" style="padding: 1rem;">
+            <td data-label="Perihal" class="sd-cell-stack" style="padding: 1rem;">
                 <div style="font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;">{{ Str::limit($doc->subject ?? $doc->title, 60) }}</div>
                 @if($doc->sender)
                 <div style="font-size: 0.75rem; color: #64748b;">{{ $doc->sender }}</div>
@@ -409,7 +409,7 @@
                 {{ $doc->document_date ? $doc->document_date->locale('id')->translatedFormat('d F Y') : '-' }}
             </td>
             
-            <td data-label="Disposisi" style="padding: 1rem;">
+            <td data-label="Disposisi" class="sd-cell-chips" style="padding: 1rem;">
                 @php
                     $disposisiData = is_string($doc->disposisi_data) ? json_decode($doc->disposisi_data, true) : $doc->disposisi_data;
                 @endphp
@@ -438,9 +438,10 @@
                 @endif
             </td>
             
-            <td data-label="Aksi" style="padding: 1rem; white-space: nowrap;">
-                <div style="display: flex; gap: 0.5rem; justify-content: center;">
-                    <a href="{{ route('sidongan.documents.show', $doc) }}" 
+            <td data-label="Aksi" class="sd-cell-stack" style="padding: 1rem; white-space: nowrap;">
+                <div class="sd-actions" style="display: flex; gap: 0.5rem; justify-content: center;">
+                    <a href="{{ route('sidongan.documents.show', $doc) }}"
+                    class="sd-icon-btn"
                     style="display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: #dbeafe; color: #2563eb; border-radius: 0.375rem; text-decoration: none; transition: all 0.2s;"
                     onmouseover="this.style.background='#bfdbfe'" 
                     onmouseout="this.style.background='#dbeafe'"
@@ -448,8 +449,9 @@
                         <i class="fas fa-eye" style="font-size: 0.875rem;"></i>
                     </a>
                     
-                    <a href="{{ route('sidongan.documents.disposisi-print', $doc) }}" 
+                    <a href="{{ route('sidongan.documents.disposisi-print', $doc) }}"
                     target="_blank"
+                    class="sd-icon-btn"
                     style="display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: #d1fae5; color: #059669; border-radius: 0.375rem; text-decoration: none; transition: all 0.2s;"
                     onmouseover="this.style.background='#a7f3d0'" 
                     onmouseout="this.style.background='#d1fae5'"
@@ -471,7 +473,7 @@
                 Menampilkan <strong>{{ $documents->firstItem() }}</strong> - <strong>{{ $documents->lastItem() }}</strong> dari <strong>{{ $documents->total() }}</strong> arsip
             </div>
             
-            <div style="display: flex; gap: 0.35rem; align-items: center;">
+            <div class="sd-pagination" style="display: flex; gap: 0.35rem; align-items: center;">
                 @if($documents->onFirstPage())
                     <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #f1f5f9; color: #94a3b8; border-radius: 0.375rem; font-size: 0.875rem; cursor: not-allowed;">
                         <i class="fas fa-chevron-left"></i>

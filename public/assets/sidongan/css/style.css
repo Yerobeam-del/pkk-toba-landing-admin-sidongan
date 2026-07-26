@@ -629,3 +629,505 @@ body {
     .sd-table-wrap td[data-label="Disposisi"]::before { text-align: left; }
     .sd-table-wrap td[data-label="Aksi"] > * { justify-content: flex-start; }
 }
+
+/* ============================================================
+   POLA BERSAMA TAMPILAN MOBILE SIDONGAN (kelas "sd-*")
+   ------------------------------------------------------------
+   Blok di bawah ini adalah satu-satunya tempat aturan mobile
+   bersama untuk seluruh halaman SIDONGAN ditulis. Berkas blade
+   hanya memasang nama kelasnya, tidak menambah CSS sendiri.
+
+   Seluruh aturan hidup di dalam @media (max-width: 768px) —
+   atau @media screen and (max-width: 768px) untuk kelompok
+   lembar cetak — sehingga tampilan desktop (>= 769px) sama
+   sekali tidak berubah.
+
+   URUTAN BLOK TIDAK BOLEH DIACAK:
+   1. sd-page            9.  sd-cell-chips
+   2. sd-page-header     10. sd-actions
+   3. sd-header-actions  11. sd-icon-btn
+   4. sd-btn-back        12. sd-sheet-scroll
+   5. sd-list-head       13. sd-sheet-a4
+   6. sd-list-actions    14. sd-scroll-hint
+   7. sd-pagination      15. sd-lightbox
+   8. sd-cell-stack      16. sd-tap
+
+   Alasan urutan: semua aturan memakai !important dengan
+   spesifisitas setara, jadi yang ditulis belakangan menang.
+   sd-cell-chips harus setelah sd-cell-stack, sd-icon-btn setelah
+   sd-actions, sd-btn-back setelah sd-header-actions, dan
+   sd-list-actions setelah sd-list-head.
+   ============================================================ */
+
+/* ============================================================
+   KONTRAK KELAS BERSAMA MOBILE SIDONGAN (sd-*)
+   Urutan blok di bawah TIDAK BOLEH diacak.
+   1. sd-page
+   ============================================================ */
+@media (max-width: 768px) {
+    /* Padding kiri-kanan cukup dipegang .content-area (0.875rem).
+       Pembungkus halaman jangan menambah 1.5rem lagi. */
+    .content-area .sd-page,
+    .content-area div[style*="padding: 0 1.5rem"],
+    .content-area .dashboard-container,
+    .content-area .lapor-container,
+    .content-area .disposisi-container,
+    .content-area .verifikasi-container,
+    .content-area .form-container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        max-width: 100% !important;
+    }
+}
+
+/* 2. sd-page-header */
+@media (max-width: 768px) {
+    /* Baris judul + tombol di dalam bar header jadi menumpuk */
+    .sd-page-header {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        gap: 0.875rem !important;
+        width: 100% !important;
+    }
+    .sd-page-header > * {
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    /* Semua bar header memakai padding yang sama, apa pun cara penulisannya.
+       Ditulis setelah aturan [style*="padding: 1.5rem"] yang sudah ada. */
+    .content-area .sd-page-header-bar,
+    .content-area .ds-header,
+    .content-area .dl-header,
+    .content-area .action-bar,
+    .content-area .disposisi-header,
+    .content-area .verifikasi-header {
+        padding: 1rem !important;
+    }
+}
+
+/* 3. sd-header-actions */
+@media (max-width: 768px) {
+    .sd-header-actions,
+    .ds-header-actions,
+    .dl-header-actions,
+    .disposisi-header-actions,
+    .action-buttons {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        gap: 0.5rem !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* <form style="display:inline"> (pembungkus tombol Arsipkan) ikut melebar.
+       Tanpa ini form menyusut mengikuti isinya dan tombolnya jadi setengah lebar. */
+    .sd-header-actions > form,
+    .ds-header-actions > form,
+    .dl-header-actions > form,
+    .disposisi-header-actions > form,
+    .action-buttons > form {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .sd-header-actions > a,
+    .sd-header-actions > button,
+    .sd-header-actions > form > a,
+    .sd-header-actions > form > button,
+    .ds-header-actions > a,
+    .ds-header-actions > button,
+    .ds-header-actions > form > a,
+    .ds-header-actions > form > button,
+    .dl-header-actions > a,
+    .dl-header-actions > button,
+    .dl-header-actions > form > a,
+    .dl-header-actions > form > button,
+    .disposisi-header-actions > a,
+    .disposisi-header-actions > button,
+    .disposisi-header-actions > form > a,
+    .disposisi-header-actions > form > button,
+    .action-buttons > a,
+    .action-buttons > button,
+    .action-buttons > form > a,
+    .action-buttons > form > button {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        flex: none !important;   /* menetralkan flex:1 pada .btn-action */
+        min-height: 44px !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+    }
+}
+
+/* 4. sd-btn-back (harus SETELAH sd-header-actions) */
+@media (max-width: 768px) {
+    /* Hanya mengubah urutan visual, markup tetap. Desktop tidak terpengaruh. */
+    .sd-btn-back,
+    .ds-header-actions .ds-btn-back,
+    .dl-header-actions .dl-btn-back,
+    .disposisi-header-actions .btn-back,
+    .action-buttons .btn-back {
+        order: 99 !important;
+    }
+}
+
+/* 5. sd-list-head */
+@media (max-width: 768px) {
+    .sd-list-head {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        gap: 0.75rem !important;
+    }
+    .sd-list-head > * {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: none !important;
+    }
+}
+
+/* 6. sd-list-actions (harus SETELAH sd-list-head) */
+@media (max-width: 768px) {
+    .sd-list-actions {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        width: 100% !important;
+        gap: 0.5rem !important;
+        margin: 0 !important;
+    }
+    .sd-list-actions > a,
+    .sd-list-actions > button,
+    .sd-list-actions > form {
+        flex: 1 1 10rem !important;
+        min-width: 0 !important;
+    }
+    .sd-list-actions > form { display: block !important; }
+    .sd-list-actions > a,
+    .sd-list-actions > button,
+    .sd-list-actions > form > a,
+    .sd-list-actions > form > button {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        min-height: 44px !important;
+        box-sizing: border-box !important;
+        white-space: nowrap !important;
+    }
+}
+
+/* 7. sd-pagination */
+@media (max-width: 768px) {
+    /* Selector kedua adalah jaring pengaman untuk markup pagination yang
+       masih memakai gaya inline (style diawali "display: flex; gap: 0.35rem"). */
+    .sd-pagination,
+    .content-area div[style^="display: flex; gap: 0.35rem"] {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0.4rem !important;
+        row-gap: 0.5rem !important;
+        width: 100% !important;
+    }
+    .sd-pagination > a,
+    .sd-pagination > span,
+    .content-area div[style^="display: flex; gap: 0.35rem"] > a,
+    .content-area div[style^="display: flex; gap: 0.35rem"] > span {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 0 0 auto !important;
+        width: auto !important;
+        height: auto !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        padding: 0.5rem 0.65rem !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* 8. sd-cell-stack (HARUS sebelum sd-cell-chips) */
+@media (max-width: 768px) {
+    /* Selector data-label adalah jaring pengaman: berlaku walau kelas belum dipasang. */
+    .sd-table-wrap td.sd-cell-stack,
+    .sd-table-wrap td[data-label="Perihal"],
+    .sd-table-wrap td[data-label="Status"],
+    .sd-table-wrap td[data-label="Aksi"],
+    .sd-table-wrap td[data-label="Aksi Terakhir"] {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        text-align: left !important;   /* wajib !important, aturan dasar juga !important */
+        gap: 0.35rem !important;
+        white-space: normal !important; /* menetralkan nowrap inline pada kolom Aksi */
+    }
+    .sd-table-wrap td.sd-cell-stack::before,
+    .sd-table-wrap td[data-label="Perihal"]::before,
+    .sd-table-wrap td[data-label="Status"]::before,
+    .sd-table-wrap td[data-label="Aksi"]::before,
+    .sd-table-wrap td[data-label="Aksi Terakhir"]::before {
+        text-align: left !important;
+        align-self: flex-start !important;
+    }
+    /* Blok isi selebar kartu supaya garis aksen border-left tidak ragged.
+       Sengaja hanya > div, agar badge <span> tetap berbentuk pil. */
+    .sd-table-wrap td.sd-cell-stack > div,
+    .sd-table-wrap td[data-label="Perihal"] > div,
+    .sd-table-wrap td[data-label="Status"] > div,
+    .sd-table-wrap td[data-label="Aksi"] > div,
+    .sd-table-wrap td[data-label="Aksi Terakhir"] > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
+/* 9. sd-cell-chips (WAJIB ditulis SETELAH sd-cell-stack) */
+@media (max-width: 768px) {
+    .sd-table-wrap td.sd-cell-chips,
+    .sd-table-wrap td[data-label="Disposisi"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        text-align: left !important;
+        gap: 0.35rem !important;
+    }
+    /* Label mengambil satu baris penuh di atas deretan chip */
+    .sd-table-wrap td.sd-cell-chips::before,
+    .sd-table-wrap td[data-label="Disposisi"]::before {
+        flex: 0 0 100% !important;
+        text-align: left !important;
+    }
+    .sd-table-wrap td.sd-cell-chips > span,
+    .sd-table-wrap td[data-label="Disposisi"] > span {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        align-self: flex-start !important;
+        margin: 0 !important;   /* buang margin 0.125rem inline */
+    }
+}
+
+/* 10. sd-actions (harus SETELAH sd-cell-stack) */
+@media (max-width: 768px) {
+    .sd-actions,
+    .sd-table-wrap td[data-label="Aksi"] > div {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: flex-start !important;  /* !important wajib: kalahkan inline center */
+        gap: 0.5rem !important;
+        width: 100% !important;
+        white-space: normal !important;
+    }
+}
+
+/* 11. sd-icon-btn (harus SETELAH sd-actions) */
+@media (max-width: 768px) {
+    .sd-icon-btn,
+    .sd-actions > a,
+    .sd-actions > button,
+    .sd-table-wrap td[data-label="Aksi"] > div > a,
+    .sd-table-wrap td[data-label="Aksi"] > div > button {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        flex: 0 0 auto !important;
+        padding: 0 !important;
+        border-radius: 0.5rem !important;
+        box-sizing: border-box !important;
+    }
+    .sd-icon-btn i,
+    .sd-actions > a i,
+    .sd-actions > button i,
+    .sd-table-wrap td[data-label="Aksi"] > div > a i,
+    .sd-table-wrap td[data-label="Aksi"] > div > button i {
+        font-size: 1rem !important;
+    }
+}
+
+/* 12. sd-sheet-scroll — WAJIB memakai "screen and" agar tidak bocor ke hasil cetak */
+@media screen and (max-width: 768px) {
+    .sd-sheet-scroll,
+    .disposisi-preview-wrapper {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;   /* jangan visible: spec mengubahnya jadi auto */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        max-width: 100% !important;
+        /* Bayangan tepi: isyarat bahwa masih ada isi di kiri/kanan */
+        background:
+            linear-gradient(to right, #fff 30%, rgba(255,255,255,0)) left / 28px 100% no-repeat,
+            linear-gradient(to left,  #fff 30%, rgba(255,255,255,0)) right / 28px 100% no-repeat,
+            radial-gradient(farthest-side at 0 50%, rgba(0,0,0,.13), transparent) left / 12px 100% no-repeat,
+            radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.13), transparent) right / 12px 100% no-repeat,
+            #fff !important;
+        background-attachment: local, local, scroll, scroll !important;
+    }
+}
+
+/* 13. sd-sheet-a4 — WAJIB "screen and": min-width tidak punya penangkal di blok @media print */
+@media screen and (max-width: 768px) {
+    .sd-sheet-a4,
+    .disposisi-preview-wrapper > .disposisi-page {
+        width: 210mm !important;
+        min-width: 210mm !important;
+        max-width: none !important;
+        box-sizing: border-box !important;
+        flex: none !important;
+    }
+}
+
+/* 14. sd-scroll-hint */
+@media screen and (min-width: 769px) {
+    /* Elemen baru, disembunyikan di desktop supaya tampilan desktop tetap identik */
+    .sd-scroll-hint { display: none !important; }
+}
+@media screen and (max-width: 768px) {
+    .sd-scroll-hint {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        margin: 0 0 0.5rem 0 !important;
+        font-size: 0.8rem !important;
+        color: #475569 !important;
+    }
+    .sd-scroll-hint i { flex: 0 0 auto !important; }
+}
+
+/* 15. sd-lightbox */
+@media (max-width: 768px) {
+    .sd-lightbox {
+        max-width: 100% !important;
+        max-height: 100vh !important;
+        width: 100% !important;
+        padding: 0 0.75rem !important;
+        box-sizing: border-box !important;
+    }
+    .sd-lightbox .dl-gallery-image-wrapper,
+    .sd-lightbox .dl-gallery-image {
+        max-width: 92vw !important;
+        max-height: 58vh !important;
+    }
+
+    /* Bilah aksi keluar dari atas foto: jadi baris normal di bawah gambar */
+    .sd-lightbox .dl-gallery-bottom-bar {
+        position: static !important;
+        transform: none !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        width: 100% !important;
+        margin-top: 0.875rem !important;
+        padding: 0 !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-radius: 0 !important;
+    }
+
+    /* Penanda jumlah foto jadi chip di pojok kiri-atas gambar.
+       Mengacu ke .sd-lightbox karena bilah bawah sudah static. */
+    .sd-lightbox .dl-gallery-counter {
+        position: absolute !important;
+        top: 0.75rem !important;
+        left: 0.75rem !important;
+        z-index: 5 !important;
+        background: rgba(0, 0, 0, 0.65) !important;
+        backdrop-filter: blur(6px) !important;
+        -webkit-backdrop-filter: blur(6px) !important;
+        padding: 0.25rem 0.625rem !important;
+        border-radius: 9999px !important;
+        font-size: 0.75rem !important;
+        line-height: 1.4 !important;
+    }
+
+    .sd-lightbox .dl-gallery-download-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 0.5rem !important;
+        flex: 1 1 auto !important;
+        min-height: 44px !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.9rem !important;
+        background: #2563eb !important;
+        border-color: #2563eb !important;
+        border-radius: 0.625rem !important;
+        transform: none !important;
+    }
+    .sd-lightbox .dl-gallery-download-btn:hover { transform: none !important; }
+    .sd-lightbox .dl-gallery-download-btn:active {
+        background: #1d4ed8 !important;
+        transform: scale(0.98) !important;
+    }
+
+    /* Strip thumbnail jadi aliran normal yang bisa digulir mendatar */
+    .sd-lightbox .dl-gallery-thumbnails {
+        position: static !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 92vw !important;
+        margin-top: 0.75rem !important;
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        padding-bottom: 0.25rem !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none;
+    }
+    .sd-lightbox .dl-gallery-thumbnails::-webkit-scrollbar { display: none; }
+    .sd-lightbox .dl-gallery-thumb { opacity: 0.5 !important; flex: 0 0 auto !important; }
+    .sd-lightbox .dl-gallery-thumb.active { opacity: 1 !important; }
+    .sd-lightbox .dl-gallery-thumb:hover { transform: none !important; }
+
+    /* Foto tunggal: penanda dan strip thumbnail tidak berguna */
+    .sd-lightbox.sd-lightbox-tunggal .dl-gallery-counter,
+    .sd-lightbox.sd-lightbox-tunggal .dl-gallery-thumbnails { display: none !important; }
+}
+
+/* 16. sd-tap */
+@media (max-width: 768px) {
+    .sd-tap,
+    .surat-submenu .nav-item {
+        min-height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    /* Hamburger & lonceng berada di luar .content-area sehingga luput
+       dari aturan tombol 44px yang sudah ada. */
+    .top-header .toggle-btn {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 0 0 auto !important;
+    }
+}

@@ -48,130 +48,23 @@
     }
 
     /* ======================================== */
-    /* MOBILE RESPONSIVE - TABLET (max 968px)   */
-    /* ======================================== */
-    @media (max-width: 968px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-        }
-        .filter-grid {
-            grid-template-columns: 1fr !important;
-        }
-        .laporan-header {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-        }
-        .laporan-actions {
-            flex-direction: row !important;
-            width: 100% !important;
-            margin-top: 1rem !important;
-        }
-        .laporan-actions .btn-action {
-            flex: 1 !important;
-            justify-content: center !important;
-        }
-    }
-
-    /* ======================================== */
     /* MOBILE RESPONSIVE - PHONE (max 640px)    */
     /* ======================================== */
+    /* Catatan: aturan untuk .mobile-container, .mobile-header, .stats-grid,
+       .filter-grid, .laporan-header, .laporan-actions, .laporan-title,
+       .laporan-meta, .disposisi-box, .pagination-info, dan .pagination-buttons
+       sudah dihapus karena kelas-kelas itu tidak pernah dipasang di markup
+       halaman ini (aturannya mati, tidak pernah berlaku). Tata letak mobile
+       kini dipegang kelas bersama sd-* di assets/sidongan/css/style.css. */
     @media (max-width: 640px) {
-        /* Container padding lebih kecil */
-        .mobile-container {
-            padding: 0 0.75rem !important;
-        }
-
-        /* Header */
-        .mobile-header h1 {
-            font-size: 1.35rem !important;
-        }
-        .mobile-header p {
-            font-size: 0.85rem !important;
-        }
-
-        /* Stats Cards - 2 kolom, lebih compact */
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 0.75rem !important;
-        }
+        /* Kartu statistik lebih rapat di layar ponsel */
         .stats-card {
             padding: 1rem !important;
         }
-        .stats-card .stats-icon {
-            width: 3rem !important;
-            height: 3rem !important;
-        }
-        .stats-card .stats-icon i {
-            font-size: 1.25rem !important;
-        }
-        .stats-card .stats-label {
-            font-size: 0.65rem !important;
-        }
-        .stats-card .stats-value {
-            font-size: 1.75rem !important;
-        }
 
-        /* Filter Section */
-        .filter-grid {
-            grid-template-columns: 1fr !important;
-            gap: 0.75rem !important;
-        }
-        .filter-grid label {
-            font-size: 0.8rem !important;
-        }
-        .filter-grid input,
-        .filter-grid select {
-            padding: 0.65rem 0.85rem !important;
-            font-size: 0.85rem !important;
-        }
-
-        /* Laporan Item */
+        /* Kartu laporan lebih rapat di layar ponsel */
         .laporan-item {
             padding: 1rem !important;
-        }
-        .laporan-header {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 0.75rem !important;
-        }
-        .laporan-title {
-            font-size: 0.95rem !important;
-        }
-        .laporan-meta {
-            font-size: 0.8rem !important;
-            flex-direction: column !important;
-            gap: 0.35rem !important;
-        }
-        .laporan-actions {
-            flex-direction: column !important;
-            width: 100% !important;
-            margin-top: 0.75rem !important;
-            gap: 0.5rem !important;
-        }
-        .laporan-actions .btn-action {
-            width: 100% !important;
-            justify-content: center !important;
-            padding: 0.7rem 1rem !important;
-            font-size: 0.85rem !important;
-        }
-
-        /* Disposisi Box */
-        .disposisi-box {
-            padding: 0.75rem !important;
-        }
-        .disposisi-box p {
-            font-size: 0.8rem !important;
-        }
-
-        /* Pagination */
-        .pagination-info {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 0.5rem !important;
-        }
-        .pagination-buttons {
-            width: 100% !important;
-            justify-content: center !important;
         }
     }
 
@@ -179,23 +72,13 @@
     /* MOBILE RESPONSIVE - SMALL (max 380px)    */
     /* ======================================== */
     @media (max-width: 380px) {
-        .stats-grid {
-            grid-template-columns: 1fr 1fr !important;
-            gap: 0.5rem !important;
-        }
         .stats-card {
             padding: 0.75rem !important;
-        }
-        .stats-card .stats-value {
-            font-size: 1.5rem !important;
-        }
-        .stats-card .stats-label {
-            font-size: 0.6rem !important;
         }
     }
 </style>
 
-<div style="padding: 0 1.5rem;">
+<div class="sd-page" style="padding: 0 1.5rem;">
     {{-- Header --}}
     <div style="margin-bottom: 2rem;" class="animate-slide-in">
         <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b; margin: 0 0 0.5rem 0; letter-spacing: -0.025em;">
@@ -373,7 +256,7 @@
                         onmouseover="this.style.background='{{ $theme['bg'] }}'; this.style.borderLeftColor='{{ $theme['btn'] }}'; this.style.transform='translateX(4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" 
                         onmouseout="this.style.background='white'; this.style.borderLeftColor='transparent'; this.style.transform='translateX(0)'; this.style.boxShadow='none'">
                         
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div class="sd-list-head" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                             <div style="flex: 1;">
                                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
                                     <span style="font-size: 0.8rem; font-family: monospace; background: white; color: {{ $theme['text'] }}; padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-weight: 700; border: 1px solid {{ $theme['border'] }}; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
@@ -405,7 +288,7 @@
                                 </div>
                             </div>
                             
-                            <div style="display: flex; gap: 0.5rem; flex-shrink: 0; flex-direction: column;">
+                            <div class="sd-list-actions" style="display: flex; gap: 0.5rem; flex-shrink: 0; flex-direction: column;">
                                 @if($existingReport)
                                     @if($existingReport->status === 'ditolak')
                                         {{-- Tombol Revisi untuk status Ditolak --}}
@@ -469,7 +352,7 @@
                         Menampilkan <strong>{{ $documents->firstItem() }}</strong> - <strong>{{ $documents->lastItem() }}</strong> dari <strong>{{ $documents->total() }}</strong> laporan
                     </div>
                     
-                    <div style="display: flex; gap: 0.35rem; align-items: center;">
+                    <div class="sd-pagination" style="display: flex; gap: 0.35rem; align-items: center;">
                         @if($documents->onFirstPage())
                             <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #f1f5f9; color: #94a3b8; border-radius: 0.375rem; font-size: 0.875rem; cursor: not-allowed;">
                                 <i class="fas fa-chevron-left"></i>

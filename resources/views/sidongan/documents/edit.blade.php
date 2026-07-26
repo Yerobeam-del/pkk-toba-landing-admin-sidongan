@@ -34,10 +34,10 @@
     }
 </style>
 
-<div style="padding: 0 1.5rem;">
+<div class="sd-page" style="padding: 0 1.5rem;">
     {{-- Header --}}
     <div style="background: linear-gradient(135deg, #0891b2, #14b8a6); padding: 1.5rem 2rem; border-radius: 1rem; margin-bottom: 1.5rem; color: white; box-shadow: 0 4px 20px rgba(8, 145, 178, 0.2);" class="animate-slide-in">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div class="sd-page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
                 <div style="width: 3rem; height: 3rem; background: rgba(255, 255, 255, 0.25); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                     <i class="fas fa-edit" style="font-size: 1.5rem; color: white;"></i>
@@ -47,10 +47,13 @@
                     <p style="font-size: 0.875rem; opacity: 0.95; margin: 0;">Update informasi dokumen</p>
                 </div>
             </div>
-            <a href="{{ route('sidongan.documents.index') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.25); color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 600; transition: all 0.25s ease; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)'">
-                <i class="fas fa-arrow-left"></i>
-                <span>Kembali</span>
-            </a>
+            {{-- Wadah tombol aksi header: aturan mobile bersama ada di kelas sd-header-actions --}}
+            <div class="sd-header-actions">
+                <a href="{{ route('sidongan.documents.index') }}" class="sd-btn-back" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.25); color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 600; transition: all 0.25s ease; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)'">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Kembali</span>
+                </a>
+            </div>
         </div>
     </div>
 

@@ -298,8 +298,8 @@
                 <p>Tentukan tujuan disposisi dan instruksi untuk surat ini</p>
             </div>
         </div>
-        <div class="disposisi-header-actions">
-            <a href="{{ $backUrl }}" class="btn-back">
+        <div class="disposisi-header-actions sd-header-actions">
+            <a href="{{ $backUrl }}" class="btn-back sd-btn-back">
                 <i class="fas fa-arrow-left"></i>
                 <span>Kembali</span>
             </a>

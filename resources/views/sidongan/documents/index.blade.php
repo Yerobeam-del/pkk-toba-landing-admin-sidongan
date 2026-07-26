@@ -60,7 +60,7 @@
     }
 </style>
 
-<div style="padding: 0 1.5rem;">
+<div class="sd-page" style="padding: 0 1.5rem;">
     {{-- Header Section --}}
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;" class="animate-slide-in">
         <div>
@@ -347,7 +347,7 @@
                             {{ $doc->agenda_number ?? '-' }}
                         </td>
                         
-                        <td data-label="Perihal" style="padding: 1rem;">
+                        <td data-label="Perihal" class="sd-cell-stack" style="padding: 1rem;">
                             <div style="font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;">{{ Str::limit($doc->subject ?? $doc->title, 60) }}</div>
                             @if($doc->sender)
                             <div style="font-size: 0.75rem; color: #64748b;">{{ $doc->sender }}</div>
@@ -362,7 +362,7 @@
                             {{ $doc->document_date ? $doc->document_date->locale('id')->translatedFormat('d F Y') : '-' }}
                         </td>
                         
-                        <td data-label="Disposisi" style="padding: 1rem;">
+                        <td data-label="Disposisi" class="sd-cell-chips" style="padding: 1rem;">
                             @php
                                 $disposisiData = is_string($doc->disposisi_data) ? json_decode($doc->disposisi_data, true) : $doc->disposisi_data;
                             @endphp
@@ -389,7 +389,7 @@
                             @endif
                         </td>
                         
-                        <td data-label="Status" style="padding: 1rem;">
+                        <td data-label="Status" class="sd-cell-stack" style="padding: 1rem;">
                             @php
                                 $reports = $doc->activityReports ?? collect();
                                 $hasReport = $reports->count() > 0;
@@ -574,7 +574,7 @@
                             @endif
                         </td>
                         
-<td data-label="Aksi Terakhir" style="padding: 1rem;">
+<td data-label="Aksi Terakhir" class="sd-cell-stack" style="padding: 1rem;">
     @php
         $actions = [];
         
@@ -674,9 +674,10 @@
     @endif
 </td>
                         
-                        <td data-label="Aksi" style="padding: 1rem; white-space: nowrap;">
-                            <div style="display: flex; gap: 0.5rem; justify-content: center;">
-                                <a href="{{ route('sidongan.documents.show', $doc) }}" 
+                        <td data-label="Aksi" class="sd-cell-stack" style="padding: 1rem; white-space: nowrap;">
+                            <div class="sd-actions" style="display: flex; gap: 0.5rem; justify-content: center;">
+                                <a href="{{ route('sidongan.documents.show', $doc) }}"
+                                class="sd-icon-btn"
                                 style="display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: #dbeafe; color: #2563eb; border-radius: 0.375rem; text-decoration: none; transition: all 0.2s;"
                                 onmouseover="this.style.background='#bfdbfe'" 
                                 onmouseout="this.style.background='#dbeafe'"
@@ -685,7 +686,8 @@
                                 </a>
                                 
                                 @if($currentUser && $currentUser->hasSidonganRole('sekretaris') && $doc->status === 'menunggu_disposisi')
-                                    <a href="{{ route('sidongan.documents.edit', $doc) }}" 
+                                    <a href="{{ route('sidongan.documents.edit', $doc) }}"
+                                    class="sd-icon-btn"
                                     style="display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: #fef3c7; color: #d97706; border-radius: 0.375rem; text-decoration: none; transition: all 0.2s;"
                                     onmouseover="this.style.background='#fde68a'" 
                                     onmouseout="this.style.background='#fef3c7'"
@@ -693,7 +695,8 @@
                                         <i class="fas fa-edit" style="font-size: 0.875rem;"></i>
                                     </a>
                                     
-                                    <button type="button" 
+                                    <button type="button"
+                                            class="sd-icon-btn"
                                             onclick="confirmDelete({{ $doc->id }}, '{{ addslashes($doc->subject ?? $doc->title) }}')"
                                             style="display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: #fee2e2; color: #ef4444; border: none; border-radius: 0.375rem; cursor: pointer; transition: all 0.2s;"
                                             onmouseover="this.style.background='#fecaca'" 
@@ -751,6 +754,7 @@
 
                                 @if($currentUser && $currentUser->hasSidonganRole('sekretaris') && $canArchive)
                                     <button type="button"
+                                            class="sd-icon-btn"
                                             onclick="confirmArchive({{ $doc->id }}, '{{ addslashes($doc->subject ?? $doc->title) }}')"
                                             style="display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: #ede9fe; color: #7c3aed; border: none; border-radius: 0.375rem; cursor: pointer; transition: all 0.2s;"
                                             onmouseover="this.style.background='#ddd6fe'" 
@@ -773,7 +777,7 @@
                 Menampilkan <strong>{{ $documents->firstItem() }}</strong> - <strong>{{ $documents->lastItem() }}</strong> dari <strong>{{ $documents->total() }}</strong> surat
             </div>
             
-            <div style="display: flex; gap: 0.35rem; align-items: center;">
+            <div class="sd-pagination" style="display: flex; gap: 0.35rem; align-items: center;">
                 @if($documents->onFirstPage())
                     <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #f1f5f9; color: #94a3b8; border-radius: 0.375rem; font-size: 0.875rem; cursor: not-allowed;">
                         <i class="fas fa-chevron-left"></i>

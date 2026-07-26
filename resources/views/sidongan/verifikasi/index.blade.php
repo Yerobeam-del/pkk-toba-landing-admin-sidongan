@@ -40,7 +40,7 @@
     }
 </style>
 
-<div style="padding: 0 1.5rem;">
+<div class="sd-page" style="padding: 0 1.5rem;">
     {{-- Header --}}
     <div style="margin-bottom: 2rem;" class="animate-slide-in">
         <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b; margin: 0 0 0.5rem 0; letter-spacing: -0.025em;">
@@ -187,7 +187,8 @@
                         onmouseover="this.style.borderLeftColor='{{ $theme['btn'] }}'; this.style.transform='translateX(4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
                         onmouseout="this.style.borderLeftColor='transparent'; this.style.transform='translateX(0)'; this.style.boxShadow='none'">
                         
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        {{-- Baris kepala kartu: aturan mobile bersama ada di kelas sd-list-head --}}
+                        <div class="sd-list-head" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                             <div style="flex: 1;">
                                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
                                     @if($report->document)
@@ -221,7 +222,8 @@
                                 </div>
                             </div>
                             
-                            <div style="display: flex; gap: 0.5rem; flex-shrink: 0; flex-direction: column;">
+                            {{-- Kolom tombol kartu: aturan mobile bersama ada di kelas sd-list-actions --}}
+                            <div class="sd-list-actions" style="display: flex; gap: 0.5rem; flex-shrink: 0; flex-direction: column;">
                                 @if($report->status === 'menunggu_verifikasi')
                                 <a href="{{ route('sidongan.verifikasi.form', $report->id) }}" 
                                 class="btn-action"
@@ -274,7 +276,8 @@
                     Menampilkan <strong>{{ $documents->firstItem() }}</strong> - <strong>{{ $documents->lastItem() }}</strong> dari <strong>{{ $documents->total() }}</strong> laporan
                 </div>
                 
-                <div style="display: flex; gap: 0.35rem; align-items: center;">
+                {{-- Tombol nomor halaman: aturan mobile bersama ada di kelas sd-pagination --}}
+                <div class="sd-pagination" style="display: flex; gap: 0.35rem; align-items: center;">
                     @if($documents->onFirstPage())
                         <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #f1f5f9; color: #94a3b8; border-radius: 0.375rem; font-size: 0.875rem; cursor: not-allowed;">
                             <i class="fas fa-chevron-left"></i>

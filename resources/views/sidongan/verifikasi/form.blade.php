@@ -193,28 +193,16 @@
 
     /* Responsive */
     @media (max-width: 968px) {
+        /* Sengaja TANPA !important: gaya inline pembungkus tetap menang di rentang
+           tablet 769-968px agar tampilan di sana tidak berubah. Untuk <=768px
+           padding sudah dinolkan oleh aturan .verifikasi-container di style.css. */
         .verifikasi-container {
             padding: 0 1rem;
         }
-        
+
         .content-grid {
             grid-template-columns: 1fr !important;
             gap: 1rem;
-        }
-        
-        .verifikasi-header {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        
-        .verifikasi-header-actions {
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
-        .verifikasi-header-actions a {
-            width: 100%;
-            justify-content: center;
         }
     }
 
@@ -226,10 +214,10 @@
     }
 </style>
 
-<div class="verifikasi-container" style="padding: 0 1.5rem;">
+<div class="verifikasi-container sd-page" style="padding: 0 1.5rem;">
 {{-- Header --}}
 <div class="verifikasi-header animate-slide-in" style="background: linear-gradient(135deg, #7c3aed, #6d28d9); padding: 1.5rem 2rem; border-radius: 1rem; margin-bottom: 1.5rem; color: white; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div class="sd-page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
             <div style="width: 3rem; height: 3rem; background: rgba(255, 255, 255, 0.25); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 <i class="fas fa-clipboard-check" style="font-size: 1.5rem; color: white;"></i>
@@ -239,8 +227,8 @@
                 <p style="font-size: 0.875rem; opacity: 0.95; margin: 0;">Tinjau detail laporan dan tentukan keputusan</p>
             </div>
         </div>
-        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <a href="{{ $backUrl }}" 
+        <div class="sd-header-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="{{ $backUrl }}" class="sd-btn-back"
                style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.25); color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 600; transition: all 0.25s ease; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.3);" 
                onmouseover="this.style.background='rgba(255,255,255,0.35)'; this.style.transform='translateY(-2px)'" 
                onmouseout="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(0)'">

@@ -57,7 +57,7 @@
 }
 </style>
 
-<div style="padding: 0 1.5rem;">
+<div class="sd-page" style="padding: 0 1.5rem;">
     {{-- Header --}}
     <div style="margin-bottom: 2rem;" class="animate-slide-in">
         <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b; margin: 0 0 0.5rem 0; letter-spacing: -0.025em;">
@@ -207,7 +207,8 @@
                         onmouseover="this.style.background='#fff7ed'; this.style.borderLeftColor='#f97316'; this.style.transform='translateX(4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" 
                         onmouseout="this.style.background='white'; this.style.borderLeftColor='transparent'; this.style.transform='translateX(0)'; this.style.boxShadow='none'">
                         
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        {{-- Baris kepala kartu: aturan mobile bersama ada di kelas sd-list-head --}}
+                        <div class="sd-list-head" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                             <div style="flex: 1;">
                                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
                                     <span style="font-size: 0.8rem; font-family: monospace; background: white; color: #ea580c; padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-weight: 700; border: 1px solid #fed7aa; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
@@ -238,8 +239,9 @@
                                 </div>
                             </div>
                             
-                            <div style="display: flex; gap: 0.5rem; flex-shrink: 0; flex-direction: column;">
-                                <a href="{{ route('sidongan.disposisi.form', $doc->id) }}?from={{ urlencode(route('sidongan.disposisi')) }}" 
+                            {{-- Kolom tombol kartu: aturan mobile bersama ada di kelas sd-list-actions --}}
+                            <div class="sd-list-actions" style="display: flex; gap: 0.5rem; flex-shrink: 0; flex-direction: column;">
+                                <a href="{{ route('sidongan.disposisi.form', $doc->id) }}?from={{ urlencode(route('sidongan.disposisi')) }}"
                                     class="btn-action"
                                     style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1rem; background: linear-gradient(135deg, #f97316, #ea580c); color: white; text-decoration: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);">
                                         <i class="fas fa-share"></i>
@@ -281,7 +283,8 @@
                     Menampilkan <strong>{{ $documents->firstItem() }}</strong> - <strong>{{ $documents->lastItem() }}</strong> dari <strong>{{ $documents->total() }}</strong> surat
                 </div>
                 
-                <div style="display: flex; gap: 0.35rem; align-items: center;">
+                {{-- Tombol nomor halaman: aturan mobile bersama ada di kelas sd-pagination --}}
+                <div class="sd-pagination" style="display: flex; gap: 0.35rem; align-items: center;">
                     @if($documents->onFirstPage())
                         <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #f1f5f9; color: #94a3b8; border-radius: 0.375rem; font-size: 0.875rem; cursor: not-allowed;">
                             <i class="fas fa-chevron-left"></i>

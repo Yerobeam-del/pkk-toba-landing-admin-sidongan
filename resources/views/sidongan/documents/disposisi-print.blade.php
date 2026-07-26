@@ -365,7 +365,8 @@
     }
     
     /* Mobile Responsive */
-    @media (max-width: 768px) {
+    /* Dibatasi "screen and" agar aturan mobile tidak pernah bocor ke hasil cetak */
+    @media screen and (max-width: 768px) {
         .disposisi-container {
             padding: 0 1rem;
         }
@@ -391,7 +392,8 @@
         }
     }
     
-    @media (max-width: 480px) {
+    /* Dibatasi "screen and" agar aturan mobile tidak pernah bocor ke hasil cetak */
+    @media screen and (max-width: 480px) {
         .disposisi-container {
             padding: 0 0.75rem;
         }
@@ -418,8 +420,8 @@
                 <p>Surat No. Agenda: {{ $document->agenda_number }}</p>
             </div>
         </div>
-        <div class="action-buttons">
-            <button onclick="window.location.replace('{{ route('sidongan.documents.show', $document) }}')" class="btn-action btn-back">
+        <div class="action-buttons sd-header-actions">
+            <button onclick="window.location.replace('{{ route('sidongan.documents.show', $document) }}')" class="btn-action btn-back sd-btn-back">
                 <i class="fas fa-arrow-left"></i>
                 <span>Kembali</span>
             </button>
@@ -430,9 +432,15 @@
         </div>
     </div>
 
+    {{-- Penanda geser: hanya tampil di layar kecil, tidak ikut tercetak --}}
+    <div class="sd-scroll-hint no-print">
+        <i class="fas fa-arrows-left-right"></i>
+        <span>Geser lembar ke samping untuk melihat seluruh isi</span>
+    </div>
+
     {{-- Preview Lembar Disposisi --}}
-    <div class="disposisi-preview-wrapper">
-        <div class="disposisi-page">
+    <div class="disposisi-preview-wrapper sd-sheet-scroll">
+        <div class="disposisi-page sd-sheet-a4">
             {{-- LAMPIRAN 4.8 --}}
             <div class="disposisi-lampiran">LAMPIRAN 4.8</div>
             
