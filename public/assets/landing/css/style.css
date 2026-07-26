@@ -1449,6 +1449,10 @@ body:has(.news-detail-wrapper) #newsModal,
     #row-sekben .org-position { font-size: 0.6rem !important; }
     #row-sekben .org-name { font-size: 0.65rem !important; }
     #row-pokja { flex-direction: row !important; flex-wrap: wrap !important; gap: 0.75rem !important; justify-content: center !important; width: 100% !important; margin-bottom: 2rem !important; padding: 0 0.5rem; }
+    #row-pokja .org-card-wrapper:nth-child(3),
+    #row-pokja .org-card-wrapper:nth-child(4) {
+        margin-top: 2.5rem !important; /* Jarak lebih besar di mobile */
+    }
     #row-pokja .org-card-wrapper { width: calc(50% - 0.5rem) !important; max-width: 150px !important; min-width: 0 !important; }
     #row-pokja .org-card { width: 100% !important; min-width: 0 !important; padding: 1rem 0.5rem !important; }
     #row-pokja .org-avatar { width: 40px !important; height: 40px !important; }
