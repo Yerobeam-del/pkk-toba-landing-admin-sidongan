@@ -1864,6 +1864,23 @@ APLIKASI CAROUSEL - FEATURES & COLORS
 .modal-card.app-color-9 .modal-icon { background: linear-gradient(135deg, #be185d, #ec4899) !important; }
 
 /* ============================================
+   WARNA DARI ADMIN PANEL
+   Nilai --app-c* di-set inline per kartu oleh page-aplikasi.blade.php,
+   berasal dari kolom `color` di Admin Panel > Manajemen Aplikasi.
+   Fallback dipakai kalau variabelnya belum ter-set.
+   Blok ini WAJIB berada sebelum blok STATUS di bawah, supaya kartu
+   maintenance/development tetap bisa menimpa warna ini.
+   ============================================ */
+.app-card-slide.has-app-color .slide-name { color: var(--app-c, var(--primary)) !important; }
+.app-card-slide.has-app-color .slide-icon { background: var(--app-c-icon, linear-gradient(135deg, var(--primary), var(--primary-light))) !important; }
+.app-card-slide.has-app-color .slide-header { background: var(--app-c-header, linear-gradient(135deg, #f0fdfa, #ccfbf1)) !important; }
+.app-card-slide.has-app-color .slide-header::before { background: var(--app-c-circle, var(--primary)) !important; }
+.app-card-slide.has-app-color .slide-link { background: var(--app-c, var(--primary)) !important; }
+.app-card-slide.has-app-color .app-features li svg { stroke: var(--app-c, var(--primary)) !important; }
+.modal-card.has-app-color .modal-icon { background: var(--app-c-icon, linear-gradient(135deg, var(--primary), var(--primary-light))) !important; }
+.modal-card.has-app-color:hover { border-color: var(--app-c, var(--primary)); }
+
+/* ============================================
    STATUS: MAINTENANCE & DEVELOPMENT
    Kartu non-aktif tetap tampil, tapi tidak bisa diinteraksikan.
    ============================================ */

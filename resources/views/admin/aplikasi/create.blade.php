@@ -177,11 +177,13 @@
                 <label style="font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem">Urutan Tampil</label>
                 <input type="number" name="sort_order" class="form-control" value="{{ old('sort_order', $nextSortOrder) }}" min="1" readonly style="background:#f8fafc;cursor:not-allowed">
                 <small style="color:var(--text-muted);display:block;margin-top:0.4rem;font-size:0.8rem">
-                    Otomatis terisi (urutan berikutnya: <strong style="color:var(--primary)">{{ $nextSortOrder }}</strong>). 
+                    Otomatis terisi (urutan berikutnya: <strong style="color:var(--primary)">{{ $nextSortOrder }}</strong>).
                     Semakin kecil angka, semakin awal tampil.
                 </small>
             </div>
         </div>
+
+        @include('admin.aplikasi.partials.color-picker')
 
         {{-- Is Active Checkbox - Custom Style --}}
         <div style="margin-bottom:2rem">

@@ -96,6 +96,18 @@
 <script>
 let appsLoaded = false;
 
+const DEFAULT_COLOR = '#0f6b63'; // Hijau PKK, dipakai bila admin belum memilih warna
+
+// Rumus turunan warna — HARUS sama dengan page-aplikasi.blade.php dan
+// pratinjau di admin/aplikasi/partials/color-picker.blade.php.
+function mixWhite(hex, ratio) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const m = (v) => Math.round(v + (255 - v) * ratio);
+    return `rgb(${m(r)}, ${m(g)}, ${m(b)})`;
+}
+
 async function loadApps() {
     if (appsLoaded) return;
 
@@ -132,31 +144,17 @@ async function loadApps() {
             gridEl.innerHTML = allApps.map((app, index) => {
                 const isMaintenance = app.status === 'maintenance';
 
-                const appColors = [
-                    { primary: '#2563eb', bg: 'linear-gradient(135deg, #dbeafe, #eff6ff)', btnBg: '#2563eb', circle: '#bfdbfe' },
-                    { primary: '#dc2626', bg: 'linear-gradient(135deg, #fee2e2, #fef2f2)', btnBg: '#dc2626', circle: '#fecaca' },
-                    { primary: '#7c3aed', bg: 'linear-gradient(135deg, #ede9fe, #f5f3ff)', btnBg: '#7c3aed', circle: '#ddd6fe' },
-                    { primary: '#059669', bg: 'linear-gradient(135deg, #d1fae5, #ecfdf5)', btnBg: '#059669', circle: '#a7f3d0' },
-                    { primary: '#d97706', bg: 'linear-gradient(135deg, #fef3c7, #fffbeb)', btnBg: '#d97706', circle: '#fde68a' },
-                    { primary: '#db2777', bg: 'linear-gradient(135deg, #fce7f3, #fdf2f8)', btnBg: '#db2777', circle: '#fbcfe8' },
-                    { primary: '#0891b2', bg: 'linear-gradient(135deg, #cffafe, #ecfeff)', btnBg: '#0891b2', circle: '#a5f3fc' },
-                    { primary: '#7c2d12', bg: 'linear-gradient(135deg, #ffedd5, #fff7ed)', btnBg: '#7c2d12', circle: '#fed7aa' },
-                    { primary: '#4338ca', bg: 'linear-gradient(135deg, #e0e7ff, #eef2ff)', btnBg: '#4338ca', circle: '#c7d2fe' },
-                    { primary: '#be185d', bg: 'linear-gradient(135deg, #fce7f3, #fdf2f8)', btnBg: '#be185d', circle: '#f9a8d4' }
-                ];
+                // Warna berasal dari Admin Panel > Manajemen Aplikasi (kolom `color`).
+                // Turunannya dihitung dengan rumus yang sama seperti halaman Aplikasi
+                // dan pratinjau di form admin, supaya ketiganya selalu cocok.
+                const warnaUtama = /^#[0-9a-fA-F]{6}$/.test(app.color || '') ? app.color : DEFAULT_COLOR;
+                const colors = {
+                    primary: warnaUtama,
+                    btnBg: warnaUtama,
+                    bg: `linear-gradient(135deg, ${mixWhite(warnaUtama, 0.88)}, ${mixWhite(warnaUtama, 0.96)})`,
+                    circle: mixWhite(warnaUtama, 0.7)
+                };
 
-                const appName = (app.short_name || app.name || '').toLowerCase();
-                let colorIndex = 0;
-
-                if (appName.includes('sieda') || appName.includes('e-dasawisma')) {
-                    colorIndex = 0;
-                } else if (appName.includes('sidongan')) {
-                    colorIndex = 1;
-                } else {
-                    colorIndex = (index % 10);
-                }
-
-                const colors = appColors[colorIndex];
                 const iconUrl = app.icon ? '/storage/' + app.icon.replace(/^(storage\/|public\/)/i, '') : null;
 
                 const features = Array.isArray(app.features) ? app.features.slice(0, 5) : [];
@@ -176,7 +174,7 @@ async function loadApps() {
                 const appUrl = app.url || '#';
 
                 return `
-                <a href="${isMaintenance ? '#' : appUrl}" class="app-card-home app-color-${colorIndex} ${isMaintenance ? 'maintenance-mode' : ''}" style="
+                <a href="${isMaintenance ? '#' : appUrl}" class="app-card-home ${isMaintenance ? 'maintenance-mode' : ''}" style="
                         background: #fff;
                         border-radius: 20px;
                         overflow: hidden;

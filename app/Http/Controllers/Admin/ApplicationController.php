@@ -92,6 +92,7 @@ class ApplicationController extends Controller
             'status' => 'required|in:active,maintenance,development',
             'url' => 'nullable|url',
             'icon' => 'nullable|image|max:2048',
+            'color' => ['nullable', 'regex:/^#[0-9a-fA-F]{6}$/'],
             'sort_order' => 'nullable|integer|min:1',
             'is_active' => 'nullable|boolean',
             'show_in_floating' => 'nullable|boolean',
@@ -101,6 +102,11 @@ class ApplicationController extends Controller
 
         // Konversi short_name ke UPPERCASE
         $validated['short_name'] = strtoupper(trim($validated['short_name']));
+
+        // Normalisasi warna: simpan huruf kecil, kosong berarti pakai warna default
+        $validated['color'] = !empty($validated['color'])
+            ? strtolower($validated['color'])
+            : null;
 
         // Handle checkbox boolean
         $validated['is_active'] = $request->has('is_active') ? 1 : 0;
@@ -162,6 +168,7 @@ class ApplicationController extends Controller
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'boolean',
             'icon' => 'nullable|image|max:2048',
+            'color' => ['nullable', 'regex:/^#[0-9a-fA-F]{6}$/'],
             'show_in_floating' => 'nullable|boolean',
             'show_in_footer' => 'nullable|boolean',
             'show_in_quick_access' => 'nullable|boolean',
@@ -169,6 +176,11 @@ class ApplicationController extends Controller
 
         // Konversi short_name ke UPPERCASE
         $validated['short_name'] = strtoupper(trim($validated['short_name']));
+
+        // Normalisasi warna: simpan huruf kecil, kosong berarti pakai warna default
+        $validated['color'] = !empty($validated['color'])
+            ? strtolower($validated['color'])
+            : null;
 
         // Handle checkbox boolean
         $validated['sort_order'] = $validated['sort_order'] ?? 0;

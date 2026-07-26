@@ -168,6 +168,8 @@
             </div>
         </div>
 
+        @include('admin.aplikasi.partials.color-picker', ['current' => $aplikasi->color])
+
         {{-- Is Active Checkbox - Custom Style --}}
         <div style="margin-bottom:2rem">
             <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.75rem 1rem;background:#f8fafc;border-radius:10px;transition:all 0.2s;width:fit-content" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">

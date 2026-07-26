@@ -111,6 +111,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
                 'description' => $app->description,
                 'url' => $app->url,
                 'icon' => $app->icon,
+                'color' => $app->effective_color, // Warna pilihan admin, atau default PKK
                 'category' => $app->category,
                 'status' => $app->status,
                 'status_label' => $app->status_label,

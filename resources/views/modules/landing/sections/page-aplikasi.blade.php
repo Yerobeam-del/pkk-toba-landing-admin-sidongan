@@ -149,6 +149,29 @@ document.addEventListener('DOMContentLoaded', function() {
         grid.innerHTML = data.map(app => createModalCardHTML(app, isLayanan)).join('');
     }
 
+    const DEFAULT_COLOR = '#0f6b63'; // Hijau PKK, dipakai bila admin belum memilih warna
+
+    // Rumus turunan warna — HARUS sama dengan pratinjau di form admin
+    // (admin/aplikasi/partials/color-picker.blade.php) agar hasilnya cocok.
+    function mixWhite(hex, ratio) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        const m = (v) => Math.round(v + (255 - v) * ratio);
+        return `rgb(${m(r)}, ${m(g)}, ${m(b)})`;
+    }
+
+    // Menghasilkan CSS variable yang dibaca aturan .has-app-color di style.css
+    function colorVars(app) {
+        const c = /^#[0-9a-fA-F]{6}$/.test(app.color || '') ? app.color : DEFAULT_COLOR;
+        return [
+            `--app-c:${c}`,
+            `--app-c-header:linear-gradient(135deg, ${mixWhite(c, 0.88)}, ${mixWhite(c, 0.96)})`,
+            `--app-c-icon:linear-gradient(135deg, ${c}, ${mixWhite(c, 0.28)})`,
+            `--app-c-circle:${mixWhite(c, 0.7)}`
+        ].join(';');
+    }
+
     // Ikon + teks per status non-aktif. Dipakai bersama oleh kartu carousel dan modal.
     const STATUS_META = {
         maintenance: {
@@ -172,7 +195,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const iconClass = isLayanan ? 'lay-icon' : '';
         const nameClass = isLayanan ? 'lay-name' : '';
         const linkClass = isLayanan ? 'lay-link' : '';
-        const colorClass = `app-color-${app.color_index || 0}`;
 
         const status = app.status || 'active';
         const meta = STATUS_META[status];
@@ -201,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
             : `<a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="slide-link ${linkClass}">Akses ${app.short_name}</a>`;
 
         return `
-        <div class="app-card-slide ${colorClass} ${stateClass}" data-name="${app.name.toLowerCase()}" data-short="${app.short_name.toLowerCase()}" data-status="${status}">
+        <div class="app-card-slide has-app-color ${stateClass}" style="${colorVars(app)}" data-name="${app.name.toLowerCase()}" data-short="${app.short_name.toLowerCase()}" data-status="${status}">
             <div class="slide-header ${bgClass}">
                 ${badgeHtml}
                 <div class="slide-icon ${iconClass}">${iconHtml}</div>
@@ -222,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
             : `<span>${app.short_name.substring(0, 2)}</span>`;
         const iconClass = isLayanan ? 'lay-icon' : '';
         const cardClass = isLayanan ? 'lay-card' : '';
-        const colorClass = `app-color-${app.color_index || 0}`;
+        const styleVars = colorVars(app);
 
         const status = app.status || 'active';
         const meta = STATUS_META[status];
@@ -237,8 +259,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Non-aktif dirender sebagai div, bukan anchor, agar benar-benar tidak bisa diklik
         return meta
-            ? `<div class="modal-card ${cardClass} ${colorClass} is-${status}" aria-disabled="true">${inner}</div>`
-            : `<a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="modal-card ${cardClass} ${colorClass}">${inner}</a>`;
+            ? `<div class="modal-card has-app-color ${cardClass} is-${status}" style="${styleVars}" aria-disabled="true">${inner}</div>`
+            : `<a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="modal-card has-app-color ${cardClass}" style="${styleVars}">${inner}</a>`;
     }
 
     // 3. Carousel Logic yang Lebih Baik & Tidak Bertabrakan

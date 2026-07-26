@@ -12,6 +12,7 @@ class Application extends Model
         'description',
         'url',
         'icon',
+        'color',
         'category',
         'sort_order',
         'is_active',
@@ -34,6 +35,39 @@ class Application extends Model
     const STATUS_ACTIVE = 'active';
     const STATUS_MAINTENANCE = 'maintenance';
     const STATUS_DEVELOPMENT = 'development';
+
+    // Warna default kartu di landing page (hijau khas PKK) ketika admin
+    // belum memilih warna untuk aplikasi ini.
+    const DEFAULT_COLOR = '#0f6b63';
+
+    /**
+     * Palet warna siap pakai di form admin. Nilainya sama dengan palet
+     * yang sebelumnya di-hardcode di landing page.
+     */
+    public static function getColorPalette()
+    {
+        return [
+            '#0f6b63' => 'Hijau PKK',
+            '#2563eb' => 'Biru',
+            '#dc2626' => 'Merah',
+            '#7c3aed' => 'Ungu',
+            '#059669' => 'Hijau',
+            '#d97706' => 'Oranye',
+            '#db2777' => 'Merah Muda',
+            '#0891b2' => 'Sian',
+            '#4338ca' => 'Indigo',
+            '#be185d' => 'Magenta',
+        ];
+    }
+
+    /**
+     * Warna yang benar-benar dipakai landing page: pilihan admin,
+     * atau warna default kalau belum diatur.
+     */
+    public function getEffectiveColorAttribute()
+    {
+        return $this->color ?: self::DEFAULT_COLOR;
+    }
 
     public static function getStatuses()
     {
