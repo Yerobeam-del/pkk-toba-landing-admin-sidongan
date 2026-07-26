@@ -334,8 +334,20 @@
                         </label>
 
                         <div class="time-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <x-sidongan.time-picker name="start_time" label="Jam Mulai" id="startTime" />
-                            <x-sidongan.time-picker name="end_time" label="Jam Selesai" id="endTime" />
+                            <div>
+                                <span style="display: block; font-size: 0.75rem; color: #64748b; margin-bottom: 0.35rem;">Jam Mulai</span>
+                                <input type="time" name="start_time" id="startTime" required value="{{ old('start_time') }}"
+                                    style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s; box-sizing: border-box;"
+                                    onfocus="this.style.borderColor='#0891b2'; this.style.boxShadow='0 0 0 3px rgba(8,145,178,0.1)'"
+                                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                            </div>
+                            <div>
+                                <span style="display: block; font-size: 0.75rem; color: #64748b; margin-bottom: 0.35rem;">Jam Selesai</span>
+                                <input type="time" name="end_time" id="endTime" required value="{{ old('end_time') }}"
+                                    style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s; box-sizing: border-box;"
+                                    onfocus="this.style.borderColor='#0891b2'; this.style.boxShadow='0 0 0 3px rgba(8,145,178,0.1)'"
+                                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                            </div>
                         </div>
 
                         {{-- Umpan balik langsung: durasi bila urutannya benar, peringatan bila terbalik.

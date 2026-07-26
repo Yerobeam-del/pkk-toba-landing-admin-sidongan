@@ -21,6 +21,40 @@ Route::get('/api/v1/health', function () {
     return response()->json(['status' => 'ok']);
 });
 
+// ================= API WILAYAH (GLOBAL, LINTAS SUBDOMAIN) =================
+// Sumber datanya tabel `wilayah` di database, BUKAN API wilayah.id, supaya
+// tidak ikut bermasalah saat layanan luar itu terganggu.
+//
+// Sengaja didaftarkan di luar grup domain: SIDONGAN berjalan di
+// sidongan.pkktoba.id dan memanggil endpoint ini secara relatif. Ketika route
+// masih berada di dalam grup pkktoba.id, panggilan dari SIDONGAN menghasilkan
+// 404 sehingga dropdown wilayah menampilkan "Gagal memuat data".
+
+Route::get('/api/v1/wilayah/provinces', function () {
+    try {
+        $provinces = \App\Models\Wilayah::where('kode', 'like', '__')->where('kode', 'not like', '%.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($p) => ['code' => $p->kode, 'name' => $p->nama]);
+        return response()->json(['success' => true, 'data' => $provinces]);
+    } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+});
+Route::get('/api/v1/wilayah/regencies/{provinceCode}', function ($provinceCode) {
+    try {
+        $regencies = \App\Models\Wilayah::where('kode', 'like', $provinceCode . '.%')->where('kode', 'not like', '%.__.%')->where('kode', 'not like', '%.__.__.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($r) => ['code' => $r->kode, 'name' => $r->nama]);
+        return response()->json(['success' => true, 'data' => $regencies]);
+    } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+});
+Route::get('/api/v1/wilayah/districts/{regencyCode}', function ($regencyCode) {
+    try {
+        $districts = \App\Models\Wilayah::where('kode', 'like', $regencyCode . '.%')->where('kode', 'not like', '%.__.__.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($d) => ['code' => $d->kode, 'name' => $d->nama]);
+        return response()->json(['success' => true, 'data' => $districts]);
+    } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+});
+Route::get('/api/v1/wilayah/villages/{districtCode}', function ($districtCode) {
+    try {
+        $villages = \App\Models\Wilayah::where('kode', 'like', $districtCode . '.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($v) => ['code' => $v->kode, 'name' => $v->nama]);
+        return response()->json(['success' => true, 'data' => $villages]);
+    } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+});
+
 // ======================================================================
 // 1. ROUTES KHUSUS DOMAIN: pkktoba.id (Landing Page & Admin Panel)
 // ======================================================================
@@ -184,31 +218,6 @@ Route::domain(config('app.landing_domain'))->group(function () {
     Route::get('/api/v1/wilayah/proxy/villages/{districtCode}', function ($districtCode) {
         try {
             $villages = cache()->remember('wilayah_villages_' . $districtCode, 86400, fn() => Http::timeout(30)->get("https://wilayah.id/api/villages/{$districtCode}.json")->json()['data'] ?? []);
-            return response()->json(['success' => true, 'data' => $villages]);
-        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-    });
-
-    Route::get('/api/v1/wilayah/provinces', function () {
-        try {
-            $provinces = \App\Models\Wilayah::where('kode', 'like', '__')->where('kode', 'not like', '%.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($p) => ['code' => $p->kode, 'name' => $p->nama]);
-            return response()->json(['success' => true, 'data' => $provinces]);
-        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-    });
-    Route::get('/api/v1/wilayah/regencies/{provinceCode}', function ($provinceCode) {
-        try {
-            $regencies = \App\Models\Wilayah::where('kode', 'like', $provinceCode . '.%')->where('kode', 'not like', '%.__.%')->where('kode', 'not like', '%.__.__.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($r) => ['code' => $r->kode, 'name' => $r->nama]);
-            return response()->json(['success' => true, 'data' => $regencies]);
-        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-    });
-    Route::get('/api/v1/wilayah/districts/{regencyCode}', function ($regencyCode) {
-        try {
-            $districts = \App\Models\Wilayah::where('kode', 'like', $regencyCode . '.%')->where('kode', 'not like', '%.__.__.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($d) => ['code' => $d->kode, 'name' => $d->nama]);
-            return response()->json(['success' => true, 'data' => $districts]);
-        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-    });
-    Route::get('/api/v1/wilayah/villages/{districtCode}', function ($districtCode) {
-        try {
-            $villages = \App\Models\Wilayah::where('kode', 'like', $districtCode . '.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($v) => ['code' => $v->kode, 'name' => $v->nama]);
             return response()->json(['success' => true, 'data' => $villages]);
         } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
     });
