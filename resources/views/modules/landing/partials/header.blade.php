@@ -31,7 +31,15 @@
         }
         .nav-link:hover { color: #fff; background: rgba(255,255,255,0.15); }
         .nav-link.active-link { color: #fbbf24; background: rgba(251, 191, 36, 0.15); font-weight: 700; }
-        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px; z-index: 1002; background: none; border: none; }
+        /* justify-content & align-items WAJIB center: di mobile ada aturan
+           min-height:44px (target sentuh) di style.css, sehingga tanpa ini
+           ketiga garis menempel di atas kotak dan terlihat lebih tinggi
+           daripada logo di sebelahnya. */
+        .hamburger {
+            display: none; flex-direction: column; gap: 5px; cursor: pointer;
+            padding: 5px; z-index: 1002; background: none; border: none;
+            justify-content: center; align-items: center;
+        }
         .hamburger span { width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s ease; }
         .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }

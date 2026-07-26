@@ -78,7 +78,9 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .navbar-links a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: all 0.3s ease; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
 .navbar-links a:hover { color: #fff; background: rgba(255,255,255,0.1); }
 .navbar-links a.active-link { color: var(--gold); background: rgba(214, 158, 46, 0.15); }
-.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px; z-index: 1001; }
+/* justify-content & align-items center menjaga garis tetap di tengah saat
+   aturan min-height:44px (target sentuh) aktif di mobile. */
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px; z-index: 1001; justify-content: center; align-items: center; }
 .hamburger span { width: 25px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s ease; }
 .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
 .hamburger.active span:nth-child(2) { opacity: 0; }
