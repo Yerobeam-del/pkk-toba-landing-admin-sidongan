@@ -603,7 +603,7 @@ function drawMobileConnectors() {
             const lastPokja = rowPokjas[rowPokjas.length - 1];
 
             // Tambah jarak untuk baris kedua (Ketua III & IV)
-            const extraSpacing = rowIndex === 1 ? 40 : 15;  // Baris ke-2: 40px, Baris ke-1: 15px
+            const extraSpacing = rowIndex === 1 ? 60 : 15;  // Baris ke-2: 40px, Baris ke-1: 15px
             const branchY = rowPokjas[0].top - extraSpacing;
 
             // Garis horizontal dari backbone ke TENGAH kartu terakhir di baris ini
