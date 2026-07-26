@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Render Carousel (Max 4 items)
-        track.innerHTML = data.slice(0, 4).map(app => createCardHTML(app, isLayanan)).join('');
+        track.innerHTML = data.map(app => createCardHTML(app, isLayanan)).join('');
 
         // Render Modal Grid (All items)
         grid.innerHTML = data.map(app => createModalCardHTML(app, isLayanan)).join('');
@@ -274,16 +274,40 @@ document.addEventListener('DOMContentLoaded', function() {
         const track = document.getElementById(trackId);
         if (!track) return;
 
+        // Hanya auto-scroll jika ada lebih dari 3 item
+        const cards = track.querySelectorAll('.app-card-slide');
+        if (cards.length <= 3) return;
+
         autoScrollIntervals[trackId] = setInterval(() => {
-            if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+            const cardWidth = cards[0].offsetWidth + 24; // width + gap
+            const maxScroll = track.scrollWidth - track.clientWidth;
+
+            if (track.scrollLeft >= maxScroll - 10) {
+                // Kembali ke awal dengan smooth
                 track.scrollTo({ left: 0, behavior: 'smooth' });
             } else {
-                window.scrollCarousel(trackId, 1);
+                // Scroll ke card berikutnya
+                track.scrollBy({ left: cardWidth, behavior: 'smooth' });
             }
-        }, 5000);
+        }, 4000);
 
+        // Pause saat hover
         track.addEventListener('mouseenter', () => clearInterval(autoScrollIntervals[trackId]));
-        track.addEventListener('mouseleave', () => startAutoScroll(trackId));
+        track.addEventListener('mouseleave', () => {
+            const cards = track.querySelectorAll('.app-card-slide');
+            if (cards.length <= 3) return;
+
+            autoScrollIntervals[trackId] = setInterval(() => {
+                const cardWidth = cards[0].offsetWidth + 24;
+                const maxScroll = track.scrollWidth - track.clientWidth;
+
+                if (track.scrollLeft >= maxScroll - 10) {
+                    track.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    track.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                }
+            }, 4000);
+        });
     }
 
     // 4. Search Logic
