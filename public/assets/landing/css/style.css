@@ -207,7 +207,12 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .quick-access-icon svg { width: 26px; height: 26px; color: #fff; }
 .quick-access-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
 .quick-access-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
-.quick-access-card > *, .app-card-home > *, .news-card > *, .news-card-full > *, .news-card-link > *, .template-card > * { pointer-events: none; }
+/* Kartu-kartu di bawah ini seluruhnya berupa <a>, jadi isinya sengaja
+   dimatikan agar klik di mana pun mengenai link kartu, bukan elemen dalam.
+   CATATAN: .template-card TIDAK boleh masuk daftar ini. Ia berupa <div>
+   tanpa link, dan justru tombol Preview/Download di dalamnya yang harus
+   bisa diklik. */
+.quick-access-card > *, .app-card-home > *, .news-card > *, .news-card-full > *, .news-card-link > * { pointer-events: none; }
 
 /* ==========================================
    6. APPS SECTION (Homepage)

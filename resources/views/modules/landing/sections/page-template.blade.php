@@ -788,23 +788,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function closeTemplatePreview() {
-    const modal = document.getElementById('templatePreviewModal');
-    const bodyEl = document.getElementById('templatePreviewBody');
-    const modalBody = document.querySelector('.template-preview-modal-body');
-
-    if (modal) modal.style.display = 'none';
-    if (bodyEl) bodyEl.innerHTML = '';
-
-    // Reset overflow modal body ke default
-    if (modalBody) {
-        modalBody.style.overflow = '';
-        modalBody.style.padding = '';
-    }
-
-    document.body.style.overflow = '';
-}
-
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeTemplatePreview();
 });
