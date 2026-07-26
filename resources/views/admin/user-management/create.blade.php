@@ -190,8 +190,11 @@
 
             {{-- Permission Section (Hanya untuk Anggota) --}}
             <div id="permissionSection" style="display:none;border:1px solid var(--border);border-radius:8px;padding:1.25rem;background:#f8fafc">
-                <label style="font-weight:600;display:block;margin-bottom:0.5rem">Permission Akses <span style="color:#ef4444">*</span></label>
-                <small style="color:var(--text-muted);display:block;margin-bottom:1rem">Pilih modul yang bisa diakses user ini</small>
+                <label style="font-weight:600;display:block;margin-bottom:0.5rem">Permission Akses</label>
+                <small style="color:var(--text-muted);display:block;margin-bottom:1rem">
+                    Akses tambahan khusus untuk akun ini saja, di luar akses bawaan role yang dipilih.
+                    Tidak memengaruhi akun lain dengan role yang sama.
+                </small>
 
                 <div class="permission-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1rem">
                     @foreach($permissions as $group => $perms)

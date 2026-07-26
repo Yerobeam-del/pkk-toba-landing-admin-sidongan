@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Role;
+use App\Models\Permission;
 
 class User extends Authenticatable
 {
@@ -163,18 +165,43 @@ class User extends Authenticatable
         return $this->role && $this->role->name === $roleName;
     }
 
+    /**
+     * Izin yang diberikan langsung ke akun ini, di luar izin bawaan role.
+     */
+    public function permissions(): BelongsToMany
+    {
+        return $this->belongsToMany(Permission::class, 'permission_user');
+    }
+
+    /**
+     * Izin efektif = izin dari role (baseline) DITAMBAH izin pribadi akun.
+     */
     public function hasPermission($permissionName): bool
     {
-        if (!$this->role) {
-            return false;
-        }
-
         // Administrator DAN Super Admin selalu punya semua permission (full access)
-        if (in_array($this->role->name, ['administrator', 'super_admin'])) {
+        if ($this->role && in_array($this->role->name, ['administrator', 'super_admin'])) {
             return true;
         }
 
-        return $this->role->hasPermission($permissionName);
+        if ($this->role && $this->role->hasPermission($permissionName)) {
+            return true;
+        }
+
+        return $this->permissions()->where('name', $permissionName)->exists();
+    }
+
+    /**
+     * Daftar nama izin efektif, berguna untuk menampilkan ringkasan akses.
+     */
+    public function effectivePermissionNames(): array
+    {
+        if ($this->role && in_array($this->role->name, ['administrator', 'super_admin'])) {
+            return Permission::pluck('name')->all();
+        }
+
+        $dariRole = $this->role ? $this->role->permissions->pluck('name') : collect();
+
+        return $dariRole->merge($this->permissions->pluck('name'))->unique()->values()->all();
     }
 
     public function hasAnyPermission($permissions): bool

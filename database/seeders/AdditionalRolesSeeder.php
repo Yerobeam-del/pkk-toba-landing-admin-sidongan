@@ -59,12 +59,9 @@ class AdditionalRolesSeeder extends Seeder
                 'description' => 'Hanya mengelola template dokumen',
                 'permissions' => ['manage-template'],
             ],
-            [
-                'name' => 'pengelola-desa',
-                'display_name' => 'Pengelola Desa',
-                'description' => 'Hanya mengelola data desa & kecamatan',
-                'permissions' => ['manage-desa'],
-            ],
+            // Catatan: role "Pengelola Desa" sengaja tidak dibuat karena modul
+            // Desa sedang dinonaktifkan (menu sidebar dikomentari). Lihat juga
+            // HIDDEN_PERMISSION_GROUPS di UserManagementController.
 
             // ---------- Gabungan ----------
             [
@@ -88,8 +85,8 @@ class AdditionalRolesSeeder extends Seeder
             [
                 'name' => 'pengelola-organisasi',
                 'display_name' => 'Pengelola Organisasi',
-                'description' => 'Mengelola struktur, desa, serta aplikasi & layanan',
-                'permissions' => ['manage-struktur', 'manage-desa', 'manage-aplikasi'],
+                'description' => 'Mengelola struktur organisasi serta aplikasi & layanan',
+                'permissions' => ['manage-struktur', 'manage-aplikasi'],
             ],
         ];
 
@@ -124,6 +121,30 @@ class AdditionalRolesSeeder extends Seeder
             $role->permissions()->sync($permissionIds);
 
             $this->command->info("  {$data['display_name']} -> " . implode(', ', $data['permissions']));
+        }
+
+        // Bersihkan role yang sudah tidak dipakai lagi (mis. dibuat oleh versi
+        // seeder sebelumnya). Hanya dihapus kalau belum ada akun yang memakainya,
+        // supaya tidak ada akun yang tiba-tiba kehilangan role.
+        $usang = ['pengelola-desa'];
+        foreach ($usang as $nama) {
+            $role = Role::where('name', $nama)->withCount('users')->first();
+
+            if (!$role) {
+                continue;
+            }
+
+            if ($role->users_count > 0) {
+                $this->command->warn(
+                    "  Role '{$nama}' sudah usang tapi masih dipakai {$role->users_count} akun. "
+                    . 'Pindahkan akun tersebut dulu, lalu jalankan seeder ini lagi.'
+                );
+                continue;
+            }
+
+            $role->permissions()->detach();
+            $role->delete();
+            $this->command->info("  Role usang dihapus: {$nama}");
         }
 
         $this->command->info('Selesai. Role administrator & anggota tidak diubah.');

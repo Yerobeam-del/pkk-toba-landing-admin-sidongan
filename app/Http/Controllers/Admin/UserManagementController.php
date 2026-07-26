@@ -59,12 +59,30 @@ class UserManagementController extends Controller
     /**
      * Show form to create new user.
      */
+    /**
+     * Grup permission yang disembunyikan dari form karena modulnya
+     * sedang dinonaktifkan (menu sidebar-nya juga dikomentari).
+     * Kosongkan array ini untuk memunculkannya kembali.
+     */
+    private const HIDDEN_PERMISSION_GROUPS = ['desa'];
+
+    /**
+     * Permission yang boleh dipilih di form tambah/edit akun,
+     * dikelompokkan per modul.
+     */
+    private function assignablePermissions()
+    {
+        return Permission::whereNotIn('group', self::HIDDEN_PERMISSION_GROUPS)
+            ->get()
+            ->groupBy('group');
+    }
+
     public function create()
     {
         $applications = Application::where('is_active', true)->orderBy('name')->get();
         $sidonganRoles = User::getSidonganRoles();
         $roles = Role::all();
-        $permissions = Permission::all()->groupBy('group');
+        $permissions = $this->assignablePermissions();
 
         // Ambil data kecamatan Kabupaten Toba (kode 12.12)
         $kecamatans = Kecamatan::where('kabupaten_kode', '12.12')->orderBy('name')->get();
@@ -121,9 +139,13 @@ class UserManagementController extends Controller
             'email_verified_at' => now(),
         ]);
 
+        // Izin disimpan per akun di tabel permission_user, BUKAN ke role bersama.
+        // Administrator sudah punya akses penuh lewat role, jadi tidak perlu izin pribadi.
         $role = Role::find($validated['role_id']);
-        if ($role->name === 'anggota' && isset($validated['permissions'])) {
-            $user->role->permissions()->sync($validated['permissions']);
+        if ($role && in_array($role->name, ['administrator', 'super_admin'])) {
+            $user->permissions()->detach();
+        } else {
+            $user->permissions()->sync($validated['permissions'] ?? []);
         }
 
         if (isset($validated['applications'])) {
@@ -188,14 +210,24 @@ class UserManagementController extends Controller
         $userApplications = $user->applications->pluck('id')->toArray();
         $sidonganRoles = User::getSidonganRoles();
         $roles = Role::all();
-        $permissions = Permission::all()->groupBy('group');
-        $userPermissions = $user->role ? $user->role->permissions->pluck('id')->toArray() : [];
+        $permissions = $this->assignablePermissions();
+
+        // Yang dicentang adalah izin PRIBADI akun ini. Izin bawaan role tidak
+        // ikut dicentang karena bukan milik akun dan tidak bisa dicabut dari sini.
+        $userPermissions = $user->permissions->pluck('id')->toArray();
+
+        // Ditampilkan sebagai keterangan agar admin tahu akses apa yang sudah
+        // otomatis didapat dari role-nya.
+        $rolePermissionNames = $user->role
+            ? $user->role->permissions->pluck('display_name')->toArray()
+            : [];
 
         // Ambil data kecamatan untuk edit form
         $kecamatans = Kecamatan::where('kabupaten_kode', '12.12')->orderBy('name')->get();
 
         return view('admin.user-management.edit', compact(
-            'user', 'applications', 'userApplications', 'sidonganRoles', 'roles', 'permissions', 'userPermissions', 'kecamatans'
+            'user', 'applications', 'userApplications', 'sidonganRoles', 'roles',
+            'permissions', 'userPermissions', 'rolePermissionNames', 'kecamatans'
         ));
     }
 
@@ -253,11 +285,12 @@ class UserManagementController extends Controller
 
         $user->save();
 
+        // Izin disimpan per akun di tabel permission_user, BUKAN ke role bersama.
         $role = Role::find($validated['role_id']);
-        if ($role->name === 'anggota' && isset($validated['permissions'])) {
-            $user->role->permissions()->sync($validated['permissions']);
-        } elseif ($role->name === 'administrator') {
-            $user->role->permissions()->sync(Permission::all());
+        if ($role && in_array($role->name, ['administrator', 'super_admin'])) {
+            $user->permissions()->detach();
+        } else {
+            $user->permissions()->sync($validated['permissions'] ?? []);
         }
 
         if (isset($validated['applications'])) {
