@@ -104,6 +104,75 @@
     </div>
 </div>
 
+{{-- Quick Actions --}}
+@php
+    // Setiap aksi dipetakan ke permission yang sama dengan middleware di routes/web.php.
+    // Tombol yang izinnya tidak dimiliki user akan tampil abu-abu dan tidak bisa diklik.
+    $quickActions = [
+        [
+            'label' => 'Tambah Berita', 'route' => 'admin.berita.create', 'permission' => 'manage-berita',
+            'bg' => 'rgba(15,107,99,0.1)', 'fg' => 'var(--primary)',
+            'icon' => '<path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/>',
+        ],
+        [
+            'label' => 'Struktur Organisasi', 'route' => 'admin.struktur.index', 'permission' => 'manage-struktur',
+            'bg' => 'rgba(59,130,246,0.1)', 'fg' => '#3b82f6',
+            'icon' => '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+        ],
+        [
+            'label' => 'Template Dokumen', 'route' => 'admin.template.index', 'permission' => 'manage-template',
+            'bg' => 'rgba(139,92,246,0.1)', 'fg' => '#8b5cf6',
+            'icon' => '<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>',
+        ],
+        [
+            'label' => 'Kelola Aplikasi', 'route' => 'admin.aplikasi.index', 'permission' => 'manage-aplikasi',
+            'bg' => 'rgba(34,197,94,0.1)', 'fg' => '#22c55e',
+            'icon' => '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
+        ],
+        [
+            'label' => 'Manajemen Akun', 'route' => 'admin.user-management.index', 'permission' => 'manage-users',
+            'bg' => 'rgba(239,68,68,0.1)', 'fg' => '#ef4444',
+            'icon' => '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+        ],
+        [
+            'label' => 'SK & Dokumen', 'route' => 'admin.sk.index', 'permission' => 'manage-dokumen',
+            'bg' => 'rgba(14,165,233,0.1)', 'fg' => '#0ea5e9',
+            'icon' => '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>',
+        ],
+    ];
+@endphp
+
+<div class="card" style="border:none;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:2rem">
+    <h2 class="card-title">Aksi Cepat</h2>
+    <div class="quick-actions">
+        @foreach ($quickActions as $aksi)
+            @php $boleh = auth()->user()->hasPermission($aksi['permission']); @endphp
+
+            @if ($boleh)
+                <a href="{{ route($aksi['route']) }}" class="quick-action-btn">
+                    <div class="action-icon" style="background:{{ $aksi['bg'] }};color:{{ $aksi['fg'] }}">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{!! $aksi['icon'] !!}</svg>
+                    </div>
+                    <span>{{ $aksi['label'] }}</span>
+                </a>
+            @else
+                {{-- Dirender sebagai <span>, bukan <a>, supaya benar-benar tidak bisa diklik --}}
+                <span class="quick-action-btn is-locked" aria-disabled="true"
+                      title="Akun Anda tidak memiliki akses ke {{ $aksi['label'] }}">
+                    <div class="action-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{!! $aksi['icon'] !!}</svg>
+                    </div>
+                    <span>{{ $aksi['label'] }}</span>
+                    <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </span>
+            @endif
+        @endforeach
+    </div>
+</div>
+
 {{-- Recent Activities & Latest Items --}}
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:2rem">
 
@@ -164,83 +233,6 @@
                 <p style="color:var(--text-muted);text-align:center;padding:1rem">Belum ada pengguna</p>
             @endforelse
         </div>
-    </div>
-</div>
-
-{{-- Quick Actions --}}
-<div class="card" style="border:none;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-    <h2 class="card-title">Aksi Cepat</h2>
-    <div class="quick-actions">
-        <a href="{{ route('admin.berita.create') }}" class="quick-action-btn">
-            <div class="action-icon" style="background:rgba(15,107,99,0.1);color:var(--primary)">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
-                    <path d="M18 14h-8"/>
-                    <path d="M15 18h-5"/>
-                    <path d="M10 6h8v4h-8V6Z"/>
-                </svg>
-            </div>
-            <span>Tambah Berita</span>
-        </a>
-
-        <a href="{{ route('admin.struktur.index') }}" class="quick-action-btn">
-            <div class="action-icon" style="background:rgba(59,130,246,0.1);color:#3b82f6">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-            </div>
-            <span>Struktur Organisasi</span>
-        </a>
-
-        <a href="{{ route('admin.template.index') }}" class="quick-action-btn">
-            <div class="action-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                    <line x1="3" y1="9" x2="21" y2="9"/>
-                    <line x1="9" y1="21" x2="9" y2="9"/>
-                </svg>
-            </div>
-            <span>Template Dokumen</span>
-        </a>
-
-        <a href="{{ route('admin.aplikasi.index') }}" class="quick-action-btn">
-            <div class="action-icon" style="background:rgba(34,197,94,0.1);color:#22c55e">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                    <line x1="8" y1="21" x2="16" y2="21"/>
-                    <line x1="12" y1="17" x2="12" y2="21"/>
-                </svg>
-            </div>
-            <span>Kelola Aplikasi</span>
-        </a>
-
-        <a href="{{ route('admin.user-management.index') }}" class="quick-action-btn">
-            <div class="action-icon" style="background:rgba(239,68,68,0.1);color:#ef4444">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-            </div>
-            <span>Manajemen Akun</span>
-        </a>
-
-        <a href="{{ route('admin.sk.index') }}" class="quick-action-btn">
-            <div class="action-icon" style="background:rgba(14,165,233,0.1);color:#0ea5e9">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <polyline points="10 9 9 9 8 9"/>
-                </svg>
-            </div>
-            <span>SK & Dokumen</span>
-        </a>
     </div>
 </div>
 @endsection
