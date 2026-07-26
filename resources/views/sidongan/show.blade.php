@@ -73,7 +73,7 @@
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="text-sm text-gray-500 mb-1">Tanggal Dokumen</div>
-                        <div class="font-semibold text-gray-800">{{ $document->document_date?->format('d M Y') ?? '-' }}</div>
+                        <div class="font-semibold text-gray-800">{{ $document->document_date?->translatedFormat('d F Y') ?? '-' }}</div>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="text-sm text-gray-500 mb-1">Ukuran File</div>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="text-sm text-gray-500 mb-1">Tanggal Upload</div>
-                        <div class="font-semibold text-gray-800">{{ $document->created_at->format('d M Y') }}</div>
+                        <div class="font-semibold text-gray-800">{{ $document->created_at->translatedFormat('d F Y') }}</div>
                     </div>
                 </div>
 

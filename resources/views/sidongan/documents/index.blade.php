@@ -459,7 +459,7 @@
                                                     </div>
                                                 @endif
                                                 <div style="color: #94a3b8; font-size: 0.65rem; margin-top: 0.2rem;">
-                                                    {{ $rejected->created_at->locale('id')->translatedFormat('d M Y, H.i') }}
+                                                    {{ $rejected->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                                 </div>
                                             </div>
                                         @endforeach
@@ -479,7 +479,7 @@
                                                     {{ $approved->creator->name ?? 'Unknown' }}
                                                 </div>
                                                 <div style="color: #94a3b8; font-size: 0.65rem; margin-top: 0.2rem;">
-                                                    {{ $approved->created_at->locale('id')->translatedFormat('d M Y, H.i') }}
+                                                    {{ $approved->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                                 </div>
                                             </div>
                                         @endforeach
@@ -499,7 +499,7 @@
                                                     {{ $pending->creator->name ?? 'Unknown' }}
                                                 </div>
                                                 <div style="color: #94a3b8; font-size: 0.65rem; margin-top: 0.2rem;">
-                                                    {{ $pending->created_at->locale('id')->translatedFormat('d M Y, H.i') }}
+                                                    {{ $pending->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                                 </div>
                                             </div>
                                         @endforeach
@@ -554,7 +554,7 @@
                                                     {{ $approved->creator->name ?? 'Unknown' }}
                                                 </div>
                                                 <div style="color: #94a3b8; font-size: 0.65rem; margin-top: 0.15rem;">
-                                                    {{ $approved->created_at->locale('id')->translatedFormat('d M Y, H.i') }}
+                                                    {{ $approved->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                                 </div>
                                             </div>
                                         @endforeach
@@ -665,7 +665,7 @@
                     {{ $latestAction['user']->name }}
                 </div>
                 <div style="font-size: 0.7rem; color: #64748b;">
-                    {{ $latestAction['time']->locale('id')->translatedFormat('d M Y, H.i') }}
+                    {{ $latestAction['time']->locale('id')->translatedFormat('d F Y, H.i') }}
                 </div>
             </div>
         </div>

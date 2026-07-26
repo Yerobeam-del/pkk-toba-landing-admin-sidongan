@@ -47,7 +47,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
                     'category' => $item->category, 'excerpt' => $item->excerpt, 'content' => $item->content,
                     'image_path' => $item->image_path, 'image' => $item->image_path ? asset('storage/' . $item->image_path) : null,
                     'published_at' => $item->published_at, 'created_at' => $item->created_at,
-                    'date' => $item->published_at?->format('d F Y') ?? $item->created_at->format('d F Y'),
+                    'date' => $item->published_at?->translatedFormat('d F Y') ?? $item->created_at->translatedFormat('d F Y'),
                 ];
             });
 
@@ -69,7 +69,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
                     'id' => $news->id, 'slug' => $news->slug, 'title' => $news->title,
                     'category' => $news->category, 'excerpt' => $news->excerpt, 'content' => $news->content,
                     'image_path' => $news->image_path, 'image' => $news->image_path ? asset('storage/' . $news->image_path) : null,
-                    'published_at' => $news->published_at, 'date' => $news->published_at?->format('d F Y') ?? $news->created_at->format('d F Y'),
+                    'published_at' => $news->published_at, 'date' => $news->published_at?->translatedFormat('d F Y') ?? $news->created_at->translatedFormat('d F Y'),
                 ]
             ]);
         } catch (\Exception $e) {
@@ -226,7 +226,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
             }
             $dokumens = $query->orderBy('document_date', 'desc')->orderBy('sort_order')->paginate($perPage);
             $formattedData = $dokumens->map(function($doc) {
-                return ['id' => $doc->id, 'name' => $doc->name, 'file_name' => $doc->file_name, 'file_size' => $doc->file_size, 'file_url' => $doc->file_url, 'file_type' => $doc->file_type, 'document_date' => $doc->document_date?->format('Y-m-d'), 'formatted_date' => $doc->document_date?->format('d F Y'), 'status' => $doc->status];
+                return ['id' => $doc->id, 'name' => $doc->name, 'file_name' => $doc->file_name, 'file_size' => $doc->file_size, 'file_url' => $doc->file_url, 'file_type' => $doc->file_type, 'document_date' => $doc->document_date?->format('Y-m-d'), 'formatted_date' => $doc->document_date?->translatedFormat('d F Y'), 'status' => $doc->status];
             });
             return response()->json(['success' => true, 'data' => $formattedData, 'pagination' => ['current_page' => $dokumens->currentPage(), 'last_page' => $dokumens->lastPage(), 'per_page' => $dokumens->perPage(), 'total' => $dokumens->total(), 'from' => $dokumens->firstItem(), 'to' => $dokumens->lastItem()]]);
         } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
@@ -245,7 +245,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
             }
             $templates = $query->orderBy('upload_date', 'desc')->orderBy('sort_order')->paginate($perPage);
             $formattedData = $templates->map(function($t) {
-                return ['id' => $t->id, 'name' => $t->name, 'file_name' => $t->file_name, 'file_size' => $t->file_size, 'file_url' => asset('storage/' . $t->file_path), 'file_path' => $t->file_path, 'file_type' => $t->file_type, 'upload_date' => $t->upload_date?->format('Y-m-d'), 'formatted_date' => $t->upload_date?->format('d F Y'), 'status' => $t->status, 'description' => $t->description ?? null];
+                return ['id' => $t->id, 'name' => $t->name, 'file_name' => $t->file_name, 'file_size' => $t->file_size, 'file_url' => asset('storage/' . $t->file_path), 'file_path' => $t->file_path, 'file_type' => $t->file_type, 'upload_date' => $t->upload_date?->format('Y-m-d'), 'formatted_date' => $t->upload_date?->translatedFormat('d F Y'), 'status' => $t->status, 'description' => $t->description ?? null];
             });
             return response()->json(['success' => true, 'data' => $formattedData, 'pagination' => ['current_page' => $templates->currentPage(), 'last_page' => $templates->lastPage(), 'per_page' => $templates->perPage(), 'total' => $templates->total(), 'from' => $templates->firstItem(), 'to' => $templates->lastItem()]]);
         } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
@@ -345,7 +345,7 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
         try {
             $documents = \App\Models\Document::published()->with(['category', 'tags'])->orderBy('document_date', 'desc')->orderBy('created_at', 'desc')->paginate(12)
                 ->through(function($doc) {
-                    return ['id' => $doc->id, 'title' => $doc->title, 'slug' => $doc->slug, 'description' => $doc->description, 'document_number' => $doc->document_number, 'document_date' => $doc->document_date?->format('Y-m-d'), 'formatted_date' => $doc->document_date?->format('d F Y'), 'category' => $doc->category ? ['id' => $doc->category->id, 'name' => $doc->category->name, 'color' => $doc->category->color] : null, 'tags' => $doc->tags->pluck('name'), 'file_name' => $doc->file_name, 'file_type' => $doc->file_type, 'file_size' => $doc->file_size, 'formatted_size' => $doc->formatted_size, 'file_url' => $doc->file_url, 'status' => $doc->status, 'is_public' => $doc->is_public, 'created_at' => $doc->created_at->format('Y-m-d H:i:s')];
+                    return ['id' => $doc->id, 'title' => $doc->title, 'slug' => $doc->slug, 'description' => $doc->description, 'document_number' => $doc->document_number, 'document_date' => $doc->document_date?->format('Y-m-d'), 'formatted_date' => $doc->document_date?->translatedFormat('d F Y'), 'category' => $doc->category ? ['id' => $doc->category->id, 'name' => $doc->category->name, 'color' => $doc->category->color] : null, 'tags' => $doc->tags->pluck('name'), 'file_name' => $doc->file_name, 'file_type' => $doc->file_type, 'file_size' => $doc->file_size, 'formatted_size' => $doc->formatted_size, 'file_url' => $doc->file_url, 'status' => $doc->status, 'is_public' => $doc->is_public, 'created_at' => $doc->created_at->format('Y-m-d H:i:s')];
                 });
             return response()->json(['success' => true, 'data' => $documents, 'meta' => ['total' => $documents->total(), 'per_page' => $documents->perPage(), 'current_page' => $documents->currentPage(), 'last_page' => $documents->lastPage()]]);
         } catch (\Exception $e) {
@@ -356,7 +356,7 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
     Route::get('/api/v1/sidongan/documents/{slug}', function ($slug) {
         try {
             $document = \App\Models\Document::published()->with(['category', 'tags', 'creator'])->where('slug', $slug)->firstOrFail();
-            return response()->json(['success' => true, 'data' => ['id' => $document->id, 'title' => $document->title, 'slug' => $document->slug, 'description' => $document->description, 'document_number' => $document->document_number, 'document_date' => $document->document_date?->format('Y-m-d'), 'formatted_date' => $document->document_date?->format('d F Y'), 'category' => $document->category ? ['id' => $document->category->id, 'name' => $document->category->name, 'color' => $document->category->color, 'description' => $document->category->description] : null, 'tags' => $document->tags->map(fn($t) => ['id' => $t->id, 'name' => $t->name, 'slug' => $t->slug]), 'file_name' => $document->file_name, 'file_type' => $document->file_type, 'file_size' => $document->file_size, 'formatted_size' => $document->formatted_size, 'file_url' => $document->file_url, 'metadata' => $document->metadata, 'creator' => $document->creator ? ['id' => $document->creator->id, 'name' => $document->creator->name] : null, 'created_at' => $document->created_at->format('Y-m-d H:i:s'), 'updated_at' => $document->updated_at?->format('Y-m-d H:i:s')]]);
+            return response()->json(['success' => true, 'data' => ['id' => $document->id, 'title' => $document->title, 'slug' => $document->slug, 'description' => $document->description, 'document_number' => $document->document_number, 'document_date' => $document->document_date?->format('Y-m-d'), 'formatted_date' => $document->document_date?->translatedFormat('d F Y'), 'category' => $document->category ? ['id' => $document->category->id, 'name' => $document->category->name, 'color' => $document->category->color, 'description' => $document->category->description] : null, 'tags' => $document->tags->map(fn($t) => ['id' => $t->id, 'name' => $t->name, 'slug' => $t->slug]), 'file_name' => $document->file_name, 'file_type' => $document->file_type, 'file_size' => $document->file_size, 'formatted_size' => $document->formatted_size, 'file_url' => $document->file_url, 'metadata' => $document->metadata, 'creator' => $document->creator ? ['id' => $document->creator->id, 'name' => $document->creator->name] : null, 'created_at' => $document->created_at->format('Y-m-d H:i:s'), 'updated_at' => $document->updated_at?->format('Y-m-d H:i:s')]]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Dokumen tidak ditemukan'], 404);
         }

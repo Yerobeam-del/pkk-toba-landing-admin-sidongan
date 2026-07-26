@@ -233,7 +233,7 @@
                                         <div style="width: 1.5rem; height: 1.5rem; background: #fff7ed; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                             <i class="fas fa-calendar" style="color: #f97316; font-size: 0.7rem;"></i>
                                         </div>
-                                        {{ $doc->document_date->locale('id')->translatedFormat('d M Y') }}
+                                        {{ $doc->document_date->locale('id')->translatedFormat('d F Y') }}
                                     </span>
                                 </div>
                             </div>

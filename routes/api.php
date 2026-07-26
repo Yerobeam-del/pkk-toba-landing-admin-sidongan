@@ -36,7 +36,7 @@ Route::prefix('v1')->group(function () {
                         'image' => $item->image_path ? asset('storage/' . $item->image_path) : null,
                         'published_at' => $item->published_at,
                         'created_at' => $item->created_at,
-                        'date' => $item->published_at?->format('d M Y') ?? $item->created_at->format('d M Y'),
+                        'date' => $item->published_at?->translatedFormat('d F Y') ?? $item->created_at->translatedFormat('d F Y'),
                     ];
                 });
             
@@ -71,7 +71,7 @@ Route::prefix('v1')->group(function () {
                     'image_path' => $news->image_path,
                     'image' => $news->image_path ? asset('storage/' . $news->image_path) : null,
                     'published_at' => $news->published_at,
-                    'date' => $news->published_at?->format('d M Y') ?? $news->created_at->format('d M Y'),
+                    'date' => $news->published_at?->translatedFormat('d F Y') ?? $news->created_at->translatedFormat('d F Y'),
                 ]
             ]);
         } catch (\Exception $e) {

@@ -55,7 +55,7 @@
         
         <div style="display:flex;justify-content:space-between;padding:0.75rem 0">
             <span style="color:var(--text-muted)">Dibuat</span>
-            <span style="font-weight:600">{{ $user->created_at->format('d M Y, H:i') }}</span>
+            <span style="font-weight:600">{{ $user->created_at->translatedFormat('d F Y, H:i') }}</span>
         </div>
     </div>
     

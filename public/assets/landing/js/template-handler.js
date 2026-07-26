@@ -57,7 +57,7 @@ function _renderTemplates(templates) {
     // Render rows
     tbody.innerHTML = templates.map((tpl, i) => {
         const ext = tpl.file_name ? tpl.file_name.split('.').pop().toUpperCase() : 'FILE';
-        const date = tpl.formatted_date || (tpl.upload_date ? new Date(tpl.upload_date).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) : '-');
+        const date = tpl.formatted_date || (tpl.upload_date ? new Date(tpl.upload_date).toLocaleDateString('id-ID', { day:'numeric', month: 'long', year:'numeric' }) : '-');
         const size = tpl.file_size || '-';
 
         return `

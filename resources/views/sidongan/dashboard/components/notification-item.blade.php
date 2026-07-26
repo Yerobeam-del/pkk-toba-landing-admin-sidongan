@@ -5,7 +5,7 @@
         </div>
         <div class="notification-text">
             <p class="notification-message">{{ Str::limit($notif->message, 80) }}</p>
-            <span class="notification-time">{{ $notif->created_at->locale('id')->translatedFormat('d M Y, H.i') }}</span>
+            <span class="notification-time">{{ $notif->created_at->locale('id')->translatedFormat('d F Y, H.i') }}</span>
         </div>
     </div>
 </div>

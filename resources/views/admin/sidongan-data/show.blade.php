@@ -53,7 +53,7 @@
         </div>
         <div>
             <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.25rem 0;text-transform:uppercase;letter-spacing:0.5px">Tanggal Surat</p>
-            <p style="font-weight:600;color:var(--text-dark);margin:0">{{ $document->document_date ? $document->document_date->format('d F Y') : '-' }}</p>
+            <p style="font-weight:600;color:var(--text-dark);margin:0">{{ $document->document_date ? $document->document_date->translatedFormat('d F Y') : '-' }}</p>
         </div>
         <div>
             <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.25rem 0;text-transform:uppercase;letter-spacing:0.5px">Kategori</p>

@@ -110,7 +110,7 @@
                     </div>
                     <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ Str::limit($doc->description ?? '', 100) }}</p>
                     <div class="flex items-center justify-between pt-4 border-t border-gray-100 text-sm text-gray-500">
-                        <span><i class="far fa-calendar mr-1"></i>{{ $doc->document_date?->format('d M Y') ?? $doc->created_at->format('d M Y') }}</span>
+                        <span><i class="far fa-calendar mr-1"></i>{{ $doc->document_date?->translatedFormat('d F Y') ?? $doc->created_at->translatedFormat('d F Y') }}</span>
                         <span><i class="fas fa-download mr-1"></i>{{ $doc->formatted_size ?? '-' }}</span>
                     </div>
                 </a>

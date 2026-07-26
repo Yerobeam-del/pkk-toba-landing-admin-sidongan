@@ -24,7 +24,7 @@ class NewsController extends Controller
                     'content' => $item->content,
                     'image' => $item->image_path ? asset('storage/' . $item->image_path) : null,
                     'image_path' => $item->image_path,
-                    'date' => $item->published_at?->format('d M Y') ?? $item->created_at->format('d M Y'),
+                    'date' => $item->published_at?->translatedFormat('d F Y') ?? $item->created_at->translatedFormat('d F Y'),
                     'published_at' => $item->published_at,
                     'created_at' => $item->created_at,
                 ];
@@ -50,7 +50,7 @@ class NewsController extends Controller
                 'excerpt' => $news->excerpt,
                 'content' => $news->content,
                 'image' => $news->image_path ? asset('storage/' . $news->image_path) : null,
-                'date' => $news->published_at?->format('d M Y') ?? $news->created_at->format('d M Y'),
+                'date' => $news->published_at?->translatedFormat('d F Y') ?? $news->created_at->translatedFormat('d F Y'),
             ]
         ]);
     }

@@ -331,7 +331,7 @@
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid #f1f5f9;">
                         <span style="font-size: 0.8rem; color: #64748b; font-weight: 600;">Tanggal Surat</span>
-                        <span style="font-size: 0.9rem; font-weight: 500; color: #0f172a;">{{ $document->document_date ? \Carbon\Carbon::parse($document->document_date)->locale('id')->translatedFormat('d M Y') : '-' }}</span>
+                        <span style="font-size: 0.9rem; font-weight: 500; color: #0f172a;">{{ $document->document_date ? \Carbon\Carbon::parse($document->document_date)->locale('id')->translatedFormat('d F Y') : '-' }}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
                         <span style="font-size: 0.8rem; color: #64748b; font-weight: 600;">Dibuat oleh</span>

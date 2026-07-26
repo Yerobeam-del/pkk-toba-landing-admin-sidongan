@@ -64,7 +64,7 @@
                                     {{ Str::limit($notif->message, 80) }}
                                 </p>
                                 <span style="font-size: 0.7rem; color: #94a3b8;">
-                                    {{ $notif->created_at->locale('id')->translatedFormat('d M Y, H.i') }}
+                                    {{ $notif->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                 </span>
                             </div>
                             <div style="width: 0.5rem; height: 0.5rem; background: #3b82f6; border-radius: 50%; flex-shrink: 0; margin-top: 0.5rem;"></div>

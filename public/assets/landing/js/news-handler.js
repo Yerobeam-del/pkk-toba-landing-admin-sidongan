@@ -71,10 +71,10 @@ function renderNewsCard(news, index) {
 
     const publishedDate = news.published_at
         ? new Date(news.published_at).toLocaleDateString('id-ID', {
-            day: '2-digit', month: 'short', year: 'numeric'
+            day: '2-digit', month: 'long', year: 'numeric'
         })
         : new Date(news.created_at).toLocaleDateString('id-ID', {
-            day: '2-digit', month: 'short', year: 'numeric'
+            day: '2-digit', month: 'long', year: 'numeric'
         });
 
     const onclickAction = hasNewsModal()
@@ -124,10 +124,10 @@ function renderNewsCardFull(news) {
 
     const publishedDate = news.published_at
         ? new Date(news.published_at).toLocaleDateString('id-ID', {
-            day: '2-digit', month: 'short', year: 'numeric'
+            day: '2-digit', month: 'long', year: 'numeric'
         })
         : new Date(news.created_at).toLocaleDateString('id-ID', {
-            day: '2-digit', month: 'short', year: 'numeric'
+            day: '2-digit', month: 'long', year: 'numeric'
         });
 
     const newsUrl = news.slug ? `/berita/${news.slug}` : `/berita/${news.id}`;

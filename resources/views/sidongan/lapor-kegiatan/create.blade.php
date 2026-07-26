@@ -160,7 +160,7 @@
                         </div>
                         <div class="info-row" style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid #f1f5f9;">
                             <span class="info-label" style="font-size: 0.85rem; color: #64748b;">Tanggal Surat</span>
-                            <span class="info-value" style="font-size: 0.85rem; font-weight: 500; color: #0f172a;">{{ $document->document_date ? \Carbon\Carbon::parse($document->document_date)->locale('id')->translatedFormat('d M Y') : '-' }}</span>
+                            <span class="info-value" style="font-size: 0.85rem; font-weight: 500; color: #0f172a;">{{ $document->document_date ? \Carbon\Carbon::parse($document->document_date)->locale('id')->translatedFormat('d F Y') : '-' }}</span>
                         </div>
                         <div class="info-row" style="display: flex; justify-content: space-between;">
                             <span class="info-label" style="font-size: 0.85rem; color: #64748b;">Perihal</span>
@@ -181,7 +181,7 @@
                         </div>
                         <div class="info-row" style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid #f1f5f9;">
                             <span class="info-label" style="font-size: 0.85rem; color: #64748b;">Tanggal Agenda</span>
-                            <span class="info-value" style="font-size: 0.85rem; font-weight: 500; color: #0f172a;">{{ $document->created_at->locale('id')->translatedFormat('d M Y') }}</span>
+                            <span class="info-value" style="font-size: 0.85rem; font-weight: 500; color: #0f172a;">{{ $document->created_at->locale('id')->translatedFormat('d F Y') }}</span>
                         </div>
                         <div class="info-row" style="display: flex; justify-content: space-between;">
                             <span class="info-label" style="font-size: 0.85rem; color: #64748b;">Dibuat oleh</span>
