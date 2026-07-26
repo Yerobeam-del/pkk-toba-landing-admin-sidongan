@@ -506,7 +506,17 @@ body {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 0.75rem !important;
     }
-    .stats-card { padding: 1rem !important; }
+    .stats-card { padding: 0.875rem !important; }
+
+    /* Isi kartu statistik disusun menurun. Dengan 2 kolom, lebar dalam kartu
+       hanya ~112px sedangkan baris ikon+teks butuh ~132px sehingga terpotong.
+       Lingkaran dekoratif di kartu memang sengaja terpotong (overflow:hidden)
+       dan tidak perlu diubah. */
+    .stats-card > [style*="display: flex"] {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
 
     /* --- Input: font 16px mencegah iOS auto-zoom saat field difokus,
            tinggi 44px memenuhi target sentuh --- */
