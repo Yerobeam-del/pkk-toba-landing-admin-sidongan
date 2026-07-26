@@ -232,8 +232,11 @@
             <div style="padding: 0;">
                 @foreach($documents as $doc)
                     @php
+                        // Laporan dimiliki ROLE, bukan perorangan: laporan yang dibuat
+                        // rekan serole harus ikut terbaca di sini agar suratnya tidak
+                        // tampil sebagai "Perlu Dilaporkan" untuk kedua kalinya.
                         $existingReport = \App\Models\ActivityReport::where('document_id', $doc->id)
-                            ->where('created_by', auth()->guard('sidongan')->user()->id)
+                            ->where('role', auth()->guard('sidongan')->user()->sidongan_role)
                             ->first();
                         
                         $statusConfig = [

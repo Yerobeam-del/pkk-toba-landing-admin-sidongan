@@ -44,22 +44,24 @@ class ActivityReportController extends Controller
             
             if ($status === 'draft') {
                 // Perlu Dilaporkan = dokumen yang BELUM ada laporan dari user ini
-                $query->whereDoesntHave('activityReports', function($q) use ($user) {
-                    $q->where('created_by', $user->id);
+                // Laporan milik ROLE: surat dianggap sudah dilaporkan bila
+                // rekan serole sudah membuatnya.
+                $query->whereDoesntHave('activityReports', function($q) use ($role) {
+                    $q->where('role', $role);
                 });
             } else {
                 // Status lain = filter berdasarkan activity_reports dengan status tertentu
-                $query->whereHas('activityReports', function($q) use ($user, $status) {
-                    $q->where('created_by', $user->id)
+                $query->whereHas('activityReports', function($q) use ($role, $status) {
+                    $q->where('role', $role)
                       ->where('activity_reports.status', $status);
                 });
             }
         }
         
         // ORDER BY STATUS PRIORITY
-        $query->leftJoin('activity_reports', function($join) use ($user) {
+        $query->leftJoin('activity_reports', function($join) use ($role) {
             $join->on('sidongan_documents.id', '=', 'activity_reports.document_id')
-                 ->where('activity_reports.created_by', '=', $user->id);
+                 ->where('activity_reports.role', '=', $role);
         })
         ->select('sidongan_documents.*') // PENTING: Mencegah ambiguitas kolom
         ->orderByRaw("
@@ -78,16 +80,17 @@ class ActivityReportController extends Controller
         $documents = $query->paginate($perPage)->withQueryString();
         
         // STATS
-        $totalLaporan = \App\Models\ActivityReport::where('created_by', $user->id)->count();
-        $menungguVerifikasi = \App\Models\ActivityReport::where('created_by', $user->id)->where('status', 'menunggu_verifikasi')->count();
-        $disetujui = \App\Models\ActivityReport::where('created_by', $user->id)->where('status', 'disetujui')->count();
-        $ditolak = \App\Models\ActivityReport::where('created_by', $user->id)->where('status', 'ditolak')->count();
+        // Statistik dihitung per ROLE agar sesama anggota melihat angka yang sama
+        $totalLaporan = \App\Models\ActivityReport::where('role', $role)->count();
+        $menungguVerifikasi = \App\Models\ActivityReport::where('role', $role)->where('status', 'menunggu_verifikasi')->count();
+        $disetujui = \App\Models\ActivityReport::where('role', $role)->where('status', 'disetujui')->count();
+        $ditolak = \App\Models\ActivityReport::where('role', $role)->where('status', 'ditolak')->count();
         
         // Perlu Dilaporkan = dokumen yang didisposisi ke user ini tapi BELUM ada laporan
         $perluDilaporkan = \App\Models\Document::where('disposisi_data', 'LIKE', '%' . $role . '%')
             ->whereNotIn('sidongan_documents.status', ['diarsipkan', 'menunggu_disposisi'])
-            ->whereDoesntHave('activityReports', function($q) use ($user) {
-                $q->where('created_by', $user->id);
+            ->whereDoesntHave('activityReports', function($q) use ($role) {
+                $q->where('role', $role);
             })
             ->count();
         
@@ -176,11 +179,26 @@ class ActivityReportController extends Controller
         }
         
         // CEK APAKAH ADA LAPORAN YANG DITOLAK SEBELUMNYA
+        // Laporan dimiliki ROLE, jadi revisi mencari laporan role ini —
+        // bukan hanya laporan yang kebetulan dibuat orang yang sedang login.
         $rejectedReport = \App\Models\ActivityReport::where('document_id', $validated['document_id'])
-            ->where('created_by', $user->id)
+            ->where('role', $user->sidongan_role)
             ->where('status', 'ditolak')
             ->first();
         
+        // Satu surat + satu role = satu laporan. Bila rekan serole sudah membuat
+        // (dan belum ditolak), arahkan untuk mengedit laporan itu, jangan buat baru.
+        $laporanRoleAda = \App\Models\ActivityReport::where('document_id', $validated['document_id'])
+            ->where('role', $user->sidongan_role)
+            ->where('status', '!=', 'ditolak')
+            ->first();
+
+        if ($laporanRoleAda) {
+            return redirect()
+                ->route('sidongan.lapor_kegiatan.show', $laporanRoleAda->id)
+                ->with('warning', 'Surat ini sudah dilaporkan oleh rekan serole Anda. Silakan periksa atau perbarui laporan tersebut.');
+        }
+
         if ($rejectedReport) {
             // UPDATE LAPORAN YANG DITOLAK
             
@@ -230,7 +248,8 @@ class ActivityReportController extends Controller
                 'deskripsi' => $validated['deskripsi'],
                 'fotos' => json_encode($fotoPaths),
                 'status' => 'menunggu_verifikasi',
-                'created_by' => auth()->guard('sidongan')->id(),
+                'role' => $user->sidongan_role,                 // pemilik laporan
+                'created_by' => auth()->guard('sidongan')->id(), // catatan pembuat pertama
             ]);
             
             $action = 'created';
@@ -287,6 +306,12 @@ class ActivityReportController extends Controller
         }
         
         $report = \App\Models\ActivityReport::with(['document', 'creator'])->findOrFail($id);
+
+        // Boleh dilihat oleh role pemilik, seluruh role tujuan disposisi, dan Ketua.
+        if (!$report->bolehDilihatOleh(auth()->guard('sidongan')->user())) {
+            abort(403, 'Anda tidak berhak melihat laporan ini.');
+        }
+
         return view('sidongan.lapor-kegiatan.show', compact('report'));
     }
 
@@ -295,8 +320,8 @@ class ActivityReportController extends Controller
         $report = \App\Models\ActivityReport::findOrFail($id);
         $user = auth()->guard('sidongan')->user();
         
-        if ($report->created_by !== $user->id) {
-            abort(403, 'Anda tidak berhak mengedit laporan ini.');
+        if (!$report->bolehDiubahOleh($user)) {
+            abort(403, 'Laporan ini milik role lain, Anda tidak berhak mengeditnya.');
         }
         
         // HANYA blokir jika sudah disetujui. Status 'ditolak' BOLEH diedit untuk revisi.
@@ -312,8 +337,8 @@ class ActivityReportController extends Controller
         $report = \App\Models\ActivityReport::findOrFail($id);
         $user = auth()->guard('sidongan')->user();
         
-        if ($report->created_by !== $user->id) {
-            abort(403, 'Anda tidak berhak mengupdate laporan ini.');
+        if (!$report->bolehDiubahOleh($user)) {
+            abort(403, 'Laporan ini milik role lain, Anda tidak berhak mengubahnya.');
         }
         
         // HANYA blokir jika sudah disetujui. Status 'ditolak' BOLEH diupdate untuk revisi.
@@ -389,7 +414,7 @@ class ActivityReportController extends Controller
         $report = \App\Models\ActivityReport::findOrFail($id);
         $user = auth()->guard('sidongan')->user();
         
-        if ($report->created_by !== $user->id) {
+        if (!$report->bolehDiubahOleh($user)) {
             return back()->with('error', 'Anda tidak berhak menghapus laporan ini.');
         }
         
