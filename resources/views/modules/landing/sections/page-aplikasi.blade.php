@@ -108,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(res => res.json())
         .then(result => {
             if (result.success) {
-
                 appsData.aplikasi = [
                     ...(result.data.aplikasi.active || []),
                     ...(result.data.aplikasi.maintenance || []),
@@ -130,16 +129,24 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => console.error('Error loading apps:', err));
 
-    // 2. Fungsi Render
+    // 2. Fungsi Render (DIPERBAIKI)
     function renderSection(type, data) {
         const track = document.getElementById(`track-${type}`);
         const grid = document.getElementById(`grid-${type}`);
+        const sectionBlock = document.getElementById(`block-${type}`); // Ambil elemen block section
         const isLayanan = type === 'layanan';
 
         if (data.length === 0) {
-            track.innerHTML = '<div class="loading-state">Tidak ada data tersedia.</div>';
-            grid.innerHTML = '<div class="loading-state">Tidak ada data tersedia.</div>';
+            // Jika data kosong, sembunyikan seluruh section block (Aplikasi atau Layanan)
+            if (sectionBlock) {
+                sectionBlock.style.display = 'none';
+            }
             return;
+        }
+
+        // Jika ada data, pastikan section block ditampilkan (untuk jaga-jaga jika sebelumnya di-hide)
+        if (sectionBlock) {
+            sectionBlock.style.display = 'block';
         }
 
         // Render Carousel
@@ -151,8 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const DEFAULT_COLOR = '#0f6b63'; // Hijau PKK, dipakai bila admin belum memilih warna
 
-    // Rumus turunan warna — HARUS sama dengan pratinjau di form admin
-    // (admin/aplikasi/partials/color-picker.blade.php) agar hasilnya cocok.
+    // Rumus turunan warna
     function mixWhite(hex, ratio) {
         const r = parseInt(hex.slice(1, 3), 16);
         const g = parseInt(hex.slice(3, 5), 16);
@@ -161,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return `rgb(${m(r)}, ${m(g)}, ${m(b)})`;
     }
 
-    // Menghasilkan CSS variable yang dibaca aturan .has-app-color di style.css
     function colorVars(app) {
         const c = /^#[0-9a-fA-F]{6}$/.test(app.color || '') ? app.color : DEFAULT_COLOR;
         return [
@@ -172,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
         ].join(';');
     }
 
-    // Ikon + teks per status non-aktif. Dipakai bersama oleh kartu carousel dan modal.
     const STATUS_META = {
         maintenance: {
             label: 'Dalam Maintenance',
@@ -200,7 +204,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const meta = STATUS_META[status];
         const stateClass = meta ? `is-${status}` : '';
 
-        // Render features jika ada
         const featuresHtml = app.features && app.features.length > 0
             ? `<ul class="app-features">${app.features.slice(0, 4).map(f => `
                 <li>
@@ -212,12 +215,10 @@ document.addEventListener('DOMContentLoaded', function() {
             `).join('')}</ul>`
             : '';
 
-        // Badge status di pojok header, hanya untuk non-aktif
         const badgeHtml = meta
             ? `<span class="slide-status-badge status-${status}">${meta.icon}${meta.label}</span>`
             : '';
 
-        // Aplikasi non-aktif tidak bisa diklik: tombol diganti keterangan status
         const actionHtml = meta
             ? `<span class="slide-link is-disabled" aria-disabled="true">${meta.icon}${meta.note}</span>`
             : `<a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="slide-link ${linkClass}">Akses ${app.short_name}</a>`;
@@ -257,13 +258,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${meta ? `<span class="modal-status status-${status}">${meta.icon}${meta.note}</span>` : ''}
             </div>`;
 
-        // Non-aktif dirender sebagai div, bukan anchor, agar benar-benar tidak bisa diklik
         return meta
             ? `<div class="modal-card has-app-color ${cardClass} is-${status}" style="${styleVars}" aria-disabled="true">${inner}</div>`
             : `<a href="${app.url && app.url !== '#' ? app.url : '#'}" target="_blank" class="modal-card has-app-color ${cardClass}" style="${styleVars}">${inner}</a>`;
     }
 
-    // 3. Carousel Logic yang Lebih Baik & Tidak Bertabrakan
+    // 3. Carousel Logic
     window.scrollCarousel = function(trackId, direction) {
         const track = document.getElementById(trackId);
         if (!track) return;
@@ -271,12 +271,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = track.querySelector('.app-card-slide');
         if (!card) return;
 
-        // Hitung lebar card + gap (1.5rem = 24px) secara dinamis
         const scrollAmount = card.offsetWidth + 24;
-
-        // Hentikan auto-scroll sementara agar tidak bertabrakan dengan kontrol user
         resetAutoScroll(trackId);
-
         track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
     };
 
@@ -285,9 +281,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!track) return;
 
         const cards = track.querySelectorAll('.app-card-slide');
-        if (cards.length <= 1) return; // Jangan auto-scroll jika hanya 1 item
+        if (cards.length <= 1) return;
 
-        // Hapus interval lama jika ada
         if (autoScrollIntervals[trackId]) {
             clearInterval(autoScrollIntervals[trackId]);
         }
@@ -299,26 +294,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const scrollAmount = card.offsetWidth + 24;
             const maxScroll = track.scrollWidth - track.clientWidth;
 
-            // Jika sudah di akhir, kembali ke awal dengan smooth (Looping)
             if (track.scrollLeft >= maxScroll - 10) {
                 track.scrollTo({ left: 0, behavior: 'smooth' });
             } else {
                 track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             }
-        }, 4000); // 4 detik durasi yang nyaman dan masuk akal
+        }, 4000);
     }
 
     function resetAutoScroll(trackId) {
         if (autoScrollIntervals[trackId]) {
             clearInterval(autoScrollIntervals[trackId]);
         }
-        // Mulai lagi setelah 5 detik agar user punya waktu melihat hasil kliknya
         setTimeout(() => {
             startAutoScroll(trackId);
         }, 5000);
     }
 
-    // Pause auto-scroll saat mouse berada di atas carousel (User sedang melihat/mengklik)
     ['track-aplikasi', 'track-layanan'].forEach(trackId => {
         const track = document.getElementById(trackId);
         if (!track) return;
