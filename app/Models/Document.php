@@ -22,6 +22,7 @@ class Document extends Model
         'sender',              // Pengirim surat
         'document_number',     // Nomor surat dari pengirim
         'agenda_number',       // Nomor agenda internal (AG/MM/YYYY/NNN)
+        'agenda_date',         // Tanggal diterima di Sekretariat
         'document_date',       // Tanggal surat
         'subject',             // Perihal surat
         'suggestion',          // Saran sekretaris
@@ -40,6 +41,7 @@ class Document extends Model
     ];
 
     protected $casts = [
+        'agenda_date' => 'date',
         'document_date' => 'date',
         'is_public' => 'boolean',
         'metadata' => 'array',
@@ -123,8 +125,12 @@ class Document extends Model
             }
             
             // Generate agenda number jika kosong
+            // Prioritaskan: agenda_date → document_date → now()
             if (empty($document->agenda_number)) {
-                $document->agenda_number = self::generateAgendaNumber();
+                $tanggalDasar = $document->agenda_date 
+                    ?? $document->document_date 
+                    ?? now();
+                $document->agenda_number = self::generateAgendaNumber($tanggalDasar);
             }
         });
     }
@@ -134,16 +140,30 @@ class Document extends Model
      * Format BARU: NNN/SM/PKK-T/BULAN(ROMAWI)/TAHUN
      * Contoh: 001/SM/PKK-T/VI/2026
      * Reset nomor urut setiap ganti bulan
+     *
+     * @param \Carbon\Carbon|string|null $tanggal Tanggal dasar untuk bulan/tahun agenda.
+     *        Bisa berupa objek Carbon, string Y-m-d, atau null (default: now()).
      */
-    public static function generateAgendaNumber()
+    public static function generateAgendaNumber($tanggal = null)
     {
-        $month = now()->month; // 1-12
-        $year = now()->year;   // 2026
+        // Konversi parameter ke Carbon
+        if ($tanggal === null) {
+            $carbon = now();
+        } elseif ($tanggal instanceof \Carbon\Carbon) {
+            $carbon = $tanggal;
+        } else {
+            // String tanggal (Y-m-d)
+            $carbon = \Carbon\Carbon::parse($tanggal);
+        }
+
+        $month = $carbon->month; // 1-12
+        $year = $carbon->year;   // 2026
         
-        // Cari dokumen terakhir di bulan & tahun ini untuk dapat nomor urut terakhir
+        // Cari dokumen terakhir di bulan & tahun yang SAMA untuk dapat nomor urut
+        // Gunakan document_date sebagai acuan, bukan created_at
         $lastDocument = self::withTrashed()
-            ->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
+            ->whereYear('document_date', $year)
+            ->whereMonth('document_date', $month)
             ->whereNotNull('agenda_number')
             ->orderBy('id', 'desc')
             ->first();

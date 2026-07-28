@@ -1,5 +1,5 @@
 @extends('sidongan.layouts.app')
-@section('title', 'Edit Dokumen - SIDONGAN')
+@section('title', 'Edit Surat - SIDONGAN')
 
 @section('content')
 @php
@@ -43,8 +43,8 @@
                     <i class="fas fa-edit" style="font-size: 1.5rem; color: white;"></i>
                 </div>
                 <div>
-                    <h1 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.25rem 0;">Edit Dokumen</h1>
-                    <p style="font-size: 0.875rem; opacity: 0.95; margin: 0;">Update informasi dokumen</p>
+                    <h1 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.25rem 0;">Edit Surat</h1>
+                    <p style="font-size: 0.875rem; opacity: 0.95; margin: 0;">Update informasi surat masuk</p>
                 </div>
             </div>
             {{-- Wadah tombol aksi header: aturan mobile bersama ada di kelas sd-header-actions --}}
@@ -87,7 +87,7 @@
             <div style="padding: 1.25rem 1.5rem; background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-bottom: 2px solid #86efac;">
                 <h2 style="font-size: 1.05rem; font-weight: 700; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                     <i class="fas fa-file-alt" style="color: #059669;"></i>
-                    Informasi Dokumen
+                    Informasi Surat
                 </h2>
             </div>
 
@@ -127,7 +127,7 @@
                         </div>
                         <div>
                             <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Tanggal Surat <span style="color: #ef4444;">*</span></label>
-                            <input type="date" name="document_date" id="document_date" value="{{ old('document_date', $document->document_date?->format('Y-m-d')) }}" required onchange="validateDates()"
+                            <input type="date" name="document_date" id="document_date" value="{{ old('document_date', $document->document_date?->format('Y-m-d')) }}" required onchange="validateDates(); updateAgendaPreviewEdit();"
                                 style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid {{ $errors->has('document_date') ? '#ef4444' : '#e2e8f0' }}; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s;" 
                                 onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" 
                                 onblur="this.style.borderColor='{{ $errors->has('document_date') ? '#ef4444' : '#e2e8f0' }}'; this.style.boxShadow='none'">
@@ -161,9 +161,26 @@
                         </h3>
                         <div>
                             <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Nomor Agenda</label>
-                            <input type="text" value="{{ $document->agenda_number ?? 'Belum ada' }}" readonly 
-                                style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #f8fafc; color: #64748b; cursor: not-allowed; font-family: monospace;">
+                            <input type="text" id="preview_agenda_edit" value="{{ $document->agenda_number ?? 'Belum ada' }}" readonly 
+                                style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #f8fafc; color: #1e293b; cursor: not-allowed; font-family: monospace; font-weight: 600;">
                             <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem;">Nomor agenda tidak dapat diubah</p>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Tanggal Diterima <span style="color: #ef4444;">*</span></label>
+                            <input type="date" name="agenda_date" id="agenda_date_edit" 
+                                value="{{ old('agenda_date', $document->agenda_date?->format('Y-m-d') ?? $document->document_date?->format('Y-m-d') ?? date('Y-m-d')) }}" 
+                                max="{{ date('Y-m-d') }}"
+                                onchange="updateAgendaPreviewEdit()"
+                                style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid {{ $errors->has('agenda_date') ? '#ef4444' : '#e2e8f0' }}; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s;" 
+                                onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" 
+                                onblur="this.style.borderColor='{{ $errors->has('agenda_date') ? '#ef4444' : '#e2e8f0' }}'; this.style.boxShadow='none'">
+                            <small style="color: #94a3b8; display: block; margin-top: 0.25rem; font-size: 0.7rem;">Tanggal surat diterima di Sekretariat</small>
+                            @error('agenda_date')
+                                <div style="display: flex; align-items: center; gap: 0.375rem; margin-top: 0.375rem; padding: 0.5rem 0.75rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 0.375rem;">
+                                    <i class="fas fa-exclamation-circle" style="color: #dc2626; font-size: 0.875rem;"></i>
+                                    <span style="font-size: 0.8rem; color: #991b1b; font-weight: 500;">{{ $message }}</span>
+                                </div>
+                            @enderror
                         </div>
                         <div>
                             <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Saran Sekretaris</label>
@@ -265,6 +282,47 @@
 </div>
 
 <script>
+    // ==========================================
+    // BULAN ROMAWI (sama dengan create.blade.php)
+    // ==========================================
+    const BULAN_ROMAWI = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+
+    // ==========================================
+    // UPDATE AGENDA PREVIEW DI EDIT
+    // ==========================================
+    function updateAgendaPreviewEdit() {
+        const agendaDate = document.getElementById('agenda_date_edit').value;
+        const docDate = document.getElementById('document_date').value;
+        const previewInput = document.getElementById('preview_agenda_edit');
+
+        // Pakai agenda_date, fallback ke document_date
+        const tanggalDasar = agendaDate || docDate;
+
+        if (!tanggalDasar) {
+            return; // Biarkan value existing
+        }
+
+        // Ambil nomor urut dari nomor agenda yang sudah ada
+        const existingAgenda = previewInput.value;
+        let sequence = 'XXX';
+        if (existingAgenda && existingAgenda !== 'Belum ada') {
+            const parts = existingAgenda.split('/');
+            if (parts.length > 0) {
+                sequence = parts[0];
+            }
+        }
+
+        const dateObj = new Date(tanggalDasar + 'T00:00:00');
+        const bulan = BULAN_ROMAWI[dateObj.getMonth()];
+        const tahun = dateObj.getFullYear();
+        previewInput.value = sequence + '/SM/PKK-T/' + bulan + '/' + tahun;
+    }
+
+    // Panggil preview saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        updateAgendaPreviewEdit();
+    });
+
     // ==========================================
     // VALIDATE DATES
     // ==========================================

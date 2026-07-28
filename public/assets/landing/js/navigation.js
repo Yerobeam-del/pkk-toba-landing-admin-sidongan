@@ -136,8 +136,7 @@ function loadSKDocuments(page = 1) {
     if (mobileListEl) mobileListEl.style.display = 'none';
     if (emptyEl) emptyEl.style.display = 'none';
     if (paginationWrapper) {
-        paginationWrapper.classList.remove('visible');
-        paginationWrapper.style.display = 'none';
+        paginationWrapper.classList.add('hidden');
     }
     
     // Build API URL
@@ -213,7 +212,7 @@ function loadSKDocuments(page = 1) {
                         }
                     }
                 }
-                if (paginationWrapper) paginationWrapper.style.display = 'none';
+                if (paginationWrapper) paginationWrapper.classList.add('hidden');
                 return;
             }
             
@@ -352,13 +351,11 @@ function loadSKDocuments(page = 1) {
             if (skPagination && skPagination.last_page > 1) {
                 renderSKPagination();
                 if (paginationWrapper) {
-                    paginationWrapper.classList.add('visible');
-                    paginationWrapper.style.display = 'block';
+                    paginationWrapper.classList.remove('hidden');
                 }
             } else {
                 if (paginationWrapper) {
-                    paginationWrapper.classList.remove('visible');
-                    paginationWrapper.style.display = 'none';
+                    paginationWrapper.classList.add('hidden');
                 }
             }
             

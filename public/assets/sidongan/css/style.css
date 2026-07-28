@@ -455,18 +455,13 @@ body {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .admin-footer-right {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .admin-footer-divider {
         display: none;
     }
     
     .content-area {
-        padding-bottom: 9rem; /* Ruang untuk footer mobile kecil (3 baris) */
+        padding-bottom: 4rem;
     }
 }
 

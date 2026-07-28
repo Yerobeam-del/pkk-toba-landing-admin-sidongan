@@ -275,13 +275,18 @@ class AdminDocumentController extends Controller
             return back()->withErrors(['file' => 'File surat wajib diupload.'])->withInput();
         }
 
+        // Tentukan tanggal dasar untuk nomor agenda
+        // Prioritaskan: agenda_date (tanggal diterima) → document_date (tanggal surat)
+        $tanggalAgenda = $validated['agenda_date'] ?? $validated['document_date'];
+
         // Buat dokumen baru
         $document = Document::create([
             'title' => $validated['subject'],
             'description' => $validated['suggestion'],
             'sender' => $validated['sender'],
             'document_number' => $validated['document_number'],
-            'agenda_number' => $validated['agenda_number'] ?? Document::generateAgendaNumber(),
+            'agenda_number' => $validated['agenda_number'] ?? Document::generateAgendaNumber($tanggalAgenda),
+            'agenda_date' => $validated['agenda_date'] ?? $validated['document_date'],
             'document_date' => $validated['document_date'],
             'subject' => $validated['subject'],
             'suggestion' => $validated['suggestion'],
@@ -360,6 +365,7 @@ class AdminDocumentController extends Controller
             'sender' => 'required|string|max:255',
             'document_number' => 'required|string|max:100',
             'document_date' => 'required|date',
+            'agenda_date' => 'nullable|date',
             'subject' => 'required|string|max:255',
             'suggestion' => 'nullable|string',
             'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
@@ -388,6 +394,7 @@ class AdminDocumentController extends Controller
             'sender' => $validated['sender'],
             'document_number' => $validated['document_number'],
             'document_date' => $validated['document_date'],
+            'agenda_date' => $validated['agenda_date'] ?? $document->agenda_date,
             'subject' => $validated['subject'],
             'suggestion' => $validated['suggestion'] ?? $document->suggestion,
         ]);

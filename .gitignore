@@ -19,3 +19,11 @@ Thumbs.db
 **/build/
 **/.gradle/
 **/local.properties
+.freebuff/desktop.db
+.freebuff/desktop.db-shm
+.freebuff/desktop.db-wal
+.freebuff/preview-thms42afwy3on9.log
+.freebuff/run.md
+docs/Pseudocode_Arsitektur_PKK_Toba.pdf
+docs/pseudocode-arsitektur-awam.html
+docs/pseudocode-arsitektur-awam.md

@@ -3,9 +3,12 @@
 
 @section('content')
 @php
-    // Preview nomor agenda berikutnya
-    $previewAgenda = \App\Models\Document::generateAgendaNumber();
+    // Preview nomor agenda berikutnya — hitung dari agenda_date (default hari ini)
     $today = date('Y-m-d');
+    $previewDate = old('agenda_date', $today);
+    $previewAgenda = \App\Models\Document::generateAgendaNumber($previewDate);
+    // Simpan nomor urut untuk JavaScript
+    $previewSequence = explode('/', $previewAgenda)[0];
 @endphp
 
 <style>
@@ -158,7 +161,7 @@
                             </div>
                             <div>
                                 <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Tanggal Surat <span style="color: #ef4444;">*</span></label>
-                                <input type="date" name="document_date" id="document_date" required value="{{ old('document_date') }}" onchange="validateDates()"
+                                <input type="date" name="document_date" id="document_date" required value="{{ old('document_date') }}" onchange="validateDates(); updateAgendaPreview();"
                                     style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s;" 
                                     onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" 
                                     onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
@@ -207,14 +210,17 @@
                         <div class="form-grid">
                             <div>
                                 <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Nomor Agenda</label>
-                                <input type="text" value="{{ $previewAgenda }}" readonly 
-                                    style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #f8fafc; color: #64748b; cursor: not-allowed; font-family: monospace;">
-                                <small style="color: #94a3b8; display: block; margin-top: 0.25rem; font-size: 0.7rem;">Format: No. Urut/SM/PKK-T/Bulan/Tahun</small>
+                                <input type="text" id="preview_agenda" value="{{ $previewAgenda }}" readonly 
+                                    style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #f8fafc; color: #1e293b; cursor: not-allowed; font-family: monospace; font-weight: 600; letter-spacing: 0.5px;">
+                                <small id="preview_agenda_note" style="color: #94a3b8; display: block; margin-top: 0.25rem; font-size: 0.7rem;">
+                                    Nomor urut &#10095; Surat Masuk &#10095; PKK Toba &#10095; {{ collect(['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'])->get((int)date('n')-1) }} &#10095; {{ date('Y') }}
+                                </small>
                             </div>
                             <div>
                                 <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Tanggal Diterima <span style="color: #ef4444;">*</span></label>
                                 <input type="date" name="agenda_date" id="agenda_date" required value="{{ old('agenda_date', $today) }}" 
                                     max="{{ $today }}"
+                                    onchange="updateAgendaPreview(); validateDates();"
                                     style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s;" 
                                     onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" 
                                     onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
@@ -316,6 +322,39 @@
 </div>
 
 <script>
+    // ==========================================
+    // UPDATE AGENDA PREVIEW (Real-time) 
+    // ==========================================
+    const BULAN_ROMAWI = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+    let currentSequence = '{{ $previewSequence }}';
+
+    function updateAgendaPreview() {
+        const agendaDate = document.getElementById('agenda_date').value;
+        const previewInput = document.getElementById('preview_agenda');
+        const previewNote = document.getElementById('preview_agenda_note');
+
+        if (!agendaDate) {
+            // Fallback ke tanggal hari ini
+            const today = new Date();
+            const bulan = BULAN_ROMAWI[today.getMonth()];
+            const tahun = today.getFullYear();
+            previewInput.value = currentSequence + '/SM/PKK-T/' + bulan + '/' + tahun;
+            previewNote.innerHTML = 'Nomor urut &#10095; Surat Masuk &#10095; PKK Toba &#10095; ' + bulan + ' &#10095; ' + tahun;
+            return;
+        }
+
+        const dateObj = new Date(agendaDate + 'T00:00:00');
+        const bulan = BULAN_ROMAWI[dateObj.getMonth()];
+        const tahun = dateObj.getFullYear();
+        previewInput.value = currentSequence + '/SM/PKK-T/' + bulan + '/' + tahun;
+        previewNote.innerHTML = 'Nomor urut &#10095; Surat Masuk &#10095; PKK Toba &#10095; ' + bulan + ' &#10095; ' + tahun;
+    }
+
+    // Panggil sekali saat halaman dimuat untuk sync preview
+    document.addEventListener('DOMContentLoaded', function() {
+        updateAgendaPreview();
+    });
+
     // ==========================================
     // VALIDATE DATES
     // ==========================================
