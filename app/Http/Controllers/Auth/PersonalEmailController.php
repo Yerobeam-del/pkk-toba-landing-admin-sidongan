@@ -59,7 +59,18 @@ class PersonalEmailController extends Controller
         $user->save();
 
         // Kirim notifikasi verifikasi ke personal email
-        $user->notify(new PersonalEmailVerificationNotification());
+        // Bungkus try-catch agar kegagalan email TIDAK menyebabkan error 500
+        try {
+            $user->notify(new PersonalEmailVerificationNotification());
+        } catch (\Throwable $e) {
+            Log::channel('audit')->warning('Gagal kirim email verifikasi personal email', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()->route('personal-email.notice')
+                ->with('error', 'Email verifikasi gagal dikirim ke <strong>' . e($request->personal_email) . '</strong>. Silakan klik "Kirim Ulang" untuk mencoba lagi.');
+        }
 
         Log::channel('audit')->info('Personal email disimpan, menunggu verifikasi', [
             'user_id' => $user->id,
@@ -169,16 +180,25 @@ class PersonalEmailController extends Controller
         }
 
         // Kirim ulang notifikasi verifikasi
-        $user->notify(new PersonalEmailVerificationNotification());
-        RateLimiter::hit($throttleKey, 1800); // 30 menit cooldown
+        try {
+            $user->notify(new PersonalEmailVerificationNotification());
+            RateLimiter::hit($throttleKey, 1800); // 30 menit cooldown
 
-        Log::channel('audit')->info('Resend verifikasi personal email', [
-            'user_id' => $user->id,
-            'user_name' => $user->name,
-            'personal_email' => $user->personal_email,
-        ]);
+            Log::channel('audit')->info('Resend verifikasi personal email', [
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'personal_email' => $user->personal_email,
+            ]);
 
-        return back()->with('success', 'Email verifikasi telah dikirim ulang ke <strong>' . e($user->personal_email) . '</strong>.');
+            return back()->with('success', 'Email verifikasi telah dikirim ulang ke <strong>' . e($user->personal_email) . '</strong>.');
+        } catch (\Throwable $e) {
+            Log::channel('audit')->warning('Gagal kirim ulang email verifikasi personal email', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->with('error', 'Email verifikasi gagal dikirim ulang. Silakan coba lagi nanti.');
+        }
     }
 
     /**
