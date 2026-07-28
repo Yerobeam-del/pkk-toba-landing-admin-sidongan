@@ -38,6 +38,7 @@
     if ($userReceivedDisposisi) {
         $userReport = \App\Models\ActivityReport::where('document_id', $document->id)
             ->where('created_by', $currentUser->id)
+            ->orderBy('created_at', 'desc')
             ->first();
         
         if (!$userReport || $userReport->status === 'ditolak') {
@@ -144,6 +145,7 @@
                                 foreach ($targetUsers as $targetUser) {
                                     $report = $document->activityReports()
                                         ->where('created_by', $targetUser->id)
+                                        ->orderBy('created_at', 'desc')
                                         ->first();
 
                                     if (!$report || !in_array($report->status, ['disetujui', 'ditolak'])) {

@@ -363,12 +363,15 @@ class Document extends Model
             return true;
         }
         
+        // Periksa laporan TERAKHIR per user (bukan first() yang bisa ambil laporan ditolak)
         foreach ($targetUsers as $user) {
-            $report = \App\Models\ActivityReport::where('document_id', $this->id)
+            $latestReport = \App\Models\ActivityReport::where('document_id', $this->id)
                 ->where('created_by', $user->id)
+                ->orderBy('created_at', 'desc')
                 ->first();
             
-            if (!$report || $report->status !== 'disetujui') {
+            // User belum lapor, atau laporan terakhirnya belum disetujui
+            if (!$latestReport || $latestReport->status !== 'disetujui') {
                 return false;
             }
         }
@@ -380,44 +383,91 @@ class Document extends Model
     {
         \Log::info("=== UPDATE STATUS DOCUMENT {$this->id} ===");
         
-        // Cek apakah semua disposisi sudah lapor
-        $allReported = $this->allDispositionsReported();
-        \Log::info("All Dispositions Reported: " . ($allReported ? 'YES' : 'NO'));
+        // Ambil data disposisi
+        $disposisiData = $this->disposisi_data;
         
-        if (!$allReported) {
+        // Handle double-encoded JSON
+        if (is_array($disposisiData) && isset($disposisiData['data']) && is_string($disposisiData['data'])) {
+            $decoded = json_decode($disposisiData['data'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $disposisiData = $decoded;
+            }
+        }
+        
+        if (!is_array($disposisiData) || !isset($disposisiData['target_roles'])) {
+            \Log::info("No target_roles found, status unchanged");
+            return $this->status;
+        }
+        
+        $targetRoles = $disposisiData['target_roles'];
+        $targetUsers = \App\Models\User::whereIn('sidongan_role', $targetRoles)->get();
+        
+        if ($targetUsers->isEmpty()) {
+            \Log::info("No users in target roles, setting selesai");
+            $this->update(['status' => 'selesai']);
+            return 'selesai';
+        }
+        
+        // Cek laporan TERAKHIR setiap user, bukan semua laporan
+        $allApproved = true;
+        $anyRejected = false;
+        $anyPending = false;
+        $anyHasReport = false;
+        
+        foreach ($targetUsers as $user) {
+            $latestReport = \App\Models\ActivityReport::where('document_id', $this->id)
+                ->where('created_by', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->first();
+            
+            if (!$latestReport) {
+                // User ini belum lapor sama sekali
+                $allApproved = false;
+                continue;
+            }
+            
+            $anyHasReport = true;
+            
+            if ($latestReport->status === 'ditolak') {
+                $anyRejected = true;
+                $allApproved = false;
+            } elseif ($latestReport->status === 'menunggu_verifikasi') {
+                $anyPending = true;
+                $allApproved = false;
+            }
+            // Jika 'disetujui', allApproved tetap true (untuk user ini)
+        }
+        
+        \Log::info("Report check - AnyReported: " . ($anyHasReport ? 'YES' : 'NO') . 
+                ", AnyRejected: " . ($anyRejected ? 'YES' : 'NO') . 
+                ", AnyPending: " . ($anyPending ? 'YES' : 'NO') . 
+                ", AllApproved: " . ($allApproved ? 'YES' : 'NO'));
+        
+        // Semua sudah lapor && semua disetujui → Selesai
+        if ($anyHasReport && $allApproved) {
+            $this->update(['status' => 'selesai']);
+            \Log::info("Status updated to: selesai");
+            return 'selesai';
+        }
+        
+        // Ada laporan yang ditolak (dan belum ada revisi yang disetujui) → berjalan
+        if ($anyRejected) {
             $this->update(['status' => 'berjalan']);
-            \Log::info("Status updated to: berjalan");
+            \Log::info("Status updated to: berjalan (masih ada laporan ditolak)");
             return 'berjalan';
         }
         
-        // Semua sudah lapor, cek status laporan
-        $reports = $this->activityReports;
-        $hasRejected = $reports->where('status', 'ditolak')->count() > 0;
-        $hasApproved = $reports->where('status', 'disetujui')->count() > 0;
-        $hasPending = $reports->where('status', 'menunggu_verifikasi')->count() > 0;
-        
-        \Log::info("Report status - Rejected: " . ($hasRejected ? 'YES' : 'NO') . 
-                ", Approved: " . ($hasApproved ? 'YES' : 'NO') . 
-                ", Pending: " . ($hasPending ? 'YES' : 'NO'));
-        
-        // JIKA ADA LAPORAN YANG DITOLAK → Status tetap BERJALAN (bisa lapor ulang)
-        if ($hasRejected) {
-            $this->update(['status' => 'berjalan']);
-            \Log::info("Status updated to: berjalan (ada laporan ditolak)");
-            return 'berjalan';
-        }
-        
-        // Jika ada yang menunggu verifikasi
-        if ($hasPending) {
+        // Ada yang menunggu verifikasi
+        if ($anyPending) {
             $this->update(['status' => 'menunggu_verifikasi']);
             \Log::info("Status updated to: menunggu_verifikasi");
             return 'menunggu_verifikasi';
         }
         
-        // Semua disetujui → Selesai
-        $this->update(['status' => 'selesai']);
-        \Log::info("Status updated to: selesai");
-        return 'selesai';
+        // Default: masih ada yang belum lapor
+        $this->update(['status' => 'berjalan']);
+        \Log::info("Status updated to: berjalan (default - ada yg belum lapor)");
+        return 'berjalan';
     }
 
     /**

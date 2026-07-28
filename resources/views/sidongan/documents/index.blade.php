@@ -509,7 +509,7 @@
                                         <div style="padding: 0.5rem 0.75rem; background: #f8fafc; border-left: 3px solid #94a3b8; border-radius: 0.25rem; font-size: 0.75rem;">
                                             <div style="color: #475569; font-weight: 600; display: flex; align-items: center; gap: 0.35rem;">
                                                 <i class="fas fa-users" style="font-size: 0.65rem;"></i>
-                                                {{ $reports->count() }} dari {{ \App\Models\User::whereIn('sidongan_role', $dispoData['target_roles'] ?? [])->count() }} sudah lapor
+                                                {{ $reports->unique('created_by')->count() }} dari {{ \App\Models\User::whereIn('sidongan_role', $dispoData['target_roles'] ?? [])->count() }} sudah lapor
                                             </div>
                                         </div>
                                     @endif
@@ -737,6 +737,7 @@
                                                 foreach ($targetUsers as $targetUser) {
                                                     $report = $doc->activityReports()
                                                         ->where('created_by', $targetUser->id)
+                                                        ->orderBy('created_at', 'desc')
                                                         ->first();
 
                                                     if (!$report || !in_array($report->status, ['disetujui', 'ditolak'])) {
