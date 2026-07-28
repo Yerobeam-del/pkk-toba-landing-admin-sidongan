@@ -58,21 +58,25 @@ class ActivityReportController extends Controller
             }
         }
         
-        // ORDER BY STATUS PRIORITY
-        $query->leftJoin('activity_reports', function($join) use ($role) {
-            $join->on('sidongan_documents.id', '=', 'activity_reports.document_id')
-                 ->where('activity_reports.role', '=', $role);
-        })
-        ->select('sidongan_documents.*') // PENTING: Mencegah ambiguitas kolom
-        ->orderByRaw("
-            CASE 
-                WHEN activity_reports.id IS NULL THEN 1  -- Perlu Dilaporkan (Paling Atas)
-                WHEN activity_reports.status = 'ditolak' THEN 2  -- Perlu Revisi
-                WHEN activity_reports.status = 'menunggu_verifikasi' THEN 3  -- Menunggu Verifikasi
-                WHEN activity_reports.status = 'disetujui' THEN 4  -- Disetujui
-                ELSE 5  -- Selesai/Lainnya (Paling Bawah)
-            END
-        ")
+        // ORDER BY STATUS PRIORITY (menggunakan subquery agar tidak ada duplikat row)
+        // COALESCE: jika tidak ada laporan sama sekali, subquery NULL → priority 1 (Paling Atas)
+        $query->select('sidongan_documents.*')
+        ->orderBy(
+            \App\Models\ActivityReport::selectRaw('
+                COALESCE(
+                    CASE 
+                        WHEN activity_reports.status = \'ditolak\' THEN 2  -- Perlu Revisi
+                        WHEN activity_reports.status = \'menunggu_verifikasi\' THEN 3  -- Menunggu Verifikasi
+                        WHEN activity_reports.status = \'disetujui\' THEN 4  -- Disetujui
+                        ELSE 5  -- Selesai/Lainnya (Paling Bawah)
+                    END, 1  -- Perlu Dilaporkan (Paling Atas)
+                )
+            ')
+            ->whereColumn('activity_reports.document_id', 'sidongan_documents.id')
+            ->where('activity_reports.role', $role)
+            ->orderBy('activity_reports.created_at', 'desc')
+            ->limit(1)
+        )
         ->orderBy('sidongan_documents.created_at', 'desc'); // Urutkan berdasarkan tanggal untuk status yang sama
         
         // PAGINATION (Hapus latest() agar tidak menimpa orderBy di atas)
@@ -200,18 +204,12 @@ class ActivityReportController extends Controller
         }
 
         if ($rejectedReport) {
-            // UPDATE LAPORAN YANG DITOLAK
-            
-            // Hapus foto lama dari storage
-            $oldFotos = json_decode($rejectedReport->fotos, true) ?? [];
-            foreach ($oldFotos as $oldFoto) {
-                if (Storage::disk('public')->exists($oldFoto)) {
-                    Storage::disk('public')->delete($oldFoto);
-                }
-            }
-            
-            // Update laporan dengan data baru
-            $rejectedReport->update([
+            // BUAT LAPORAN BARU (jangan update laporan yang ditolak,
+            // agar riwayat penolakan tetap utuh di Alur Kegiatan)
+            $report = \App\Models\ActivityReport::create([
+                'document_id' => $validated['document_id'],
+                'role' => $user->sidongan_role,
+                'created_by' => $user->id,
                 'kegiatan_nama' => $validated['kegiatan_nama'],
                 'kegiatan_tanggal' => $validated['kegiatan_tanggal'],
                 'start_time' => $validated['start_time'],
@@ -224,13 +222,9 @@ class ActivityReportController extends Controller
                 'deskripsi' => $validated['deskripsi'],
                 'fotos' => json_encode($fotoPaths),
                 'status' => 'menunggu_verifikasi',
-                'catatan_verifikasi' => null,
-                'verified_by' => null,
-                'verified_at' => null,
             ]);
             
-            $report = $rejectedReport;
-            $action = 'updated';
+            $action = 'revisi';
             
         } else {
             // BUAT LAPORAN BARU
@@ -262,14 +256,14 @@ class ActivityReportController extends Controller
             // Kirim notifikasi ke Ketua
             $ketuaUsers = \App\Models\User::where('sidongan_role', 'ketua')->get();
             foreach ($ketuaUsers as $ketua) {
-                $message = $action === 'updated' 
-                    ? "Laporan kegiatan untuk surat No. Agenda {$document->agenda_number} telah diperbarui oleh {$user->name} dan menunggu verifikasi ulang."
+                $message = $action === 'revisi' 
+                    ? "Laporan revisi untuk surat No. Agenda {$document->agenda_number} telah dikirim oleh {$user->name} dan menunggu verifikasi ulang."
                     : "Laporan kegiatan untuk surat No. Agenda {$document->agenda_number} telah dikirim oleh {$user->name} dan menunggu verifikasi.";
                 
                 \App\Models\Notification::create([
                     'user_id' => $ketua->id,
                     'type' => 'laporan.submitted',
-                    'title' => $action === 'updated' ? 'Laporan Diperbarui' : 'Laporan Kegiatan Baru',
+                    'title' => $action === 'revisi' ? 'Laporan Revisi' : 'Laporan Kegiatan Baru',
                     'message' => $message,
                     'related_id' => $document->id,
                     'related_type' => 'document',
@@ -277,8 +271,8 @@ class ActivityReportController extends Controller
             }
         }
         
-        $successMessage = $action === 'updated' 
-            ? 'Laporan kegiatan berhasil diperbarui dan dikirim ulang untuk verifikasi!'
+        $successMessage = $action === 'revisi' 
+            ? 'Laporan revisi berhasil dikirim untuk verifikasi ulang!'
             : 'Laporan kegiatan berhasil dikirim untuk verifikasi!';
         
         return redirect()->route('sidongan.lapor_kegiatan.index')

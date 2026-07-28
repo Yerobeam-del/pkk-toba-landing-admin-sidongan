@@ -365,8 +365,15 @@
                 <div class="ds-laporan-card {{ $cardClass }}">
                     <div class="ds-laporan-header">
                         <div class="ds-laporan-creator">
-                            <div class="ds-laporan-avatar">
-                                {{ substr($report->creator->name ?? 'U', 0, 1) }}
+                            <div class="ds-laporan-avatar" style="{{ $report->creator && $report->creator->avatar ? 'overflow: hidden;' : '' }}">
+                                @if($report->creator && $report->creator->avatar)
+                                    <img src="{{ asset('storage/' . $report->creator->avatar) }}" 
+                                         alt="{{ $report->creator->name }}"
+                                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block;"
+                                         onerror="this.style.display='none';this.parentElement.innerHTML='{{ strtoupper(substr($report->creator->name ?? 'U', 0, 1)) }}';this.parentElement.style.display='flex';this.parentElement.style.alignItems='center';this.parentElement.style.justifyContent='center';this.parentElement.style.color='white';this.parentElement.style.fontWeight='700';this.parentElement.style.fontSize='1rem';this.parentElement.style.overflow='';">
+                                @else
+                                    {{ strtoupper(substr($report->creator->name ?? 'U', 0, 1)) }}
+                                @endif
                             </div>
                             <div>
                                 <p class="ds-laporan-name" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
