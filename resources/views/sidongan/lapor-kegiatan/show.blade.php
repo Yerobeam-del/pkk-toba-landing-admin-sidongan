@@ -317,13 +317,10 @@
     
     function openGallery(index) {
         currentIndex = index;
-        updateGalleryImage('fade-in');
+        updateGalleryImage('zoom-in');
         updateGalleryUI(); 
         const overlay = document.getElementById('galleryOverlay');
-        overlay.style.display = 'flex';
-        setTimeout(() => {
-            overlay.style.opacity = '1';
-        }, 10);
+        overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
     
@@ -332,7 +329,7 @@
         const overlay = document.getElementById('galleryOverlay');
         overlay.style.opacity = '0';
         setTimeout(() => {
-            overlay.style.display = 'none';
+            overlay.classList.remove('active');
             overlay.style.opacity = '';
         }, 300);
         document.body.style.overflow = '';
@@ -348,7 +345,6 @@
         const img = document.getElementById('galleryImage');
         
         img.style.opacity = '0';
-        img.style.transform = direction > 0 ? 'translateX(-40px) scale(0.95)' : 'translateX(40px) scale(0.95)';
         
         setTimeout(() => {
             currentIndex = nextIndex;
@@ -357,7 +353,6 @@
             
             setTimeout(() => {
                 img.style.opacity = '1';
-                img.style.transform = 'translateX(0) scale(1)';
             }, 50);
             
             updateGalleryUI();
@@ -369,7 +364,7 @@
         }, 200);
     }
     
-    function updateGalleryImage(animClass = 'fade-in') {
+    function updateGalleryImage(animClass = 'zoom-in') {
         const img = document.getElementById('galleryImage');
         img.src = '{{ asset("storage") }}/' + galleryFotos[currentIndex];
         img.className = 'dl-gallery-image ' + animClass;
@@ -389,12 +384,6 @@
         } else {
             prevBtn.style.display = 'flex';
             nextBtn.style.display = 'flex';
-        }
-
-        // Tandai galeri berfoto tunggal; CSS mobile yang menyembunyikan penanda & thumbnail
-        const wadahGaleri = document.querySelector('.dl-gallery-container');
-        if (wadahGaleri) {
-            wadahGaleri.classList.toggle('sd-lightbox-tunggal', galleryFotos.length <= 1);
         }
 
         updateThumbnails();
@@ -418,7 +407,7 @@
     
     document.addEventListener('keydown', (e) => {
         const overlay = document.getElementById('galleryOverlay');
-        if (!overlay || overlay.style.display !== 'flex') return;
+        if (!overlay || !overlay.classList.contains('active')) return;
         if (e.key === 'Escape') closeGallery();
         if (e.key === 'ArrowLeft') navigateGallery(-1);
         if (e.key === 'ArrowRight') navigateGallery(1);

@@ -1012,7 +1012,7 @@
     function showGalleryModal() {
         const overlay = document.getElementById('galleryOverlay');
         if (!overlay) return;
-        updateGalleryImage('fade-in');
+        updateGalleryImage('zoom-in');
         updateGalleryUI();
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
