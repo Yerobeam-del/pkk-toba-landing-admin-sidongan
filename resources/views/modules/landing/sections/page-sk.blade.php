@@ -115,17 +115,17 @@
             {{-- PAGINATION --}}
             <div id="paginationWrapper" class="sk-pagination-wrapper">
                 <div class="sk-pagination-container">
-                    <button id="prevPageBtn" class="sk-pagination-btn" onclick="changePage('prev')" disabled>
+                    <button id="prevPageBtn" class="sk-pagination-btn" onclick="changeSKPage('prev')" disabled>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="15 18 9 12 15 6"/>
                         </svg>
-                        <span class="desktop-only">Previous</span>
+                        <span class="desktop-only">Sebelumnya</span>
                     </button>
 
                     <div id="pageNumbers" class="sk-page-numbers"></div>
 
-                    <button id="nextPageBtn" class="sk-pagination-btn" onclick="changePage('next')">
-                        <span class="desktop-only">Next</span>
+                    <button id="nextPageBtn" class="sk-pagination-btn" onclick="changeSKPage('next')">
+                        <span class="desktop-only">Selanjutnya</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="9 18 15 12 9 6"/>
                         </svg>

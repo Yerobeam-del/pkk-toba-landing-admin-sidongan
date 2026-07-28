@@ -162,8 +162,10 @@
                         <div>
                             <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Nomor Agenda</label>
                             <input type="text" id="preview_agenda_edit" value="{{ $document->agenda_number ?? 'Belum ada' }}" readonly 
-                                style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #f8fafc; color: #1e293b; cursor: not-allowed; font-family: monospace; font-weight: 600;">
-                            <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem;">Nomor agenda tidak dapat diubah</p>
+                                style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #f8fafc; color: #1e293b; cursor: not-allowed; font-family: monospace; font-weight: 600;"
+                                ondblclick="enableEditAgenda(this)">
+                            <input type="hidden" name="agenda_number" id="agenda_number_edit_input" value="{{ $document->agenda_number ?? '' }}">
+                            <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem;">Klik dua kali untuk mengubah nomor agenda</p>
                         </div>
                         <div>
                             <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Tanggal Diterima <span style="color: #ef4444;">*</span></label>
@@ -294,6 +296,7 @@
         const agendaDate = document.getElementById('agenda_date_edit').value;
         const docDate = document.getElementById('document_date').value;
         const previewInput = document.getElementById('preview_agenda_edit');
+        const hiddenInput = document.getElementById('agenda_number_edit_input');
 
         // Pakai agenda_date, fallback ke document_date
         const tanggalDasar = agendaDate || docDate;
@@ -316,6 +319,44 @@
         const bulan = BULAN_ROMAWI[dateObj.getMonth()];
         const tahun = dateObj.getFullYear();
         previewInput.value = sequence + '/SM/PKK-T/' + bulan + '/' + tahun;
+        if (hiddenInput) hiddenInput.value = previewInput.value;
+    }
+
+    // ==========================================
+    // DOUBLE-CLICK TO EDIT AGENDA NUMBER
+    // ==========================================
+    function enableEditAgenda(input) {
+        // Hanya aktifkan jika input readonly
+        if (!input.readOnly) return;
+
+        // Ubah jadi bisa diedit
+        input.readOnly = false;
+        input.style.cursor = 'text';
+        input.style.background = '#fff';
+        input.style.borderColor = '#3b82f6';
+        input.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)';
+        input.focus();
+        input.select();
+
+        // Saat selesai edit (blur atau Enter), simpan dan kembalikan readonly
+        const finishEditing = function() {
+            input.readOnly = true;
+            input.style.cursor = 'not-allowed';
+            input.style.background = '#f8fafc';
+            input.style.borderColor = '#e2e8f0';
+            input.style.boxShadow = 'none';
+
+            // Update hidden input
+            const hiddenInput = document.getElementById('agenda_number_edit_input');
+            if (hiddenInput) hiddenInput.value = input.value;
+        };
+
+        input.addEventListener('blur', finishEditing, { once: true });
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                input.blur();
+            }
+        }, { once: true });
     }
 
     // Panggil preview saat halaman dimuat

@@ -211,7 +211,9 @@
                             <div>
                                 <label style="display: block; font-size: 0.8rem; font-weight: 500; color: #475569; margin-bottom: 0.375rem;">Nomor Agenda</label>
                                 <input type="text" id="preview_agenda" value="{{ $previewAgenda }}" readonly 
-                                    style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #f8fafc; color: #1e293b; cursor: not-allowed; font-family: monospace; font-weight: 600; letter-spacing: 0.5px;">
+                                    style="width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #f8fafc; color: #1e293b; cursor: not-allowed; font-family: monospace; font-weight: 600; letter-spacing: 0.5px;"
+                                    ondblclick="enableEditAgenda(this)">
+                                <input type="hidden" name="agenda_number" id="agenda_number_input" value="{{ $previewAgenda }}">
                                 <small id="preview_agenda_note" style="color: #94a3b8; display: block; margin-top: 0.25rem; font-size: 0.7rem;">
                                     Nomor urut &#10095; Surat Masuk &#10095; PKK Toba &#10095; {{ collect(['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'])->get((int)date('n')-1) }} &#10095; {{ date('Y') }}
                                 </small>
@@ -332,6 +334,7 @@
         const agendaDate = document.getElementById('agenda_date').value;
         const previewInput = document.getElementById('preview_agenda');
         const previewNote = document.getElementById('preview_agenda_note');
+        const hiddenInput = document.getElementById('agenda_number_input');
 
         if (!agendaDate) {
             // Fallback ke tanggal hari ini
@@ -340,6 +343,7 @@
             const tahun = today.getFullYear();
             previewInput.value = currentSequence + '/SM/PKK-T/' + bulan + '/' + tahun;
             previewNote.innerHTML = 'Nomor urut &#10095; Surat Masuk &#10095; PKK Toba &#10095; ' + bulan + ' &#10095; ' + tahun;
+            if (hiddenInput) hiddenInput.value = previewInput.value;
             return;
         }
 
@@ -348,6 +352,44 @@
         const tahun = dateObj.getFullYear();
         previewInput.value = currentSequence + '/SM/PKK-T/' + bulan + '/' + tahun;
         previewNote.innerHTML = 'Nomor urut &#10095; Surat Masuk &#10095; PKK Toba &#10095; ' + bulan + ' &#10095; ' + tahun;
+        if (hiddenInput) hiddenInput.value = previewInput.value;
+    }
+
+    // ==========================================
+    // DOUBLE-CLICK TO EDIT AGENDA NUMBER
+    // ==========================================
+    function enableEditAgenda(input) {
+        // Hanya aktifkan jika input readonly
+        if (!input.readOnly) return;
+
+        // Ubah jadi bisa diedit
+        input.readOnly = false;
+        input.style.cursor = 'text';
+        input.style.background = '#fff';
+        input.style.borderColor = '#3b82f6';
+        input.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.1)';
+        input.focus();
+        input.select();
+
+        // Saat selesai edit (blur atau Enter), simpan dan kembalikan readonly
+        const finishEditing = function() {
+            input.readOnly = true;
+            input.style.cursor = 'not-allowed';
+            input.style.background = '#f8fafc';
+            input.style.borderColor = '#e2e8f0';
+            input.style.boxShadow = 'none';
+
+            // Update hidden input
+            const hiddenInput = document.getElementById('agenda_number_input');
+            if (hiddenInput) hiddenInput.value = input.value;
+        };
+
+        input.addEventListener('blur', finishEditing, { once: true });
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                input.blur();
+            }
+        }, { once: true });
     }
 
     // Panggil sekali saat halaman dimuat untuk sync preview
