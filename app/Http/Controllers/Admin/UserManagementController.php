@@ -108,6 +108,7 @@ class UserManagementController extends Controller
                 'regex:/^[a-zA-Z0-9._%+-]+@pkk-toba\.id$/'
             ],
             'phone_number' => 'nullable|string|max:20',
+            'personal_email' => 'nullable|email|max:255|unique:users,personal_email',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role_id' => 'required|exists:roles,id',
             'permissions' => 'nullable|array',
@@ -131,6 +132,7 @@ class UserManagementController extends Controller
             'email' => $validated['email'],
             'phone_number' => $validated['phone_number'] ?? null,
             'password' => Hash::make($validated['password']),
+            'personal_email' => $validated['personal_email'] ?? null,
             'role_id' => $validated['role_id'],
             'sidongan_role' => $validated['sidongan_role'] ?? null,
             'sieda_role' => $validated['sieda_role'] ?? null,
@@ -252,6 +254,7 @@ class UserManagementController extends Controller
                 'regex:/^[a-zA-Z0-9._%+-]+@pkk-toba\.id$/'
             ],
             'phone_number' => 'nullable|string|max:20',
+            'personal_email' => 'nullable|email|max:255|unique:users,personal_email,' . $user->id,
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'role_id' => 'required|exists:roles,id',
             'permissions' => 'nullable|array',
@@ -273,6 +276,7 @@ class UserManagementController extends Controller
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->phone_number = $validated['phone_number'] ?? null;
+        $user->personal_email = $validated['personal_email'] ?? null;
         $user->role_id = $validated['role_id'];
         $user->sidongan_role = $validated['sidongan_role'] ?? null;
         $user->sieda_role = $validated['sieda_role'] ?? null;
@@ -395,6 +399,33 @@ class UserManagementController extends Controller
         $user->sendEmailVerificationNotification();
 
         return response()->json(['success' => true, 'message' => 'Email verifikasi berhasil dikirim']);
+    }
+
+    /**
+     * Reset password user dari Admin Panel (tanpa perlu email).
+     */
+    public function resetPassword(Request $request, User $user)
+    {
+        // VALIDASI KEAMANAN: Hanya Super Admin yang bisa reset password akun lain
+        if (!auth()->user()->hasRole('super_admin')) {
+            return response()->json(['success' => false, 'message' => 'Akses ditolak! Hanya Super Admin yang dapat mereset password.'], 403);
+        }
+
+        if ($user->hasRole('super_admin') && !auth()->user()->hasRole('super_admin')) {
+            return response()->json(['success' => false, 'message' => 'Akses ditolak!'], 403);
+        }
+
+        $validated = $request->validate([
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+        ]);
+
+        $user->password = \Illuminate\Support\Facades\Hash::make($validated['password']);
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password akun ' . $user->name . ' berhasil direset!'
+        ]);
     }
 
     /**

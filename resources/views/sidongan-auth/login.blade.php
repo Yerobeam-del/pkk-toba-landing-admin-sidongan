@@ -473,7 +473,15 @@
                 @endif
 
                 @if (session('status'))
-                    <div class="alert alert-danger">{{ session('status') }}</div>
+                    <div class="alert alert-success" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;border-radius:8px;padding:0.75rem 1rem;font-size:0.85rem;margin-bottom:1.125rem">
+                        <div style="display:flex;align-items:center;gap:0.5rem">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            {{ session('status') }}
+                        </div>
+                    </div>
                 @endif
 
                 <div class="form-group">

@@ -268,11 +268,61 @@
                             : '<button type="button" onclick="toggleStatus('.$item->id.', \''.addslashes($item->name).'\', false)" title="Aktifkan Akun" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'#f0fdf4\';this.style.color=\'#16a34a\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>';
 
                         $html .= $statusAction;
+
+                        // Tombol Reset Password
+                        $html .= '<button type="button" onclick="showResetPasswordModal('.$item->id.', \''.addslashes($item->name).'\')" title="Reset Password" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'#f0fdf4\';this.style.color=\'#16a34a\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>';
                     }
                     return $html;
                 }
             ])
         </div>
+    </div>
+</div>
+
+{{-- ==========================================
+     MODAL RESET PASSWORD
+     ========================================== --}}
+<div id="resetPasswordModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+    <div style="background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:420px;margin:1rem;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:slideIn 0.3s ease">
+        <div style="text-align:center;margin-bottom:1.5rem">
+            <div style="width:56px;height:56px;background:rgba(20,184,166,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </div>
+            <h3 style="margin:0 0 0.25rem 0;font-size:1.15rem;font-weight:700;color:#1e293b">Reset Password</h3>
+            <p style="margin:0;color:#64748b;font-size:0.9rem">Akun: <strong id="resetPasswordUserName"></strong></p>
+        </div>
+
+        <form id="resetPasswordForm">
+            <input type="hidden" id="resetPasswordUserId" value="">
+
+            <div class="form-group" style="margin-bottom:1rem">
+                <label for="resetPasswordInput" style="display:block;font-weight:600;color:#1e293b;margin-bottom:0.5rem;font-size:0.9rem">Password Baru</label>
+                <input type="password" id="resetPasswordInput" name="password" required placeholder="Minimal 8 karakter"
+                    style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;font-family:inherit;transition:all 0.2s"
+                    onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 4px rgba(20,184,166,0.1)'"
+                    onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'">
+            </div>
+
+            <div class="form-group" style="margin-bottom:1.25rem">
+                <label for="resetPasswordConfirmInput" style="display:block;font-weight:600;color:#1e293b;margin-bottom:0.5rem;font-size:0.9rem">Konfirmasi Password Baru</label>
+                <input type="password" id="resetPasswordConfirmInput" name="password_confirmation" required placeholder="Ulangi password baru"
+                    style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;font-family:inherit;transition:all 0.2s"
+                    onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 4px rgba(20,184,166,0.1)'"
+                    onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'">
+            </div>
+
+            <div style="display:flex;gap:0.75rem">
+                <button type="button" onclick="closeResetPasswordModal()" style="flex:1;padding:0.75rem;background:#f1f5f9;color:#64748b;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:all 0.2s" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
+                    Batal
+                </button>
+                <button type="submit" id="resetPasswordSubmitBtn" style="flex:1;padding:0.75rem;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:all 0.2s;box-shadow:0 4px 12px rgba(20,184,166,0.3)" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+                    Reset Password
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -283,7 +333,6 @@
 async function toggleStatus(userId, userName, currentStatus) {
     const action = currentStatus ? 'menonaktifkan' : 'mengaktifkan';
     try {
-        // Toast dimuat global di layout, jadi tidak perlu cadangan confirm() bawaan
         const confirmed = await Toast.confirm(
             `Apakah Anda yakin ingin <strong>${action}</strong> akun <strong>"${userName}"</strong>?`,
             { title: 'Konfirmasi Perubahan Status', confirmText: 'Ya, Ubah', cancelText: 'Batal', type: 'warning' }
@@ -313,5 +362,82 @@ async function toggleStatus(userId, userName, currentStatus) {
         else Toast.error('Terjadi kesalahan saat mengubah status akun');
     }
 }
+
+// ==========================================
+// RESET PASSWORD MODAL
+// ==========================================
+function showResetPasswordModal(userId, userName) {
+    document.getElementById('resetPasswordUserId').value = userId;
+    document.getElementById('resetPasswordUserName').textContent = userName;
+    document.getElementById('resetPasswordInput').value = '';
+    document.getElementById('resetPasswordConfirmInput').value = '';
+    document.getElementById('resetPasswordModal').style.display = 'flex';
+}
+
+function closeResetPasswordModal() {
+    document.getElementById('resetPasswordModal').style.display = 'none';
+}
+
+// Close modal on overlay click
+document.getElementById('resetPasswordModal').addEventListener('click', function(e) {
+    if (e.target === this) closeResetPasswordModal();
+});
+
+// Handle form submit
+document.getElementById('resetPasswordForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const userId = document.getElementById('resetPasswordUserId').value;
+    const password = document.getElementById('resetPasswordInput').value;
+    const passwordConfirm = document.getElementById('resetPasswordConfirmInput').value;
+    const submitBtn = document.getElementById('resetPasswordSubmitBtn');
+
+    if (password.length < 8) {
+        if (typeof Toast !== 'undefined') Toast.warning('Password minimal 8 karakter!');
+        else alert('Password minimal 8 karakter!');
+        return;
+    }
+
+    if (password !== passwordConfirm) {
+        if (typeof Toast !== 'undefined') Toast.warning('Konfirmasi password tidak cocok!');
+        else alert('Konfirmasi password tidak cocok!');
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Menyimpan...';
+
+    try {
+        const response = await fetch(`/admin/user-management/${userId}/reset-password`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                password: password,
+                password_confirmation: passwordConfirm
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            if (typeof Toast !== 'undefined') Toast.success(data.message);
+            closeResetPasswordModal();
+        } else {
+            if (typeof Toast !== 'undefined') Toast.error(data.message);
+            else alert(data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        if (typeof Toast !== 'undefined') Toast.error('Terjadi kesalahan saat mereset password');
+        else alert('Terjadi kesalahan saat mereset password');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Reset Password';
+    }
+});
 </script>
 @endsection

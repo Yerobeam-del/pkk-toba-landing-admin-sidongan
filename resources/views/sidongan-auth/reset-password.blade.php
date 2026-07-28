@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password - Admin Panel PKK Kabupaten Toba</title>
+    <title>Reset Password - SIDONGAN PKK Kabupaten Toba</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #14b8a6;
-            --primary-dark: #0d9488;
-            --text-dark: #1e293b;
+            --primary: #8b5cf6;
+            --primary-dark: #6d28d9;
+            --text-dark: #4c1d95;
             --text-muted: #64748b;
             --border: #e2e8f0;
             --bg: #f1f5f9;
@@ -26,39 +26,40 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #ccfbf1;
+            background: linear-gradient(135deg, #4c1d95 0%, #6d28d9 50%, #8b5cf6 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
             position: relative;
-            z-index: 1;
+            overflow-x: hidden;
         }
 
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-image: url("{{ asset('assets/admin/images/batik-pkk.svg') }}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.4;
-            z-index: -1;
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .reset-container {
             background: #fff;
             border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(76, 29, 149, 0.3);
             overflow: hidden;
             width: 100%;
             max-width: 420px;
             animation: slideUp 0.5s ease;
+            position: relative;
+            z-index: 1;
         }
 
         @keyframes slideUp {
@@ -140,7 +141,7 @@
         .form-group input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
         }
 
         .form-group .input-with-icon {
@@ -182,12 +183,12 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
 
         .btn-reset:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(20, 184, 166, 0.4);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
         }
 
         .btn-reset:active { transform: translateY(0); }
@@ -222,9 +223,9 @@
         }
 
         .info-box {
-            background: #f0f9ff;
-            border: 1px solid #bae6fd;
-            color: #0369a1;
+            background: #f5f3ff;
+            border: 1px solid #ddd6fe;
+            color: #5b21b6;
             padding: 1rem;
             border-radius: 10px;
             margin-bottom: 1.5rem;
@@ -260,7 +261,6 @@
             font-size: 0.85rem;
         }
 
-        /* Password strength indicator */
         .password-strength {
             margin-top: 0.5rem;
             display: flex;
@@ -297,10 +297,10 @@
         {{-- Header --}}
         <div class="reset-header">
             <div class="logo">
-                <img src="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}" alt="Logo PKK Kabupaten Toba">
+                <img src="{{ asset('assets/sidongan/images/Logo-SIDONGAN-white.svg') }}" alt="Logo SIDONGAN">
             </div>
-            <h1>Reset Password</h1>
-            <p>PKK Kabupaten Toba</p>
+            <h1>Reset Password SIDONGAN</h1>
+            <p>Sistem Informasi Dokumen & Arsip PKK Kabupaten Toba</p>
         </div>
 
         {{-- Body --}}
@@ -337,11 +337,11 @@
 
             {{-- Info Box --}}
             <div class="info-box">
-                Buat password baru untuk akun Anda. Pastikan password kuat dan mudah diingat.
+                Buat password baru untuk akun SIDONGAN Anda. Pastikan password kuat dan mudah diingat.
             </div>
 
             {{-- Reset Password Form --}}
-            <form method="POST" action="{{ route('password.store') }}">
+            <form method="POST" action="{{ route('sidongan.password.store') }}">
                 @csrf
 
                 {{-- Token --}}
@@ -349,7 +349,7 @@
 
                 {{-- Email --}}
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Email SIDONGAN</label>
                     <input
                         type="email"
                         id="email"
@@ -423,16 +423,16 @@
 
                 {{-- Submit Button --}}
                 <button type="submit" class="btn-reset" id="submitBtn">
-                    RESET PASSWORD
+                    RESET PASSWORD SIDONGAN
                 </button>
             </form>
 
             {{-- Back to Login Link --}}
-            <a href="{{ route('login') }}" class="link-back">
+            <a href="{{ route('sidongan.login') }}" class="link-back">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
-                Kembali ke Login
+                Kembali ke Login SIDONGAN
             </a>
 
             {{-- Footer --}}
@@ -443,9 +443,6 @@
     </div>
 
     <script>
-        // ==========================================
-        // TOGGLE PASSWORD VISIBILITY
-        // ==========================================
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
             const isPassword = input.type === 'password';
@@ -460,37 +457,26 @@
             }
         }
 
-        // ==========================================
-        // PASSWORD STRENGTH INDICATOR
-        // ==========================================
         function checkPasswordStrength(password) {
             const bars = document.querySelectorAll('#passwordStrength .bar');
             const hint = document.getElementById('passwordHint');
             let strength = 0;
 
-            // Reset all bars
-            bars.forEach(bar => {
-                bar.className = 'bar';
-            });
+            bars.forEach(bar => { bar.className = 'bar'; });
 
             if (password.length === 0) {
                 hint.textContent = '';
                 return;
             }
 
-            // Check length
             if (password.length >= 8) strength++;
             if (password.length >= 12) strength++;
-
-            // Check for mixed characters
             if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
             if (/\d/.test(password)) strength++;
             if (/[^a-zA-Z0-9]/.test(password)) strength++;
 
-            // Normalize to 0-4
             strength = Math.min(strength, 4);
 
-            // Update bars
             for (let i = 0; i < bars.length; i++) {
                 if (i < strength) {
                     let level = 'weak';
@@ -500,7 +486,6 @@
                 }
             }
 
-            // Update hint text
             if (strength <= 1) hint.textContent = 'Password lemah';
             else if (strength <= 2) hint.textContent = 'Password cukup';
             else if (strength <= 3) hint.textContent = 'Password baik';

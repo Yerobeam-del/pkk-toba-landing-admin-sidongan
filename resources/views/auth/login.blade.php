@@ -552,9 +552,9 @@
                         </span>
                         <span class="check-text">Ingat saya</span>
                     </label>
-                    <!-- @if (Route::has('password.request'))
+                    @if (Route::has('password.request'))
                         <a class="forgot-password" href="{{ route('password.request') }}">Lupa password?</a>
-                    @endif -->
+                    @endif
                 </div>
 
                 <button type="submit" class="btn-login">

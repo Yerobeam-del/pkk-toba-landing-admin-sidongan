@@ -28,6 +28,20 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $user = Auth::user();
+
+        // ===== PERSONAL EMAIL FLOW AFTER LOGIN =====
+        // 1. Belum diset → redirect ke halaman setup
+        if (!$user->personal_email) {
+            return redirect()->route('personal-email.setup');
+        }
+
+        // 2. Sudah diset tapi belum diverifikasi → redirect ke notice
+        if (!$user->hasVerifiedPersonalEmail()) {
+            return redirect()->route('personal-email.notice');
+        }
+
+        // 3. Sudah diverifikasi → lanjut ke dashboard
         return redirect()->intended(route('admin.dashboard', absolute: false));
     }
 

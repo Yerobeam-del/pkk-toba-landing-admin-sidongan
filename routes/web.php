@@ -331,6 +331,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
             Route::put('/{user}', [App\Http\Controllers\Admin\UserManagementController::class, 'update'])->name('update');
             Route::delete('/{user}', [App\Http\Controllers\Admin\UserManagementController::class, 'destroy'])->name('destroy');
             Route::post('/{user}/toggle-status', [App\Http\Controllers\Admin\UserManagementController::class, 'toggleStatus'])->name('user-management.toggle-status');
+            Route::post('/{user}/reset-password', [App\Http\Controllers\Admin\UserManagementController::class, 'resetPassword'])->name('user-management.reset-password');
             Route::get('/{user}', [App\Http\Controllers\Admin\UserManagementController::class, 'show'])->name('show');
         });
 
@@ -342,6 +343,20 @@ Route::domain(config('app.landing_domain'))->group(function () {
             Route::delete('/{document}', [App\Http\Controllers\Admin\SidonganDataController::class, 'destroy'])->name('destroy');
         });
     });
+
+    // ================= PERSONAL EMAIL SETUP & VERIFICATION =================
+    // Flow: setup → store (simpan + kirim email) → notice (cekk email) → verify (klik link) → dashboard
+    Route::middleware(['auth'])->prefix('personal-email')->name('personal-email.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Auth\PersonalEmailController::class, 'showSetupForm'])->name('setup');
+        Route::post('/', [App\Http\Controllers\Auth\PersonalEmailController::class, 'store'])->name('store');
+        Route::get('/notice', [App\Http\Controllers\Auth\PersonalEmailController::class, 'showNotice'])->name('notice');
+        Route::get('/verify/{id}', [App\Http\Controllers\Auth\PersonalEmailController::class, 'verify'])
+            ->middleware('signed') // Validasi signed URL otomatis
+            ->name('verify');
+        Route::post('/resend', [App\Http\Controllers\Auth\PersonalEmailController::class, 'resend'])->name('resend');
+        Route::get('/skip', [App\Http\Controllers\Auth\PersonalEmailController::class, 'skip'])->name('skip');
+    });
+
 });
 
 // ======================================================================
@@ -406,6 +421,19 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
         })->name('sidongan.login');
 
         Route::post('/sidongan-login', [App\Http\Controllers\Sidongan\AuthController::class, 'login'])->name('sidongan.login.post');
+
+        // ================= SIDONGAN FORGOT PASSWORD =================
+        Route::get('/sidongan-forgot-password', [App\Http\Controllers\Sidongan\ForgotPasswordController::class, 'create'])
+            ->name('sidongan.password.request');
+
+        Route::post('/sidongan-forgot-password', [App\Http\Controllers\Sidongan\ForgotPasswordController::class, 'store'])
+            ->name('sidongan.password.email');
+
+        Route::get('/sidongan-reset-password/{token}', [App\Http\Controllers\Sidongan\ResetPasswordController::class, 'create'])
+            ->name('sidongan.password.reset');
+
+        Route::post('/sidongan-reset-password', [App\Http\Controllers\Sidongan\ResetPasswordController::class, 'store'])
+            ->name('sidongan.password.store');
     });
 
     Route::post('/sidongan-logout', [App\Http\Controllers\Sidongan\AuthController::class, 'logout'])->name('sidongan.logout');

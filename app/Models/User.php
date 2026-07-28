@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -17,9 +18,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'personal_email',
         'phone_number',
         'avatar',
         'email_verified_at',
+        'personal_email_verified_at',
         'password',
         'remember_token',
         'sidongan_role',
@@ -38,8 +41,46 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'personal_email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Send the password reset notification using custom branded notification.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        // Kirim ke personal_email jika sudah diverifikasi
+        $email = $this->personal_email_verified_at ? $this->personal_email : $this->email;
+        $this->notify(new ResetPasswordNotification($token, 'web', $email));
+    }
+
+    /**
+     * Send password reset notification for SIDONGAN guard.
+     */
+    public function sendSidonganPasswordResetNotification($token): void
+    {
+        $email = $this->personal_email_verified_at ? $this->personal_email : $this->email;
+        $this->notify(new ResetPasswordNotification($token, 'sidongan', $email));
+    }
+
+    /**
+     * Cek apakah personal email sudah diverifikasi.
+     */
+    public function hasVerifiedPersonalEmail(): bool
+    {
+        return !is_null($this->personal_email_verified_at);
+    }
+
+    /**
+     * Tandai personal email sebagai terverifikasi.
+     */
+    public function markPersonalEmailAsVerified(): bool
+    {
+        return $this->forceFill([
+            'personal_email_verified_at' => $this->freshTimestamp(),
+        ])->save();
     }
 
     /**

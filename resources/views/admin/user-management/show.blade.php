@@ -11,12 +11,16 @@
     </div>
     <div style="display:flex;gap:0.75rem">
         
-        {{-- Hanya tampilkan tombol Edit jika user yang sedang login adalah Super Admin --}}
+        {{-- Hanya tampilkan tombol Edit & Reset Password jika user yang sedang login adalah Super Admin --}}
         @if(auth()->user()->sidongan_role === 'super_admin')
             <a href="{{ route('admin.user-management.edit', $user) }}" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 Edit Akun
             </a>
+            <button type="button" onclick="showResetPasswordModal({{ $user->id }}, '{{ addslashes($user->name) }}')" class="btn btn-secondary" style="display:inline-flex;align-items:center;gap:0.5rem;background:#f1f5f9;color:#475569;padding:0.5rem 1rem;border-radius:8px;border:1px solid #e2e8f0;cursor:pointer;font-weight:600;font-family:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#475569'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Reset Password
+            </button>
         @endif
         
         <x-admin.back-button :href="route('admin.user-management.index')" />

@@ -84,6 +84,18 @@
                     <label style="font-weight:600;display:block;margin-bottom:0.5rem">Nomor Telepon</label>
                     <input type="text" name="phone_number" class="form-control" value="{{ old('phone_number') }}">
                 </div>
+
+                {{-- Personal Email --}}
+                <div>
+                    <label style="font-weight:600;display:block;margin-bottom:0.5rem">
+                        Email Pribadi
+                        <span style="font-weight:400;color:var(--text-muted);font-size:0.8rem">(Gmail, Yahoo, dll)</span>
+                    </label>
+                    <input type="email" name="personal_email" class="form-control" value="{{ old('personal_email') }}" placeholder="namaketua@gmail.com">
+                    <small style="color:var(--text-muted);display:block;margin-top:0.25rem">
+                        Email pribadi untuk menerima link reset password jika lupa password.
+                    </small>
+                </div>
             </div>
 
             {{-- Grid 2 Kolom: Password & Confirm --}}

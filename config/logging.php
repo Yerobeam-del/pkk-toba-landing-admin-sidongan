@@ -123,6 +123,19 @@ return [
             'handler' => NullHandler::class,
         ],
 
+        // ============================================
+        // AUDIT LOG — Merekam aktivitas keamanan
+        // seperti request reset password, login gagal, dll.
+        // Disimpan terpisah agar mudah diaudit.
+        // ============================================
+        'audit' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/audit.log'),
+            'level' => 'info',
+            'days' => 90,
+            'replace_placeholders' => true,
+        ],
+
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],

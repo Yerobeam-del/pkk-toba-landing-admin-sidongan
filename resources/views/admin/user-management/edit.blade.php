@@ -89,6 +89,21 @@
                     <label style="font-weight:600;display:block;margin-bottom:0.5rem">Nomor Telepon</label>
                     <input type="text" name="phone_number" class="form-control" value="{{ old('phone_number', $user->phone_number) }}">
                 </div>
+
+                {{-- Personal Email --}}
+                <div>
+                    <label style="font-weight:600;display:block;margin-bottom:0.5rem">
+                        Email Pribadi
+                        <span style="font-weight:400;color:var(--text-muted);font-size:0.8rem">(Gmail, Yahoo, dll)</span>
+                    </label>
+                    <input type="email" name="personal_email" class="form-control" value="{{ old('personal_email', $user->personal_email) }}" placeholder="namaketua@gmail.com">
+                    <small style="color:var(--text-muted);display:block;margin-top:0.25rem">
+                        Email pribadi untuk menerima link reset password. 
+                        @if($user->personal_email_verified_at)
+                            <span style="color:#16a34a">✓ Terverifikasi ({{ $user->personal_email_verified_at->translatedFormat('d F Y') }})</span>
+                        @endif
+                    </small>
+                </div>
             </div>
 
             {{-- Grid 2 Kolom: Password & Confirm --}}
