@@ -257,11 +257,11 @@
             <div class="info-card">
                 <strong style="font-size:0.9rem; color:var(--text-dark);">Dikirim ke:</strong>
                 <div class="email-display">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ $personal_email ?? Auth::user()->personal_email ? '#14b8a6' : '#94a3b8' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                         <polyline points="22,6 12,13 2,6"/>
                     </svg>
-                    <span>{{ $personal_email ?? Auth::user()->personal_email }}</span>
+                    <span>{{ $personal_email }}</span>
                 </div>
             </div>
 
@@ -270,7 +270,7 @@
                 <ol class="steps">
                     <li>
                         <span class="step-number">1</span>
-                        <span>Buka kotak masuk email <strong>{{ $personal_email ?? Auth::user()->personal_email }}</strong> Anda (Gmail, Yahoo, dll)</span>
+                        <span>Buka kotak masuk email <strong>{{ $personal_email }}</strong> Anda (Gmail, Yahoo, dll)</span>
                     </li>
                     <li>
                         <span class="step-number">2</span>

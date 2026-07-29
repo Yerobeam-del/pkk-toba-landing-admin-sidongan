@@ -16,15 +16,22 @@ class PersonalEmailController extends Controller
     /**
      * Tampilkan halaman setup personal email.
      */
-    public function showSetupForm(): View
+    public function showSetupForm(): View|RedirectResponse
     {
         $user = Auth::user();
 
-        // Jika sudah punya personal_email tapi belum diverifikasi,
-        // kasih opsi untuk ganti atau kirim ulang verifikasi
-        if ($user->personal_email && !$user->hasVerifiedPersonalEmail()) {
+        // Kalau sudah diverifikasi di DB, redirect ke dashboard
+        if ($user->hasVerifiedPersonalEmail()) {
+            return redirect()->intended(route('admin.dashboard'))
+                ->with('info', 'Email pribadi <strong>' . e($user->personal_email) . '</strong> sudah diverifikasi.');
+        }
+
+        // Cek apakah ada email yang sedang menunggu verifikasi di session
+        $pendingEmail = session('pending_personal_email');
+
+        if ($pendingEmail) {
             return view('auth.setup-personal-email', [
-                'existing_email' => $user->personal_email,
+                'existing_email' => $pendingEmail,
                 'needs_verification' => true,
             ]);
         }
@@ -36,8 +43,8 @@ class PersonalEmailController extends Controller
     }
 
     /**
-     * Simpan personal email dan kirim link verifikasi ke email tersebut.
-     * Email TIDAK langsung diverifikasi — user harus klik link di email.
+     * Validasi email, simpan di SESSION (bukan DB), lalu kirim link verifikasi.
+     * Email akan disimpan ke DB hanya setelah user mengklik link verifikasi.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -53,38 +60,40 @@ class PersonalEmailController extends Controller
             ],
         ]);
 
-        // Simpan personal email — BELUM diverifikasi
-        $user->personal_email = $request->personal_email;
-        $user->personal_email_verified_at = null;
-        $user->save();
+        $email = $request->personal_email;
 
-        // Kirim notifikasi verifikasi ke personal email
-        // Bungkus try-catch agar kegagalan email TIDAK menyebabkan error 500
+        // Simpan email di SESSION — BELUM masuk database
+        session(['pending_personal_email' => $email]);
+
+        // Kirim notifikasi verifikasi ke email tersebut
         try {
-            $user->notify(new PersonalEmailVerificationNotification());
+            $user->notify(new PersonalEmailVerificationNotification($email));
         } catch (\Throwable $e) {
+            // Gagal kirim → hapus session
+            session()->forget('pending_personal_email');
+
             Log::channel('audit')->warning('Gagal kirim email verifikasi personal email', [
                 'user_id' => $user->id,
                 'error' => $e->getMessage(),
             ]);
 
             return redirect()->route('personal-email.notice')
-                ->with('error', 'Email verifikasi gagal dikirim ke <strong>' . e($request->personal_email) . '</strong>. Silakan klik "Kirim Ulang" untuk mencoba lagi.');
+                ->with('error', 'Email verifikasi gagal dikirim ke <strong>' . e($email) . '</strong>. Silakan klik "Kirim Ulang" untuk mencoba lagi.');
         }
 
-        Log::channel('audit')->info('Personal email disimpan, menunggu verifikasi', [
+        Log::channel('audit')->info('Personal email menunggu verifikasi (session)', [
             'user_id' => $user->id,
             'user_name' => $user->name,
-            'personal_email' => $user->personal_email,
+            'personal_email' => $email,
             'login_email' => $user->email,
         ]);
 
         return redirect()->route('personal-email.notice')
-            ->with('success', 'Email verifikasi telah dikirim ke <strong>' . e($request->personal_email) . '</strong>. Silakan cek inbox email Anda.');
+            ->with('success', 'Email verifikasi telah dikirim ke <strong>' . e($email) . '</strong>. Silakan cek inbox email Anda.');
     }
 
     /**
-     * Tampilkan halaman "Cek Email Anda" — memberi tahu user untuk cek inbox.
+     * Tampilkan halaman "Cek Email Anda".
      */
     public function showNotice(): View|RedirectResponse
     {
@@ -95,19 +104,22 @@ class PersonalEmailController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        // Kalau personal_email belum diset, redirect ke setup
-        if (!$user->personal_email) {
+        // Ambil email dari session
+        $pendingEmail = session('pending_personal_email');
+
+        // Kalau tidak ada pending email, redirect ke setup
+        if (!$pendingEmail) {
             return redirect()->route('personal-email.setup');
         }
 
         return view('auth.personal-email-notice', [
-            'personal_email' => $user->personal_email,
+            'personal_email' => $pendingEmail,
         ]);
     }
 
     /**
      * Verifikasi personal email via signed URL.
-     * Route sudah menggunakan middleware 'signed' — URL otomatis divalidasi.
+     * Email BARU disimpan ke DATABASE di sini, setelah user klik link.
      */
     public function verify(Request $request, $id): RedirectResponse
     {
@@ -118,10 +130,12 @@ class PersonalEmailController extends Controller
             abort(403, 'Link verifikasi tidak sesuai dengan akun Anda.');
         }
 
-        // Cek apakah email pribadi sudah terisi
-        if (!$user->personal_email) {
+        // Ambil email dari signed URL
+        $email = $request->query('email');
+
+        if (!$email) {
             return redirect()->route('personal-email.setup')
-                ->with('error', 'Silakan daftarkan email pribadi Anda terlebih dahulu.');
+                ->with('error', 'Link verifikasi tidak valid. Silakan daftarkan email pribadi Anda kembali.');
         }
 
         // Jika sudah diverifikasi sebelumnya, lewati
@@ -130,22 +144,26 @@ class PersonalEmailController extends Controller
                 ->with('info', 'Email pribadi sudah diverifikasi sebelumnya.');
         }
 
-        // Tandai sebagai terverifikasi
+        // Simpan ke DATABASE — BARU SEKARANG!
+        $user->personal_email = $email;
         $user->personal_email_verified_at = now();
         $user->save();
 
-        Log::channel('audit')->info('Personal email berhasil diverifikasi', [
+        // Bersihkan session
+        session()->forget('pending_personal_email');
+
+        Log::channel('audit')->info('Personal email berhasil diverifikasi & disimpan', [
             'user_id' => $user->id,
             'user_name' => $user->name,
-            'personal_email' => $user->personal_email,
+            'personal_email' => $email,
         ]);
 
         return redirect()->intended(route('admin.dashboard'))
-            ->with('success', '🎉 Email pribadi <strong>' . e($user->personal_email) . '</strong> berhasil diverifikasi! Sekarang Anda bisa menggunakan fitur Lupa Password.');
+            ->with('success', '🎉 Email pribadi <strong>' . e($email) . '</strong> berhasil diverifikasi! Sekarang Anda bisa menggunakan fitur Lupa Password.');
     }
 
     /**
-     * Kirim ulang link verifikasi ke personal email.
+     * Kirim ulang link verifikasi (email diambil dari session).
      * Rate limit: 3x per 30 menit per user.
      */
     public function resend(Request $request): RedirectResponse
@@ -157,8 +175,11 @@ class PersonalEmailController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        // Kalau personal_email belum diset, redirect ke setup
-        if (!$user->personal_email) {
+        // Ambil email dari session
+        $email = session('pending_personal_email');
+
+        // Kalau tidak ada pending email, redirect ke setup
+        if (!$email) {
             return redirect()->route('personal-email.setup');
         }
 
@@ -172,7 +193,7 @@ class PersonalEmailController extends Controller
             Log::channel('audit')->warning('Rate limit tercapai — Resend verifikasi personal email', [
                 'user_id' => $user->id,
                 'user_name' => $user->name,
-                'personal_email' => $user->personal_email,
+                'personal_email' => $email,
                 'cooldown_remaining' => $seconds . ' detik',
             ]);
 
@@ -181,16 +202,16 @@ class PersonalEmailController extends Controller
 
         // Kirim ulang notifikasi verifikasi
         try {
-            $user->notify(new PersonalEmailVerificationNotification());
+            $user->notify(new PersonalEmailVerificationNotification($email));
             RateLimiter::hit($throttleKey, 1800); // 30 menit cooldown
 
             Log::channel('audit')->info('Resend verifikasi personal email', [
                 'user_id' => $user->id,
                 'user_name' => $user->name,
-                'personal_email' => $user->personal_email,
+                'personal_email' => $email,
             ]);
 
-            return back()->with('success', 'Email verifikasi telah dikirim ulang ke <strong>' . e($user->personal_email) . '</strong>.');
+            return back()->with('success', 'Email verifikasi telah dikirim ulang ke <strong>' . e($email) . '</strong>.');
         } catch (\Throwable $e) {
             Log::channel('audit')->warning('Gagal kirim ulang email verifikasi personal email', [
                 'user_id' => $user->id,
@@ -206,6 +227,9 @@ class PersonalEmailController extends Controller
      */
     public function skip(Request $request): RedirectResponse
     {
+        // Hapus pending email dari session jika ada
+        session()->forget('pending_personal_email');
+
         return redirect()->intended(route('admin.dashboard'))
             ->with('info', 'Anda bisa setup email pribadi nanti melalui menu Profil.');
     }

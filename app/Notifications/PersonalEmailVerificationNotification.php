@@ -12,11 +12,16 @@ class PersonalEmailVerificationNotification extends Notification
     use Queueable;
 
     /**
+     * Alamat email tujuan — diisi oleh controller, dibaca oleh User::routeNotificationForMail().
+     */
+    public string $email;
+
+    /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(string $email)
     {
-        //
+        $this->email = $email;
     }
 
     /**
@@ -34,9 +39,10 @@ class PersonalEmailVerificationNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        // Signed URL valid 24 jam — hanya bisa dipakai oleh user yang terautentikasi
+        // Signed URL valid 24 jam — sertakan email agar diverifikasi dulu baru disimpan
         $verificationUrl = URL::signedRoute('personal-email.verify', [
             'id' => $notifiable->id,
+            'email' => $this->email,
         ], now()->addHours(24));
 
         $mail = (new MailMessage)
@@ -52,8 +58,8 @@ class PersonalEmailVerificationNotification extends Notification
             ->salutation('Salam, ' . PHP_EOL . 'Tim PKK Kabupaten Toba')
             ->level('primary');
 
-        // Email dikirim ke alamat yang ditentukan oleh User::routeNotificationForMail()
-        // yang akan mengarahkan ke personal_email (bukan login email @pkk-toba.id)
+        // Email dikirim ke alamat dari $this->email (diatur oleh controller),
+        // dibaca oleh User::routeNotificationForMail() untuk menentukan tujuan.
         return $mail;
     }
 

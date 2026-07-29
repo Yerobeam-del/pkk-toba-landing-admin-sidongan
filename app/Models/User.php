@@ -50,17 +50,18 @@ class User extends Authenticatable
     /**
      * Tentukan alamat email tujuan untuk notifikasi mail.
      *
-     * - PersonalEmailVerificationNotification → selalu ke personal_email (walaupun belum diverifikasi)
+     * - PersonalEmailVerificationNotification → kirim ke $notification->email
+     *   (email pribadi yang belum disimpan di DB, dibawa oleh notification instance)
      * - Notifikasi lain → personal_email jika sudah diverifikasi, fallback ke login email
      */
     public function routeNotificationForMail($notification = null): array|string
     {
-        // Untuk verifikasi, kirim ke personal_email (mungkin masih belum diverifikasi)
+        // PersonalEmailVerificationNotification membawa email tujuannya sendiri
         if ($notification instanceof PersonalEmailVerificationNotification) {
-            return $this->personal_email;
+            return $notification->email;
         }
 
-        // Untuk notifikasi lain (reset password, dll), kirim ke personal_email jika sudah diverifikasi
+        // Notifikasi lain (reset password, dll) → personal_email jika sudah diverifikasi
         if ($this->personal_email_verified_at && $this->personal_email) {
             return $this->personal_email;
         }
