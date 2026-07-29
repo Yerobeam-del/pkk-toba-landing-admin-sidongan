@@ -27,3 +27,15 @@ Thumbs.db
 docs/Pseudocode_Arsitektur_PKK_Toba.pdf
 docs/pseudocode-arsitektur-awam.html
 docs/pseudocode-arsitektur-awam.md
+.freebuff/run-dev.bat
+.freebuff/run-server.bat
+.freebuff/server-pid.txt
+.freebuff/start-dev.vbs
+.freebuff/start-server.bat
+.freebuff/start-server.ps1
+.freebuff/start-server.vbs
+.freebuff/preview-thms42afwy3on9.log.err
+.freebuff/preview-thms42afwy3on9.log.bak
+.freebuff/preview-out.log
+.freebuff/preview-err.log
+server.php
