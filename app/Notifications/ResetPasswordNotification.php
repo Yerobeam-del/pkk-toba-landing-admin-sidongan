@@ -21,18 +21,12 @@ class ResetPasswordNotification extends Notification
     protected string $guard;
 
     /**
-     * Alamat email tujuan (personal_email jika ada, login email default).
-     */
-    protected ?string $emailTo;
-
-    /**
      * Create a new notification instance.
      */
-    public function __construct(string $token, string $guard = 'web', ?string $emailTo = null)
+    public function __construct(string $token, string $guard = 'web')
     {
         $this->token = $token;
         $this->guard = $guard;
-        $this->emailTo = $emailTo;
     }
 
     /**
@@ -78,11 +72,8 @@ class ResetPasswordNotification extends Notification
             ->salutation('Salam, ' . PHP_EOL . 'Tim PKK Kabupaten Toba')
             ->level('primary');
 
-        // Kirim ke personal_email jika disediakan (bukan ke login email @pkk-toba.id)
-        if ($this->emailTo) {
-            $mail->to($this->emailTo);
-        }
-
+        // Email dikirim ke alamat yang ditentukan oleh User::routeNotificationForMail()
+        // yang akan mengarahkan ke personal_email jika sudah diverifikasi
         return $mail;
     }
 

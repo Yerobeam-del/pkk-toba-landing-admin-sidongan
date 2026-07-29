@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Notifications\PersonalEmailVerificationNotification;
 use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable
@@ -47,13 +48,32 @@ class User extends Authenticatable
     }
 
     /**
+     * Tentukan alamat email tujuan untuk notifikasi mail.
+     *
+     * - PersonalEmailVerificationNotification → selalu ke personal_email (walaupun belum diverifikasi)
+     * - Notifikasi lain → personal_email jika sudah diverifikasi, fallback ke login email
+     */
+    public function routeNotificationForMail($notification = null): array|string
+    {
+        // Untuk verifikasi, kirim ke personal_email (mungkin masih belum diverifikasi)
+        if ($notification instanceof PersonalEmailVerificationNotification) {
+            return $this->personal_email;
+        }
+
+        // Untuk notifikasi lain (reset password, dll), kirim ke personal_email jika sudah diverifikasi
+        if ($this->personal_email_verified_at && $this->personal_email) {
+            return $this->personal_email;
+        }
+
+        return $this->email;
+    }
+
+    /**
      * Send the password reset notification using custom branded notification.
      */
     public function sendPasswordResetNotification($token): void
     {
-        // Kirim ke personal_email jika sudah diverifikasi
-        $email = $this->personal_email_verified_at ? $this->personal_email : $this->email;
-        $this->notify(new ResetPasswordNotification($token, 'web', $email));
+        $this->notify(new ResetPasswordNotification($token, 'web'));
     }
 
     /**
@@ -61,8 +81,7 @@ class User extends Authenticatable
      */
     public function sendSidonganPasswordResetNotification($token): void
     {
-        $email = $this->personal_email_verified_at ? $this->personal_email : $this->email;
-        $this->notify(new ResetPasswordNotification($token, 'sidongan', $email));
+        $this->notify(new ResetPasswordNotification($token, 'sidongan'));
     }
 
     /**

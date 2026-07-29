@@ -52,9 +52,8 @@ class PersonalEmailVerificationNotification extends Notification
             ->salutation('Salam, ' . PHP_EOL . 'Tim PKK Kabupaten Toba')
             ->level('primary');
 
-        // Kirim ke personal_email (bukan login email @pkk-toba.id)
-        $mail->to($notifiable->personal_email);
-
+        // Email dikirim ke alamat yang ditentukan oleh User::routeNotificationForMail()
+        // yang akan mengarahkan ke personal_email (bukan login email @pkk-toba.id)
         return $mail;
     }
 
