@@ -533,9 +533,9 @@
                         </span>
                         <span class="check-text">Ingat saya</span>
                     </label>
-                    @if (Route::has('sidongan.password.request'))
-                        <a class="forgot-password" href="{{ route('sidongan.password.request') }}">Lupa password?</a>
-                    @endif
+                    <a class="forgot-password" href="https://{{ config('app.landing_domain', 'pkktoba.id') }}/forgot-password" target="_blank" rel="noopener noreferrer">
+                        Lupa password?
+                    </a>
                 </div>
 
                 <button type="submit" class="btn-login">

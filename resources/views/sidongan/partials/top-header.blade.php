@@ -115,12 +115,19 @@
             <svg id="userMenuArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="transition:transform 0.2s">
                 <polyline points="6 9 12 15 18 9"/>
             </svg>
-        </button>
-
-        <div id="userMenu" class="user-menu">
+        </button>            <div id="userMenu" class="user-menu">
             <div style="padding:0.75rem 1rem;border-bottom:1px solid #f1f5f9">
                 <div style="font-weight:600;font-size:0.9rem;color:#334155">{{ $currentUser->name }}</div>
                 <div style="font-size:0.75rem;color:#94a3b8">{{ $currentUser->sidongan_role_name }}</div>
+            </div>
+            <div style="padding:0.5rem 0;border-bottom:1px solid #f1f5f9">
+                <a href="https://{{ config('app.landing_domain', 'pkktoba.id') }}/personal-email" target="_blank" rel="noopener noreferrer" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:#334155;transition:background 0.2s;text-align:left;font-size:0.85rem;text-decoration:none;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                        <path d="M22 7l-10 7L2 7"/>
+                    </svg>
+                    <span>Pengaturan Email</span>
+                </a>
             </div>
             <form method="POST" action="{{ route('sidongan.logout') }}" style="padding:0.5rem 0">
                 @csrf

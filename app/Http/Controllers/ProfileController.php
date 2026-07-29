@@ -18,8 +18,29 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+
+        // Hitung persentase kelengkapan profil
+        $completionItems = [
+            'name' => !empty($user->name),
+            'email' => !empty($user->email),
+            'avatar' => !empty($user->avatar),
+            'phone_number' => !empty($user->phone_number),
+            'personal_email' => !empty($user->personal_email) && !is_null($user->personal_email_verified_at),
+        ];
+        $completedCount = count(array_filter($completionItems));
+        $completionPercentage = round(($completedCount / count($completionItems)) * 100);
+
+        // Izin efektif user
+        $effectivePermissions = $user->effectivePermissionNames();
+
         return view('admin.profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'completionPercentage' => $completionPercentage,
+            'completionItems' => $completionItems,
+            'effectivePermissions' => $effectivePermissions,
+            'linkedApplications' => $user->applications,
+            'sidonganRoleName' => $user->sidongan_role_name,
         ]);
     }
 

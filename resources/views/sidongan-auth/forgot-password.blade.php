@@ -278,33 +278,34 @@
 
             {{-- Info Box --}}
             <div class="info-box">
-                Lupa password SIDONGAN? Masukkan email Anda dan kami akan mengirimkan tautan untuk mereset password.
+                Lupa password? Fitur reset password kini terpusat di Portal Akun PKK Kabupaten Toba.
             </div>
 
-            {{-- Forgot Password Form --}}
-            <form method="POST" action="{{ route('sidongan.password.email') }}">
-                @csrf
-
-                {{-- Email --}}
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value="{{ old('email') }}"
-                        required
-                        autofocus
-                        autocomplete="email"
-                        placeholder="nama@email.com"
-                    >
+            {{-- Unified Portal Info --}}
+            <div class="info-box">
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    <strong style="font-size:1rem;">Reset Password Terpusat</strong>
                 </div>
-
-                {{-- Submit Button --}}
-                <button type="submit" class="btn-login">
-                    KIRIM LINK RESET
-                </button>
-            </form>
+                <p style="margin:0 0 1rem 0;line-height:1.6;">
+                    Fitur lupa password kini telah terpusat di <strong>Portal Akun PKK Kabupaten Toba</strong>.
+                    Klik tombol di bawah untuk melanjutkan.
+                </p>
+                <a href="https://{{ config('app.landing_domain', 'pkktoba.id') }}/forgot-password"
+                   class="btn-login"
+                   style="display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;text-decoration:none;font-size:0.9rem;padding:0.75rem 1.25rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    BUKA PORTAL RESET PASSWORD
+                </a>
+            </div>
 
             {{-- Back to Login Link --}}
             <a href="{{ route('sidongan.login') }}" class="link-back">
