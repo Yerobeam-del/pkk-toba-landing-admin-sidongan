@@ -57,6 +57,30 @@ return [
             'options' => [],
         ],
 
+        /*
+         * Koneksi khusus untuk membaca database SIEDA (aplikasi terpisah).
+         * Gunakan hanya untuk fitur Manajemen Data SIEDA (hard delete, recycle bin, statistik).
+         *
+         * Model yang menggunakan koneksi ini menetapkan:
+         *   protected $connection = 'sieda';
+         *   protected $table = '<nama_tabel_sieda>';
+         */
+        'sieda' => [
+            'driver' => 'mysql',
+            'host' => env('DB_SIEDA_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('DB_SIEDA_PORT', env('DB_PORT', '3306')),
+            'database' => env('DB_SIEDA_DATABASE', 'db_sieda_app'),
+            'username' => env('DB_SIEDA_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('DB_SIEDA_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_0900_ai_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

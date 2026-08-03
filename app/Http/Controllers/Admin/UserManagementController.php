@@ -15,6 +15,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Services\SiedaSyncService;
 
 class UserManagementController extends Controller
 {
@@ -154,22 +155,17 @@ class UserManagementController extends Controller
             $user->applications()->sync($validated['applications']);
         }
 
-        // SINKRONISASI KE SIEDA BACKEND (Localhost Port 8004)
+        // SINKRONISASI KE SIEDA BACKEND via service (auto header X-Sieda-Key + HMAC)
         if ($user->sieda_role) {
-            try {
-                $apiUrl = 'http://127.0.0.1:8004/api/sieda/sync-user';
-
-                Http::timeout(10)->post($apiUrl, [
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'password' => $request->password,
-                    'sieda_role' => $user->sieda_role,
-                    'kecamatan_code' => $user->sieda_kecamatan,
-                    'kelurahan_code' => $user->sieda_kelurahan,
-                ]);
-            } catch (\Exception $e) {
-                Log::error('Gagal sync user ke SIEDA: ' . $e->getMessage());
-            }
+            $syncService = app(SiedaSyncService::class);
+            $syncService->syncUser([
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => $request->password,
+                'sieda_role' => $user->sieda_role,
+                'kecamatan_code' => $user->sieda_kecamatan,
+                'kelurahan_code' => $user->sieda_kelurahan,
+            ]);
         }
 
         return redirect()->route('admin.user-management.index')
@@ -301,22 +297,17 @@ class UserManagementController extends Controller
             $user->applications()->sync($validated['applications']);
         }
 
-        // SINKRONISASI UPDATE KE SIEDA BACKEND (Localhost Port 8004)
+        // SINKRONISASI UPDATE KE SIEDA BACKEND via service (auto header X-Sieda-Key + HMAC)
         if ($user->sieda_role) {
-            try {
-                $apiUrl = 'http://127.0.0.1:8004/api/sieda/sync-user/' . urlencode($user->email);
-
-                Http::timeout(10)->put($apiUrl, [
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'password' => !empty($validated['password']) ? $request->password : null,
-                    'sieda_role' => $user->sieda_role,
-                    'kecamatan_code' => $user->sieda_kecamatan,
-                    'kelurahan_code' => $user->sieda_kelurahan,
-                ]);
-            } catch (\Exception $e) {
-                Log::error('Gagal sync update user ke SIEDA: ' . $e->getMessage());
-            }
+            $syncService = app(SiedaSyncService::class);
+            $syncService->syncUser([
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => !empty($validated['password']) ? $request->password : null,
+                'sieda_role' => $user->sieda_role,
+                'kecamatan_code' => $user->sieda_kecamatan,
+                'kelurahan_code' => $user->sieda_kelurahan,
+            ], $user->getOriginal('email')); // Kirim email lama untuk path /sync-user/{email}
         }
 
         return redirect()->route('admin.user-management.edit', $user)
@@ -377,6 +368,12 @@ class UserManagementController extends Controller
         }
 
         try {
+            // Revoke akses SIEDA sebelum menghapus user lokal
+            if ($user->sieda_role || $user->email) {
+                $syncService = app(SiedaSyncService::class);
+                $syncService->revokeAccess($user->email);
+            }
+
             DB::table('application_user')->where('user_id', $user->id)->delete();
             $user->delete();
 

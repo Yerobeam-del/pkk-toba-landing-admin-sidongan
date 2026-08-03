@@ -525,6 +525,21 @@
                         <span class="nav-text">Data SIDONGAN</span>
                     </a>
                     @endif
+
+                    {{-- Manajemen Data SIEDA (Hanya Super Admin — hard delete permanen) --}}
+                    @if(auth()->user()->hasRole('super_admin'))
+                    <a href="{{ route('admin.sieda-data.index') }}" class="nav-item {{ request()->routeIs('admin.sieda-data.*') ? 'active' : '' }}">
+                        <div class="nav-icon-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                                <path d="M8 16l4-4 4 4" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        <span class="nav-text">Manajemen SIEDA</span>
+                    </a>
+                    @endif
                 </div>
                 @endif
             </nav>

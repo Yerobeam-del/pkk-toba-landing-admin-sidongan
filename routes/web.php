@@ -342,6 +342,17 @@ Route::domain(config('app.landing_domain'))->group(function () {
             Route::delete('/report/{reportId}', [App\Http\Controllers\Admin\SidonganDataController::class, 'deleteReport'])->name('report.delete');
             Route::delete('/{document}', [App\Http\Controllers\Admin\SidonganDataController::class, 'destroy'])->name('destroy');
         });
+
+        // Manajemen Data SIEDA — hapus permanen + recycle bin.
+        // Perhatian: middleware permission bersifat defense-in-depth; controller juga
+        // memverifikasi sidongan_role === 'super_admin' di dalam authorizeSuperAdmin().
+        Route::prefix('sieda-data')->name('sieda-data.')->middleware('permission:manage-users')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\SiedaDataController::class, 'index'])->name('index');
+            Route::get('/module/{module}', [App\Http\Controllers\Admin\SiedaDataController::class, 'showModule'])->name('module');
+            Route::get('/module/{module}/{id}', [App\Http\Controllers\Admin\SiedaDataController::class, 'showRecord'])->name('show');
+            Route::post('/module/{module}/{id}/restore', [App\Http\Controllers\Admin\SiedaDataController::class, 'restore'])->name('restore');
+            Route::delete('/module/{module}/{id}', [App\Http\Controllers\Admin\SiedaDataController::class, 'forceDelete'])->name('force-delete');
+        });
     });
 
     // ================= PERSONAL EMAIL SETUP & VERIFICATION =================

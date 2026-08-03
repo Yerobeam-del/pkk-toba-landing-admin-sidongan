@@ -31,4 +31,22 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | SIEDA Backend Integration
+    |--------------------------------------------------------------------------
+    |
+    | Konfigurasi untuk sinkronisasi user ke backend SIEDA (aplikasi PKK
+    | di tingkat desa). SIEDA_SYNC_SECRET HARUS sama persis dengan nilai
+    | di .env aplikasi SIEDA agar header X-Sieda-Key lolos middleware.
+    |
+    | Generate secret dengan: php artisan tinker --execute="echo Str::random(64);"
+    |
+    */
+
+    'sieda' => [
+        'base_url' => env('SIEDA_API_URL', 'http://127.0.0.1:8004'),
+        'sync_secret' => env('SIEDA_SYNC_SECRET'),
+    ],
+
 ];
