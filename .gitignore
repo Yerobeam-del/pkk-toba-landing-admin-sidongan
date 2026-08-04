@@ -39,3 +39,7 @@ docs/pseudocode-arsitektur-awam.md
 .freebuff/preview-out.log
 .freebuff/preview-err.log
 server.php
+.freebuff/desktop-v2.db-wal
+.gitignore
+.freebuff/desktop-v2.db-shm
+.freebuff/desktop-v2.db
