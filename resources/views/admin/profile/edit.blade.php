@@ -47,10 +47,12 @@
 @section('content')
 
 @php
+// SSO: URL balik ke SIEDA (login otomatis tanpa mengetik kredensial).
+$ssoBackUrl = app(\App\Services\SsoTokenService::class)->buildCallbackUrl($user->email);
 $appList = [
 ['name' => 'Admin Panel', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5', 'color' => '#14b8a6', 'url' => route('admin.dashboard'), 'accessible' => true],
 ['name' => 'SIDONGAN', 'icon' => 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z', 'color' => '#8b5cf6', 'url' => 'https://sidongan.' . config('app.landing_domain', 'pkktoba.id'), 'accessible' => $user->hasSidonganAccess()],
-['name' => 'SIEDA', 'icon' => 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z', 'color' => '#0ea5a4', 'url' => '#', 'accessible' => !empty($user->sieda_role)],
+['name' => 'SIEDA', 'icon' => 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z', 'color' => '#0ea5a4', 'url' => $ssoBackUrl, 'accessible' => !empty($user->sieda_role)],
 ];
 @endphp
 
@@ -59,6 +61,12 @@ $appList = [
         <h1 style="font-size:1.5rem;font-weight:800;color:#1e293b;margin:0 0 0.25rem 0">Edit Profil</h1>
         <p style="color:#94a3b8;margin:0;font-size:0.9rem">Kelola informasi akun dan akses aplikasi Anda</p>
     </div>
+    @if (!empty($user->sieda_role))
+    <a href="{{ $ssoBackUrl }}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:600;transition:all 0.2s;margin-left:0.5rem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Kembali ke SIEDA
+    </a>
+    @endif
     <a href="{{ route('admin.dashboard') }}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#f1f5f9;color:#475569;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:500;transition:all 0.2s">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Kembali

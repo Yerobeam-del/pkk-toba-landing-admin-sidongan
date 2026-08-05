@@ -8,8 +8,15 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+
+// ================= SSO DARI/TUJU SIEDA =================
+// /sso/login tanpa middleware guest: user yang sudah login langsung
+// diteruskan ke halaman tujuan, yang belum login diverifikasi token dulu.
+Route::get('sso/login', [SsoController::class, 'login'])->name('sso.login');
+Route::get('sso/back', [SsoController::class, 'back'])->name('sso.back');
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
