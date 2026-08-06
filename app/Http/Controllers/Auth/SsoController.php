@@ -35,6 +35,11 @@ class SsoController extends Controller
     {
         // Sudah login di Admin Panel → langsung lanjut ke tujuan.
         if (Auth::guard('web')->check()) {
+            // Catat kalau user datang lewat SSO SIEDA (token sah), supaya
+            // tombol "Kembali ke SIEDA" muncul di halaman profil.
+            if ($sso->verify((string) $request->query('token', ''))) {
+                $request->session()->put('sso_from_sieda', true);
+            }
             return redirect()->to($this->normalizeReturn($request->query('return', '/admin/profile')));
         }
 
@@ -70,6 +75,10 @@ class SsoController extends Controller
 
         Auth::guard('web')->login($user);
         $request->session()->regenerate();
+
+        // Tandai sesi ini berasal dari SIEDA — tombol "Kembali ke SIEDA"
+        // di halaman profil hanya muncul dalam kondisi ini.
+        $request->session()->put('sso_from_sieda', true);
 
         return redirect()->to($this->normalizeReturn($data['return'] ?? '/admin/profile'));
     }

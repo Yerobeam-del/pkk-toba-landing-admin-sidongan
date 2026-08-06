@@ -28,6 +28,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Login normal dari Admin Panel → bukan dari SIEDA, jadi tombol
+        // "Kembali ke SIEDA" di halaman profil tidak boleh muncul.
+        $request->session()->forget('sso_from_sieda');
+
         $user = Auth::user();
 
         // ===== PERSONAL EMAIL FLOW AFTER LOGIN =====

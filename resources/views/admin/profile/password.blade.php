@@ -10,13 +10,15 @@
         <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Perbarui password akun Anda</p>
     </div>
     <div style="display:flex;align-items:center;gap:0.5rem">
-        @if (!empty(auth()->user()->sieda_role))
+        @if (session('sso_from_sieda'))
+        {{-- Diakses dari SIEDA: tombol kembali diganti menjadi Kembali ke SIEDA --}}
         <a href="{{ app(\App\Services\SsoTokenService::class)->buildCallbackUrl(auth()->user()->email) }}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:600;transition:all 0.2s">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Kembali ke SIEDA
         </a>
-        @endif
+        @else
         <x-admin.back-button :href="route('admin.profile.edit')" label="Kembali ke Profil" />
+        @endif
     </div>
 </div>
 
