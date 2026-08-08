@@ -1,3 +1,16 @@
+@php
+    // Badge jumlah data untuk sidebar — dihitung sekali per render halaman
+    $badgeBerita = \App\Models\News::count();
+    $badgeDokumen = \App\Models\Dokumen::count();
+    $badgeSidongan = \App\Models\Document::count();
+    $badgeUsers = \App\Models\User::count();
+    // SIEDA terhubung ke database terpisah; amankan agar layout tidak error jika DB offline
+    try {
+        $badgeSieda = \App\Models\Sieda\Warga::count();
+    } catch (\Throwable $e) {
+        $badgeSieda = null;
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -45,171 +58,11 @@
             overflow-x: hidden;
         }
 
-        /* LAYOUT WRAPPER */
-        .admin-layout {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            color: var(--text-light);
-            position: fixed;
-            top: 0; left: 0; bottom: 0;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            transition: var(--transition);
-            border-right: 1px solid var(--border);
-        }
-
-        .admin-layout.collapsed .sidebar {
-            width: var(--sidebar-collapsed-width);
-        }
-
-        /* Sidebar Header */
-        .sidebar-header {
-            height: var(--header-height);
-            display: flex;
-            align-items: center;
-            padding: 0 1.25rem;
-            gap: 0.75rem;
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .sidebar-logo {
-            width: 44px;
-            height: 44px;
-            background: transparent;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            padding: 4px;
-        }
-
-        .sidebar-logo .logo-img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-            filter: brightness(0) invert(1);
-        }
-
-        .sidebar-title {
-            transition: var(--transition);
-            opacity: 1;
-            width: auto;
-        }
-
-        .admin-layout.collapsed .sidebar-title {
-            opacity: 0;
-            width: 0;
-        }
-
-        .sidebar-title h1 { font-size: 1rem; font-weight: 700; line-height: 1.2; }
-        .sidebar-title small { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
-
-        /* Navigation */
-        .sidebar-nav {
-            flex: 1;
-            padding: 1rem 0.75rem;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .nav-section-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            padding: 0.5rem 0.5rem;
-            margin-top: 1rem;
-            white-space: nowrap;
-            transition: var(--transition);
-        }
-
-        .admin-layout.collapsed .nav-section-title {
-            opacity: 0;
-            height: 0;
-            padding: 0;
-            margin: 0;
-        }
-
-        /* MAIN CONTENT WRAPPER */
-        .main-wrapper {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-
-        .admin-layout.collapsed .main-wrapper {
-            margin-left: var(--sidebar-collapsed-width);
-        }
-
-        /* TOP HEADER */
-        .top-header {
-            height: var(--header-height);
-            background: #fff;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 900;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .toggle-btn {
-            width: 36px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
-            background: transparent;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            cursor: pointer;
-            color: #64748b;
-            transition: var(--transition);
-        }
-
-        .toggle-btn:hover { background: #f1f5f9; color: var(--primary); }
-        .toggle-btn svg { width: 20px; height: 20px; }
-
-        .header-right { display: flex; align-items: center; gap: 1rem; }
-        .user-info { font-size: 0.9rem; font-weight: 600; color: #334155; }
-
-        /* CONTENT AREA */
-        .content-area {
-            padding: 2rem;
-            flex: 1;
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 1024px) {
-            .sidebar { transform: translateX(-100%); }
-            .admin-layout.mobile-open .sidebar { transform: translateX(0); }
-            .main-wrapper { margin-left: 0 !important; }
-            .sidebar-overlay {
-                display: none; position: fixed; inset: 0;
-                background: rgba(0,0,0,0.5); z-index: 999;
-                transition: opacity 0.3s;
-            }
-            .admin-layout.mobile-open .sidebar-overlay { display: block; opacity: 1; }
-            .admin-layout.collapsed .sidebar { width: var(--sidebar-width); }
-            .admin-layout.collapsed .nav-item .nav-text { opacity: 1; width: auto; position: static; box-shadow: none; }
-        }
+        /* ==========================================
+           SIDEBAR & LAYOUT
+           Semua styling sidebar, header, dan layout
+           kini berada di global.css (satu sumber).
+           ========================================== */
 
         /* User Profile Dropdown Animation */
         @keyframes slideIn {
@@ -223,18 +76,6 @@
 
         .user-profile-btn:hover .user-text span:first-child {
             color: var(--primary);
-        }
-
-        .admin-layout.collapsed .sidebar-logo {
-            width: 36px;
-            height: 36px;
-            padding: 4px;
-        }
-
-        .admin-layout.collapsed .sidebar-logo .logo-img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
         }
 
         /* ==========================================
@@ -400,10 +241,10 @@
             </div>
 
             <nav class="sidebar-nav">
-                <div class="nav-section-title">Main Navigation</div>
+                <div class="nav-section-title">Menu Utama</div>
 
                 {{-- Beranda (Semua user bisa akses) --}}
-                <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" data-tip="Beranda">
                     <div class="nav-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                     </div>
@@ -412,7 +253,7 @@
 
                 {{-- Kelola Beranda --}}
                 @if(auth()->user()->hasPermission('manage-hero-slider'))
-                <a href="{{ route('admin.hero-sliders.index') }}" class="nav-item {{ request()->routeIs('admin.hero-sliders.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.hero-sliders.index') }}" class="nav-item {{ request()->routeIs('admin.hero-sliders.*') ? 'active' : '' }}" data-tip="Kelola Beranda">
                     <div class="nav-icon-box">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -426,7 +267,7 @@
 
                 {{-- Struktur --}}
                 @if(auth()->user()->hasPermission('manage-struktur'))
-                <a href="{{ route('admin.struktur.index') }}" class="nav-item {{ request()->routeIs('admin.struktur.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.struktur.index') }}" class="nav-item {{ request()->routeIs('admin.struktur.*') ? 'active' : '' }}" data-tip="Struktur">
                     <div class="nav-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     </div>
@@ -436,7 +277,7 @@
 
                 {{-- Aplikasi --}}
                 @if(auth()->user()->hasPermission('manage-aplikasi'))
-                <a href="{{ route('admin.aplikasi.index') }}" class="nav-item {{ request()->routeIs('admin.aplikasi.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.aplikasi.index') }}" class="nav-item {{ request()->routeIs('admin.aplikasi.*') ? 'active' : '' }}" data-tip="Aplikasi">
                     <div class="nav-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                     </div>
@@ -446,11 +287,12 @@
 
                 {{-- Berita --}}
                 @if(auth()->user()->hasPermission('manage-berita'))
-                <a href="{{ route('admin.berita.index') }}" class="nav-item {{ request()->routeIs('admin.berita.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.berita.index') }}" class="nav-item {{ request()->routeIs('admin.berita.*') ? 'active' : '' }}" data-tip="Berita">
                     <div class="nav-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
                     </div>
                     <span class="nav-text">Berita</span>
+                    <span class="nav-badge">{{ $badgeBerita }}</span>
                 </a>
                 @endif
 
@@ -466,17 +308,18 @@
 
                 {{-- SK & Dokumen --}}
                 @if(auth()->user()->hasPermission('manage-dokumen'))
-                <a href="{{ route('admin.sk.index') }}" class="nav-item {{ request()->routeIs('admin.sk.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.sk.index') }}" class="nav-item {{ request()->routeIs('admin.sk.*') ? 'active' : '' }}" data-tip="SK & Dokumen">
                     <div class="nav-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                     </div>
                     <span class="nav-text">SK & Dokumen</span>
+                    <span class="nav-badge">{{ $badgeDokumen }}</span>
                 </a>
                 @endif
 
                 {{-- Template --}}
                 @if(auth()->user()->hasPermission('manage-template'))
-                <a href="{{ route('admin.template.index') }}" class="nav-item {{ request()->routeIs('admin.template.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.template.index') }}" class="nav-item {{ request()->routeIs('admin.template.*') ? 'active' : '' }}" data-tip="Template">
                     <div class="nav-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
                     </div>
@@ -486,7 +329,7 @@
 
                 {{-- Tentang --}}
                 @if(auth()->user()->hasPermission('manage-tentang'))
-                <a href="{{ route('admin.tentang.index') }}" class="nav-item {{ request()->routeIs('admin.tentang.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.tentang.index') }}" class="nav-item {{ request()->routeIs('admin.tentang.*') ? 'active' : '' }}" data-tip="Tentang">
                     <div class="nav-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                     </div>
@@ -496,13 +339,11 @@
 
                 {{-- Section Separator --}}
                 @if(auth()->user()->hasPermission('manage-users'))
-                <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.4); padding: 0.5rem 0.5rem; margin-bottom: 0.5rem;">
-                        System
-                    </div>
+                <div style="margin-top: 1.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.08);">
+                    <div class="nav-section-title">Sistem</div>
 
                     {{-- Manajemen Akun --}}
-                    <a href="{{ route('admin.user-management.index') }}" class="nav-item {{ request()->routeIs('admin.user-management.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.user-management.index') }}" class="nav-item {{ request()->routeIs('admin.user-management.*') ? 'active' : '' }}" data-tip="Manajemen Akun">
                         <div class="nav-icon-box">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -510,11 +351,12 @@
                             </svg>
                         </div>
                         <span class="nav-text">Manajemen Akun</span>
+                        <span class="nav-badge">{{ $badgeUsers }}</span>
                     </a>
 
                     {{-- Data SIDONGAN (Hanya untuk Super Admin) --}}
-                    @if(auth()->user()->hasRole('super_admin'))
-                    <a href="{{ route('admin.sidongan-data.index') }}" class="nav-item {{ request()->routeIs('admin.sidongan-data.*') ? 'active' : '' }}">
+                    @if(auth()->user()->sidongan_role === 'super_admin')
+                    <a href="{{ route('admin.sidongan-data.index') }}" class="nav-item {{ request()->routeIs('admin.sidongan-data.*') ? 'active' : '' }}" data-tip="Data SIDONGAN">
                         <div class="nav-icon-box">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <ellipse cx="12" cy="5" rx="9" ry="3"/>
@@ -523,12 +365,13 @@
                             </svg>
                         </div>
                         <span class="nav-text">Data SIDONGAN</span>
+                        <span class="nav-badge">{{ $badgeSidongan }}</span>
                     </a>
                     @endif
 
                     {{-- Manajemen Data SIEDA (Hanya Super Admin — hard delete permanen) --}}
-                    @if(auth()->user()->hasRole('super_admin'))
-                    <a href="{{ route('admin.sieda-data.index') }}" class="nav-item {{ request()->routeIs('admin.sieda-data.*') ? 'active' : '' }}">
+                    @if(auth()->user()->sidongan_role === 'super_admin')
+                    <a href="{{ route('admin.sieda-data.index') }}" class="nav-item {{ request()->routeIs('admin.sieda-data.*') ? 'active' : '' }}" data-tip="Manajemen SIEDA">
                         <div class="nav-icon-box">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <ellipse cx="12" cy="5" rx="9" ry="3"/>
@@ -538,11 +381,46 @@
                             </svg>
                         </div>
                         <span class="nav-text">Manajemen SIEDA</span>
+                        @if($badgeSieda !== null)
+                            <span class="nav-badge">{{ $badgeSieda }}</span>
+                        @endif
                     </a>
                     @endif
                 </div>
                 @endif
             </nav>
+
+            {{-- Footer Sidebar — Kartu User (avatar, nama, role, logout) --}}
+            <div class="sidebar-footer">
+                <div class="sidebar-footer-inner">
+                    <a href="{{ route('admin.profile.edit') }}" class="sidebar-user-card" title="Edit Profil">
+                        <div class="sidebar-user-avatar">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}">
+                            @else
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            @endif
+                        </div>
+                        <div class="sidebar-user-text">
+                            <div class="sidebar-user-name">{{ Auth::user()->name ?? 'Admin' }}</div>
+                            <div class="sidebar-user-role">{{ Auth::user()->role?->display_name ?? 'Administrator' }}</div>
+                        </div>
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="sidebar-logout-btn" title="Logout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -692,6 +570,30 @@
                 } else {
                     layout.classList.remove('collapsed');
                 }
+            });
+
+            // ===== Tooltip nama menu saat sidebar collapsed (desktop) =====
+            // Pakai elemen position:fixed agar tidak terpotong overflow sidebar
+            const tipEl = document.createElement('div');
+            tipEl.id = 'sidebarTooltip';
+            tipEl.style.cssText = 'position:fixed;z-index:3000;background:#1e293b;color:#e2e8f0;font-size:0.75rem;font-weight:600;padding:0.4rem 0.75rem;border-radius:6px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 6px 16px rgba(0,0,0,0.35);pointer-events:none;opacity:0;transition:opacity 0.15s;white-space:nowrap;display:none';
+            document.body.appendChild(tipEl);
+
+            document.querySelectorAll('.nav-item[data-tip]').forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    if (!layout.classList.contains('collapsed') || window.innerWidth <= 1024) return;
+                    const r = item.getBoundingClientRect();
+                    tipEl.textContent = item.dataset.tip;
+                    tipEl.style.display = 'block';
+                    tipEl.style.left = (r.right + 12) + 'px';
+                    tipEl.style.top = (r.top + r.height / 2) + 'px';
+                    tipEl.style.transform = 'translateY(-50%)';
+                    requestAnimationFrame(() => { tipEl.style.opacity = '1'; });
+                });
+                item.addEventListener('mouseleave', () => {
+                    tipEl.style.opacity = '0';
+                    tipEl.style.display = 'none';
+                });
             });
         });
 

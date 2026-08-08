@@ -34,6 +34,10 @@ class SiedaDataController extends Controller
             'display_fields' => ['nik', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir'],
             'search_fields' => ['nik', 'nama', 'no_registrasi', 'alamat'],
             'with' => [],
+            // Tabel yang mereferensikan tabel modul (foreign key) — wajib dibersihkan
+            // lebih dulu agar penghapusan tidak diblokir constraint.
+            'cascade' => ['catatan_kelahiran_kematian', 'tp_pkk_kegiatan_warga', 'tp_pkk_kader_dasawisma', 'tp_pkk_kegiatan_penduduk', 'tp_pkk_anggota_keluarga'],
+            'cascade_label' => 'anggota keluarga, kader dasawisma, kegiatan warga, dan catatan ibu & anak',
         ],
         'keluarga' => [
             'model' => Keluarga::class,
@@ -43,6 +47,8 @@ class SiedaDataController extends Controller
             'display_fields' => ['no_kk', 'id_kepala_keluarga', 'id_kelompok_dasawisma', 'config_year'],
             'search_fields' => ['no_kk', 'no_registrasi_keluarga'],
             'with' => ['kepalaKeluarga', 'kelompokDasawisma'],
+            'cascade' => ['catatan_kelahiran_kematian', 'tp_pkk_anggota_keluarga', 'tp_pkk_dasawisma_keluarga'],
+            'cascade_label' => 'anggota keluarga, catatan ibu & anak, dan data dasawisma keluarga',
         ],
         'anggota-keluarga' => [
             'model' => AnggotaKeluarga::class,
@@ -52,6 +58,8 @@ class SiedaDataController extends Controller
             'display_fields' => ['id', 'no_kk', 'nik'],
             'search_fields' => ['no_kk', 'nik'],
             'with' => [],
+            'cascade' => [],
+            'cascade_label' => '',
         ],
         'kelompok-dasawisma' => [
             'model' => KelompokDasawisma::class,
@@ -61,6 +69,8 @@ class SiedaDataController extends Controller
             'display_fields' => ['id', 'nama', 'id_dusun', 'kader', 'config_year'],
             'search_fields' => ['nama', 'kader'],
             'with' => ['dusun'],
+            'cascade' => ['catatan_kelahiran_kematian', 'tp_pkk_kader_dasawisma'],
+            'cascade_label' => 'kader dasawisma dan catatan ibu & anak',
         ],
         'catatan-ibu-anak' => [
             'model' => CatatanKelahiranKematian::class,
@@ -70,6 +80,8 @@ class SiedaDataController extends Controller
             'display_fields' => ['id', 'id_warga_ibu', 'status_ibu', 'tanggal_melahirkan', 'config_year'],
             'search_fields' => ['id_warga_ibu', 'nama_bayi', 'nama_meninggal'],
             'with' => [],
+            'cascade' => [],
+            'cascade_label' => '',
         ],
     ];
 
@@ -191,16 +203,25 @@ class SiedaDataController extends Controller
 
         DB::beginTransaction();
         try {
+            // Hapus dulu tabel anak yang mereferensikan tabel modul (foreign key),
+            // agar penghapusan tidak diblokir constraint MySQL (SQLSTATE 23000/1451).
+            // Urutan mengikuti dependensi tabel di database SIEDA (db_sieda_app).
+            $cascadeCounts = [];
+            foreach ($config['cascade'] as $table) {
+                $cascadeCounts[$table] = DB::connection('sieda')->table($table)->delete();
+            }
+
             $model::query()->delete(); // Model tanpa SoftDeletes → hard-delete permanen
             DB::commit();
 
             Log::warning('[SiedaData] HAPUS SEMUA data', [
                 'module' => $module,
                 'total' => $count,
+                'cascade' => $cascadeCounts,
                 'by' => auth()->id(),
             ]);
 
-            return back()->with('success', number_format($count) . ' data ' . $config['label'] . ' berhasil dihapus permanen dari database SIEDA.');
+            return back()->with('success', number_format($count) . ' data ' . $config['label'] . ' beserta data terkait berhasil dihapus permanen dari database SIEDA.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('[SiedaData] Delete all gagal', [

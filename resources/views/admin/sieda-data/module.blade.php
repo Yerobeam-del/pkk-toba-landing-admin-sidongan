@@ -236,13 +236,16 @@
                 <strong style="color:#991b1b">Hapus Semua Data</strong>
                 <p style="margin:0.25rem 0 0 0; color:#7f1d1d; font-size:0.85rem">
                     Menghapus <strong>{{ number_format($totalCount) }} record</strong> {{ strtolower($config['label']) }}
+                    @if (!empty($config['cascade_label']))
+                        beserta data terkait ({{ $config['cascade_label'] }})
+                    @endif
                     di database SIEDA secara permanen. Tindakan ini tidak bisa dibatalkan!
                 </p>
             </div>
         </div>
         <form method="POST" action="{{ route('admin.sieda-data.delete-all', $module) }}" class="delete-all-form"
               data-title="Hapus Semua Data {{ $config['label'] }}"
-              data-message="Seluruh {{ number_format($totalCount) }} data <strong>{{ $config['label'] }}</strong> di database SIEDA akan dihapus permanen dan TIDAK bisa dikembalikan. Lanjutkan?">
+              data-message="Seluruh {{ number_format($totalCount) }} data <strong>{{ $config['label'] }}</strong>@if (!empty($config['cascade_label'])) beserta data terkait ({{ $config['cascade_label'] }})@endif di database SIEDA akan dihapus permanen dan TIDAK bisa dikembalikan. Lanjutkan?">
             @csrf
             <input type="hidden" name="confirm" value="1">
             <button type="submit" style="background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;border:none;border-radius:8px;padding:0.6rem 1.25rem;display:inline-flex;align-items:center;gap:0.5rem;font-weight:600;font-size:0.875rem;cursor:pointer;transition:all 0.2s" onmouseover="this.style.boxShadow='0 4px 12px rgba(239,68,68,0.35)'" onmouseout="this.style.boxShadow='none'">
