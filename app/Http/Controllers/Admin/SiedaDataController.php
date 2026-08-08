@@ -15,13 +15,8 @@ use Illuminate\Support\Facades\Log;
 /**
  * Manajemen Data SIEDA
  *
- * Controller ini memungkinkan Super Admin untuk melihat, mengelola,
- * dan menghapus PERMANEN data dari aplikasi SIEDA yang menggunakan
- * sistem soft-delete.
- *
- * Perbedaan dengan SIEDA:
- *   - SIEDA (aplikasi operator): hanya soft-delete (active=0)
- *   - Admin Panel (di sini): bisa hard-delete permanen + restore
+ * Controller ini memungkinkan Super Admin untuk melihat dan menghapus
+ * data dari aplikasi SIEDA (database db_sieda_app) secara PERMANEN.
  *
  * JANGAN tampilkan halaman ini ke role non-super_admin.
  */
@@ -38,6 +33,7 @@ class SiedaDataController extends Controller
             'id_label' => 'NIK',
             'display_fields' => ['nik', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir'],
             'search_fields' => ['nik', 'nama', 'no_registrasi', 'alamat'],
+            'with' => [],
         ],
         'keluarga' => [
             'model' => Keluarga::class,
@@ -46,6 +42,7 @@ class SiedaDataController extends Controller
             'id_label' => 'Nomor KK',
             'display_fields' => ['no_kk', 'id_kepala_keluarga', 'id_kelompok_dasawisma', 'config_year'],
             'search_fields' => ['no_kk', 'no_registrasi_keluarga'],
+            'with' => ['kepalaKeluarga', 'kelompokDasawisma'],
         ],
         'anggota-keluarga' => [
             'model' => AnggotaKeluarga::class,
@@ -54,6 +51,7 @@ class SiedaDataController extends Controller
             'id_label' => 'ID Record',
             'display_fields' => ['id', 'no_kk', 'nik'],
             'search_fields' => ['no_kk', 'nik'],
+            'with' => [],
         ],
         'kelompok-dasawisma' => [
             'model' => KelompokDasawisma::class,
@@ -62,6 +60,7 @@ class SiedaDataController extends Controller
             'id_label' => 'ID',
             'display_fields' => ['id', 'nama', 'id_dusun', 'kader', 'config_year'],
             'search_fields' => ['nama', 'kader'],
+            'with' => ['dusun'],
         ],
         'catatan-ibu-anak' => [
             'model' => CatatanKelahiranKematian::class,
@@ -70,6 +69,7 @@ class SiedaDataController extends Controller
             'id_label' => 'ID',
             'display_fields' => ['id', 'id_warga_ibu', 'status_ibu', 'tanggal_melahirkan', 'config_year'],
             'search_fields' => ['id_warga_ibu', 'nama_bayi', 'nama_meninggal'],
+            'with' => [],
         ],
     ];
 
@@ -81,21 +81,18 @@ class SiedaDataController extends Controller
         $this->authorizeSuperAdmin();
 
         $stats = collect(self::MODULES)->map(function ($config, $slug) {
-            $count = $config['model']::count();
-            $softDeleted = $config['model']::where('active', 0)->count();
             return [
                 'slug' => $slug,
                 'label' => $config['label'],
-                'total' => $count,
-                'aktif' => $count - $softDeleted,
-                'terhapus' => $softDeleted,
+                'total' => $config['model']::count(),
+                'aktif' => $config['model']::where('active', 1)->count(),
             ];
         });
 
         $totalKeseluruhan = $stats->sum('total');
-        $totalTerhapus = $stats->sum('terhapus');
+        $totalAktif = $stats->sum('aktif');
 
-        return view('admin.sieda-data.index', compact('stats', 'totalKeseluruhan', 'totalTerhapus'));
+        return view('admin.sieda-data.index', compact('stats', 'totalKeseluruhan', 'totalAktif'));
     }
 
     /**
@@ -112,13 +109,12 @@ class SiedaDataController extends Controller
 
         $perPage = min((int) $request->input('per_page', 25), 100);
         $search = $request->input('search', '');
-        $filterStatus = $request->input('status', 'aktif'); // 'aktif' | 'terhapus'
 
         $query = $config['model']::query();
 
-        // Filter status (aktif / terhapus)
-        if ($filterStatus === 'terhapus') {
-            $query->where('active', 0);
+        // Eager load relasi agar data_get di partial tabel tersedia
+        if (!empty($config['with'])) {
+            $query->with($config['with']);
         }
 
         // Search
@@ -136,11 +132,11 @@ class SiedaDataController extends Controller
 
         // Statistik cepat untuk header
         $totalCount = $config['model']::count();
-        $softDeletedCount = $config['model']::where('active', 0)->count();
+        $totalAktif = $config['model']::where('active', 1)->count();
 
         return view('admin.sieda-data.module', compact(
-            'module', 'config', 'items', 'search', 'filterStatus', 'perPage',
-            'totalCount', 'softDeletedCount'
+            'module', 'config', 'items', 'search', 'perPage',
+            'totalCount', 'totalAktif'
         ));
     }
 
@@ -164,9 +160,13 @@ class SiedaDataController extends Controller
     }
 
     /**
-     * Pulihkan data yang terhapus (active=0 → active=1)
+     * Hapus PERMANEN seluruh data pada satu modul — hanya super admin yang bisa
+     *
+     * INI OPERASI FINAL. Seluruh record pada tabel modul ini di database SIEDA
+     * akan terhapus dan tidak bisa dikembalikan. Harus dikonfirmasi lewat
+     * checkbox tersembunyi `confirm` (pola fitur cleanup di SidonganDataController).
      */
-    public function restore(Request $request, string $module, string $id)
+    public function deleteAll(Request $request, string $module)
     {
         $this->authorizeSuperAdmin();
 
@@ -175,23 +175,40 @@ class SiedaDataController extends Controller
             abort(404, 'Modul tidak ditemukan.');
         }
 
-        $model = $config['model'];
-        $primaryKey = $model::primaryKey();
-        $item = $model::where($primaryKey, $id)->first();
-
-        if (!$item) {
-            return back()->with('error', 'Data tidak ditemukan.');
-        }
-
-        $item->update(['active' => 1]);
-
-        Log::info('[SiedaData] Restore record', [
-            'module' => $module,
-            'id' => $id,
-            'by' => auth()->id(),
+        $request->validate([
+            'confirm' => 'required|accepted',
+        ], [
+            'confirm.required' => 'Konfirmasi diperlukan untuk menghapus seluruh data.',
+            'confirm.accepted' => 'Anda harus menyetujui konfirmasi sebelum menghapus seluruh data.',
         ]);
 
-        return back()->with('success', 'Data berhasil dipulihkan.');
+        $model = $config['model'];
+        $count = $model::count();
+
+        if ($count === 0) {
+            return back()->with('info', 'Tidak ada data untuk dihapus pada modul ini.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $model::query()->delete(); // Model tanpa SoftDeletes → hard-delete permanen
+            DB::commit();
+
+            Log::warning('[SiedaData] HAPUS SEMUA data', [
+                'module' => $module,
+                'total' => $count,
+                'by' => auth()->id(),
+            ]);
+
+            return back()->with('success', number_format($count) . ' data ' . $config['label'] . ' berhasil dihapus permanen dari database SIEDA.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('[SiedaData] Delete all gagal', [
+                'module' => $module,
+                'error' => $e->getMessage(),
+            ]);
+            return back()->with('error', 'Gagal menghapus seluruh data. Silakan coba lagi.');
+        }
     }
 
     /**

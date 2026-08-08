@@ -5,8 +5,6 @@
 @section('content')
 <style>
     .sieda-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-    .badge-aktif { background: #d1fae5; color: #065f46; padding: 2px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
-    .badge-terhapus { background: #fee2e2; color: #991b1b; padding: 2px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
     .detail-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
     .detail-table tr { border-bottom: 1px solid #e2e8f0; }
     .detail-table tr:last-child { border-bottom: none; }
@@ -17,10 +15,6 @@
     .section-heading:first-of-type { margin-top: 0; }
     .data-nilai-null { color: #94a3b8; font-style: italic; }
     .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
-    .btn-warning-outline { border: 1px solid #f59e0b; color: #92400e; background: transparent; }
-    .btn-warning-outline:hover { background: #fef3c7; }
-    .btn-success-outline { border: 1px solid #22c55e; color: #166534; background: transparent; }
-    .btn-success-outline:hover { background: #f0fdf4; }
 </style>
 
 {{-- Header --}}
@@ -36,9 +30,17 @@
         <p style="color:#64748b; margin:0; font-size:0.9rem">Detail record #{{ $item->{$config['id_field']} }} dari aplikasi SIEDA</p>
     </div>
     <div>
-        <span class="{{ $item->active ? 'badge-aktif' : 'badge-terhapus' }}">
-            {{ $item->active ? '✓ Aktif' : '✗ Terhapus (Recycle Bin)' }}
-        </span>
+        @if ($item->active)
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(34,197,94,0.1);color:#166534">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Aktif
+            </span>
+        @else
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(239,68,68,0.1);color:#dc2626">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Terhapus
+            </span>
+        @endif
     </div>
 </div>
 
@@ -57,21 +59,14 @@
         </div>
 
         <div style="display:flex; gap:0.5rem; align-items:center">
-            @if ($item->active == 0)
-                <form method="POST" action="{{ route('admin.sieda-data.restore', [$module, $item->{$config['id_field']}]) }}"
-                      onsubmit="return confirm('Pulihkan record ini ke kondisi aktif?')">
-                    @csrf
-                    <button type="submit" class="btn btn-success-outline btn-sm" style="border-radius:8px; padding:0.5rem 0.875rem">
-                        ↩️ Restore
-                    </button>
-                </form>
-            @endif
-
             <form method="POST" action="{{ route('admin.sieda-data.force-delete', [$module, $item->{$config['id_field']}]) }}"
-                  onsubmit="return confirm('⚠️ HAPUS PERMANEN: Data akan hilang dari database dan TIDAK bisa dikembalikan. Lanjutkan?')">
+                  onsubmit="return confirm('HAPUS PERMANEN: Data akan hilang dari database SIEDA dan TIDAK bisa dikembalikan. Lanjutkan?')">
                 @csrf @method('DELETE')
-                <button type="submit" class="btn btn-sm" style="background:linear-gradient(135deg,#ef4444,#b91c1c); color:white; border:none; border-radius:8px; padding:0.5rem 0.875rem">
-                    🗑️ Hapus Permanen
+                <button type="submit" class="btn btn-sm" style="background:linear-gradient(135deg,#ef4444,#b91c1c); color:white; border:none; border-radius:8px; padding:0.5rem 0.875rem; display:inline-flex; align-items:center; gap:0.5rem">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
+                    </svg>
+                    Hapus Permanen
                 </button>
             </form>
         </div>
