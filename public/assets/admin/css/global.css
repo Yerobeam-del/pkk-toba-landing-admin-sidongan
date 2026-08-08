@@ -69,11 +69,11 @@ body {
   content: ''; position: absolute; left: 1rem; right: 1rem; bottom: -1px; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(20,184,166,0.5), transparent);
 }
+/* Logo tanpa kotak — tampil polos seperti desain sebelumnya */
 .sidebar-logo {
-  width: 40px; height: 40px; background: linear-gradient(135deg, #2dd4bf, #0d9488);
-  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; padding: 4px;
+  display: flex; align-items: center; justify-content: center;
   font-weight: 800; font-size: 1.1rem; flex-shrink: 0; color: #fff;
-  box-shadow: 0 4px 14px rgba(20,184,166,0.35);
 }
 /* Logo berupa gambar SVG — diputihkan agar kontras di sidebar gelap */
 .sidebar-logo .logo-img {
@@ -143,71 +143,16 @@ body {
 }
 .nav-item.active:hover .nav-icon-box svg { transform: none; }
 
-/* Badge jumlah data di samping menu */
-.nav-badge {
-  margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px;
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 999px; background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: #a5f3fc; font-size: 0.62rem; font-weight: 700;
-  transition: var(--transition); flex-shrink: 0;
-}
-.nav-item.active .nav-badge { background: rgba(255,255,255,0.22); color: #fff; border-color: rgba(255,255,255,0.25); }
-.admin-layout.collapsed .nav-badge { display: none; }
-
 .nav-item .nav-text { transition: var(--transition); opacity: 1; }
 /* Saat collapsed, teks disembunyikan penuh; tooltip ditangani JS agar tidak terpotong */
 .admin-layout.collapsed .nav-item .nav-text { display: none; }
 
 .admin-layout.collapsed .nav-item { justify-content: center; padding: 0.25rem 0; margin: 0.375rem 0.5rem; height: 56px; }
-.admin-layout.collapsed .nav-item:hover { transform: none; }
+/* Saat collapsed, hover hanya menyorot kotak ikon (hindari kotak ganda) */
+.admin-layout.collapsed .nav-item:hover { transform: none; background: transparent; }
 .admin-layout.collapsed .nav-icon-box { width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.05); }
 .admin-layout.collapsed .nav-item:hover .nav-icon-box { background: rgba(20,184,166,0.15); transform: scale(1.05); }
 .admin-layout.collapsed .nav-item.active .nav-icon-box { background: transparent; color: #fff; box-shadow: none; }
-
-/* ==========================================
-   SIDEBAR FOOTER — Kartu User
-   ========================================== */
-.sidebar-footer {
-  padding: 0.75rem; border-top: 1px solid rgba(255,255,255,0.08);
-  background: rgba(0,0,0,0.15);
-}
-.sidebar-footer-inner { display: flex; align-items: center; gap: 0.5rem; }
-.sidebar-user-card {
-  flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.6rem;
-  padding: 0.45rem 0.6rem; background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
-  text-decoration: none; transition: var(--transition);
-}
-.sidebar-user-card:hover { background: rgba(255,255,255,0.09); border-color: rgba(20,184,166,0.3); }
-.sidebar-user-avatar {
-  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; overflow: hidden;
-  background: linear-gradient(135deg, #2dd4bf, #0d9488);
-  display: flex; align-items: center; justify-content: center;
-  border: 2px solid rgba(255,255,255,0.25);
-}
-.sidebar-user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.sidebar-user-avatar svg { width: 16px; height: 16px; color: #fff; }
-.sidebar-user-text { min-width: 0; }
-.sidebar-user-name {
-  color: #f1f5f9; font-size: 0.8rem; font-weight: 600; line-height: 1.2;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.sidebar-user-role {
-  color: rgba(255,255,255,0.45); font-size: 0.65rem;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.sidebar-logout-btn {
-  width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.6); transition: var(--transition);
-}
-.sidebar-logout-btn:hover { background: rgba(239,68,68,0.15); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
-.sidebar-logout-btn svg { width: 16px; height: 16px; }
-.admin-layout.collapsed .sidebar-user-text { display: none; }
-.admin-layout.collapsed .sidebar-user-card { justify-content: center; padding: 0.45rem; }
-.admin-layout.collapsed .sidebar-footer-inner { justify-content: center; }
-.admin-layout.collapsed .sidebar-logout-btn { width: 30px; height: 30px; }
 
 .main-wrapper {
   flex: 1; margin-left: var(--sidebar-width); transition: var(--transition);

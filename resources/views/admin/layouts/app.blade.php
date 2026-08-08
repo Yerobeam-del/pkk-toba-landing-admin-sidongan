@@ -1,16 +1,3 @@
-@php
-    // Badge jumlah data untuk sidebar — dihitung sekali per render halaman
-    $badgeBerita = \App\Models\News::count();
-    $badgeDokumen = \App\Models\Dokumen::count();
-    $badgeSidongan = \App\Models\Document::count();
-    $badgeUsers = \App\Models\User::count();
-    // SIEDA terhubung ke database terpisah; amankan agar layout tidak error jika DB offline
-    try {
-        $badgeSieda = \App\Models\Sieda\Warga::count();
-    } catch (\Throwable $e) {
-        $badgeSieda = null;
-    }
-@endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -292,7 +279,6 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
                     </div>
                     <span class="nav-text">Berita</span>
-                    <span class="nav-badge">{{ $badgeBerita }}</span>
                 </a>
                 @endif
 
@@ -313,7 +299,6 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                     </div>
                     <span class="nav-text">SK & Dokumen</span>
-                    <span class="nav-badge">{{ $badgeDokumen }}</span>
                 </a>
                 @endif
 
@@ -351,7 +336,6 @@
                             </svg>
                         </div>
                         <span class="nav-text">Manajemen Akun</span>
-                        <span class="nav-badge">{{ $badgeUsers }}</span>
                     </a>
 
                     {{-- Data SIDONGAN (Hanya untuk Super Admin) --}}
@@ -365,7 +349,6 @@
                             </svg>
                         </div>
                         <span class="nav-text">Data SIDONGAN</span>
-                        <span class="nav-badge">{{ $badgeSidongan }}</span>
                     </a>
                     @endif
 
@@ -381,46 +364,11 @@
                             </svg>
                         </div>
                         <span class="nav-text">Manajemen SIEDA</span>
-                        @if($badgeSieda !== null)
-                            <span class="nav-badge">{{ $badgeSieda }}</span>
-                        @endif
                     </a>
                     @endif
                 </div>
                 @endif
             </nav>
-
-            {{-- Footer Sidebar — Kartu User (avatar, nama, role, logout) --}}
-            <div class="sidebar-footer">
-                <div class="sidebar-footer-inner">
-                    <a href="{{ route('admin.profile.edit') }}" class="sidebar-user-card" title="Edit Profil">
-                        <div class="sidebar-user-avatar">
-                            @if(Auth::user()->avatar)
-                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}">
-                            @else
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="12" cy="7" r="4"/>
-                                </svg>
-                            @endif
-                        </div>
-                        <div class="sidebar-user-text">
-                            <div class="sidebar-user-name">{{ Auth::user()->name ?? 'Admin' }}</div>
-                            <div class="sidebar-user-role">{{ Auth::user()->role?->display_name ?? 'Administrator' }}</div>
-                        </div>
-                    </a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="sidebar-logout-btn" title="Logout">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                                <polyline points="16 17 21 12 16 7"/>
-                                <line x1="21" y1="12" x2="9" y2="12"/>
-                            </svg>
-                        </button>
-                    </form>
-                </div>
-            </div>
         </aside>
 
         <!-- Main Content -->
