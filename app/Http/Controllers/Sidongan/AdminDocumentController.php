@@ -181,12 +181,13 @@ class AdminDocumentController extends Controller
         $documents = $query->paginate($perPage)->withQueryString();
         $categories = DocumentCategory::where('is_active', true)->orderBy('name')->get();
         
-        // Ambil tahun unik untuk filter tahun
-        $availableYears = Document::selectRaw('YEAR(document_date) as year')
-            ->whereNotNull('document_date')
-            ->distinct()
-            ->orderBy('year', 'desc')
-            ->pluck('year')
+        // Ambil tahun unik untuk filter tahun (kompatibel MySQL & SQLite)
+        $availableYears = Document::whereNotNull('document_date')
+            ->orderBy('document_date', 'desc')
+            ->pluck('document_date')
+            ->map(fn($d) => $d->format('Y'))
+            ->unique()
+            ->values()
             ->filter();
 
         return view('sidongan.documents.index', [

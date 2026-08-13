@@ -533,7 +533,7 @@
                         </span>
                         <span class="check-text">Ingat saya</span>
                     </label>
-                    <a class="forgot-password" href="https://{{ config('app.landing_domain', 'pkktoba.id') }}/forgot-password" target="_blank" rel="noopener noreferrer">
+                    <a class="forgot-password" href="https://{{ config('app.landing_domain', 'tp-pkk.tobakab.go.id') }}/forgot-password" target="_blank" rel="noopener noreferrer">
                         Lupa password?
                     </a>
                 </div>

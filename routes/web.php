@@ -26,8 +26,8 @@ Route::get('/api/v1/health', function () {
 // tidak ikut bermasalah saat layanan luar itu terganggu.
 //
 // Sengaja didaftarkan di luar grup domain: SIDONGAN berjalan di
-// sidongan.pkktoba.id dan memanggil endpoint ini secara relatif. Ketika route
-// masih berada di dalam grup pkktoba.id, panggilan dari SIDONGAN menghasilkan
+// sidongan.tobakab.go.id dan memanggil endpoint ini secara relatif. Ketika route
+// masih berada di dalam grup tp-pkk.tobakab.go.id, panggilan dari SIDONGAN menghasilkan
 // 404 sehingga dropdown wilayah menampilkan "Gagal memuat data".
 
 Route::get('/api/v1/wilayah/provinces', function () {
@@ -56,7 +56,7 @@ Route::get('/api/v1/wilayah/villages/{districtCode}', function ($districtCode) {
 });
 
 // ======================================================================
-// 1. ROUTES KHUSUS DOMAIN: pkktoba.id (Landing Page & Admin Panel)
+// 1. ROUTES KHUSUS DOMAIN: tp-pkk.tobakab.go.id (Landing Page & Admin Panel)
 // ======================================================================
 Route::domain(config('app.landing_domain'))->group(function () {
 
@@ -371,7 +371,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
 });
 
 // ======================================================================
-// 2. ROUTES KHUSUS DOMAIN: sidongan.pkktoba.id (Aplikasi SIDONGAN)
+// 2. ROUTES KHUSUS DOMAIN: sidongan.tobakab.go.id (Aplikasi SIDONGAN)
 // ======================================================================
 Route::domain(config('app.sidongan_domain'))->group(function () {
 

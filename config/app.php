@@ -66,9 +66,9 @@ return [
     |
     */
 
-    'landing_domain' => env('LANDING_DOMAIN', 'pkktoba.id'),
+    'landing_domain' => env('LANDING_DOMAIN', 'tp-pkk.tobakab.go.id'),
 
-    'sidongan_domain' => env('SIDONGAN_DOMAIN', 'sidongan.pkktoba.id'),
+    'sidongan_domain' => env('SIDONGAN_DOMAIN', 'sidongan.tobakab.go.id'),
 
     /*
     |--------------------------------------------------------------------------

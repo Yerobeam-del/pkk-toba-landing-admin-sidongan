@@ -295,7 +295,7 @@
                     Fitur lupa password kini telah terpusat di <strong>Portal Akun PKK Kabupaten Toba</strong>.
                     Klik tombol di bawah untuk melanjutkan.
                 </p>
-                <a href="https://{{ config('app.landing_domain', 'pkktoba.id') }}/forgot-password"
+                <a href="https://{{ config('app.landing_domain', 'tp-pkk.tobakab.go.id') }}/forgot-password"
                    class="btn-login"
                    style="display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;text-decoration:none;font-size:0.9rem;padding:0.75rem 1.25rem;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

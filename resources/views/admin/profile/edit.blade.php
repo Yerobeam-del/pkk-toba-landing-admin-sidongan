@@ -51,7 +51,7 @@
 $ssoBackUrl = app(\App\Services\SsoTokenService::class)->buildCallbackUrl($user->email);
 $appList = [
 ['name' => 'Admin Panel', 'icon' => 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5', 'color' => '#14b8a6', 'url' => route('admin.dashboard'), 'accessible' => true],
-['name' => 'SIDONGAN', 'icon' => 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z', 'color' => '#8b5cf6', 'url' => 'https://sidongan.' . config('app.landing_domain', 'pkktoba.id'), 'accessible' => $user->hasSidonganAccess()],
+['name' => 'SIDONGAN', 'icon' => 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z', 'color' => '#8b5cf6', 'url' => 'https://' . config('app.sidongan_domain', 'sidongan.tobakab.go.id'), 'accessible' => $user->hasSidonganAccess()],
 ['name' => 'SIEDA', 'icon' => 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z', 'color' => '#0ea5a4', 'url' => $ssoBackUrl, 'accessible' => !empty($user->sieda_role)],
 ];
 @endphp
