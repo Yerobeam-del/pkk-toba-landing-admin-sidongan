@@ -92,7 +92,7 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .nav-link.active-link { color: #fbbf24; background: rgba(251, 191, 36, 0.15); font-weight: 700; }
 
 /* Hamburger menu button */
-.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px; z-index: 1001; justify-content: center; align-items: center; }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px; z-index: 1001; justify-content: center; align-items: center; background: none; border: none; }
 .hamburger span { width: 25px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s ease; }
 .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
 .hamburger.active span:nth-child(2) { opacity: 0; }
