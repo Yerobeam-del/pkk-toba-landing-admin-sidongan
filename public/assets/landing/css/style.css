@@ -65,7 +65,7 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     padding: 1rem 2rem;
     transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, background-color 0.4s ease;
-    background: var(--navbar-bg); overflow: visible;
+    background: transparent; overflow: visible;
 }
 .navbar::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--primary), var(--primary-light)); opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
 .navbar.scrolled::before { opacity: 1; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
