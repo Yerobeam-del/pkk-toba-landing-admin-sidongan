@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('sidongan.layouts.app')
 @section('title', 'Detail Surat - SIDONGAN')
 
@@ -32,16 +35,16 @@
         $userReceivedDisposisi = in_array($currentUser->sidongan_role, $disposisiData['target_roles']);
     }
 
-    $userReport = null;
+    $existingReport = null;
     $canLaporKegiatan = false;
 
     if ($userReceivedDisposisi) {
-        $userReport = \App\Models\ActivityReport::where('document_id', $document->id)
-            ->where('created_by', $currentUser->id)
+        // Satu surat = SATU laporan: cek apakah sudah ada laporan apa pun.
+        $existingReport = \App\Models\ActivityReport::where('document_id', $document->id)
             ->orderBy('created_at', 'desc')
             ->first();
         
-        if (!$userReport || $userReport->status === 'ditolak') {
+        if (!$existingReport || $existingReport->status === 'ditolak') {
             $canLaporKegiatan = true;
         }
     }
@@ -133,36 +136,17 @@
                         // Langsung bisa arsip jika disposisi "Di Arsipkan" dan status berjalan
                         $canArchive = true;
                     } elseif ($document->status === 'selesai') {
-                        // KONDISI 2: Jika status selesai, cek semua laporan
-                        if (isset($dispoData['target_roles'])) {
-                            $targetRoles = $dispoData['target_roles'];
-                            $targetUsers = \App\Models\User::whereIn('sidongan_role', $targetRoles)->get();
-
-                            if ($targetUsers->isEmpty()) {
-                                $canArchive = true;
-                            } else {
-                                $allReported = true;
-                                foreach ($targetUsers as $targetUser) {
-                                    $report = $document->activityReports()
-                                        ->where('created_by', $targetUser->id)
-                                        ->orderBy('created_at', 'desc')
-                                        ->first();
-
-                                    if (!$report || !in_array($report->status, ['disetujui', 'ditolak'])) {
-                                        $allReported = false;
-                                        break;
-                                    }
-                                }
-                                $canArchive = $allReported;
-                            }
-                        } else {
-                            $canArchive = true;
-                        }
+                        // KONDISI 2: Status selesai berarti laporan terakhir sudah
+                        // disetujui ketua (satu surat = satu laporan).
+                        $latestReport = $document->activityReports()
+                            ->orderBy('created_at', 'desc')
+                            ->first();
+                        $canArchive = $latestReport && $latestReport->status === 'disetujui';
                     }
                 @endphp
 
                 @if($currentUser && $currentUser->hasSidonganRole('sekretaris') && $canArchive)
-                <form action="{{ route('sidongan.documents.archive', $document) }}" method="POST" style="display: inline;" onsubmit="event.preventDefault(); const f = this; Toast.confirm('Surat yang diarsipkan akan dipindahkan ke arsip dan tidak lagi muncul di daftar surat aktif.', { title: 'Arsipkan Surat?', confirmText: 'Ya, Arsipkan', cancelText: 'Batal', type: 'warning' }).then(function (setuju) { if (setuju) f.submit(); }); return false;">
+                <form id="archiveConfirmForm" action="{{ route('sidongan.documents.archive', $document) }}" method="POST" style="display: inline;">
                     @csrf
                     @method('PATCH')
                     <button type="submit" class="ds-btn ds-btn-archive">
@@ -197,7 +181,7 @@
                 {{-- Data Surat --}}
                 <div>
                     <h4 style="font-size: 1.05rem; font-weight: 700; color: #0891b2; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-envelope" style="color: #14b8a6;"></i>
+                        <i class="fas fa-envelope u-a25"></i>
                         Data Surat
                     </h4>
                     <div class="ds-info-row">
@@ -223,7 +207,7 @@
                 {{-- Data Agenda --}}
                 <div>
                     <h4 style="font-size: 1.05rem; font-weight: 700; color: #0891b2; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-clipboard-list" style="color: #14b8a6;"></i>
+                        <i class="fas fa-clipboard-list u-a25"></i>
                         Data Agenda
                     </h4>
                     <div class="ds-info-row">
@@ -378,7 +362,7 @@
                                 @endif
                             </div>
                             <div>
-                                <p class="ds-laporan-name" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                                <p class="ds-laporan-name u-flex-center-gap-2-wrap">
                                     {{ $report->creator->name ?? 'Sekretaris PKK' }}
                                     @if($report->creator && $report->creator->sidongan_role)
                                         @php
@@ -464,14 +448,14 @@
                         $fotosArray = is_array($fotos) ? $fotos : [];
                     @endphp
                     @if(count($fotosArray) > 0)
-                    <div style="margin-bottom: 1.25rem;">
+                    <div class="u-mb-5">
                         <span class="ds-laporan-info-label" style="display: block; margin-bottom: 0.75rem;">
-                            <i class="fas fa-camera" style="margin-right: 0.35rem;"></i>
+                            <i class="fas fa-camera u-mr-1"></i>
                             Dokumentasi ({{ count($fotosArray) }} foto):
                         </span>
                         <div class="ds-laporan-foto-grid">
                             @foreach($fotosArray as $index => $foto)
-                            <div onclick="openReportGallery({{ $report->id }}, {{ $index }})" class="ds-laporan-foto-item">
+                            <div data-report-id="{{ $report->id }}" data-index="{{ $index }}" class="ds-laporan-foto-item">
                                 <img src="{{ asset('storage/' . $foto) }}" alt="Dokumentasi">
                             </div>
                             @endforeach
@@ -588,13 +572,13 @@
                                     @endif
                                 </div>
                                 @if($currentItem < $totalItems)
-                                    <div class="ds-timeline-line" style="background: #e2e8f0;"></div>
+                                    <div class="ds-timeline-line u-bg-slate-200"></div>
                                 @endif
                             </div>
                             <div class="ds-timeline-content">
                                 <div class="ds-timeline-header">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                        <h4 class="ds-timeline-title" style="margin: 0;">{{ $document->creator->name ?? 'Sekretaris PKK' }}</h4>
+                                    <div class="u-flex-center-gap-2-wrap">
+                                        <h4 class="ds-timeline-title u-m-0">{{ $document->creator->name ?? 'Sekretaris PKK' }}</h4>
                                         @if($document->creator && $document->creator->sidongan_role)
                                             @php
                                                 $roleLabels = [
@@ -644,13 +628,13 @@
                                     @endif
                                 </div>
                                 @if($currentItem < $totalItems)
-                                    <div class="ds-timeline-line" style="background: #e2e8f0;"></div>
+                                    <div class="ds-timeline-line u-bg-slate-200"></div>
                                 @endif
                             </div>
                             <div class="ds-timeline-content">
                                 <div class="ds-timeline-header">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                        <h4 class="ds-timeline-title" style="margin: 0;">{{ $disposedByUser->name ?? 'Ketua PKK' }}</h4>
+                                    <div class="u-flex-center-gap-2-wrap">
+                                        <h4 class="ds-timeline-title u-m-0">{{ $disposedByUser->name ?? 'Ketua PKK' }}</h4>
                                         @if($disposedByUser && $disposedByUser->sidongan_role)
                                             @php
                                                 $roleLabels = [
@@ -723,13 +707,13 @@
                                         @endif
                                     </div>
                                     @if($currentItem < $totalItems)
-                                        <div class="ds-timeline-line" style="background: #e2e8f0;"></div>
+                                        <div class="ds-timeline-line u-bg-slate-200"></div>
                                     @endif
                                 </div>
                                 <div class="ds-timeline-content">
                                     <div class="ds-timeline-header">
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                            <h4 class="ds-timeline-title" style="margin: 0;">
+                                        <div class="u-flex-center-gap-2-wrap">
+                                            <h4 class="ds-timeline-title u-m-0">
                                                 {{ $report->creator->name ?? 'Sekretaris PKK' }}
                                             </h4>
                                             @if($report->creator && $report->creator->sidongan_role)
@@ -795,13 +779,13 @@
                                     @endif
                                 </div>
                                 @if($currentItem < $totalItems)
-                                    <div class="ds-timeline-line" style="background: #e2e8f0;"></div>
+                                    <div class="ds-timeline-line u-bg-slate-200"></div>
                                 @endif
                             </div>
                             <div class="ds-timeline-content">
                                 <div class="ds-timeline-header">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                        <h4 class="ds-timeline-title" style="margin: 0;">
+                                    <div class="u-flex-center-gap-2-wrap">
+                                        <h4 class="ds-timeline-title u-m-0">
                                             {{ $verifier->name ?? 'Ketua PKK' }}
                                         </h4>
                                         @if($verifier && $verifier->sidongan_role)
@@ -840,13 +824,13 @@
                                         </p>
                                         @if($report->kegiatan_tanggal)
                                         <p style="font-size: 0.85rem; color: #065f46; margin: 0 0 0.25rem 0;">
-                                            <i class="fas fa-calendar" style="margin-right: 0.35rem;"></i>
+                                            <i class="fas fa-calendar u-mr-1"></i>
                                             {{ \Carbon\Carbon::parse($report->kegiatan_tanggal)->locale('id')->translatedFormat('d F Y') }}
                                         </p>
                                         @endif
                                         @if($report->start_time && $report->end_time)
                                         <p style="font-size: 0.85rem; color: #065f46; margin: 0;">
-                                            <i class="fas fa-clock" style="margin-right: 0.35rem;"></i>
+                                            <i class="fas fa-clock u-mr-1"></i>
                                             {{ \Carbon\Carbon::parse($report->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($report->end_time)->format('H:i') }}
                                         </p>
                                         @endif
@@ -864,13 +848,13 @@
                                         </p>
                                         @if($report->kegiatan_tanggal)
                                         <p style="font-size: 0.85rem; color: #991b1b; margin: 0 0 0.25rem 0;">
-                                            <i class="fas fa-calendar" style="margin-right: 0.35rem;"></i>
+                                            <i class="fas fa-calendar u-mr-1"></i>
                                             {{ \Carbon\Carbon::parse($report->kegiatan_tanggal)->locale('id')->translatedFormat('d F Y') }}
                                         </p>
                                         @endif
                                         @if($report->start_time && $report->end_time)
                                         <p style="font-size: 0.85rem; color: #991b1b; margin: 0;">
-                                            <i class="fas fa-clock" style="margin-right: 0.35rem;"></i>
+                                            <i class="fas fa-clock u-mr-1"></i>
                                             {{ \Carbon\Carbon::parse($report->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($report->end_time)->format('H:i') }}
                                         </p>
                                         @endif
@@ -904,13 +888,13 @@
                                     @endif
                                 </div>
                                 @if($currentItem < $totalItems)
-                                    <div class="ds-timeline-line" style="background: #e2e8f0;"></div>
+                                    <div class="ds-timeline-line u-bg-slate-200"></div>
                                 @endif
                             </div>
                             <div class="ds-timeline-content">
                                 <div class="ds-timeline-header">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                        <h4 class="ds-timeline-title" style="margin: 0;">{{ $document->creator->name ?? 'Sekretaris PKK' }}</h4>
+                                    <div class="u-flex-center-gap-2-wrap">
+                                        <h4 class="ds-timeline-title u-m-0">{{ $document->creator->name ?? 'Sekretaris PKK' }}</h4>
                                         @if($document->creator && $document->creator->sidongan_role)
                                             @php
                                                 $roleLabels = [
@@ -950,20 +934,67 @@
 </div>
 
 {{-- MODAL GALLERY --}}
-<div id="galleryOverlay" class="dl-gallery-overlay" onclick="closeGallery(event)">
-    <button class="dl-gallery-close" onclick="closeGallery()">
+@php
+    $currentUser = auth()->guard('sidongan')->user();
+    $disposisiData = is_string($document->disposisi_data ?? '') ? json_decode($document->disposisi_data, true) : $document->disposisi_data;
+    $dispo = $disposisiData;
+    
+    $statusConfig = [
+        'menunggu_disposisi' => ['class' => 'ds-status-menunggu_disposisi', 'label' => 'Menunggu Disposisi Ketua'],
+        'berjalan' => ['class' => 'ds-status-berjalan', 'label' => 'Sedang Berjalan'],
+        'menunggu_verifikasi' => ['class' => 'ds-status-menunggu_verifikasi', 'label' => 'Menunggu Verifikasi'],
+        'selesai' => ['class' => 'ds-status-selesai', 'label' => 'Selesai'],
+        'diarsipkan' => ['class' => 'ds-status-diarsipkan', 'label' => 'Diarsipkan'],
+    ];
+    $status = $statusConfig[$document->status] ?? ['class' => '', 'label' => $document->status];
+    
+    $rolesMap = [
+        'sekretaris' => 'Sekretaris PKK',
+        'bendahara' => 'Bendahara PKK',
+        'staf_ahli_1' => 'Staf Ahli I',
+        'staf_ahli_2' => 'Staf Ahli II',
+        'pengurus_1' => 'Ketua Pengurus I',
+        'pengurus_2' => 'Ketua Pengurus II',
+        'pengurus_3' => 'Ketua Pengurus III',
+        'pengurus_4' => 'Ketua Pengurus IV',
+    ];
+    
+    $userReceivedDisposisi = false;
+    if (is_array($disposisiData) && isset($disposisiData['target_roles']) && $document->status === 'berjalan') {
+        $userReceivedDisposisi = in_array($currentUser->sidongan_role, $disposisiData['target_roles']);
+    }
+
+    $existingReport = null;
+    $canLaporKegiatan = false;
+
+    if ($userReceivedDisposisi) {
+        // Satu surat = SATU laporan: cek apakah sudah ada laporan apa pun.
+        $existingReport = \App\Models\ActivityReport::where('document_id', $document->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        
+        if (!$existingReport || $existingReport->status === 'ditolak') {
+            $canLaporKegiatan = true;
+        }
+    }
+@endphp
+<div id="galleryOverlay" class="dl-gallery-overlay"
+     data-fotos='{{ json_encode($document->file_path ? [$document->file_path] : []) }}'
+     data-report-fotos='{{ json_encode($allReportFotos) }}'
+     data-storage="{{ asset('storage') }}">
+    <button class="dl-gallery-close" >
         <i class="fas fa-times"></i>
     </button>
     
-    <div class="dl-gallery-container sd-lightbox" onclick="event.stopPropagation()">
+    <div class="dl-gallery-container sd-lightbox" >
         <div class="dl-gallery-image-wrapper">
             <img id="galleryImage" class="dl-gallery-image" src="" alt="Dokumentasi">
         </div>
         
-        <button class="dl-gallery-nav prev" onclick="navigateGallery(-1)">
+        <button class="dl-gallery-nav prev" >
             <i class="fas fa-chevron-left"></i>
         </button>
-        <button class="dl-gallery-nav next" onclick="navigateGallery(1)">
+        <button class="dl-gallery-nav next" >
             <i class="fas fa-chevron-right"></i>
         </button>
         
@@ -981,172 +1012,8 @@
 
 <link rel="stylesheet" href="{{ asset('assets/sidongan/css/detail-laporan.css') }}">
 
-<script>
-    const documentFoto = @json($document->file_path ? [$document->file_path] : []);
-    
-    @php
-        $allReportFotos = [];
-        if(isset($activityReports)) {
-            foreach($activityReports as $report) {
-                $fotos = is_string($report->fotos ?? '') ? json_decode($report->fotos, true) : $report->fotos;
-                $fotosArray = is_array($fotos) ? $fotos : [];
-                if(count($fotosArray) > 0) {
-                    $allReportFotos[$report->id] = $fotosArray;
-                }
-            }
-        }
-    @endphp
-    const reportFotosData = @json($allReportFotos);
-    
-    let currentGallery = {
-        fotos: [],
-        currentIndex: 0,
-        isAnimating: false
-    };
-    
-    function openGallery(index) {
-        if (documentFoto.length === 0) return;
-        currentGallery.fotos = documentFoto;
-        currentGallery.currentIndex = index;
-        showGalleryModal();
-    }
-    
-    function openReportGallery(reportId, index) {
-        if (!reportFotosData[reportId] || reportFotosData[reportId].length === 0) return;
-        currentGallery.fotos = reportFotosData[reportId];
-        currentGallery.currentIndex = index;
-        showGalleryModal();
-    }
-    
-    function showGalleryModal() {
-        const overlay = document.getElementById('galleryOverlay');
-        if (!overlay) return;
-        updateGalleryImage('zoom-in');
-        updateGalleryUI();
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeGallery(event) {
-        if (event && event.target !== document.getElementById('galleryOverlay')) return;
-        const overlay = document.getElementById('galleryOverlay');
-        overlay.style.opacity = '0';
-        setTimeout(() => {
-            overlay.classList.remove('active');
-            overlay.style.opacity = '';
-        }, 300);
-        document.body.style.overflow = '';
-    }
-    
-    function navigateGallery(direction) {
-        if (currentGallery.isAnimating || currentGallery.fotos.length <= 1) return;
-        currentGallery.isAnimating = true;
-        
-        const animClass = direction > 0 ? 'slide-left' : 'slide-right';
-        const nextIndex = (currentGallery.currentIndex + direction + currentGallery.fotos.length) % currentGallery.fotos.length;
-        
-        const img = document.getElementById('galleryImage');
-        img.style.opacity = '0';
-        img.style.transform = direction > 0 ? 'translateX(-40px) scale(0.95)' : 'translateX(40px) scale(0.95)';
-        
-        setTimeout(() => {
-            currentGallery.currentIndex = nextIndex;
-            const fotoPath = currentGallery.fotos[currentGallery.currentIndex];
-            
-            if (fotoPath.startsWith('http')) {
-                img.src = fotoPath;
-            } else {
-                img.src = '{{ asset("storage") }}/' + fotoPath;
-            }
-            
-            img.className = 'dl-gallery-image ' + animClass;
-            
-            setTimeout(() => {
-                img.style.opacity = '1';
-                img.style.transform = 'translateX(0) scale(1)';
-            }, 50);
-            
-            updateGalleryUI();
-            
-            setTimeout(() => {
-                currentGallery.isAnimating = false;
-                img.className = 'dl-gallery-image';
-            }, 400);
-        }, 200);
-    }
-    
-    function updateGalleryImage(animClass) {
-        const img = document.getElementById('galleryImage');
-        const fotoPath = currentGallery.fotos[currentGallery.currentIndex];
-        
-        if (fotoPath.startsWith('http')) {
-            img.src = fotoPath;
-        } else {
-            img.src = '{{ asset("storage") }}/' + fotoPath;
-        }
-        
-        img.className = 'dl-gallery-image ' + (animClass || 'fade-in');
-        updateGalleryUI();
-    }
-    
-    function updateGalleryUI() {
-        const counter = document.getElementById('galleryCounter');
-        const downloadBtn = document.getElementById('galleryDownload');
-        const fotoPath = currentGallery.fotos[currentGallery.currentIndex];
-        const fullUrl = fotoPath.startsWith('http') ? fotoPath : '{{ asset("storage") }}/' + fotoPath;
-        
-        if (counter) {
-            counter.textContent = (currentGallery.currentIndex + 1) + ' / ' + currentGallery.fotos.length;
-        }
-        if (downloadBtn) {
-            downloadBtn.href = fullUrl;
-        }
-        
-        const prevBtn = document.querySelector('.dl-gallery-nav.prev');
-        const nextBtn = document.querySelector('.dl-gallery-nav.next');
-        
-        if (currentGallery.fotos.length <= 1) {
-            if (prevBtn) prevBtn.style.display = 'none';
-            if (nextBtn) nextBtn.style.display = 'none';
-        } else {
-            if (prevBtn) prevBtn.style.display = 'flex';
-            if (nextBtn) nextBtn.style.display = 'flex';
-        }
-
-        // Tandai galeri berfoto tunggal; CSS mobile yang menyembunyikan penanda & thumbnail
-        const wadahGaleri = document.querySelector('.dl-gallery-container');
-        if (wadahGaleri) {
-            wadahGaleri.classList.toggle('sd-lightbox-tunggal', currentGallery.fotos.length <= 1);
-        }
-
-        updateThumbnails();
-    }
-    
-    function updateThumbnails() {
-        const container = document.getElementById('galleryThumbnails');
-        if (!container) return;
-        container.innerHTML = '';
-        
-        currentGallery.fotos.forEach((foto, index) => {
-            const fullUrl = foto.startsWith('http') ? foto : '{{ asset("storage") }}/' + foto;
-            const thumb = document.createElement('div');
-            thumb.className = 'dl-gallery-thumb' + (index === currentGallery.currentIndex ? ' active' : '');
-            thumb.innerHTML = '<img src="' + fullUrl + '" alt="Thumb">';
-            thumb.onclick = () => {
-                if (index !== currentGallery.currentIndex) {
-                    navigateGallery(index - currentGallery.currentIndex);
-                }
-            };
-            container.appendChild(thumb);
-        });
-    }
-    
-    document.addEventListener('keydown', (e) => {
-        const overlay = document.getElementById('galleryOverlay');
-        if (!overlay || !overlay.classList.contains('active')) return;
-        if (e.key === 'Escape') closeGallery();
-        if (e.key === 'ArrowLeft') navigateGallery(-1);
-        if (e.key === 'ArrowRight') navigateGallery(1);
-    });
-</script>
+@push('scripts')
+    <script src="{{ asset('assets/sidongan/js/documents-show.js') }}"></script>
+@endpush
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

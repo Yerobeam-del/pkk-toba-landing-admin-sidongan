@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -22,3 +27,4 @@ class EmailVerificationNotificationController extends Controller
         return back()->with('status', 'verification-link-sent');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

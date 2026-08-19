@@ -1,0 +1,71 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/modules/landing/sections/apps-home.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+        .apps-home-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 2.5rem !important;
+            max-width: 1200px !important;
+            margin: 0 auto !important;
+        }
+
+        .apps-section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .apps-section-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #0f766e;
+            background: rgba(15, 118, 110, 0.08);
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+        }
+
+        .apps-section-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #0f766e;
+            margin-bottom: 0.8rem;
+        }
+
+        .apps-section-desc {
+            font-size: 1rem;
+            color: #718096;
+            max-width: 550px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            .apps-home-grid {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+            .apps-section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(72, 187, 120, 0); }
+        }
+
+        @keyframes pulse-orange {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+        }
+    

@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 /**
  * Desa Handler Module - DYNAMIC VERSION
  * Fetches village data from Laravel API instead of hardcoded array
@@ -198,3 +201,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { desaData, renderDesaCard, populateDesa, filterDesa, loadDesaDataFromAPI };
 }
+/* Dikembangkan oleh Institut Teknologi Del */

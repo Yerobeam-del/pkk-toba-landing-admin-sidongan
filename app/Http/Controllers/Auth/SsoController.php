@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -109,3 +114,4 @@ class SsoController extends Controller
         return '/admin/profile';
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

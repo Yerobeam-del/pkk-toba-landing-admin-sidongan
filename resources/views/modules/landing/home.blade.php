@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('modules.landing.layouts.app')
 
 @section('title', 'Beranda - PKK Kabupaten Toba')
@@ -19,3 +22,4 @@
 @include('modules.landing.sections.page-template')
 @include('modules.landing.sections.page-tentang')
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

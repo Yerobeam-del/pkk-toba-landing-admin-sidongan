@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\Auth;
@@ -105,3 +110,4 @@ class ErrorContextHelper
         ];
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

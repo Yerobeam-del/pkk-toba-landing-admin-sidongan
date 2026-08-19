@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
@@ -109,3 +114,4 @@ class SsoTokenService
         return rtrim(strtr(base64_encode($payload), '+/', '-_'), '=') . '.' . hash_hmac('sha256', $payload, $this->secret());
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

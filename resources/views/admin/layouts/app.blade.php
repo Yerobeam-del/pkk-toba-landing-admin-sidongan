@@ -1,7 +1,12 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="{{ asset('assets/shared/css/utilities.css') }}">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Panel - PKK Kabupaten Toba')</title>
@@ -17,198 +22,18 @@
 
     <!-- CSS Admin -->
     <link rel="stylesheet" href="{{ asset('assets/admin/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/layout.css') }}">
 
     <!-- Cropper.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" integrity="sha512-...">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
-    <style>
-        :root {
-            --sidebar-width: 260px;
-            --sidebar-collapsed-width: 80px;
-            --header-height: 64px;
-            --primary: #14b8a6;
-            --sidebar-bg: #0f172a;
-            --sidebar-hover: #1e293b;
-            --sidebar-active: rgba(20,184,166,0.15);
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* RESET & BASE */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #f1f5f9;
-            color: #334155;
-            overflow-x: hidden;
-        }
-
-        /* ==========================================
-           SIDEBAR & LAYOUT
-           Semua styling sidebar, header, dan layout
-           kini berada di global.css (satu sumber).
-           ========================================== */
-
-        /* User Profile Dropdown Animation */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 480px) {
-            .user-text { display: none !important; }
-        }
-
-        .user-profile-btn:hover .user-text span:first-child {
-            color: var(--primary);
-        }
-
-        /* ==========================================
-           FIX CKEDITOR LIST DISPLAY
-           ========================================== */
-
-        /* Editor content area */
-        .ck.ck-content ul,
-        .ck.ck-content ol {
-            padding-left: 2.5rem !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            list-style-position: outside !important;
-        }
-
-        .ck.ck-content ul li,
-        .ck.ck-content ol li {
-            margin: 0.5rem 0 !important;
-            padding-left: 0.25rem !important;
-            line-height: 1.8 !important;
-        }
-
-        /* Ensure list markers are visible */
-        .ck.ck-content ul {
-            list-style-type: disc !important;
-        }
-
-        .ck.ck-content ol {
-            list-style-type: decimal !important;
-        }
-
-        /* Fix for nested lists */
-        .ck.ck-content ul ul,
-        .ck.ck-content ol ol,
-        .ck.ck-content ul ol,
-        .ck.ck-content ol ul {
-            padding-left: 2rem !important;
-            margin: 0.5rem 0 !important;
-        }
-
-        /* Blockquote fix */
-        .ck.ck-content blockquote {
-            padding: 0.5rem 1rem 0.5rem 1.5rem !important;
-            margin: 1rem 0 !important;
-            border-left: 4px solid #e2e8f0 !important;
-            background: #f8fafc !important;
-        }
-
-        /* Also fix for frontend display */
-        .news-detail-content ul,
-        .news-detail-content ol {
-            padding-left: 2rem !important;
-            margin: 1rem 0 !important;
-            list-style-position: outside !important;
-        }
-
-        .news-detail-content ul li,
-        .news-detail-content ol li {
-            margin: 0.5rem 0 !important;
-            line-height: 1.8 !important;
-        }
-
-        /* ==========================================
-        ADMIN FOOTER
-        ========================================== */
-        .admin-footer {
-            background: #fff;
-            border-top: 1px solid #e2e8f0;
-            padding: 1.5rem 2rem;
-            position: sticky;
-            bottom: 0;
-            z-index: 100;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
-        }
-
-        .admin-footer-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .admin-footer-left {
-            color: #64748b;
-            font-size: 0.875rem;
-        }
-
-        .admin-footer-left strong {
-            color: #334155;
-            font-weight: 600;
-        }
-
-        .admin-footer-right {
-            display: flex;
-            gap: 1.5rem;
-            font-size: 0.875rem;
-            color: #64748b;
-            align-items: center;
-        }
-
-        .admin-footer-right strong {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .admin-footer-divider {
-            color: rgba(0,0,0,0.15);
-        }
-
-        .admin-footer-link {
-            display: inline-flex;
-            align-items: center;
-            color: #64748b;
-            text-decoration: none;
-            transition: color 0.2s;
-            vertical-align: middle;
-            line-height: 1;
-        }
-
-        .admin-footer-link:hover {
-            color: var(--primary);
-        }
-
-        @media (max-width: 768px) {
-            .admin-footer {
-                padding: 1.25rem 1.5rem;
-            }
-
-            .admin-footer-inner {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.75rem;
-            }
-
-            .admin-footer-right {
-                display: none;
-            }
-        }
-    </style>
-
     @stack('styles')
 </head>
-<body>
+<body data-session-success="{{ session('success') }}"
+      data-session-error="{{ session('error') }}"
+      data-session-warning="{{ session('warning') }}"
+      data-session-info="{{ session('info') }}">
 
     <div class="admin-layout" id="adminLayout">
 
@@ -324,7 +149,7 @@
 
                 {{-- Section Separator --}}
                 @if(auth()->user()->hasPermission('manage-users'))
-                <div style="margin-top: 1.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="sidebar-section-separator">
                     <div class="nav-section-title">Sistem</div>
 
                     {{-- Manajemen Akun --}}
@@ -380,21 +205,21 @@
                         <line x1="9" y1="3" x2="9" y2="21"></line>
                     </svg>
                 </button>
-                <div class="header-right" style="position:relative">
+                <div class="header-right">
 
                     {{-- User Profile Button --}}
-                    <button onclick="toggleUserMenu()" class="user-profile-btn" style="display:flex;align-items:center;gap:0.75rem;background:none;border:none;cursor:pointer;padding:0.5rem 0.75rem;border-radius:8px;transition:background 0.2s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+                    <button type="button" class="user-profile-btn" aria-haspopup="true" aria-expanded="false" aria-controls="userMenu">
 
                         {{-- User Info --}}
-                        <div class="user-text" style="text-align:right;display:flex;flex-direction:column;align-items:flex-end">
-                            <span style="font-weight:600;font-size:0.9rem;color:#334155;line-height:1.2">{{ Auth::user()->name ?? 'Admin' }}</span>
-                            <span style="font-size:0.7rem;color:#94a3b8">{{ Auth::user()->role?->display_name ?? 'Administrator' }}</span>
+                        <div class="user-text">
+                            <span class="user-text-name">{{ Auth::user()->name ?? 'Admin' }}</span>
+                            <span class="user-text-role">{{ Auth::user()->role?->display_name ?? 'Administrator' }}</span>
                         </div>
 
                         {{-- User Avatar --}}
-                        <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.1)">
+                        <div class="user-avatar">
                             @if(Auth::user()->avatar)
-                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" style="width:100%;height:100%;object-fit:cover">
+                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}">
                             @else
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -404,40 +229,38 @@
                         </div>
 
                         {{-- Dropdown Arrow --}}
-                        <svg id="userMenuArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="transition:transform 0.2s">
+                        <svg id="userMenuArrow" class="user-menu-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"/>
                         </svg>
                     </button>
 
                     {{-- Dropdown Menu --}}
-                    <div id="userMenu" style="display:none;position:absolute;right:0;top:calc(100% + 0.5rem);background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1);min-width:220px;z-index:1000;animation:slideIn 0.2s ease">
+                    <div id="userMenu" class="user-menu" role="menu" aria-labelledby="userMenuBtn">
 
                         {{-- Menu Header --}}
-                        <div style="padding:0.75rem 1rem;border-bottom:1px solid #f1f5f9">
-                            <div style="font-weight:600;font-size:0.9rem;color:#334155">Akun Saya</div>
-                            <div style="font-size:0.75rem;color:#94a3b8">{{ Auth::user()->email }}</div>
+                        <div class="user-menu-header">
+                            <div class="user-menu-header-title">Akun Saya</div>
+                            <div class="user-menu-header-email">{{ Auth::user()->email }}</div>
                         </div>
 
                         {{-- Menu Items --}}
-                        <div style="padding:0.5rem 0">
-                            <a href="{{ route('admin.profile.edit') }}" style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;color:#334155;text-decoration:none;transition:background 0.2s;font-size:0.9rem" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                        <div class="user-menu-body">
+                            <a href="{{ route('admin.profile.edit') }}" class="user-menu-item" role="menuitem">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                                     <circle cx="12" cy="7" r="4"/>
                                 </svg>
                                 <span>Edit Profil</span>
                             </a>
-
-    
                         </div>
 
                         {{-- Divider --}}
-                        <div style="border-top:1px solid #f1f5f9;margin:0.5rem 0"></div>
+                        <div class="user-menu-divider"></div>
 
                         {{-- Logout --}}
-                        <form method="POST" action="{{ route('logout') }}" style="padding:0.5rem 0">
+                        <form method="POST" action="{{ route('logout') }}" class="user-menu-footer">
                             @csrf
-                            <button type="submit" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:#ef4444;transition:background 0.2s;text-align:left;font-size:0.9rem" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='transparent'">
+                            <button type="submit" class="user-menu-logout" role="menuitem">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                                     <polyline points="16 17 21 12 16 7"/>
@@ -472,147 +295,15 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const layout = document.getElementById('adminLayout');
-            const toggleBtn = document.getElementById('toggleBtn');
-            const overlay = document.getElementById('sidebarOverlay');
-            const navItems = document.querySelectorAll('.nav-item');
-
-            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-            const isMobile = window.innerWidth <= 1024;
-
-            if (!isMobile && isCollapsed) {
-                layout.classList.add('collapsed');
-            }
-
-            toggleBtn.addEventListener('click', () => {
-                if (window.innerWidth <= 1024) {
-                    layout.classList.toggle('mobile-open');
-                } else {
-                    layout.classList.toggle('collapsed');
-                    localStorage.setItem('sidebarCollapsed', layout.classList.contains('collapsed'));
-                }
-            });
-
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    if (window.innerWidth <= 1024) {
-                        layout.classList.remove('mobile-open');
-                    }
-                });
-            });
-
-            overlay.addEventListener('click', () => {
-                layout.classList.remove('mobile-open');
-            });
-
-            window.addEventListener('resize', () => {
-                if (window.innerWidth > 1024) {
-                    layout.classList.remove('mobile-open');
-                    if (localStorage.getItem('sidebarCollapsed') === 'true') {
-                        layout.classList.add('collapsed');
-                    } else {
-                        layout.classList.remove('collapsed');
-                    }
-                } else {
-                    layout.classList.remove('collapsed');
-                }
-            });
-
-            // ===== Tooltip nama menu saat sidebar collapsed (desktop) =====
-            // Pakai elemen position:fixed agar tidak terpotong overflow sidebar
-            const tipEl = document.createElement('div');
-            tipEl.id = 'sidebarTooltip';
-            tipEl.style.cssText = 'position:fixed;z-index:3000;background:#1e293b;color:#e2e8f0;font-size:0.75rem;font-weight:600;padding:0.4rem 0.75rem;border-radius:6px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 6px 16px rgba(0,0,0,0.35);pointer-events:none;opacity:0;transition:opacity 0.15s;white-space:nowrap;display:none';
-            document.body.appendChild(tipEl);
-
-            document.querySelectorAll('.nav-item[data-tip]').forEach(item => {
-                item.addEventListener('mouseenter', () => {
-                    if (!layout.classList.contains('collapsed') || window.innerWidth <= 1024) return;
-                    const r = item.getBoundingClientRect();
-                    tipEl.textContent = item.dataset.tip;
-                    tipEl.style.display = 'block';
-                    tipEl.style.left = (r.right + 12) + 'px';
-                    tipEl.style.top = (r.top + r.height / 2) + 'px';
-                    tipEl.style.transform = 'translateY(-50%)';
-                    requestAnimationFrame(() => { tipEl.style.opacity = '1'; });
-                });
-                item.addEventListener('mouseleave', () => {
-                    tipEl.style.opacity = '0';
-                    tipEl.style.display = 'none';
-                });
-            });
-        });
-
-        function toggleUserMenu() {
-            const menu = document.getElementById('userMenu');
-            const arrow = document.getElementById('userMenuArrow');
-
-            if (menu.style.display === 'block') {
-                menu.style.display = 'none';
-                arrow.style.transform = 'rotate(0deg)';
-            } else {
-                menu.style.display = 'block';
-                arrow.style.transform = 'rotate(180deg)';
-            }
-        }
-
-        document.addEventListener('click', function(e) {
-            const menu = document.getElementById('userMenu');
-            const btn = e.target.closest('.user-profile-btn');
-
-            if (!btn && menu.style.display === 'block') {
-                menu.style.display = 'none';
-                document.getElementById('userMenuArrow').style.transform = 'rotate(0deg)';
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const menu = document.getElementById('userMenu');
-                menu.style.display = 'none';
-                document.getElementById('userMenuArrow').style.transform = 'rotate(0deg)';
-            }
-        });
-    </script>
-
     {{-- Toast Notification System --}}
     {{-- Toast dipakai bersama Admin Panel & SIDONGAN, jadi berkasnya di assets/shared --}}
     <script src="{{ asset('assets/shared/js/toast.js') }}"></script>
 
-    {{-- Auto Show Session Messages --}}
-    @if(session('success'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            Toast.success('{{ session('success') }}');
-        });
-    </script>
-    @endif
+    {{-- Pesan flash session (success/error/warning/info) — lihat data-* pada <body> --}}
+    <script src="{{ asset('assets/admin/js/toast-messages.js') }}"></script>
 
-    @if(session('error'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            Toast.error('{{ session('error') }}');
-        });
-    </script>
-    @endif
-
-    @if(session('warning'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            Toast.warning('{{ session('warning') }}');
-        });
-    </script>
-    @endif
-
-    @if(session('info'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            Toast.info('{{ session('info') }}');
-        });
-    </script>
-    @endif
+    {{-- Layout: sidebar, tooltip, dropdown user --}}
+    <script src="{{ asset('assets/admin/js/layout.js') }}"></script>
 
     @stack('scripts')
 </body>

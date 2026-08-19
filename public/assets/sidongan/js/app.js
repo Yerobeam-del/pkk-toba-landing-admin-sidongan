@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
     const layout = document.getElementById('adminLayout');
     const toggleBtn = document.getElementById('toggleBtn');
@@ -231,3 +234,39 @@ function toggleSuratMenu(event) {
         }
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */
+
+// ============================================================
+// Dikembangkan oleh Institut Teknologi Del
+// DELEGATION (menggantikan onclick inline)
+// ============================================================
+document.addEventListener('click', function (event) {
+    const el = event.target.closest('[data-action], [data-notif-id]');
+    if (!el) return;
+
+    const action = el.getAttribute('data-action');
+    if (action === 'toggle-notification-popup') toggleNotificationPopup();
+    else if (action === 'toggle-user-menu') toggleUserMenu();
+    else if (action === 'mark-all-read') markAllAsRead();
+    else if (action === 'toggle-surat-menu') toggleSuratMenu(event);
+
+    const notifId = el.getAttribute('data-notif-id');
+    if (notifId && el.hasAttribute('data-notif-url')) {
+        markNotificationReadAndRedirect(notifId, el.getAttribute('data-notif-url'));
+    }
+});
+
+// ============================================================
+// Dikembangkan oleh Institut Teknologi Del
+// HALAMAN CETAK DISPOSISI (menggantikan onclick inline)
+// ============================================================
+document.addEventListener('click', function (event) {
+    const backBtn = event.target.closest('[data-back-url]');
+    if (backBtn) {
+        window.location.replace(backBtn.getAttribute('data-back-url'));
+        return;
+    }
+    if (event.target.closest('[data-action="print-page"]')) {
+        window.print();
+    }
+});

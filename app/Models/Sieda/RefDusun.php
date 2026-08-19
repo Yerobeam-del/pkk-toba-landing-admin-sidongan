@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 class RefDusun extends BaseSiedaModel
@@ -20,3 +25,4 @@ class RefDusun extends BaseSiedaModel
         return 'id';
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

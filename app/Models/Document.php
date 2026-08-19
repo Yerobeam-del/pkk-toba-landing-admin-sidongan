@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -212,78 +217,26 @@ class Document extends Model
     }
 
     /**
-     * Cek apakah semua disposisi sudah memberikan laporan
+     * Cek apakah sudah ada laporan untuk surat ini.
+     *
+     * Satu surat cukup SATU laporan (dibuat oleh siapa pun dari role tujuan
+     * disposisi), jadi tidak lagi menghitung per role maupun per user.
      */
     public function allDispositionsReported()
     {
-        $disposisiData = $this->disposisi_data;
-        
-        \Log::info("=== CHECK allDispositionsReported ===");
-        \Log::info("Document ID: {$this->id}");
-        \Log::info("Raw disposisi_data:", ['data' => $disposisiData]);
-        
-        // Handle double-encoded JSON (data lama yang salah)
-        if (is_array($disposisiData) && isset($disposisiData['data']) && is_string($disposisiData['data'])) {
-            \Log::info("Detected double-encoded JSON, decoding...");
-            $decoded = json_decode($disposisiData['data'], true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $disposisiData = $decoded;
-                \Log::info("Decoded disposisi_data:", ['data' => $disposisiData]);
-            }
-        }
-        
-        if (!is_array($disposisiData) || !isset($disposisiData['target_roles'])) {
-            \Log::info("No target_roles found, returning true");
-            return true;
-        }
-        
-        $targetRoles = $disposisiData['target_roles'];
-        \Log::info("Target roles:", ['roles' => $targetRoles]);
-        
-        if (empty($targetRoles)) {
-            \Log::info("Empty target_roles, returning true");
-            return true;
-        }
-        
-        // Ambil SEMUA user dengan role target
-        $targetUsers = \App\Models\User::whereIn('sidongan_role', $targetRoles)->get();
-        
-        \Log::info("Target users found:", [
-            'count' => $targetUsers->count(),
-            'users' => $targetUsers->map(fn($u) => [
-                'id' => $u->id,
-                'name' => $u->name,
-                'role' => $u->sidongan_role
-            ])
-        ]);
-        
-        if ($targetUsers->isEmpty()) {
-            \Log::info("No users found with target roles, returning true");
-            return true;
-        }
-        
-        // Cek apakah SEMUA user target sudah lapor
-        $allReported = true;
-        foreach ($targetUsers as $user) {
-            $hasReported = \App\Models\ActivityReport::where('document_id', $this->id)
-                ->where('created_by', $user->id)
-                ->exists();
-            
-            \Log::info("User report status:", [
-                'user_id' => $user->id,
-                'user_name' => $user->name,
-                'user_role' => $user->sidongan_role,
-                'has_reported' => $hasReported ? 'YES' : 'NO'
-            ]);
-            
-            if (!$hasReported) {
-                $allReported = false;
-                \Log::info("User {$user->name} ({$user->sidongan_role}) has NOT reported yet!");
-            }
-        }
-        
-        \Log::info("All dispositions reported: " . ($allReported ? 'YES' : 'NO'));
-        return $allReported;
+        return \App\Models\ActivityReport::where('document_id', $this->id)->exists();
+    }
+
+    /**
+     * Saring daftar role disposisi ke yang benar-benar punya anggota user.
+     */
+    private function rolesDenganAnggota(array $targetRoles): array
+    {
+        return \App\Models\User::whereIn('sidongan_role', $targetRoles)
+            ->pluck('sidongan_role')
+            ->unique()
+            ->values()
+            ->all();
     }
 
     /**
@@ -295,88 +248,34 @@ class Document extends Model
     }
 
     /**
-     * Hitung jumlah user yang sudah lapor
+     * Jumlah laporan yang sudah masuk.
+     * Satu surat cukup satu laporan: 1 jika sudah ada, 0 jika belum.
      */
     public function getReportedCount()
     {
-        $disposisiData = $this->disposisi_data;
-        
-        if (!is_array($disposisiData) || !isset($disposisiData['target_roles'])) {
-            return 0;
-        }
-        
-        $targetRoles = $disposisiData['target_roles'];
-        $targetUsers = \App\Models\User::whereIn('sidongan_role', $targetRoles)->get();
-        
-        $reportedCount = 0;
-        foreach ($targetUsers as $user) {
-            $hasReported = \App\Models\ActivityReport::where('document_id', $this->id)
-                ->where('created_by', $user->id)
-                ->exists();
-            
-            if ($hasReported) {
-                $reportedCount++;
-            }
-        }
-        
-        return $reportedCount;
+        return \App\Models\ActivityReport::where('document_id', $this->id)->exists() ? 1 : 0;
     }
 
     /**
-     * Hitung total user yang harus lapor
+     * Total laporan yang dibutuhkan.
+     * Satu surat cukup satu laporan.
      */
     public function getTotalRequiredReports()
     {
-        $disposisiData = $this->disposisi_data;
-        
-        if (!is_array($disposisiData) || !isset($disposisiData['target_roles'])) {
-            return 0;
-        }
-        
-        $targetRoles = $disposisiData['target_roles'];
-        return \App\Models\User::whereIn('sidongan_role', $targetRoles)->count();
+        return 1;
     }
 
     /**
-     * Cek apakah semua laporan sudah diverifikasi (disetujui)
+     * Cek apakah laporan sudah diverifikasi (disetujui).
+     * Selesai bila laporan TERAKHIR surat ini sudah disetujui.
      */
     public function allReportsVerified()
     {
-        $disposisiData = $this->disposisi_data;
+        $latestReport = \App\Models\ActivityReport::where('document_id', $this->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
         
-        // Handle double-encoded JSON (data lama)
-        if (is_array($disposisiData) && isset($disposisiData['data']) && is_string($disposisiData['data'])) {
-            $decoded = json_decode($disposisiData['data'], true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $disposisiData = $decoded;
-            }
-        }
-        
-        if (!is_array($disposisiData) || !isset($disposisiData['target_roles'])) {
-            return true;
-        }
-        
-        $targetRoles = $disposisiData['target_roles'];
-        $targetUsers = \App\Models\User::whereIn('sidongan_role', $targetRoles)->get();
-        
-        if ($targetUsers->isEmpty()) {
-            return true;
-        }
-        
-        // Periksa laporan TERAKHIR per user (bukan first() yang bisa ambil laporan ditolak)
-        foreach ($targetUsers as $user) {
-            $latestReport = \App\Models\ActivityReport::where('document_id', $this->id)
-                ->where('created_by', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->first();
-            
-            // User belum lapor, atau laporan terakhirnya belum disetujui
-            if (!$latestReport || $latestReport->status !== 'disetujui') {
-                return false;
-            }
-        }
-        
-        return true;
+        return $latestReport && $latestReport->status === 'disetujui';
     }
 
     public function updateCorrectStatus()
@@ -393,81 +292,53 @@ class Document extends Model
                 $disposisiData = $decoded;
             }
         }
-        
+
         if (!is_array($disposisiData) || !isset($disposisiData['target_roles'])) {
             \Log::info("No target_roles found, status unchanged");
             return $this->status;
         }
-        
-        $targetRoles = $disposisiData['target_roles'];
-        $targetUsers = \App\Models\User::whereIn('sidongan_role', $targetRoles)->get();
-        
-        if ($targetUsers->isEmpty()) {
+
+        // Jika tidak ada anggota sama sekali pada role tujuan, tidak ada yang
+        // bisa melapor → anggap selesai agar surat tidak macet.
+        $rolesDenganAnggota = $this->rolesDenganAnggota($disposisiData['target_roles']);
+
+        if (empty($rolesDenganAnggota)) {
             \Log::info("No users in target roles, setting selesai");
             $this->update(['status' => 'selesai']);
             return 'selesai';
         }
-        
-        // Cek laporan TERAKHIR setiap user, bukan semua laporan
-        $allApproved = true;
-        $anyRejected = false;
-        $anyPending = false;
-        $anyHasReport = false;
-        
-        foreach ($targetUsers as $user) {
-            $latestReport = \App\Models\ActivityReport::where('document_id', $this->id)
-                ->where('created_by', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->first();
-            
-            if (!$latestReport) {
-                // User ini belum lapor sama sekali
-                $allApproved = false;
-                continue;
-            }
-            
-            $anyHasReport = true;
-            
-            if ($latestReport->status === 'ditolak') {
-                $anyRejected = true;
-                $allApproved = false;
-            } elseif ($latestReport->status === 'menunggu_verifikasi') {
-                $anyPending = true;
-                $allApproved = false;
-            }
-            // Jika 'disetujui', allApproved tetap true (untuk user ini)
-        }
-        
-        \Log::info("Report check - AnyReported: " . ($anyHasReport ? 'YES' : 'NO') . 
-                ", AnyRejected: " . ($anyRejected ? 'YES' : 'NO') . 
-                ", AnyPending: " . ($anyPending ? 'YES' : 'NO') . 
-                ", AllApproved: " . ($allApproved ? 'YES' : 'NO'));
-        
-        // Semua sudah lapor && semua disetujui → Selesai
-        if ($anyHasReport && $allApproved) {
-            $this->update(['status' => 'selesai']);
-            \Log::info("Status updated to: selesai");
-            return 'selesai';
-        }
-        
-        // Ada laporan yang ditolak (dan belum ada revisi yang disetujui) → berjalan
-        if ($anyRejected) {
+
+        // Satu surat = SATU laporan. Status surat ditentukan laporan TERAKHIR:
+        //   - belum ada laporan                  → berjalan
+        //   - laporan terakhir ditolak           → berjalan (perlu laporan ulang)
+        //   - laporan terakhir menunggu verifikasi → menunggu_verifikasi
+        //   - laporan terakhir disetujui         → selesai
+        $latestReport = \App\Models\ActivityReport::where('document_id', $this->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (!$latestReport) {
+            \Log::info("No report yet, setting berjalan");
             $this->update(['status' => 'berjalan']);
-            \Log::info("Status updated to: berjalan (masih ada laporan ditolak)");
             return 'berjalan';
         }
-        
-        // Ada yang menunggu verifikasi
-        if ($anyPending) {
-            $this->update(['status' => 'menunggu_verifikasi']);
-            \Log::info("Status updated to: menunggu_verifikasi");
-            return 'menunggu_verifikasi';
+
+        if ($latestReport->status === 'disetujui') {
+            \Log::info("Latest report approved, setting selesai");
+            $this->update(['status' => 'selesai']);
+            return 'selesai';
         }
-        
-        // Default: masih ada yang belum lapor
-        $this->update(['status' => 'berjalan']);
-        \Log::info("Status updated to: berjalan (default - ada yg belum lapor)");
-        return 'berjalan';
+
+        if ($latestReport->status === 'ditolak') {
+            \Log::info("Latest report rejected, setting berjalan");
+            $this->update(['status' => 'berjalan']);
+            return 'berjalan';
+        }
+
+        // menunggu_verifikasi (atau status laporan lain yang belum disetujui)
+        $this->update(['status' => 'menunggu_verifikasi']);
+        \Log::info("Status updated to: menunggu_verifikasi");
+        return 'menunggu_verifikasi';
     }
 
     /**
@@ -490,3 +361,4 @@ class Document extends Model
             ->count();
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
@@ -54,3 +59,4 @@ class PublicDocumentController extends Controller
         return Storage::disk('public')->download($document->file_path, $document->file_name);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

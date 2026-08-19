@@ -1,24 +1,16 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 {{-- Toast Notification System --}}
 {{-- Berkasnya di assets/shared karena dipakai bersama Admin Panel & SIDONGAN --}}
 <script src="{{ asset('assets/shared/js/toast.js') }}"></script>
 
 {{-- Auto Show Toast from Session --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        @if(session('success'))
-            Toast.success("{{ session('success') }}");
-        @endif
-        
-        @if(session('error'))
-            Toast.error("{{ session('error') }}");
-        @endif
-        
-        @if(session('warning'))
-            Toast.warning("{{ session('warning') }}");
-        @endif
-        
-        @if(session('info'))
-            Toast.info("{{ session('info') }}");
-        @endif
-    });
-</script>
+{{-- Pesan flash dibaca dari atribut data-* oleh assets/shared/js/toast-flash.js --}}
+<div id="toast-flash"
+     data-success="{{ session('success') }}"
+     data-error="{{ session('error') }}"
+     data-warning="{{ session('warning') }}"
+     data-info="{{ session('info') }}"></div>
+<script src="{{ asset('assets/shared/js/toast-flash.js') }}"></script>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

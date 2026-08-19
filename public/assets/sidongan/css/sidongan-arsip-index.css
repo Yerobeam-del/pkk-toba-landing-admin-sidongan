@@ -1,0 +1,69 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/sidongan/arsip/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+    .arsip-row {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-left: 3px solid transparent;
+        position: relative;
+    }
+    .arsip-row::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #8b5cf6, #7c3aed);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .arsip-row:hover {
+        background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%) !important;
+        border-left-color: #8b5cf6;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+    }
+    .arsip-row:hover::before {
+        opacity: 1;
+    }
+    .stats-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stats-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    .animate-slide-in {
+        animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        opacity: 0;
+    }
+    .btn-action {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    }
+    .filter-btn {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+

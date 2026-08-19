@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Middleware;
 
 use Closure;
@@ -22,3 +27,4 @@ class CheckPermission
         return $next($request);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

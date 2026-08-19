@@ -1,4 +1,9 @@
 <?php
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -27,3 +32,4 @@ class HeroSlider extends Model
         return $query->where('is_active', true)->orderBy('sort_order');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,0 +1,42 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/berita/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .berita-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    .berita-header h1 { font-size: 1.25rem !important; }
+    .berita-header .btn { width: 100% !important; justify-content: center !important; }
+    .stats-grid { grid-template-columns: 1fr !important; }
+    .tabs-container { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+    .tabs-container::-webkit-scrollbar { height: 4px; }
+    .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+
+    /* Search & Tampilkan adjustments for mobile */
+    .berita-search-wrapper {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    .berita-search-input {
+        width: 100% !important;
+    }
+    .berita-perpage-wrapper {
+        width: 100% !important;
+        justify-content: flex-end !important;
+    }
+    .berita-form-wrapper {
+        width: auto !important;
+    }
+}
+

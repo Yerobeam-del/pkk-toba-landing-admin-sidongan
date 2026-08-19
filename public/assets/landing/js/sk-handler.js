@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 /**
  * SK & Dokumen Handler Module
  * Renders document table, handles search
@@ -77,3 +80,4 @@ document.addEventListener('DOMContentLoaded', populateSKTable);
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { skDocuments, renderSKRow, renderSKTable, populateSKTable, searchSK };
 }
+/* Dikembangkan oleh Institut Teknologi Del */

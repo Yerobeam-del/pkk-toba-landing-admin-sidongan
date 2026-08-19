@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <section class="space-y-6">
     <header>
         <h2 class="text-lg font-medium text-gray-900">
@@ -53,3 +56,4 @@
         </form>
     </x-modal>
 </section>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

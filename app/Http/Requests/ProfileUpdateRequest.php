@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Requests;
 
 use App\Models\User;
@@ -25,3 +30,4 @@ class ProfileUpdateRequest extends FormRequest
         ];
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

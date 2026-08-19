@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -44,3 +49,4 @@ class WilayahController extends Controller
         return response()->json($villages);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

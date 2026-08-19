@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @props(['href', 'label' => 'Batal'])
 
 {{--
@@ -14,3 +17,4 @@
     dari variabel halaman pemanggil.
 --}}
 <a href="{{ $href }}" {{ $attributes->merge(['class' => 'btn btn-cancel']) }}>{{ $label }}</a>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

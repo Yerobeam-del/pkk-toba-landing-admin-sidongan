@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -180,3 +185,4 @@ class DokumenController extends Controller
         return round($bytes, 2) . ' ' . $units[$pow];
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

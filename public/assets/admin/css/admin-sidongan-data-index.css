@@ -1,0 +1,59 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/sidongan-data/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+/* FIX: Hilangkan border hitam tebal, ganti dengan border halus */
+.card {
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+}
+
+@media (max-width: 768px) {
+    .sidongan-header { flex-direction: column !important; align-items: flex-start !important; gap: 1rem !important; }
+    .sidongan-header h1 { font-size: 1.25rem !important; }
+    .sidongan-header .btn { width: 100% !important; justify-content: center !important; }
+    .stats-grid { grid-template-columns: 1fr !important; }
+    .tabs-container { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+    .tabs-container::-webkit-scrollbar { height: 4px; }
+    .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+
+    /* FIX: Filter form collapse ke 1 kolom */
+    .filter-form > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* FIX: Flex container di filter juga harus stack vertikal */
+    .filter-form > div[style*="display:flex"] {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .filter-form > div[style*="display:flex"] > div {
+        width: 100% !important;
+    }
+
+    /* FIX: Tombol dan link full width di mobile */
+    .filter-form button, .filter-form a {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* FIX: Dropdown Tampilkan full width dan rapi */
+    .filter-form select[name="per_page"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* FIX: Cleanup grid collapse */
+    .cleanup-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+

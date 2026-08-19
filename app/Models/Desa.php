@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -25,3 +30,4 @@ class Desa extends Model
         return $this->image ? asset('storage/' . $this->image) : null;
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

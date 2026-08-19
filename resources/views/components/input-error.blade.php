@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @props(['messages'])
 
 @if ($messages)
@@ -7,3 +10,4 @@
         @endforeach
     </ul>
 @endif
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

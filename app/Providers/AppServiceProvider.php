@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
@@ -33,3 +38,4 @@ class AppServiceProvider extends ServiceProvider
         );
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

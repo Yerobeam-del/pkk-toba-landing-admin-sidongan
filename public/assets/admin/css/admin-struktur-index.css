@@ -1,0 +1,66 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/struktur/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+@media (max-width: 768px) {
+    /* Header adjustments */
+    .struktur-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    .struktur-header .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* Tabs container adjustments */
+    .tabs-container {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    .tabs-container::-webkit-scrollbar {
+        height: 4px;
+    }
+    .tabs-container::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 4px;
+    }
+
+    /* Toolbar: Tampilkan di kanan atas, Search di bawah full width */
+    .struktur-toolbar-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
+        width: 100% !important;
+    }
+
+    /* Dropdown Tampilkan rata kanan di mobile */
+    .struktur-perpage-wrapper {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
+    .struktur-form-wrapper {
+        width: auto !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Search input full width */
+    .struktur-search-wrapper {
+        width: 100% !important;
+        flex-shrink: 1 !important;
+    }
+
+    .struktur-search-input {
+        width: 100% !important;
+    }
+}
+

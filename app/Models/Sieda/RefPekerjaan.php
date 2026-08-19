@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 class RefPekerjaan extends BaseSiedaModel
@@ -12,3 +17,4 @@ class RefPekerjaan extends BaseSiedaModel
     public static function moduleName(): string { return 'Referensi Pekerjaan'; }
     public static function primaryKey(): string { return 'id'; }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

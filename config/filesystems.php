@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 return [
 
     /*
@@ -74,3 +79,4 @@ return [
     ],
 
 ];
+/* Dikembangkan oleh Institut Teknologi Del */

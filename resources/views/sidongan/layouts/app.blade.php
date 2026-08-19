@@ -1,7 +1,12 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="{{ asset('assets/shared/css/utilities.css') }}">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -26,7 +31,7 @@
 
         if (!$currentUser && !request()->routeIs('sidongan.login*')) {
             if (!request()->ajax() && !request()->wantsJson()) {
-                echo '<script>window.location.href="' . route('sidongan.login') . '";</script>';
+                echo "    <script src=\"" . asset('assets/sidongan/js/sidongan-layouts-app.js') . "\" data-login-url=\"" . route('sidongan.login') . "\"></script>\n";
                 exit;
             }
         }
@@ -62,3 +67,4 @@
     @stack('scripts')
 </body>
 </html>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

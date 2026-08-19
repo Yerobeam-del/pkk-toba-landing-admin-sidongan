@@ -1,7 +1,12 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8">
+        
+    <link rel="stylesheet" href="{{ asset('assets/shared/css/utilities.css') }}">
+<meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -37,3 +42,4 @@
         </div>
     </body>
 </html>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

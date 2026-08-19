@@ -1,19 +1,13 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Manajemen Data SIEDA')
 @section('page-title', 'Manajemen Data SIEDA')
 
 @section('content')
-<style>
-    .sieda-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-    .sieda-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--text-dark); margin: 0 0 0.25rem 0; letter-spacing: -0.5px; }
-    .sieda-header p { color: var(--text-muted); margin: 0; font-size: 0.9rem; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-    th { background: #f8fafc; text-align: left; padding: 0.75rem; font-weight: 600; color: #334155; border-bottom: 2px solid #e2e8f0; }
-    td { padding: 0.75rem; border-bottom: 1px solid #f1f5f9; }
-    tr:hover td { background: #fafbfc; }
-    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; border-radius: 6px; }
-    .card { border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-</style>
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-sieda-data-index.css') }}">
+
 
 {{-- Header --}}
 <div class="sieda-header">
@@ -45,12 +39,12 @@
 <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; margin-bottom:2rem">
     <div class="card" style="background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; padding:1.25rem; border:none">
         <div style="display:flex; align-items:flex-start; gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
                 </svg>
             </div>
-            <div style="flex:1">
+            <div class="u-flex-1">
                 <p style="margin:0 0 0.25rem 0; opacity:0.9; font-size:0.85rem">Total Record Keseluruhan</p>
                 <p style="margin:0; font-size:1.85rem; font-weight:800; line-height:1.1">{{ number_format($totalKeseluruhan) }}</p>
             </div>
@@ -58,12 +52,12 @@
     </div>
     <div class="card" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; padding:1.25rem; border:none">
         <div style="display:flex; align-items:flex-start; gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
             </div>
-            <div style="flex:1">
+            <div class="u-flex-1">
                 <p style="margin:0 0 0.25rem 0; opacity:0.9; font-size:0.85rem">Data Aktif di SIEDA</p>
                 <p style="margin:0; font-size:1.85rem; font-weight:800; line-height:1.1">{{ number_format($totalAktif) }}</p>
             </div>
@@ -80,7 +74,7 @@
             <tr>
                 <th>Modul</th>
                 <th style="text-align:center">Total Data</th>
-                <th style="text-align:right">Aksi</th>
+                <th class="u-text-right">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -90,7 +84,7 @@
                         <strong>{{ $stat['label'] }}</strong>
                     </td>
                     <td style="text-align:center">{{ number_format($stat['total']) }}</td>
-                    <td style="text-align:right">
+                    <td class="u-text-right">
                         <a href="{{ route('admin.sieda-data.module', $stat['slug']) }}"
                            class="btn btn-sm btn-outline-primary"
                            style="display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap">
@@ -139,3 +133,4 @@
 </div>
 
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

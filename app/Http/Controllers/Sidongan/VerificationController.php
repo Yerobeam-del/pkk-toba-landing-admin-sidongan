@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
@@ -114,24 +119,45 @@ class VerificationController extends Controller
                 $notifTitle = "Laporan Ditolak";
             }
             
-            // KIRIM NOTIFIKASI KE PEMBUAT LAPORAN
-            if (isset($notifMessage) && $report->created_by) {
-                \App\Models\Notification::create([
-                    'user_id' => $report->created_by,
-                    'type' => 'laporan_verifikasi',
-                    'title' => $notifTitle,
-                    'message' => $notifMessage,
-                    'related_id' => $report->document->id,
-                    'related_type' => 'document',
-                ]);
+            // KIRIM NOTIFIKASI: pembuat laporan, plus SELURUH role tujuan disposisi
+            // saat ditolak — karena satu surat = satu laporan, siapa pun dari role
+            // tujuan boleh mengisi ulang dan perlu tahu bahwa laporannya ditolak.
+            if (isset($notifMessage)) {
+                $penerimaIds = $report->created_by ? [$report->created_by] : [];
+
+                if ($validated['status'] === 'ditolak' && $report->document->disposisi_data) {
+                    $dispo = is_string($report->document->disposisi_data)
+                        ? json_decode($report->document->disposisi_data, true)
+                        : $report->document->disposisi_data;
+
+                    $targetRoles = $dispo['target_roles'] ?? [];
+                    if (!empty($targetRoles)) {
+                        $penerimaIds = array_merge(
+                            $penerimaIds,
+                            \App\Models\User::whereIn('sidongan_role', $targetRoles)->pluck('id')->all()
+                        );
+                    }
+                }
+
+                foreach (array_unique($penerimaIds) as $userId) {
+                    \App\Models\Notification::create([
+                        'user_id' => $userId,
+                        'type' => 'laporan_verifikasi',
+                        'title' => $notifTitle,
+                        'message' => $notifMessage,
+                        'related_id' => $report->document->id,
+                        'related_type' => 'document',
+                    ]);
+                }
             }
         }
         
         $pesan = $validated['status'] === 'disetujui' 
             ? 'Laporan berhasil disetujui!' 
-            : 'Laporan ditolak. Pembuat laporan akan diberi notifikasi.';
+            : 'Laporan ditolak. Role tujuan disposisi akan diberi notifikasi.';
         
         return redirect()->route('sidongan.verifikasi')
             ->with('success', $pesan);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
@@ -151,3 +156,4 @@ class SiedaSyncService
         }
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

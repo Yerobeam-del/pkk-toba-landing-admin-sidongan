@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,3 +31,4 @@ class DocumentCategory extends Model
         return $this->hasMany(Document::class, 'category_id');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

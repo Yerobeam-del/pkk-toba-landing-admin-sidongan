@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 /**
  * Toast Notification System dengan Progress Bar
  * Usage: Toast.show('Pesan sukses', 'success')
@@ -353,3 +356,4 @@ const Toast = {
 
 // Export ke global
 window.Toast = Toast;
+/* Dikembangkan oleh Institut Teknologi Del */

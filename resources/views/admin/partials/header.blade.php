@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <div class="topbar">
     <h2 id="pageTitle">@yield('page-title', 'Dashboard')</h2>
     <div>
@@ -7,3 +10,4 @@
         {{-- Tombol "+ Tambah" sudah dipindah ke dalam masing-masing halaman --}}
     </div>
 </div>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -490,3 +495,4 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
 
 // ================= AUTH ROUTES (Wajib di paling bawah) =================
 require __DIR__.'/auth.php';
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,0 +1,34 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/user-management/edit.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .form-grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .permission-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .email-input-group {
+        flex-direction: column !important;
+    }
+
+    .email-input-group input[type="text"] {
+        width: 100% !important;
+    }
+
+    .email-domain {
+        width: 100% !important;
+        text-align: center !important;
+    }
+}
+

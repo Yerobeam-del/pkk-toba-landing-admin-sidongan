@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <aside class="sidebar" id="adminSidebar">
     <div class="sidebar-header">
         <div class="logo">PKK</div>
@@ -127,3 +130,4 @@
 
     </ul>
 </aside>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

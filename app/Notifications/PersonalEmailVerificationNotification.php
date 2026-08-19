@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -75,3 +80,4 @@ class PersonalEmailVerificationNotification extends Notification
         ];
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

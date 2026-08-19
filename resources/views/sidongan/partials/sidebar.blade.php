@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @php
     $currentUser = auth()->guard('sidongan')->user();
 @endphp
@@ -32,9 +35,9 @@
         @php
             $isSuratActive = request()->routeIs('sidongan.documents.*');
         @endphp
-        <div class="nav-item-wrapper" style="margin-bottom: 0.25rem;">
-            <a href="javascript:void(0)" onclick="toggleSuratMenu(event)" class="nav-item has-submenu {{ $isSuratActive ? 'active' : '' }}" style="justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div class="nav-item-wrapper u-a86">
+            <a href="javascript:void(0)" data-action="toggle-surat-menu" class="nav-item has-submenu {{ $isSuratActive ? 'active' : '' }}" style="justify-content: space-between;">
+                <div class="u-flex-center-gap-3">
                     <div class="nav-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </div>
@@ -125,3 +128,4 @@
         </a>
     </nav>
 </aside>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

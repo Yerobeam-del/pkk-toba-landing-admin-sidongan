@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -21,3 +26,4 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

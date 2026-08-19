@@ -1,0 +1,240 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/sidongan/lapor-kegiatan/create.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+    /* Container tanpa max-width */
+    .lapor-container {
+        padding: 0 1.5rem;
+    }
+    
+    /* Responsive Grid */
+    .responsive-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 968px) {
+        .lapor-container {
+            padding: 0 1rem;
+        }
+        
+        .responsive-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .detail-surat-card {
+            position: static !important;
+            margin-bottom: 1rem;
+        }
+        
+        .form-header h1 {
+            font-size: 1.125rem !important;
+        }
+        
+        .form-header p {
+            font-size: 0.75rem !important;
+        }
+        
+        .section-title {
+            font-size: 0.8rem !important;
+        }
+        
+        .info-row {
+            flex-direction: column !important;
+            gap: 0.25rem !important;
+        }
+        
+        .info-label, .info-value {
+            font-size: 0.75rem !important;
+        }
+        
+        .btn-submit {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+        
+        .btn-group {
+            flex-direction: column-reverse !important;
+            gap: 0.5rem !important;
+        }
+        
+        .btn-group > * {
+            width: 100% !important;
+        }
+        
+        .location-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .lapor-container {
+            padding: 0 0.75rem;
+        }
+        
+        .form-header h1 {
+            font-size: 1rem !important;
+        }
+        
+        .time-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * Efek fokus & hover (menggantikan onfocus/onblur/onmouseover/onmouseout inline)
+ * ============================================================ */
+
+/* Fokus ring (dipasang lewat kelas .u-field-focused oleh JS) */
+.u-field-focused {
+    border-color: #0891b2 !important;
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1) !important;
+}
+
+/* Tombol kembali (header) */
+.sd-btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.sd-btn-back:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+}
+
+/* Tombol lihat dokumen */
+.sd-doc-view {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #dbeafe;
+    color: #2563eb;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+.sd-doc-view:hover {
+    background: #bfdbfe;
+    transform: translateY(-2px);
+}
+
+/* Tombol "Tambah Foto" */
+.sd-btn-add-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    background: linear-gradient(135deg, #0891b2, #14b8a6);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(8, 145, 178, 0.2);
+}
+.sd-btn-add-more:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(8, 145, 178, 0.3);
+}
+
+/* Tombol "Ganti File" */
+.sd-btn-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.sd-btn-change:hover {
+    background: #f8fafc;
+    color: #334155;
+}
+
+/* Tombol reset */
+.sd-btn-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.sd-btn-reset:hover {
+    background: #e2e8f0;
+}
+
+/* Tombol batal */
+.sd-btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.sd-btn-cancel:hover {
+    background: #e2e8f0;
+}
+
+/* Tombol submit */
+.sd-btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #0891b2, #14b8a6);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(8, 145, 178, 0.2);
+}
+.sd-btn-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+}

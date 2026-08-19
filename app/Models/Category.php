@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -36,3 +41,4 @@ class Category extends Model
         return $query->where('is_active', true);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

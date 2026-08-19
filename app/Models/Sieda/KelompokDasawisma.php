@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 class KelompokDasawisma extends BaseSiedaModel
@@ -32,3 +37,4 @@ class KelompokDasawisma extends BaseSiedaModel
         return $this->hasMany(Keluarga::class, 'id_kelompok_dasawisma', 'id');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -26,3 +31,4 @@ class Role extends Model
         return $this->permissions()->where('name', $permissionName)->exists();
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

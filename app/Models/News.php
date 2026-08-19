@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -45,3 +50,4 @@ class News extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

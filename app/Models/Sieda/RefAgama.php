@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 class RefAgama extends BaseSiedaModel
@@ -12,3 +17,4 @@ class RefAgama extends BaseSiedaModel
     public static function moduleName(): string { return 'Referensi Agama'; }
     public static function primaryKey(): string { return 'id'; }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

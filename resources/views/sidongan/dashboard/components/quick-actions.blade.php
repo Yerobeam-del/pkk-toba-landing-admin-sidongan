@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <div class="card">
     <div class="card-body">
         <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e293b; margin: 0 0 1rem 0;">Aksi Cepat</h3>
@@ -27,7 +30,7 @@
 
                 <a href="{{ route('sidongan.verifikasi') }}" class="quick-action-item">
                     <div class="quick-action-icon" style="background: #d1fae5;">
-                        <i class="fas fa-check-double" style="color: #059669;"></i>
+                        <i class="fas fa-check-double u-a80"></i>
                     </div>
                     <div class="quick-action-text">
                         <div class="quick-action-title">Verifikasi Laporan</div>
@@ -60,7 +63,7 @@
 
             <a href="{{ route('sidongan.arsip') }}" class="quick-action-item">
                 <div class="quick-action-icon" style="background: #fef3c7;">
-                    <i class="fas fa-archive" style="color: #d97706;"></i>
+                    <i class="fas fa-archive u-a81"></i>
                 </div>
                 <div class="quick-action-text">
                     <div class="quick-action-title">Arsip Surat</div>
@@ -71,54 +74,10 @@
     </div>
 </div>
 
-<style>
-    .quick-actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-    }
+    @once
+    @push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/sidongan/css/sidongan-dashboard-components-quick-actions.css') }}">
+    @endpush
+    @endonce
 
-    .quick-action-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border: 1px solid #e2e8f0;
-        background: white;
-        text-decoration: none;
-        transition: all 0.2s;
-    }
-
-    .quick-action-item:hover {
-        background: #f8fafc;
-        border-color: #cbd5e1;
-        transform: translateY(-2px);
-    }
-
-    .quick-action-icon {
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .quick-action-text {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .quick-action-title {
-        font-weight: 600;
-        color: #0f172a;
-        font-size: 0.95rem;
-    }
-
-    .quick-action-desc {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-</style>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

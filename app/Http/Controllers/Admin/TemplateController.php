@@ -1,4 +1,9 @@
 <?php
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Template;
@@ -121,3 +126,4 @@ class TemplateController extends Controller
         return round($bytes / pow(1024, $pow), 2) . ' ' . $units[$pow];
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

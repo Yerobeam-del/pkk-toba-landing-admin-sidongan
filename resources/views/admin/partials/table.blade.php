@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @props([
     'data' => [],
     'columns' => [],
@@ -102,7 +105,7 @@
                         <td class="actions-cell" style="padding: 1rem; text-align: right;">
                             <div class="actions-container" style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
                                 @if(in_array('show', $actions) && $showRoute)
-                                    <a href="{{ route($showRoute, $item) }}" class="action-btn" title="Lihat" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: transparent; color: #94a3b8; border-radius: 6px; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.background='#eff6ff'; this.style.color='#2563eb'" onmouseout="this.style.background='transparent'; this.style.color='#94a3b8'">
+                                    <a href="{{ route($showRoute, $item) }}" class="action-btn" title="Lihat">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                             <circle cx="12" cy="12" r="3"/>
@@ -111,7 +114,7 @@
                                 @endif
 
                                 @if(in_array('edit', $actions) && $editRoute)
-                                    <a href="{{ route($editRoute, $item) }}" class="action-btn btn-edit" title="Edit" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: transparent; color: #94a3b8; border-radius: 6px; transition: all 0.2s; cursor: pointer;" onmouseover="this.style.background='#eff6ff'; this.style.color='#2563eb'" onmouseout="this.style.background='transparent'; this.style.color='#94a3b8'">
+                                    <a href="{{ route($editRoute, $item) }}" class="action-btn btn-edit" title="Edit">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -120,7 +123,7 @@
                                 @endif
 
                                 @if(in_array('delete', $actions) && $deleteRoute)
-                                    <button type="button" onclick="confirmDeleteItem({{ $item->id }}, '{{ addslashes(data_get($item, 'name')) }}')" class="action-btn btn-delete" title="Hapus" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: transparent; color: #94a3b8; border-radius: 6px; border: none; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'; this.style.color='#ef4444'" onmouseout="this.style.background='transparent'; this.style.color='#94a3b8'">
+                                    <button type="button" data-delete-item="{{ $item->id }}" data-delete-title="{{ addslashes(data_get($item, 'name')) }}" class="action-btn btn-delete" title="Hapus">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <polyline points="3 6 5 6 21 6"/>
                                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -151,7 +154,7 @@
     <div style="margin-top:1.5rem;padding:1rem 1.5rem;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
 
         {{-- Info "Menampilkan..." di SEBELAH KIRI --}}
-        <div style="font-size:0.85rem;color:var(--text-muted)">
+        <div class="u-text-muted-sm">
             Menampilkan <strong>{{ $paginator->firstItem() }}</strong> - <strong>{{ $paginator->lastItem() }}</strong> dari <strong>{{ $paginator->total() }}</strong> data
         </div>
 
@@ -177,14 +180,14 @@
             {{-- Previous Button --}}
             @if($paginator->onFirstPage())
                 <button disabled style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-muted);border:1px solid #e2e8f0;border-radius:8px;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;cursor:default;opacity:0.5">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+                    <svg class="u-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="15 18 9 12 15 6"/>
                     </svg>
                     <span class="desktop-only">Previous</span>
                 </button>
             @else
-                <a href="{{ $paginator->previousPageUrl() }}" style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;transition:all 0.2s" onmouseover="this.style.background='#f8fafc';this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.background='#fff';this.style.borderColor='#e2e8f0';this.style.color='var(--text-dark)'">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+                <a href="{{ $paginator->previousPageUrl() }}" class="sd-paginate">
+                    <svg class="u-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="15 18 9 12 15 6"/>
                     </svg>
                     <span class="desktop-only">Previous</span>
@@ -200,7 +203,7 @@
                         {{ $page }}
                     </button>
                 @else
-                    <a href="{{ $paginator->url($page) }}" style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;transition:all 0.2s" onmouseover="this.style.background='#f8fafc';this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.background='#fff';this.style.borderColor='#e2e8f0';this.style.color='var(--text-dark)'">
+                    <a href="{{ $paginator->url($page) }}" class="sd-paginate">
                         {{ $page }}
                     </a>
                 @endif
@@ -208,16 +211,16 @@
 
             {{-- Next Button --}}
             @if($paginator->hasMorePages())
-                <a href="{{ $paginator->nextPageUrl() }}" style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;transition:all 0.2s" onmouseover="this.style.background='#f8fafc';this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.background='#fff';this.style.borderColor='#e2e8f0';this.style.color='var(--text-dark)'">
+                <a href="{{ $paginator->nextPageUrl() }}" class="sd-paginate">
                     <span class="desktop-only">Next</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+                    <svg class="u-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9 18 15 12 9 6"/>
                     </svg>
                 </a>
             @else
                 <button disabled style="padding:0.5rem 0.9rem;background:#fff;color:var(--text-muted);border:1px solid #e2e8f0;border-radius:8px;font-size:0.875rem;font-weight:500;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;cursor:default;opacity:0.5">
                     <span class="desktop-only">Next</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+                    <svg class="u-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9 18 15 12 9 6"/>
                     </svg>
                 </button>
@@ -294,9 +297,9 @@
                                 $value = data_get($item, $column['key']);
                                 $columnType = $column['type'] ?? 'text';
                             @endphp
-                            <div style="padding:0.75rem;background:#f8fafc;border-radius:8px">
-                                <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;margin-bottom:0.25rem">{{ $column['label'] }}</div>
-                                <div style="font-weight:600;color:var(--text-dark);font-size:0.9rem">
+                            <div class="u-box-soft">
+                                <div class="u-eyebrow-xs">{{ $column['label'] }}</div>
+                                <div class="u-a32">
                                     @if($columnType === 'callback' && isset($column['callback']))
                                         {!! $column['callback']($item, $value) !!}
                                     @elseif($columnType === 'badge')
@@ -320,32 +323,32 @@
                 {{-- Action Buttons --}}
                 <div class="member-card-actions" style="display:flex;gap:0.5rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.06)">
                     @if(in_array('show', $actions) && $showRoute)
-                        <a href="{{ route($showRoute, $item) }}" class="action-btn btn-show" title="Lihat" style="flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:8px;transition:all 0.2s;cursor:pointer;text-decoration:none" onmouseover="this.style.background='#eff6ff';this.style.color='#2563eb'" onmouseout="this.style.background='transparent';this.style.color='#94a3b8'">
+                        <a href="{{ route($showRoute, $item) }}" class="action-btn btn-show u-a54" title="Lihat">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                 <circle cx="12" cy="12" r="3"/>
                             </svg>
-                            <span style="margin-left:0.5rem;font-weight:600">Lihat</span>
+                            <span class="u-a19">Lihat</span>
                         </a>
                     @endif
                     @if(in_array('edit', $actions) && $editRoute)
-                        <a href="{{ route($editRoute, $item) }}" class="action-btn btn-edit" title="Edit" style="flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:8px;transition:all 0.2s;cursor:pointer;text-decoration:none" onmouseover="this.style.background='#eff6ff';this.style.color='#2563eb'" onmouseout="this.style.background='transparent';this.style.color='#94a3b8'">
+                        <a href="{{ route($editRoute, $item) }}" class="action-btn btn-edit u-a54" title="Edit">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                             </svg>
-                            <span style="margin-left:0.5rem;font-weight:600">Edit</span>
+                            <span class="u-a19">Edit</span>
                         </a>
                     @endif
                     @if(in_array('delete', $actions) && $deleteRoute)
-                        <button type="button" onclick="confirmDeleteItem({{ $item->id }}, '{{ addslashes(data_get($item, 'name') ?? data_get($item, 'title') ?? data_get($item, 'subject')) }}')" class="action-btn btn-delete" title="Hapus" style="flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:8px;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='#fef2f2';this.style.color='#ef4444'" onmouseout="this.style.background='transparent';this.style.color='#94a3b8'">
+                        <button type="button" data-delete-item="{{ $item->id }}" data-delete-title="{{ addslashes(data_get($item, 'name') ?? data_get($item, 'title') ?? data_get($item, 'subject')) }}" class="action-btn btn-delete" title="Hapus">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="3 6 5 6 21 6"/>
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                                 <line x1="10" y1="11" x2="10" y2="17"/>
                                 <line x1="14" y1="11" x2="14" y2="17"/>
                             </svg>
-                            <span style="margin-left:0.5rem;font-weight:600">Hapus</span>
+                            <span class="u-a19">Hapus</span>
                         </button>
                         <form id="delete-form-{{ $item->id }}" action="{{ route($deleteRoute, $item) }}" method="POST" class="d-none">
                             @csrf
@@ -381,11 +384,11 @@
             <div style="display:flex;justify-content:center;gap:0.3rem;flex-wrap:wrap;align-items:center">
                 @if($paginator->onFirstPage())
                     <button disabled style="padding:0.5rem 0.7rem;background:#fff;color:var(--text-muted);border:1px solid #e2e8f0;border-radius:8px;font-size:0.8rem;min-width:36px;display:inline-flex;align-items:center;justify-content:center;opacity:0.5">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="15 18 9 12 15 6"/></svg>
+                        <svg class="u-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
                 @else
-                    <a href="{{ $paginator->previousPageUrl() }}" style="padding:0.5rem 0.7rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.8rem;min-width:36px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.2s" onmouseover="this.style.background='#f8fafc';this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.background='#fff';this.style.borderColor='#e2e8f0';this.style.color='var(--text-dark)'">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="15 18 9 12 15 6"/></svg>
+                    <a href="{{ $paginator->previousPageUrl() }}" class="sd-paginate">
+                        <svg class="u-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
                     </a>
                 @endif
                 @foreach($pages as $page)
@@ -396,18 +399,18 @@
                             {{ $page }}
                         </button>
                     @else
-                        <a href="{{ $paginator->url($page) }}" style="padding:0.5rem 0.7rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.8rem;font-weight:500;min-width:36px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.2s" onmouseover="this.style.background='#f8fafc';this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.background='#fff';this.style.borderColor='#e2e8f0';this.style.color='var(--text-dark)'">
+                        <a href="{{ $paginator->url($page) }}" style="padding:0.5rem 0.7rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.8rem;font-weight:500;min-width:36px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.2s">
                             {{ $page }}
                         </a>
                     @endif
                 @endforeach
                 @if($paginator->hasMorePages())
-                    <a href="{{ $paginator->nextPageUrl() }}" style="padding:0.5rem 0.7rem;background:#fff;color:var(--text-dark);border:1px solid #e2e8f0;border-radius:8px;text-decoration:none;font-size:0.8rem;min-width:36px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.2s" onmouseover="this.style.background='#f8fafc';this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.background='#fff';this.style.borderColor='#e2e8f0';this.style.color='var(--text-dark)'">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="9 18 15 12 9 6"/></svg>
+                    <a href="{{ $paginator->nextPageUrl() }}" class="sd-paginate">
+                        <svg class="u-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                     </a>
                 @else
                     <button disabled style="padding:0.5rem 0.7rem;background:#fff;color:var(--text-muted);border:1px solid #e2e8f0;border-radius:8px;font-size:0.8rem;min-width:36px;display:inline-flex;align-items:center;justify-content:center;opacity:0.5">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="9 18 15 12 9 6"/></svg>
+                        <svg class="u-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                     </button>
                 @endif
             </div>
@@ -426,25 +429,10 @@
     @endif
 </div>
 
-<script>
-if (typeof window.confirmDeleteItem === 'undefined') {
-    window.confirmDeleteItem = function(id, name) {
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            Toast.confirm(
-                `Data <strong>"${name}"</strong> akan dihapus secara permanen.`,
-                {
-                    title: 'Hapus Data?',
-                    confirmText: 'Ya, Hapus',
-                    cancelText: 'Batal',
-                    type: 'danger'
-                }
-            ).then(function(confirmed) {
-                if (confirmed) {
-                    const form = document.getElementById('delete-form-' + id);
-                    if (form) form.submit();
-                }
-            });
-        }
-    };
-}
-</script>
+    @once
+    @push('scripts')
+    <script src="{{ asset('assets/admin/js/admin-partials-table.js') }}"></script>
+    @endpush
+    @endonce
+
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

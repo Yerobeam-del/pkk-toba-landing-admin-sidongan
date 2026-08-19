@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\View\Components;
 
 use Illuminate\View\Component;
@@ -15,3 +20,4 @@ class AppLayout extends Component
         return view('layouts.app');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

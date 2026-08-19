@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -33,3 +38,4 @@ return new class extends Migration
         Schema::dropIfExists('cache_locks');
     }
 };
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 /**
  * Template Handler Module - Simple Version (Like struktur-handler.js)
  */
@@ -129,3 +132,4 @@ window.addEventListener('load', () => setTimeout(initTemplatePage, 300));
 // Expose functions
 window.handleTemplateSearch = handleTemplateSearch;
 window.initTemplatePage = initTemplatePage;
+/* Dikembangkan oleh Institut Teknologi Del */

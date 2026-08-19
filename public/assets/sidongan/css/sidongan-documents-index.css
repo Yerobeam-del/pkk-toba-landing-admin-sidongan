@@ -1,0 +1,131 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/sidongan/documents/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+    .stats-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stats-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slide-in {
+        animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        opacity: 0;
+    }
+    .btn-action {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .filter-btn {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * Efek hover (menggantikan onmouseover/onmouseout inline)
+ * ============================================================ */
+
+/* Baris tabel */
+.sd-row {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.2s;
+}
+.sd-row:hover {
+    background: #f8fafc;
+}
+
+/* Tombol ikon aksi */
+.sd-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.sd-icon-view {
+    background: #dbeafe;
+    color: #2563eb;
+}
+.sd-icon-view:hover {
+    background: #bfdbfe;
+}
+.sd-icon-edit {
+    background: #fef3c7;
+    color: #d97706;
+}
+.sd-icon-edit:hover {
+    background: #fde68a;
+}
+.sd-icon-delete {
+    background: #fee2e2;
+    color: #ef4444;
+    border: none;
+    cursor: pointer;
+}
+.sd-icon-delete:hover {
+    background: #fecaca;
+}
+.sd-icon-archive {
+    background: #ede9fe;
+    color: #7c3aed;
+    border: none;
+    cursor: pointer;
+}
+.sd-icon-archive:hover {
+    background: #ddd6fe;
+}
+
+/* Tombol pagination */
+.sd-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.sd-page-btn-blue {
+    background: #3b82f6;
+    color: white;
+}
+.sd-page-btn-blue:hover {
+    background: #2563eb;
+}
+.sd-page-btn-white {
+    background: white;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+.sd-page-btn-white:hover {
+    background: #f1f5f9;
+}

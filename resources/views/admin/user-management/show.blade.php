@@ -1,23 +1,26 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Detail Akun')
 @section('page-title', 'Detail Akun')
 
 @section('content')
 
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+<div class="u-header-row-plain">
     <div>
-        <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0">Detail Akun</h1>
-        <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Informasi akun {{ $user->name }}</p>
+        <h1 class="u-page-title">Detail Akun</h1>
+        <p class="u-muted">Informasi akun {{ $user->name }}</p>
     </div>
-    <div style="display:flex;gap:0.75rem">
+    <div class="u-a64">
         
         {{-- Hanya tampilkan tombol Edit & Reset Password jika user yang sedang login adalah Super Admin --}}
         @if(auth()->user()->sidongan_role === 'super_admin')
-            <a href="{{ route('admin.user-management.edit', $user) }}" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem">
+            <a href="{{ route('admin.user-management.edit', $user) }}" class="btn btn-primary u-inline-flex-center-gap-2">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 Edit Akun
             </a>
-            <button type="button" onclick="showResetPasswordModal({{ $user->id }}, '{{ addslashes($user->name) }}')" class="btn btn-secondary" style="display:inline-flex;align-items:center;gap:0.5rem;background:#f1f5f9;color:#475569;padding:0.5rem 1rem;border-radius:8px;border:1px solid #e2e8f0;cursor:pointer;font-weight:600;font-family:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#475569'">
+            <button type="button" data-reset-password-id="{{ $user->id }}" data-reset-password-name="{{ addslashes($user->name) }}" class="btn btn-secondary" style="display:inline-flex;align-items:center;gap:0.5rem;background:#f1f5f9;color:#475569;padding:0.5rem 1rem;border-radius:8px;border:1px solid #e2e8f0;cursor:pointer;font-weight:600;font-family:inherit;transition:all 0.2s">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 Reset Password
             </button>
@@ -27,29 +30,29 @@
     </div>
 </div>
 
-<div class="card" style="padding:1.5rem;border-radius:12px">
+<div class="card u-a71">
     <div style="display:grid;gap:1rem;max-width:600px">
-        <div style="display:flex;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border)">
-            <span style="color:var(--text-muted)">Nama</span>
-            <span style="font-weight:600">{{ $user->name }}</span>
+        <div class="u-row-divider-border">
+            <span class="u-muted-plain">Nama</span>
+            <span class="u-semibold">{{ $user->name }}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border)">
-            <span style="color:var(--text-muted)">Email</span>
-            <span style="font-weight:600">{{ $user->email }}</span>
+        <div class="u-row-divider-border">
+            <span class="u-muted-plain">Email</span>
+            <span class="u-semibold">{{ $user->email }}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border)">
-            <span style="color:var(--text-muted)">Telepon</span>
-            <span style="font-weight:600">{{ $user->phone_number ?? '-' }}</span>
+        <div class="u-row-divider-border">
+            <span class="u-muted-plain">Telepon</span>
+            <span class="u-semibold">{{ $user->phone_number ?? '-' }}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border)">
-            <span style="color:var(--text-muted)">Status Email</span>
+        <div class="u-row-divider-border">
+            <span class="u-muted-plain">Status Email</span>
             <span>{{ $user->email_verified_at ? '✓ Terverifikasi' : '⚠ Belum Verifikasi' }}</span>
         </div>
         
         {{-- SIDONGAN Role --}}
         @if($user->sidongan_role)
         <div style="display:flex;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border);background:rgba(20,184,166,0.05);padding:0.75rem 1rem;border-radius:8px">
-            <span style="color:var(--text-muted)">Peran di SIDONGAN</span>
+            <span class="u-muted-plain">Peran di SIDONGAN</span>
             <span style="font-weight:600;color:#0d9488">
                 <i class="fas fa-user-tag" style="margin-right:0.5rem"></i>
                 {{ $user->sidongan_role_name }}
@@ -58,13 +61,13 @@
         @endif
         
         <div style="display:flex;justify-content:space-between;padding:0.75rem 0">
-            <span style="color:var(--text-muted)">Dibuat</span>
-            <span style="font-weight:600">{{ $user->created_at->translatedFormat('d F Y, H:i') }}</span>
+            <span class="u-muted-plain">Dibuat</span>
+            <span class="u-semibold">{{ $user->created_at->translatedFormat('d F Y, H:i') }}</span>
         </div>
     </div>
     
-    <div style="margin-top:1.5rem">
-        <h3 style="font-weight:600;margin-bottom:0.75rem">Aplikasi yang Diakses</h3>
+    <div class="u-a73">
+        <h3 class="u-a74">Aplikasi yang Diakses</h3>
         @if($user->applications->count() > 0)
         <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
             @foreach($user->applications as $app)
@@ -77,13 +80,13 @@
             @endforeach
         </div>
         @else
-        <p style="color:var(--text-muted)">Belum ada akses aplikasi</p>
+        <p class="u-muted-plain">Belum ada akses aplikasi</p>
         @endif
     </div>
 
     {{-- BAGIAN BARU: Info Admin Panel --}}
-    <div style="margin-top:1.5rem">
-        <h3 style="font-weight:600;margin-bottom:0.75rem">Info Admin Panel</h3>
+    <div class="u-a73">
+        <h3 class="u-a74">Info Admin Panel</h3>
         
         @if($user->role)
             <div style="display:grid;gap:1rem">
@@ -112,20 +115,20 @@
                 @endif
             </div>
         @else
-            <span style="color:var(--text-muted)">Belum ada role yang ditetapkan</span>
+            <span class="u-muted-plain">Belum ada role yang ditetapkan</span>
         @endif
     </div>
 
     {{-- Info Akses SIEDA --}}
     @if($user->sieda_role)
-    <div style="margin-top:1.5rem">
-        <h3 style="font-weight:600;margin-bottom:0.75rem">Info Akses SIEDA</h3>
+    <div class="u-a73">
+        <h3 class="u-a74">Info Akses SIEDA</h3>
         
         <div style="background:#f0fdf4;padding:1rem;border-radius:8px;border-left:4px solid #22c55e">
-            <div style="display:grid;gap:0.75rem">
+            <div class="u-grid-gap-3">
                 {{-- Role SIEDA --}}
                 <div style="display:flex;justify-content:space-between;align-items:center">
-                    <span style="font-size:0.85rem;color:var(--text-muted)">Role di SIEDA</span>
+                    <span class="u-text-muted-sm">Role di SIEDA</span>
                     <span style="background:#22c55e;color:#fff;padding:4px 12px;border-radius:20px;font-size:0.85rem;font-weight:600;text-transform:capitalize">
                         {{ $user->sieda_role }}
                     </span>
@@ -134,7 +137,7 @@
                 {{-- Kecamatan --}}
                 @if($user->sieda_kecamatan)
                 <div style="display:flex;justify-content:space-between;align-items:center;padding-top:0.5rem;border-top:1px dashed #bbf7d0">
-                    <span style="font-size:0.85rem;color:var(--text-muted)">Kecamatan</span>
+                    <span class="u-text-muted-sm">Kecamatan</span>
                     <span style="font-weight:600;color:#166534">
                         <i class="fas fa-map-marker-alt" style="margin-right:0.5rem;color:#22c55e"></i>
                         {{ $kecamatan ? $kecamatan->name : $user->sieda_kecamatan }}
@@ -145,7 +148,7 @@
                 {{-- Kelurahan/Desa --}}
                 @if($user->sieda_kelurahan)
                 <div style="display:flex;justify-content:space-between;align-items:center;padding-top:0.5rem">
-                    <span style="font-size:0.85rem;color:var(--text-muted)">Kelurahan/Desa</span>
+                    <span class="u-text-muted-sm">Kelurahan/Desa</span>
                     <span style="font-weight:600;color:#166534">
                         <i class="fas fa-location-dot" style="margin-right:0.5rem;color:#22c55e"></i>
                         {{ $kelurahan ? $kelurahan->name : $user->sieda_kelurahan }}
@@ -167,3 +170,4 @@
 </div>
 
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

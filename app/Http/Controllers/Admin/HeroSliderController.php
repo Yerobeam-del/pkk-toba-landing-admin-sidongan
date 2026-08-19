@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -128,3 +133,4 @@ class HeroSliderController extends Controller
         return response()->json(['success' => true]);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

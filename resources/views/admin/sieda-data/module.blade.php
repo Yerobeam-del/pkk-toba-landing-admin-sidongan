@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Manajemen Data SIEDA — ' . $config['label'])
 @section('page-title', 'Manajemen Data SIEDA — ' . $config['label'])
@@ -22,20 +25,17 @@
 </div>
 
 {{-- Search & Tampilkan --}}
-<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+<div class="u-header-row-wrap">
     {{-- Search --}}
-    <div style="flex:1;min-width:200px">
+    <div class="u-flex-1-min-200">
         <form method="GET" action="{{ route('admin.sieda-data.module', $module) }}">
             <input type="hidden" name="per_page" value="{{ $perPage }}">
-            <div style="position:relative">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
+            <div class="u-relative">
+                <svg class="u-position-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"/>
                     <path d="m21 21-4.35-4.35"/>
                 </svg>
-                <input type="text" name="search" value="{{ $search }}" placeholder="Cari {{ strtolower($config['id_label']) }} atau nama..."
-                       style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;width:100%;transition:all 0.2s"
-                       onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'"
-                       onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                <input class="u-input-icon-left" type="text" name="search" value="{{ $search }}" placeholder="Cari {{ strtolower($config['id_label']) }} atau nama...">
                 @if ($search)
                     <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -49,19 +49,17 @@
     </div>
 
     {{-- Per Page --}}
-    <div style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0">
-        <form method="GET" action="{{ route('admin.sieda-data.module', $module) }}" style="display:flex;align-items:center;gap:0.5rem">
+    <div class="u-flex-center-gap-2-shrink">
+        <form class="u-flex-center-gap-2" method="GET" action="{{ route('admin.sieda-data.module', $module) }}">
             <input type="hidden" name="search" value="{{ $search }}">
-            <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-            <div style="position:relative">
-                <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none"
-                        onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'"
-                        onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+            <label class="u-a3">Tampilkan:</label>
+            <div class="u-relative">
+                <select class="u-select-mini" name="per_page">
                     @foreach ([25, 50, 100] as $pp)
                         <option value="{{ $pp }}" {{ $perPage == $pp ? 'selected' : '' }}>{{ $pp }}</option>
                     @endforeach
                 </select>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                <svg class="u-select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="6 9 12 15 18 9"/>
                 </svg>
             </div>
@@ -71,7 +69,7 @@
 
 {{-- Tabel Data (partial standar + pagination otomatis) --}}
 <div class="card" style="overflow:hidden">
-    <div style="padding:0">
+    <div class="u-p-0">
         @php
             $columns = [];
 
@@ -81,7 +79,7 @@
                 'label' => $config['id_label'],
                 'type' => 'callback',
                 'callback' => function ($item) use ($config) {
-                    return '<code style="font-family:monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85rem">' . e($item->{$config['id_field']}) . '</code>';
+                    return '<code class="u-code-chip">' . e($item->{$config['id_field']}) . '</code>';
                 },
             ];
 
@@ -100,12 +98,12 @@
                 ];
                 $columns[] = [
                     'key' => 'tempat_lahir', 'label' => 'TTL', 'type' => 'callback',
-                    'callback' => fn($item) => e($item->tempat_lahir ?? '-') . '<br><small style="color:var(--text-muted)">' . e($item->tanggal_lahir ?? '-') . '</small>',
+                    'callback' => fn($item) => e($item->tempat_lahir ?? '-') . '<br><small class="u-muted-plain">' . e($item->tanggal_lahir ?? '-') . '</small>',
                 ];
             } elseif ($module === 'keluarga') {
                 $columns[] = [
                     'key' => 'kepalaKeluarga.nama', 'label' => 'Kepala Keluarga', 'type' => 'callback',
-                    'callback' => fn($item) => '<strong>' . e($item->kepalaKeluarga?->nama ?? '-') . '</strong><br><small style="color:var(--text-muted)">' . e($item->id_kepala_keluarga ?? '-') . '</small>',
+                    'callback' => fn($item) => '<strong>' . e($item->kepalaKeluarga?->nama ?? '-') . '</strong><br><small class="u-muted-plain">' . e($item->id_kepala_keluarga ?? '-') . '</small>',
                 ];
                 $columns[] = [
                     'key' => 'kelompokDasawisma.nama', 'label' => 'Dasawisma', 'type' => 'callback',
@@ -118,11 +116,11 @@
             } elseif ($module === 'anggota-keluarga') {
                 $columns[] = [
                     'key' => 'nik', 'label' => 'NIK', 'type' => 'callback',
-                    'callback' => fn($item) => '<code style="font-family:monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85rem">' . e($item->nik) . '</code>',
+                    'callback' => fn($item) => '<code class="u-code-chip">' . e($item->nik) . '</code>',
                 ];
                 $columns[] = [
                     'key' => 'no_kk', 'label' => 'No. KK', 'type' => 'callback',
-                    'callback' => fn($item) => '<code style="font-family:monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85rem">' . e($item->no_kk) . '</code>',
+                    'callback' => fn($item) => '<code class="u-code-chip">' . e($item->no_kk) . '</code>',
                 ];
             } elseif ($module === 'kelompok-dasawisma') {
                 $columns[] = [
@@ -144,7 +142,7 @@
             } elseif ($module === 'catatan-ibu-anak') {
                 $columns[] = [
                     'key' => 'id_warga_ibu', 'label' => 'Ibu (NIK)', 'type' => 'callback',
-                    'callback' => fn($item) => '<code style="font-family:monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85rem">' . e($item->id_warga_ibu ?? '-') . '</code>',
+                    'callback' => fn($item) => '<code class="u-code-chip">' . e($item->id_warga_ibu ?? '-') . '</code>',
                 ];
                 $columns[] = [
                     'key' => 'status_ibu', 'label' => 'Status Ibu', 'type' => 'callback',
@@ -154,7 +152,7 @@
                             return '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(59,130,246,0.1);color:#1e40af">Hamil</span>';
                         }
                         if ($status === 'melahirkan') {
-                            return '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(34,197,94,0.1);color:#166534">Melahirkan</span>';
+                            return '<span class="u-badge-green">Melahirkan</span>';
                         }
                         if ($status === 'nifas') {
                             return '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(245,158,11,0.1);color:#92400e">Nifas</span>';
@@ -179,9 +177,9 @@
                 'type' => 'callback',
                 'callback' => function ($item) {
                     if ((int) $item->active === 1) {
-                        return '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(34,197,94,0.1);color:#166534"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Aktif</span>';
+                        return '<span class="u-badge-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Aktif</span>';
                     }
-                    return '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(239,68,68,0.1);color:#dc2626"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Terhapus</span>';
+                    return '<span class="u-a67"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Terhapus</span>';
                 },
             ];
 
@@ -208,10 +206,10 @@
                 $styleBtnOver = 'this.style.background=\'#eff6ff\';this.style.color=\'#2563eb\'';
                 $styleBtnOut = 'this.style.background=\'transparent\';this.style.color=\'#94a3b8\'';
 
-                $html = '<a href="' . route('admin.sieda-data.show', [$module, $id]) . '" title="Lihat Detail" style="' . $styleBtn . '" onmouseover="' . $styleBtnOver . '" onmouseout="' . $styleBtnOut . '">'
+                $html = '<a href="' . route('admin.sieda-data.show', [$module, $id]) . '" title="Lihat Detail" style="' . $styleBtn . '">'
                     . '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></a>';
 
-                $html .= '<button type="button" onclick="confirmDeleteItem(\'' . $id . '\', \'' . addslashes($name) . '\')" title="Hapus Permanen" style="' . $styleBtn . ';border:none" onmouseover="this.style.background=\'#fef2f2\';this.style.color=\'#ef4444\'" onmouseout="' . $styleBtnOut . '">'
+                $html .= '<button type="button" data-delete-item="' . $id . '" data-delete-title="' . addslashes($name) . '" title="Hapus Permanen" style="' . $styleBtn . ';border:none">'
                     . '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>';
 
                 $html .= '<form id="delete-form-' . $id . '" action="' . route('admin.sieda-data.force-delete', [$module, $id]) . '" method="POST" class="d-none">'
@@ -248,7 +246,7 @@
               data-message="Seluruh {{ number_format($totalCount) }} data <strong>{{ $config['label'] }}</strong>@if (!empty($config['cascade_label'])) beserta data terkait ({{ $config['cascade_label'] }})@endif di database SIEDA akan dihapus permanen dan TIDAK bisa dikembalikan. Lanjutkan?">
             @csrf
             <input type="hidden" name="confirm" value="1">
-            <button type="submit" style="background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;border:none;border-radius:8px;padding:0.6rem 1.25rem;display:inline-flex;align-items:center;gap:0.5rem;font-weight:600;font-size:0.875rem;cursor:pointer;transition:all 0.2s" onmouseover="this.style.boxShadow='0 4px 12px rgba(239,68,68,0.35)'" onmouseout="this.style.boxShadow='none'">
+            <button type="submit" style="background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;border:none;border-radius:8px;padding:0.6rem 1.25rem;display:inline-flex;align-items:center;gap:0.5rem;font-weight:600;font-size:0.875rem;cursor:pointer;transition:all 0.2s">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
                 </svg>
@@ -258,27 +256,8 @@
     </div>
 </div>
 
-<script>
-// Konfirmasi Hapus Semua Data (pola fitur cleanup di halaman lain)
-document.querySelectorAll('.delete-all-form').forEach(form => {
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const title = this.dataset.title;
-        const message = this.dataset.message;
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            Toast.confirm(message, {
-                title: title,
-                confirmText: 'Ya, Hapus Semua',
-                cancelText: 'Batal',
-                type: 'danger'
-            }).then((confirmed) => {
-                if (confirmed) this.submit();
-            });
-        } else {
-            if (confirm(message.replace(/<[^>]*>/g, ''))) this.submit();
-        }
-    });
-});
-</script>
+    <script src="{{ asset('assets/admin/js/admin-sieda-data-module.js') }}"></script>
+
 
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

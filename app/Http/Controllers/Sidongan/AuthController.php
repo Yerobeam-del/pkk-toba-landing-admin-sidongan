@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
@@ -73,3 +78,4 @@ class AuthController extends Controller
         return redirect()->route('sidongan.login');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

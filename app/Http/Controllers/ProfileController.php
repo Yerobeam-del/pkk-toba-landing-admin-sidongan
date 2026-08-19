@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
@@ -141,3 +146,4 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

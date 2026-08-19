@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
@@ -93,3 +98,4 @@ class ForgotPasswordController extends Controller
         return back()->with('status', 'Link reset password telah dikirim ke email Anda.');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

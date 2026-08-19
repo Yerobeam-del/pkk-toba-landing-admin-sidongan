@@ -1,0 +1,162 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/desa/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .desa-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    
+    .desa-header h1 {
+        font-size: 1.25rem !important;
+    }
+    
+    .desa-header-actions {
+        width: 100% !important;
+        flex-direction: column !important;
+    }
+    
+    .desa-header-actions > div {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    
+    .desa-header-actions #filterKecamatan {
+        width: 100% !important;
+    }
+    
+    .desa-header-actions #btnTambahDesa {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    /* Hide desktop table, show mobile cards */
+    .desktop-table-view {
+        display: none !important;
+    }
+    
+    .mobile-card-view {
+        display: block !important;
+    }
+    
+    /* Accordion button responsive */
+    .accordion-header-btn {
+        padding: 1rem !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.75rem !important;
+    }
+    
+    .accordion-header-btn > div:last-child {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    /* Stats responsive */
+    .kec-stats {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+        padding: 0.75rem !important;
+    }
+    
+    .mobile-card-view .desa-card {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.06);
+    }
+    
+    .mobile-card-view .desa-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .mobile-card-view .desa-card-photo {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #f8fafc;
+        flex-shrink: 0;
+    }
+    
+    .mobile-card-view .desa-card-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .mobile-card-view .desa-card-name {
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+    }
+    
+    .mobile-card-view .desa-card-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+    
+    .mobile-card-view .desa-card-actions {
+        display: flex;
+        gap: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    
+    .mobile-card-view .desa-card-actions a,
+    .mobile-card-view .desa-card-actions button {
+        flex: 1;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        color: #94a3b8;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+    }
+    
+    .mobile-card-view .desa-card-actions a:hover {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+    
+    .mobile-card-view .desa-card-actions button:hover {
+        background: #fef2f2;
+        color: #ef4444;
+    }
+}
+
+/* Desktop: show table, hide card */
+@media (min-width: 769px) {
+    .desktop-table-view {
+        display: block !important;
+    }
+    
+    .mobile-card-view {
+        display: none !important;
+    }
+}
+

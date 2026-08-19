@@ -1,66 +1,21 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Manajemen Data SIDONGAN')
 @section('page-title', 'Manajemen Data SIDONGAN')
 
 @section('content')
-<style>
-/* FIX: Hilangkan border hitam tebal, ganti dengan border halus */
-.card {
-    border: 1px solid rgba(0,0,0,0.06) !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
-}
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-sidongan-data-index.css') }}">
 
-@media (max-width: 768px) {
-    .sidongan-header { flex-direction: column !important; align-items: flex-start !important; gap: 1rem !important; }
-    .sidongan-header h1 { font-size: 1.25rem !important; }
-    .sidongan-header .btn { width: 100% !important; justify-content: center !important; }
-    .stats-grid { grid-template-columns: 1fr !important; }
-    .tabs-container { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-    .tabs-container::-webkit-scrollbar { height: 4px; }
-    .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
-    .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
-
-    /* FIX: Filter form collapse ke 1 kolom */
-    .filter-form > div[style*="grid-template-columns"] {
-        grid-template-columns: 1fr !important;
-    }
-
-    /* FIX: Flex container di filter juga harus stack vertikal */
-    .filter-form > div[style*="display:flex"] {
-        flex-direction: column !important;
-        align-items: stretch !important;
-    }
-
-    .filter-form > div[style*="display:flex"] > div {
-        width: 100% !important;
-    }
-
-    /* FIX: Tombol dan link full width di mobile */
-    .filter-form button, .filter-form a {
-        width: 100% !important;
-        justify-content: center !important;
-    }
-
-    /* FIX: Dropdown Tampilkan full width dan rapi */
-    .filter-form select[name="per_page"] {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    /* FIX: Cleanup grid collapse */
-    .cleanup-grid {
-        grid-template-columns: 1fr !important;
-    }
-}
-</style>
 
 {{-- Header Section --}}
-<div class="sidongan-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap">
-    <div style="flex:1;min-width:0">
-        <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0;letter-spacing:-0.5px">Manajemen Data SIDONGAN</h1>
-        <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Kelola dan bersihkan data surat dari sistem SIDONGAN</p>
+<div class="sidongan-header u-a12">
+    <div class="u-flex-1-min">
+        <h1 class="u-page-title-tight">Manajemen Data SIDONGAN</h1>
+        <p class="u-muted">Kelola dan bersihkan data surat dari sistem SIDONGAN</p>
     </div>
-    <a href="{{ route('sidongan.dashboard') }}" target="_blank" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;white-space:nowrap;flex-shrink:0">
+    <a href="{{ route('sidongan.dashboard') }}" target="_blank" class="btn btn-primary u-inline-flex-gap-2-nowrap">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Buka SIDONGAN
     </a>
@@ -68,79 +23,79 @@
 
 {{-- Stats Cards --}}
 <div class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem">
-    <div class="stat-card" style="background:linear-gradient(135deg,#3182ce,#2b6cb0);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+    <div class="stat-card u-badge-blue">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Total Surat</p>
-                <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['total'] }}</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Total Surat</p>
+                <p class="u-h1-hero">{{ $stats['total'] }}</p>
             </div>
         </div>
     </div>
     <div class="stat-card" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Menunggu Disposisi</p>
-                <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['menunggu_disposisi'] }}</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Menunggu Disposisi</p>
+                <p class="u-h1-hero">{{ $stats['menunggu_disposisi'] }}</p>
             </div>
         </div>
     </div>
     <div class="stat-card" style="background:linear-gradient(135deg,#f97316,#ea580c);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Berjalan</p>
-                <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['berjalan'] }}</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Berjalan</p>
+                <p class="u-h1-hero">{{ $stats['berjalan'] }}</p>
             </div>
         </div>
     </div>
     <div class="stat-card" style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Menunggu Verifikasi</p>
-                <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['menunggu_verifikasi'] }}</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Menunggu Verifikasi</p>
+                <p class="u-h1-hero">{{ $stats['menunggu_verifikasi'] }}</p>
             </div>
         </div>
     </div>
     <div class="stat-card" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Selesai</p>
-                <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['selesai'] }}</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Selesai</p>
+                <p class="u-h1-hero">{{ $stats['selesai'] }}</p>
             </div>
         </div>
     </div>
     <div class="stat-card" style="background:linear-gradient(135deg,#a855f7,#9333ea);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Diarsipkan</p>
-                <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['diarsipkan'] }}</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Diarsipkan</p>
+                <p class="u-h1-hero">{{ $stats['diarsipkan'] }}</p>
             </div>
         </div>
     </div>
     <div class="stat-card" style="background:linear-gradient(135deg,#ec4899,#db2777);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Storage</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Storage</p>
                 <p style="font-size:1.5rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['storage_used'] }}</p>
             </div>
         </div>
@@ -148,25 +103,25 @@
 </div>
 
 {{-- Stats Tambahan --}}
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-bottom:2rem">
+<div class="u-a4">
     <div class="stat-card" style="background:#fff;border:1px solid rgba(0,0,0,0.06);padding:1.25rem">
-        <div style="display:flex;align-items:center;gap:1rem">
+        <div class="u-flex-center-gap-4">
             <div style="width:48px;height:48px;background:rgba(59,130,246,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 0.25rem 0">Total Laporan Kegiatan</p>
+            <div class="u-flex-1">
+                <p class="u-a65">Total Laporan Kegiatan</p>
                 <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1;color:var(--text-dark)">{{ $stats['total_laporan'] }}</p>
             </div>
         </div>
     </div>
     <div class="stat-card" style="background:#fff;border:1px solid rgba(0,0,0,0.06);padding:1.25rem">
-        <div style="display:flex;align-items:center;gap:1rem">
+        <div class="u-flex-center-gap-4">
             <div style="width:48px;height:48px;background:rgba(168,85,247,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 0.25rem 0">Total Notifikasi</p>
+            <div class="u-flex-1">
+                <p class="u-a65">Total Notifikasi</p>
                 <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1;color:var(--text-dark)">{{ $stats['total_notifikasi'] }}</p>
             </div>
         </div>
@@ -174,7 +129,7 @@
 </div>
 
 {{-- Cleanup Section --}}
-<div class="card" style="padding:1.5rem;margin-bottom:1.5rem">
+<div class="card u-box-padded">
     <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin:0 0 0.5rem 0;display:flex;align-items:center;gap:0.5rem">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         Pembersihan Data
@@ -185,16 +140,16 @@
             @csrf
             <input type="hidden" name="action" value="delete_archived">
             <input type="hidden" name="confirm" value="1">
-            <button type="submit" style="width:100%;padding:1rem;background:linear-gradient(135deg,#a855f7,#9333ea);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s;text-align:left" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 16px rgba(168,85,247,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                <div style="display:flex;align-items:center;gap:0.75rem">
-                    <div style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <button type="submit" style="width:100%;padding:1rem;background:linear-gradient(135deg,#a855f7,#9333ea);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s;text-align:left">
+                <div class="u-flex-center-gap-3">
+                    <div class="u-icon-badge-square">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
                     </div>
-                    <div style="flex:1">
-                        <div style="font-weight:600;margin-bottom:0.25rem">Hapus Arsip</div>
-                        <div style="font-size:0.85rem;opacity:0.9">{{ $stats['diarsipkan'] }} surat</div>
+                    <div class="u-flex-1">
+                        <div class="u-a20">Hapus Arsip</div>
+                        <div class="u-a21">{{ $stats['diarsipkan'] }} surat</div>
                     </div>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.6;flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+                    <svg class="u-a35" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
             </button>
         </form>
@@ -202,16 +157,16 @@
             @csrf
             <input type="hidden" name="action" value="delete_completed">
             <input type="hidden" name="confirm" value="1">
-            <button type="submit" style="width:100%;padding:1rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s;text-align:left" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 16px rgba(34,197,94,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                <div style="display:flex;align-items:center;gap:0.75rem">
-                    <div style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <button type="submit" style="width:100%;padding:1rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s;text-align:left">
+                <div class="u-flex-center-gap-3">
+                    <div class="u-icon-badge-square">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
-                    <div style="flex:1">
-                        <div style="font-weight:600;margin-bottom:0.25rem">Hapus Selesai</div>
-                        <div style="font-size:0.85rem;opacity:0.9">{{ $stats['selesai'] }} surat</div>
+                    <div class="u-flex-1">
+                        <div class="u-a20">Hapus Selesai</div>
+                        <div class="u-a21">{{ $stats['selesai'] }} surat</div>
                     </div>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.6;flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+                    <svg class="u-a35" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
             </button>
         </form>
@@ -219,16 +174,16 @@
             @csrf
             <input type="hidden" name="action" value="delete_all_reports">
             <input type="hidden" name="confirm" value="1">
-            <button type="submit" style="width:100%;padding:1rem;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s;text-align:left" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 16px rgba(59,130,246,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                <div style="display:flex;align-items:center;gap:0.75rem">
-                    <div style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <button type="submit" style="width:100%;padding:1rem;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s;text-align:left">
+                <div class="u-flex-center-gap-3">
+                    <div class="u-icon-badge-square">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                     </div>
-                    <div style="flex:1">
-                        <div style="font-weight:600;margin-bottom:0.25rem">Hapus Laporan</div>
-                        <div style="font-size:0.85rem;opacity:0.9">{{ $stats['total_laporan'] }} laporan</div>
+                    <div class="u-flex-1">
+                        <div class="u-a20">Hapus Laporan</div>
+                        <div class="u-a21">{{ $stats['total_laporan'] }} laporan</div>
                     </div>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.6;flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+                    <svg class="u-a35" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
             </button>
         </form>
@@ -236,16 +191,16 @@
             @csrf
             <input type="hidden" name="action" value="delete_all_notifications">
             <input type="hidden" name="confirm" value="1">
-            <button type="submit" style="width:100%;padding:1rem;background:linear-gradient(135deg,#ec4899,#db2777);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s;text-align:left" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 16px rgba(236,72,153,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
-                <div style="display:flex;align-items:center;gap:0.75rem">
-                    <div style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <button type="submit" style="width:100%;padding:1rem;background:linear-gradient(135deg,#ec4899,#db2777);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s;text-align:left">
+                <div class="u-flex-center-gap-3">
+                    <div class="u-icon-badge-square">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                     </div>
-                    <div style="flex:1">
-                        <div style="font-weight:600;margin-bottom:0.25rem">Hapus Notifikasi</div>
-                        <div style="font-size:0.85rem;opacity:0.9">{{ $stats['total_notifikasi'] }} notifikasi</div>
+                    <div class="u-flex-1">
+                        <div class="u-a20">Hapus Notifikasi</div>
+                        <div class="u-a21">{{ $stats['total_notifikasi'] }} notifikasi</div>
                     </div>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.6;flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+                    <svg class="u-a35" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
             </button>
         </form>
@@ -255,17 +210,17 @@
             <input type="hidden" name="confirm" value="1">
             <div style="padding:1rem;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border-radius:10px">
                 <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem">
-                    <div style="width:40px;height:40px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <div class="u-icon-badge-square">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     </div>
-                    <div style="flex:1">
-                        <div style="font-weight:600;margin-bottom:0.25rem">Hapus Data Lama</div>
-                        <div style="font-size:0.85rem;opacity:0.9">Berdasarkan umur data</div>
+                    <div class="u-flex-1">
+                        <div class="u-a20">Hapus Data Lama</div>
+                        <div class="u-a21">Berdasarkan umur data</div>
                     </div>
                 </div>
                 <div style="display:flex;gap:0.5rem">
                     <input type="number" name="days" value="365" min="1" placeholder="Hari" style="flex:1;padding:0.5rem;border:none;border-radius:6px;font-size:0.875rem">
-                    <button type="submit" style="padding:0.5rem 1rem;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">Hapus</button>
+                    <button type="submit" style="padding:0.5rem 1rem;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;transition:all 0.2s">Hapus</button>
                 </div>
             </div>
         </form>
@@ -278,13 +233,13 @@
         <input type="hidden" name="tab" value="{{ $currentTab }}">
 
         {{-- Baris 1: Cari & Kategori --}}
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div class="u-a66">
             <div>
-                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Cari</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Judul, nomor, pengirim..." style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(20,184,166,0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.08)';this.style.boxShadow='none'">
+                <label class="u-a36">Cari</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Judul, nomor, pengirim..." style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;transition:all 0.2s">
             </div>
             <div>
-                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Kategori</label>
+                <label class="u-a36">Kategori</label>
                 <select name="category_id" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;background:#fff;cursor:pointer">
                     <option value="">Semua Kategori</option>
                     @foreach($categories as $cat)
@@ -295,13 +250,13 @@
         </div>
 
         {{-- Baris 2: Tanggal --}}
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div class="u-a66">
             <div>
-                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Dari Tanggal</label>
+                <label class="u-a36">Dari Tanggal</label>
                 <input type="date" name="date_from" value="{{ request('date_from') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
             </div>
             <div>
-                <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px">Sampai Tanggal</label>
+                <label class="u-a36">Sampai Tanggal</label>
                 <input type="date" name="date_to" value="{{ request('date_to') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
             </div>
         </div>
@@ -313,14 +268,14 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"><polyline points="20 6 9 17 4 12"/></svg>
                     Filter
                 </button>
-                <a href="{{ route('admin.sidongan-data.index') }}" style="padding:0.625rem 1rem;background:#f1f5f9;color:var(--text-dark);border:none;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
+                <a href="{{ route('admin.sidongan-data.index') }}" style="padding:0.625rem 1rem;background:#f1f5f9;color:var(--text-dark);border:none;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
                 </a>
             </div>
 
-            <div style="display:flex;align-items:center;gap:0.5rem">
-                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-                <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.9rem;cursor:pointer;background:white;min-width:80px">
+            <div class="u-flex-center-gap-2">
+                <label class="u-a3">Tampilkan:</label>
+                <select name="per_page" style="padding:0.5rem 2rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.9rem;cursor:pointer;background:white;min-width:80px">
                     <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
                     <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
                     <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
@@ -353,10 +308,10 @@
                     'page_menunggu_verifikasi' => 1, 'page_selesai' => 1, 'page_diarsipkan' => 1,
                 ]);
             @endphp
-            <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }}" onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}" onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
+            <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }}">
                 {{ $tabData['label'] }}
                 @if($tabData['count'] > 0)
-                    <span style="background:rgba(0,0,0,0.05);color:var(--text-muted);padding:2px 8px;border-radius:12px;font-size:0.75rem">{{ $tabData['count'] }}</span>
+                    <span class="u-badge-soft">{{ $tabData['count'] }}</span>
                 @endif
             </a>
         @endforeach
@@ -364,7 +319,7 @@
 </div>
 
 {{-- Main Card with Tabs --}}
-<div class="card" style="padding:0;overflow:hidden;border:1px solid rgba(0,0,0,0.06);border-radius:12px">
+<div class="card u-a11">
     @php
         $sidonganColumns = [
             [
@@ -382,7 +337,7 @@
                 'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
                 'type' => 'callback',
                 'callback' => function($item, $value) {
-                    return '<div style="font-weight:600;color:var(--text-dark);margin-bottom:0.25rem">' . \Str::limit($value, 50) . '</div><div style="font-size:0.85rem;color:var(--text-muted)">' . $item->document_number . '</div>';
+                    return '<div style="font-weight:600;color:var(--text-dark);margin-bottom:0.25rem">' . \Str::limit($value, 50) . '</div><div class="u-text-muted-sm">' . $item->document_number . '</div>';
                 }
             ],
             [
@@ -514,48 +469,12 @@
 </div>
 
 {{-- Hidden Form untuk Delete --}}
-<form id="deleteForm" method="POST" style="display:none">
+<form class="u-hidden" id="deleteForm" method="POST">
     @csrf
     @method('DELETE')
 </form>
 
-<script>
-// Konfirmasi Cleanup
-document.querySelectorAll('.cleanup-form').forEach(form => {
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const title = this.dataset.title;
-        const message = this.dataset.message;
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            Toast.confirm(message, {
-                title: title,
-                confirmText: 'Ya, Hapus Sekarang',
-                cancelText: 'Batal',
-                type: 'danger'
-            }).then((confirmed) => {
-                if (confirmed) this.submit();
-            });
-        }
-    });
-});
+    <script src="{{ asset('assets/admin/js/admin-sidongan-data-index.js') }}"></script>
 
-// Konfirmasi Delete Single
-function confirmDeleteItem(id, name) {
-    const message = `Apakah Anda yakin ingin menghapus surat "<strong>${name}</strong>" secara permanen?<br><small style="color:#64748b">File, laporan, dan notifikasi terkait juga akan dihapus.</small>`;
-    if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-        Toast.confirm(message, {
-            title: 'Hapus Permanen',
-            confirmText: 'Ya, Hapus',
-            cancelText: 'Batal',
-            type: 'danger'
-        }).then((confirmed) => {
-            if (confirmed) {
-                const form = document.getElementById('deleteForm');
-                form.action = `/admin/sidongan-data/${id}`;
-                form.submit();
-            }
-        });
-    }
-}
-</script>
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

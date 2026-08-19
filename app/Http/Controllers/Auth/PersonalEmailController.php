@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -234,3 +239,4 @@ class PersonalEmailController extends Controller
             ->with('info', 'Anda bisa setup email pribadi nanti melalui menu Profil.');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

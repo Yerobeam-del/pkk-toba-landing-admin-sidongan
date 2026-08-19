@@ -1,0 +1,48 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/template/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .template-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    .template-header h1 { font-size: 1.25rem !important; }
+    .template-header .btn { width: 100% !important; justify-content: center !important; }
+    .stats-grid { grid-template-columns: 1fr !important; }
+    .tabs-container { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+    .tabs-container::-webkit-scrollbar { height: 4px; }
+    .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+
+    /* Search & Tampilkan adjustments for mobile */
+    .template-search-wrapper {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    .template-search-input {
+        width: 100% !important;
+    }
+    .template-perpage-wrapper {
+        width: 100% !important;
+        justify-content: flex-end !important;
+    }
+    .template-form-wrapper {
+        width: auto !important;
+    }
+}
+
+/* Desktop: show table, hide card */
+@media (min-width: 769px) {
+    .desktop-table-view { display: block !important; }
+    .mobile-card-view { display: none !important; }
+}
+

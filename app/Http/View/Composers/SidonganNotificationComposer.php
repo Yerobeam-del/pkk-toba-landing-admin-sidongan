@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\View\Composers;
 
 use Illuminate\View\View;
@@ -40,3 +45,4 @@ class SidonganNotificationComposer
         ]);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

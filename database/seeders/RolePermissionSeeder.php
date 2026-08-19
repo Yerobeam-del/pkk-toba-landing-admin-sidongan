@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace Database\Seeders;
 
 use App\Models\Role;
@@ -71,3 +76,4 @@ class RolePermissionSeeder extends Seeder
         // Anggota gets no permissions by default (will be assigned individually)
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

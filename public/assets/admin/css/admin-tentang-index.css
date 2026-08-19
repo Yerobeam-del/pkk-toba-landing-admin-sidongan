@@ -1,0 +1,55 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/tentang/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .tentang-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    
+    .tentang-header h1 {
+        font-size: 1.25rem !important;
+    }
+    
+    .section-title {
+        font-size: 1rem !important;
+    }
+    
+    .program-item {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .program-item button {
+        width: 100% !important;
+        margin-top: 0.5rem !important;
+    }
+    
+    .maps-preview-container {
+        overflow: hidden !important;
+    }
+    
+    .maps-preview-container iframe {
+        width: 100% !important;
+        height: 300px !important;
+    }
+    
+    .action-buttons {
+        flex-direction: column-reverse !important;
+    }
+    
+    .action-buttons .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+

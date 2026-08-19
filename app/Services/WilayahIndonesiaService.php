@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
@@ -114,3 +119,4 @@ class WilayahIndonesiaService
         return $count;
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

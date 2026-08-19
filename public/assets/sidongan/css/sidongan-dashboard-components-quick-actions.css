@@ -1,0 +1,60 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/sidongan/dashboard/components/quick-actions.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+    .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .quick-action-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #e2e8f0;
+        background: white;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .quick-action-item:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        transform: translateY(-2px);
+    }
+
+    .quick-action-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .quick-action-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .quick-action-title {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 0.95rem;
+    }
+
+    .quick-action-desc {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+

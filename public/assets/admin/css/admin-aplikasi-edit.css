@@ -1,0 +1,48 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/aplikasi/edit.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .aplikasi-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    
+    .aplikasi-header h1 {
+        font-size: 1.25rem !important;
+    }
+    
+    .aplikasi-header .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    .form-grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .feature-item {
+        flex-direction: column !important;
+    }
+    
+    .feature-item button {
+        width: 100% !important;
+        margin-top: 0.5rem !important;
+    }
+}
+
+
+/* ============================================================
+   Hover state (dipindah dari atribut onmouseover/onmouseout)
+   Dikembangkan oleh Institut Teknologi Del
+   ============================================================ */
+.u-a9:hover { background: #f1f5f9; }
+.vis-label:hover, .u-a27:hover { border-color: var(--primary); }

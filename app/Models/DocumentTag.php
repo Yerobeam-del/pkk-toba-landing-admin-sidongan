@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,3 +29,4 @@ class DocumentTag extends Model
         return $this->belongsToMany(Document::class, 'sidongan_document_tag', 'tag_id', 'document_id');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

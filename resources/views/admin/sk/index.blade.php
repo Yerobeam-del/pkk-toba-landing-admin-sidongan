@@ -1,94 +1,66 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'SK & Dokumen')
 @section('page-title', 'SK & Dokumen')
 
 @section('content')
-<style>
-/* Responsive untuk Mobile */
-@media (max-width: 768px) {
-    .sk-header {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 1rem !important;
-    }
-    .sk-header h1 { font-size: 1.25rem !important; }
-    .sk-header .btn { width: 100% !important; justify-content: center !important; }
-    .stats-grid { grid-template-columns: 1fr !important; }
-    .tabs-container { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-    .tabs-container::-webkit-scrollbar { height: 4px; }
-    .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
-    .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-sk-index.css') }}">
 
-    /* Search & Tampilkan adjustments for mobile */
-    .sk-search-wrapper {
-        width: 100% !important;
-        min-width: 100% !important;
-    }
-    .sk-search-input {
-        width: 100% !important;
-    }
-    .sk-perpage-wrapper {
-        width: 100% !important;
-        justify-content: flex-end !important;
-    }
-    .sk-form-wrapper {
-        width: auto !important;
-    }
-}
-</style>
 
 {{-- Header Section --}}
-<div class="sk-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap">
-    <div style="flex:1;min-width:0">
-        <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0;letter-spacing:-0.5px">SK & Dokumen</h1>
-        <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Kelola surat keputusan dan dokumen dari pusat</p>
+<div class="sk-header u-a12">
+    <div class="u-flex-1-min">
+        <h1 class="u-page-title-tight">SK & Dokumen</h1>
+        <p class="u-muted">Kelola surat keputusan dan dokumen dari pusat</p>
     </div>
-    <a href="{{ route('admin.sk.create') }}" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;white-space:nowrap;flex-shrink:0">
+    <a href="{{ route('admin.sk.create') }}" class="btn btn-primary u-inline-flex-gap-2-nowrap">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Tambah Dokumen
     </a>
 </div>
 
 {{-- Stats Cards --}}
-<div class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-bottom:2rem">
-    <div class="stat-card" style="background:linear-gradient(135deg,#3182ce,#2b6cb0);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+<div class="stats-grid u-a4">
+    <div class="stat-card u-badge-blue">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Total Dokumen</p>
-                <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['total'] }}</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Total Dokumen</p>
+                <p class="u-h1-hero">{{ $stats['total'] }}</p>
             </div>
         </div>
     </div>
-    <div class="stat-card" style="background:linear-gradient(135deg,#38a169,#2f855a);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+    <div class="stat-card u-badge-green-solid">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Published</p>
-                <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['published'] }}</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Published</p>
+                <p class="u-h1-hero">{{ $stats['published'] }}</p>
             </div>
         </div>
     </div>
-    <div class="stat-card" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff">
-        <div style="display:flex;align-items:flex-start;gap:1rem">
-            <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+    <div class="stat-card u-a29">
+        <div class="u-flex-start-gap-4">
+            <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             </div>
-            <div style="flex:1">
-                <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Draft</p>
-                <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ $stats['draft'] }}</p>
+            <div class="u-flex-1">
+                <p class="u-subtitle">Draft</p>
+                <p class="u-h1-hero">{{ $stats['draft'] }}</p>
             </div>
         </div>
     </div>
 </div>
 
 {{-- TABS --}}
-<div style="margin-bottom:1rem">
-    <div class="tabs-container" style="display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem;overflow-x:auto">
+<div class="u-mb-4">
+    <div class="tabs-container u-tabs-row">
         @php
             $tabs = [
                 'all' => ['label' => 'Semua Dokumen', 'count' => $stats['total']],
@@ -108,12 +80,10 @@
                 ]);
             @endphp
             <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}"
-               style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};white-space:nowrap"
-               onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}"
-               onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
+               style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};white-space:nowrap">
                 {{ $tabData['label'] }}
                 @if($tabData['count'] > 0)
-                    <span style="background:rgba(0,0,0,0.05);color:var(--text-muted);padding:2px 8px;border-radius:12px;font-size:0.75rem">{{ $tabData['count'] }}</span>
+                    <span class="u-badge-soft">{{ $tabData['count'] }}</span>
                 @endif
             </a>
         @endforeach
@@ -121,17 +91,17 @@
 </div>
 
 {{-- Search & Tampilkan --}}
-<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+<div class="u-header-row-wrap">
     {{-- Search Form --}}
-    <div class="sk-search-wrapper" style="flex:1;min-width:200px">
+    <div class="sk-search-wrapper u-flex-1-min-200">
         <form method="GET" action="{{ route('admin.sk.index') }}">
             <input type="hidden" name="tab" value="{{ $currentTab }}">
-            <div style="position:relative">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
+            <div class="u-relative">
+                <svg class="u-position-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"/>
                     <path d="m21 21-4.35-4.35"/>
                 </svg>
-                <input type="text" name="search" value="{{ request('search') }}" class="sk-search-input" placeholder="Cari nama dokumen..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;width:100%;transition:all 0.2s" onfocus="this.style.borderColor='#8b5cf6';this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                <input type="text" name="search" value="{{ request('search') }}" class="sk-search-input u-input-icon-left" placeholder="Cari nama dokumen...">
                 @if(request('search'))
                     <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -145,18 +115,18 @@
     </div>
 
     {{-- Per Page Dropdown --}}
-    <div class="sk-perpage-wrapper" style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0">
-        <form method="GET" action="{{ route('admin.sk.index') }}" class="sk-form-wrapper" style="display:flex;align-items:center;gap:0.5rem">
+    <div class="sk-perpage-wrapper u-flex-center-gap-2-shrink">
+        <form method="GET" action="{{ route('admin.sk.index') }}" class="sk-form-wrapper u-flex-center-gap-2">
             <input type="hidden" name="tab" value="{{ $currentTab }}">
-            <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-            <div style="position:relative">
-                <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='#8b5cf6';this.style.boxShadow='0 0 0 3px rgba(139, 92, 246, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+            <label class="u-a3">Tampilkan:</label>
+            <div class="u-relative">
+                <select class="u-select-mini" name="per_page">
                     <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
                     <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
                     <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
                     <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
                 </select>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                <svg class="u-select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="6 9 12 15 18 9"/>
                 </svg>
             </div>
@@ -165,7 +135,7 @@
 </div>
 
 {{-- Main Card --}}
-<div class="card" style="padding:0;overflow:hidden;border:1px solid rgba(0,0,0,0.06);border-radius:12px">
+<div class="card u-a11">
 
     @php
         $dokumenColumns = [
@@ -186,9 +156,9 @@
                                     <polyline points="10 9 9 9 8 9"/>
                                 </svg>
                             </div>
-                            <div style="flex:1;min-width:0">
+                            <div class="u-flex-1-min">
                                 <div style="font-weight:600;color:var(--text-dark);margin-bottom:0.15rem">' . \Str::limit($value, 50) . '</div>
-                                <div style="font-size:0.8rem;color:var(--text-muted)">' . $item->file_name . '</div>
+                                <div class="u-text-muted-xs2">' . $item->file_name . '</div>
                             </div>
                         </div>
                     ';
@@ -215,7 +185,7 @@
                 'type' => 'callback',
                 'callback' => function($item, $value) {
                     if ($value === 'published') {
-                        return '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(34,197,94,0.1);color:#166534"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Published</span>';
+                        return '<span class="u-a57"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Published</span>';
                     }
                     return '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(234,179,8,0.1);color:#92400e"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Draft</span>';
                 }
@@ -235,7 +205,7 @@
             'emptyIcon' => 'file',
             'rowActions' => function($item) {
                 return '
-                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn" title="Preview" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;transition:all 0.2s;cursor:pointer" onmouseover="this.style.background=\'#eff6ff\';this.style.color=\'#2563eb\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'">
+                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn u-a18" title="Preview">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </a>
                 ';
@@ -255,7 +225,7 @@
             'emptyIcon' => 'file',
             'rowActions' => function($item) {
                 return '
-                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn" title="Preview" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;transition:all 0.2s;cursor:pointer" onmouseover="this.style.background=\'#eff6ff\';this.style.color=\'#2563eb\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'">
+                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn u-a18" title="Preview">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </a>
                 ';
@@ -275,7 +245,7 @@
             'emptyIcon' => 'file',
             'rowActions' => function($item) {
                 return '
-                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn" title="Preview" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;transition:all 0.2s;cursor:pointer" onmouseover="this.style.background=\'#eff6ff\';this.style.color=\'#2563eb\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'">
+                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn u-a18" title="Preview">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </a>
                 ';
@@ -284,27 +254,7 @@
     </div>
 </div>
 
-<script>
-// Konfirmasi Hapus
-if (typeof window.confirmDeleteItem === 'undefined') {
-    window.confirmDeleteItem = function(id, name) {
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            Toast.confirm(
-                `Dokumen <strong>"${name}"</strong> akan dihapus secara permanen.`,
-                {
-                    title: 'Hapus Dokumen?',
-                    confirmText: 'Ya, Hapus',
-                    cancelText: 'Batal',
-                    type: 'danger'
-                }
-            ).then(function(confirmed) {
-                if (confirmed) {
-                    const form = document.getElementById('delete-form-' + id);
-                    if (form) form.submit();
-                }
-            });
-        }
-    };
-}
-</script>
+    <script src="{{ asset('assets/admin/js/admin-sk-index.js') }}"></script>
+
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

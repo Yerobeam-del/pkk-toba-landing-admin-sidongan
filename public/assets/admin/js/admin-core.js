@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 /**
  * Admin Core JS - Handles modal, tabs, and basic interactions
  */
@@ -56,3 +59,4 @@ document.addEventListener('DOMContentLoaded', () => {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { openModal, closeModal, switchStrukturTab };
 }
+/* Dikembangkan oleh Institut Teknologi Del */

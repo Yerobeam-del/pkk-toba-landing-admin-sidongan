@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -7,12 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { font-family: 'Inter', sans-serif; }
-        .hero-gradient { background: linear-gradient(135deg, #065f46 0%, #059669 100%); }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-    </style>
+        <link rel="stylesheet" href="{{ asset('assets/sidongan/css/sidongan-index.css') }}">
+
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
@@ -135,3 +134,4 @@
     </footer>
 </body>
 </html>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -22,3 +27,4 @@ class Kecamatan extends Model
         return $this->hasMany(Desa::class)->where('is_active', true)->orderBy('sort_order');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

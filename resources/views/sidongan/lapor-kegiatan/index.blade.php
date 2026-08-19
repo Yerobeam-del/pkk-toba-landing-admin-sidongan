@@ -1,90 +1,20 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('sidongan.layouts.app')
 @section('title', 'Lapor Kegiatan - SIDONGAN')
 
 @section('content')
-<style>
-    .laporan-item {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border-left: 3px solid transparent;
-        position: relative;
-        overflow: hidden;
-    }
-    .laporan-item::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: linear-gradient(180deg, #0ea5e9, #0284c7);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    .btn-action {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .btn-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-    .stats-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .stats-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    }
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    .animate-slide-in {
-        animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        opacity: 0;
-    }
+    <link rel="stylesheet" href="{{ asset('assets/sidongan/css/sidongan-lapor-kegiatan-index.css') }}">
 
-    /* ======================================== */
-    /* MOBILE RESPONSIVE - PHONE (max 640px)    */
-    /* ======================================== */
-    /* Catatan: aturan untuk .mobile-container, .mobile-header, .stats-grid,
-       .filter-grid, .laporan-header, .laporan-actions, .laporan-title,
-       .laporan-meta, .disposisi-box, .pagination-info, dan .pagination-buttons
-       sudah dihapus karena kelas-kelas itu tidak pernah dipasang di markup
-       halaman ini (aturannya mati, tidak pernah berlaku). Tata letak mobile
-       kini dipegang kelas bersama sd-* di assets/sidongan/css/style.css. */
-    @media (max-width: 640px) {
-        /* Kartu statistik lebih rapat di layar ponsel */
-        .stats-card {
-            padding: 1rem !important;
-        }
 
-        /* Kartu laporan lebih rapat di layar ponsel */
-        .laporan-item {
-            padding: 1rem !important;
-        }
-    }
-
-    /* ======================================== */
-    /* MOBILE RESPONSIVE - SMALL (max 380px)    */
-    /* ======================================== */
-    @media (max-width: 380px) {
-        .stats-card {
-            padding: 0.75rem !important;
-        }
-    }
-</style>
-
-<div class="sd-page" style="padding: 0 1.5rem;">
+<div class="sd-page u-px-6">
     {{-- Header --}}
-    <div style="margin-bottom: 2rem;" class="animate-slide-in">
-        <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b; margin: 0 0 0.5rem 0; letter-spacing: -0.025em;">
+    <div class="animate-slide-in u-mb-8">
+        <h1 class="u-h2-slate">
             Lapor Kegiatan
         </h1>
-        <p style="font-size: 0.95rem; color: #64748b; margin: 0; line-height: 1.6;">
+        <p class="u-text-muted-lead">
             Laporkan kegiatan yang telah dilaksanakan
         </p>
     </div>
@@ -94,18 +24,17 @@
         {{-- Perlu Dilaporkan - BIRU --}}
         <div class="stats-card animate-slide-in" 
             style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);">
-            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(10px);"></div>
-            <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+            <div class="u-deco-circle-tr"></div>
+            <div class="u-deco-circle-bl"></div>
             
-            <div style="display: flex; align-items: center; gap: 1rem; position: relative; z-index: 1;">
-                <div style="width: 4.5rem; height: 4.5rem; background: rgba(255,255,255,0.25); border-radius: 1rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                    <i class="fas fa-tasks" style="font-size: 2rem;"></i>
+            <div class="u-flex-center-gap-4-rel">
+                <div class="u-icon-badge-lg">
+                    <i class="fas fa-tasks u-text-2xl"></i>
                 </div>
-                <div style="flex: 1;">
-                    <p style="font-size: 0.9rem; opacity: 0.95; margin: 0 0 0.5rem 0; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
-                        Perlu Dilaporkan
-                    </p>
-                    <p style="font-size: 3rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.05em;">
+                <div class="u-flex-1"><p class="u-a7">
+                         Perlu Dilaporkan
+                     </p>
+                    <p class="u-a8">
                         {{ $perluDilaporkan ?? 0 }}
                     </p>
                 </div>
@@ -115,18 +44,17 @@
         {{-- Menunggu Verifikasi - ORANGE --}}
         <div class="stats-card animate-slide-in" 
             style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);">
-            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(10px);"></div>
-            <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+            <div class="u-deco-circle-tr"></div>
+            <div class="u-deco-circle-bl"></div>
             
-            <div style="display: flex; align-items: center; gap: 1rem; position: relative; z-index: 1;">
-                <div style="width: 4.5rem; height: 4.5rem; background: rgba(255,255,255,0.25); border-radius: 1rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                    <i class="fas fa-clock" style="font-size: 2rem;"></i>
+            <div class="u-flex-center-gap-4-rel">
+                <div class="u-icon-badge-lg">
+                    <i class="fas fa-clock u-text-2xl"></i>
                 </div>
-                <div style="flex: 1;">
-                    <p style="font-size: 0.9rem; opacity: 0.95; margin: 0 0 0.5rem 0; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
-                        Menunggu Verifikasi
-                    </p>
-                    <p style="font-size: 3rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.05em;">
+                <div class="u-flex-1"><p class="u-a7">
+                         Menunggu Verifikasi
+                     </p>
+                    <p class="u-a8">
                         {{ $menungguVerifikasi ?? 0 }}
                     </p>
                 </div>
@@ -134,20 +62,19 @@
         </div>
         
         {{-- Disetujui - HIJAU --}}
-        <div class="stats-card animate-slide-in" 
-            style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);">
-            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(10px);"></div>
-            <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+        <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);" class="stats-card animate-slide-in" 
+           >
+            <div class="u-deco-circle-tr"></div>
+            <div class="u-deco-circle-bl"></div>
             
-            <div style="display: flex; align-items: center; gap: 1rem; position: relative; z-index: 1;">
-                <div style="width: 4.5rem; height: 4.5rem; background: rgba(255,255,255,0.25); border-radius: 1rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                    <i class="fas fa-check-circle" style="font-size: 2rem;"></i>
+            <div class="u-flex-center-gap-4-rel">
+                <div class="u-icon-badge-lg">
+                    <i class="fas fa-check-circle u-text-2xl"></i>
                 </div>
-                <div style="flex: 1;">
-                    <p style="font-size: 0.9rem; opacity: 0.95; margin: 0 0 0.5rem 0; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
-                        Disetujui
-                    </p>
-                    <p style="font-size: 3rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.05em;">
+                <div class="u-flex-1"><p class="u-a7">
+                         Disetujui
+                     </p>
+                    <p class="u-a8">
                         {{ $disetujui ?? 0 }}
                     </p>
                 </div>
@@ -157,18 +84,17 @@
         {{-- Ditolak - MERAH --}}
         <div class="stats-card animate-slide-in" 
             style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);">
-            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(10px);"></div>
-            <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+            <div class="u-deco-circle-tr"></div>
+            <div class="u-deco-circle-bl"></div>
             
-            <div style="display: flex; align-items: center; gap: 1rem; position: relative; z-index: 1;">
-                <div style="width: 4.5rem; height: 4.5rem; background: rgba(255,255,255,0.25); border-radius: 1rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                    <i class="fas fa-times-circle" style="font-size: 2rem;"></i>
+            <div class="u-flex-center-gap-4-rel">
+                <div class="u-icon-badge-lg">
+                    <i class="fas fa-times-circle u-text-2xl"></i>
                 </div>
-                <div style="flex: 1;">
-                    <p style="font-size: 0.9rem; opacity: 0.95; margin: 0 0 0.5rem 0; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
-                        Ditolak
-                    </p>
-                    <p style="font-size: 3rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.05em;">
+                <div class="u-flex-1"><p class="u-a7">
+                         Ditolak
+                     </p>
+                    <p class="u-a8">
                         {{ $ditolak ?? 0 }}
                     </p>
                 </div>
@@ -181,23 +107,17 @@
         <form id="filterForm" method="GET">
             <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; align-items: end;">
                 <div>
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Cari Laporan</label>
-                    <div style="position: relative;">
+                    <label class="u-label-gray">Cari Laporan</label>
+                    <div class="u-relative">
                         <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 0.875rem; pointer-events: none;"></i>
-                        <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Cari berdasarkan judul kegiatan..." 
-                            style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; border: 1px solid #e5e7eb; border-radius: 0.625rem; font-size: 0.9rem; transition: all 0.2s;"
-                            onfocus="this.style.borderColor='#0ea5e9'; this.style.boxShadow='0 0 0 3px rgba(14, 165, 233, 0.1)'" 
-                            onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'">
+                        <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Cari berdasarkan judul kegiatan..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; border: 1px solid #e5e7eb; border-radius: 0.625rem; font-size: 0.9rem; transition: all 0.2s;">
                     </div>
                 </div>
                 
                 <div>
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Status</label>
-                    <div style="position: relative;">
-                        <select name="status" style="width: 100%; padding: 0.75rem 2.5rem 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.625rem; font-size: 0.9rem; background: white; appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%239ca3af\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem; transition: all 0.2s;"
-                                onchange="document.getElementById('filterForm').submit()"
-                                onfocus="this.style.borderColor='#0ea5e9'; this.style.boxShadow='0 0 0 3px rgba(14, 165, 233, 0.1)'" 
-                                onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'">
+                    <label class="u-label-gray">Status</label>
+                    <div class="u-relative">
+                        <select class="u-label-gray" name="status">
                             <option value="">Semua Status</option>
                             <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Perlu Dilaporkan</option>
                             <option value="menunggu_verifikasi" {{ request('status') == 'menunggu_verifikasi' ? 'selected' : '' }}>Menunggu Verifikasi</option>
@@ -208,12 +128,9 @@
                 </div>
 
                 <div>
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Tampilkan</label>
-                    <div style="position: relative;">
-                        <select name="per_page" style="width: 100%; padding: 0.75rem 2.5rem 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.625rem; font-size: 0.9rem; background: white; appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%239ca3af\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem; transition: all 0.2s;"
-                                onchange="document.getElementById('filterForm').submit()"
-                                onfocus="this.style.borderColor='#0ea5e9'; this.style.boxShadow='0 0 0 3px rgba(14, 165, 233, 0.1)'" 
-                                onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'">
+                    <label class="u-label-gray">Tampilkan</label>
+                    <div class="u-relative">
+                        <select class="u-label-gray" name="per_page">
                             @foreach([5, 10, 15, 25, 50] as $value)
                                 <option value="{{ $value }}" {{ (request('per_page', 10) == $value) ? 'selected' : '' }}>
                                     {{ $value }} laporan
@@ -229,14 +146,14 @@
     {{-- List Container --}}
     <div style="background: white; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; overflow: hidden;" class="animate-slide-in">
         @if(isset($documents) && $documents->count() > 0)
-            <div style="padding: 0;">
+            <div class="u-p-0">
                 @foreach($documents as $doc)
                     @php
-                        // Laporan dimiliki ROLE, bukan perorangan: laporan yang dibuat
-                        // rekan serole harus ikut terbaca di sini agar suratnya tidak
-                        // tampil sebagai "Perlu Dilaporkan" untuk kedua kalinya.
+                        // Satu surat = SATU laporan: laporan apa pun (dari role tujuan
+                        // mana pun) yang sudah ada harus terbaca di sini agar suratnya
+                        // tidak tampil sebagai "Perlu Dilaporkan" untuk kedua kalinya.
                         $existingReport = \App\Models\ActivityReport::where('document_id', $doc->id)
-                            ->where('role', auth()->guard('sidongan')->user()->sidongan_role)
+                            ->orderBy('created_at', 'desc')
                             ->first();
                         
                         $statusConfig = [
@@ -255,13 +172,13 @@
                                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                                 border-left: 3px solid transparent;
                                 position: relative;
-                                overflow: hidden;"
-                        onmouseover="this.style.background='{{ $theme['bg'] }}'; this.style.borderLeftColor='{{ $theme['btn'] }}'; this.style.transform='translateX(4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" 
-                        onmouseout="this.style.background='white'; this.style.borderLeftColor='transparent'; this.style.transform='translateX(0)'; this.style.boxShadow='none'">
+                                overflow: hidden;
+                                --lk-bg: {{ $theme['bg'] }};
+                                --lk-border: {{ $theme['btn'] }};">
                         
-                        <div class="sd-list-head" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                            <div style="flex: 1;">
-                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;" class="sd-list-head">
+                            <div class="u-flex-1">
+                                <div class="u-flex-1">
                                     <span style="font-size: 0.8rem; font-family: monospace; background: white; color: {{ $theme['text'] }}; padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-weight: 700; border: 1px solid {{ $theme['border'] }}; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                                         {{ $doc->agenda_number }}
                                     </span>
@@ -276,13 +193,13 @@
                                 </h4>
                                 
                                 <div style="display: flex; gap: 1.5rem; font-size: 0.875rem; color: #64748b; flex-wrap: wrap; margin-bottom: 0.75rem;">
-                                    <span style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span class="u-flex-center-gap-2">
                                         <div style="width: 1.5rem; height: 1.5rem; background: {{ $theme['bg'] }}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                             <i class="fas fa-user" style="color: {{ $theme['btn'] }}; font-size: 0.7rem;"></i>
                                         </div>
                                         {{ $doc->sender }}
                                     </span>
-                                    <span style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span class="u-flex-center-gap-2">
                                         <div style="width: 1.5rem; height: 1.5rem; background: {{ $theme['bg'] }}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                             <i class="fas fa-calendar" style="color: {{ $theme['btn'] }}; font-size: 0.7rem;"></i>
                                         </div>
@@ -291,13 +208,21 @@
                                 </div>
                             </div>
                             
-                            <div class="sd-list-actions" style="display: flex; gap: 0.5rem; flex-shrink: 0; flex-direction: column;">
+                            <div style="display: flex; gap: 0.5rem; flex-shrink: 0; flex-direction: column;" class="sd-list-actions">
                                 @if($existingReport)
                                     @if($existingReport->status === 'ditolak')
-                                        {{-- Tombol Revisi untuk status Ditolak --}}
+                                        {{-- Surat ditolak: siapa pun dari role tujuan disposisi boleh
+                                             membuat laporan baru (data lama otomatis dimuat di form).
+                                             Revisi di tempat tetap tersedia sebagai opsi kedua. --}}
+                                        <a href="{{ route('sidongan.lapor_kegiatan.create', ['document_id' => $doc->id]) }}" 
+                                        class="btn-action"
+                                        style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1rem; background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; text-decoration: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);">
+                                            <i class="fas fa-plus"></i>
+                                            <span>Buat Laporan</span>
+                                        </a>
                                         <a href="{{ route('sidongan.lapor_kegiatan.edit', $existingReport->id) }}" 
                                         class="btn-action"
-                                        style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1rem; background: linear-gradient(135deg, #f97316, #ea580c); color: white; text-decoration: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);">
+                                        style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1rem; background: white; color: #c2410c; text-decoration: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; border: 1px solid #fed7aa; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                             <i class="fas fa-edit"></i>
                                             <span>Revisi Laporan</span>
                                         </a>
@@ -331,7 +256,7 @@
                                     <div style="width: 2rem; height: 2rem; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                         <i class="fas fa-info-circle" style="color: {{ $theme['btn'] }}; font-size: 0.875rem;"></i>
                                     </div>
-                                    <div style="flex: 1;">
+                                    <div class="u-flex-1">
                                         <p style="font-size: 0.8rem; color: {{ $theme['text'] }}; margin: 0 0 0.375rem 0; font-weight: 700;">Instruksi Disposisi</p>
                                         <p style="font-size: 0.875rem; color: #64748b; margin: 0; line-height: 1.5;">
                                             <strong>{{ $dispo['action'] }}</strong>
@@ -350,20 +275,19 @@
 
             {{-- Pagination --}}
             @if(isset($documents) && method_exists($documents, 'hasPages') && $documents->hasPages())
-                <div style="padding: 1.25rem 1.75rem; border-top: 1px solid #e5e7eb; background: #f9fafb; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                    <div style="font-size: 0.875rem; color: #64748b;">
+                <div class="u-card-footer">
+                    <div class="u-text-sm-muted-2">
                         Menampilkan <strong>{{ $documents->firstItem() }}</strong> - <strong>{{ $documents->lastItem() }}</strong> dari <strong>{{ $documents->total() }}</strong> laporan
                     </div>
                     
-                    <div class="sd-pagination" style="display: flex; gap: 0.35rem; align-items: center;">
+                    <div class="sd-pagination u-a79">
                         @if($documents->onFirstPage())
-                            <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #f1f5f9; color: #94a3b8; border-radius: 0.375rem; font-size: 0.875rem; cursor: not-allowed;">
+                            <span class="u-a15">
                                 <i class="fas fa-chevron-left"></i>
                             </span>
                         @else
                             <a href="{{ $documents->previousPageUrl() }}" 
-                            style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #0ea5e9; color: white; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                            onmouseover="this.style.background='#0284c7'" onmouseout="this.style.background='#0ea5e9'">
+                            class="sd-page-btn sd-page-btn-sky">
                                 <i class="fas fa-chevron-left"></i>
                             </a>
                         @endif
@@ -382,24 +306,22 @@
                         
                         @if($startPage > 1)
                             <a href="{{ $documents->url(1) }}" 
-                            style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: white; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                            onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='white'">
+                            class="sd-page-btn sd-page-btn-white">
                                 1
                             </a>
                             @if($startPage > 2)
-                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; color: #94a3b8; font-size: 0.875rem;">...</span>
+                                <span class="u-a16">...</span>
                             @endif
                         @endif
                         
                         @for($i = $startPage; $i <= $endPage; $i++)
                             @if($i == $currentPage)
-                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #0ea5e9; color: white; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 600;">
+                                <span class="sd-page-btn sd-page-btn-sky">
                                     {{ $i }}
                                 </span>
                             @else
                                 <a href="{{ $documents->url($i) }}" 
-                                style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: white; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                                onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='white'">
+                                class="sd-page-btn sd-page-btn-white">
                                     {{ $i }}
                                 </a>
                             @endif
@@ -407,45 +329,43 @@
                         
                         @if($endPage < $lastPage)
                             @if($endPage < $lastPage - 1)
-                                <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; color: #94a3b8; font-size: 0.875rem;">...</span>
+                                <span class="u-a16">...</span>
                             @endif
                             <a href="{{ $documents->url($lastPage) }}" 
-                            style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: white; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                            onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='white'">
+                            class="sd-page-btn sd-page-btn-white">
                                 {{ $lastPage }}
                             </a>
                         @endif
                         
                         @if($documents->hasMorePages())
                             <a href="{{ $documents->nextPageUrl() }}" 
-                            style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #0ea5e9; color: white; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                            onmouseover="this.style.background='#0284c7'" onmouseout="this.style.background='#0ea5e9'">
+                            class="sd-page-btn sd-page-btn-sky">
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         @else
-                            <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #f1f5f9; color: #94a3b8; border-radius: 0.375rem; font-size: 0.875rem; cursor: not-allowed;">
+                            <span class="u-a15">
                                 <i class="fas fa-chevron-right"></i>
                             </span>
                         @endif
                     </div>
                 </div>
             @elseif(isset($documents) && count($documents) > 0)
-                <div style="padding: 1.25rem 1.75rem; border-top: 1px solid #e5e7eb; background: #f9fafb; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                    <div style="font-size: 0.875rem; color: #64748b;">
+                <div class="u-card-footer">
+                    <div class="u-text-sm-muted-2">
                         Menampilkan <strong>1</strong> - <strong>{{ count($documents) }}</strong> dari <strong>{{ count($documents) }}</strong> laporan
                     </div>
-                    <div style="font-size: 0.875rem; color: #94a3b8;">
+                    <div class="u-text-xs-muted">
                         <i class="fas fa-info-circle"></i> Semua laporan ditampilkan dalam satu halaman
                     </div>
                 </div>
             @endif
         @else
-            <div style="text-align: center; padding: 4rem 2rem;" class="animate-slide-in">
+            <div class="animate-slide-in u-a117">
                 <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15); animation: float 3s ease-in-out infinite;">
                     <i class="fas fa-inbox" style="color: #0ea5e9; font-size: 3rem;"></i>
                 </div>
-                <h4 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0 0 0.5rem 0;">Tidak Ada Laporan</h4>
-                <p style="font-size: 0.95rem; color: #64748b; margin: 0; line-height: 1.6;">
+                <h4 class="u-h3-slate">Tidak Ada Laporan</h4>
+                <p class="u-text-muted-lead">
                     Belum ada surat yang perlu dilaporkan atau sesuai dengan filter.
                 </p>
             </div>
@@ -453,16 +373,7 @@
     </div>
 </div>
 
-<script>
-    let searchTimeout;
-    const searchInput = document.getElementById('searchInput');
-    const filterForm = document.getElementById('filterForm');
+    <script src="{{ asset('assets/sidongan/js/sidongan-lapor-kegiatan-index.js') }}"></script>
 
-    searchInput?.addEventListener('input', function(e) {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            filterForm.submit();
-        }, 500);
-    });
-</script>
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

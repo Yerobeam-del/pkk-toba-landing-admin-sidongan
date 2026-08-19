@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('sidongan.layouts.app')
 @section('title', 'Detail Laporan Kegiatan - SIDONGAN')
 
@@ -16,6 +19,12 @@
     $currentUser = auth()->guard('sidongan')->user();
     $isKetua = $currentUser && $currentUser->hasSidonganRole('ketua');
     $canVerify = $isKetua && $report->status === 'menunggu_verifikasi';
+
+    // Laporan ditolak: siapa pun dari role tujuan disposisi surat boleh mengisi
+    // laporan baru (form otomatis terisi data laporan yang ditolak).
+    $canRefill = $report->status === 'ditolak'
+        && $currentUser
+        && in_array($currentUser->sidongan_role, $report->peranTujuanSurat(), true);
 @endphp
 
 <link rel="stylesheet" href="{{ asset('assets/sidongan/css/detail-laporan.css') }}">
@@ -24,9 +33,9 @@
     {{-- Header --}}
     <div class="dl-header">
         <div class="dl-header-top">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <div style="width: 3rem; height: 3rem; background: rgba(255, 255, 255, 0.25); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                    <i class="fas fa-clipboard-list" style="font-size: 1.5rem; color: white;"></i>
+            <div class="u-flex-center-gap-3">
+                <div class="u-icon-badge-sm">
+                    <i class="fas fa-clipboard-list u-flex-center-gap-3"></i>
                 </div>
                 <div>
                     <h1>Detail Laporan Kegiatan</h1>
@@ -39,6 +48,13 @@
                 <a href="{{ route('sidongan.verifikasi.form', $report->id) }}" class="dl-btn dl-btn-verify">
                     <i class="fas fa-clipboard-check"></i>
                     <span>Verifikasi Laporan</span>
+                </a>
+                @endif
+
+                @if($canRefill)
+                <a href="{{ route('sidongan.lapor_kegiatan.create', ['document_id' => $report->document_id]) }}" class="dl-btn dl-btn-verify">
+                    <i class="fas fa-plus"></i>
+                    <span>Buat Laporan</span>
                 </a>
                 @endif
                 
@@ -70,9 +86,9 @@
                 <div class="dl-info-grid">
                     <div>
                         <span class="dl-info-label">Tanggal Kegiatan</span>
-                        <p class="dl-info-value" style="display: flex; align-items: center; gap: 0.5rem;">
-                            <div style="width: 1.5rem; height: 1.5rem; background: #f0f9ff; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-calendar" style="color: #0891b2; font-size: 0.7rem;"></i>
+                        <p class="dl-info-value u-flex-center-gap-2">
+                            <div class="u-dot-blue">
+                                <i class="fas fa-calendar u-flex-center-gap-2"></i>
                             </div>
                             @if($report->kegiatan_tanggal)
                                 {{ $report->kegiatan_tanggal->locale('id')->translatedFormat('d F Y') }}
@@ -84,9 +100,9 @@
                     <div>
                         <span class="dl-info-label">Waktu Kegiatan</span>
                         @if($report->start_time && $report->end_time)
-                            <p class="dl-info-value" style="display: flex; align-items: center; gap: 0.5rem;">
-                                <div style="width: 1.5rem; height: 1.5rem; background: #f0f9ff; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-clock" style="color: #0891b2; font-size: 0.7rem;"></i>
+                            <p class="dl-info-value u-flex-center-gap-2">
+                                <div class="u-dot-blue">
+                                    <i class="fas fa-clock u-flex-center-gap-2"></i>
                                 </div>
                                 {{ \Carbon\Carbon::parse($report->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($report->end_time)->format('H:i') }}
                             </p>
@@ -98,7 +114,7 @@
                 
                 {{-- Lokasi Kegiatan --}}
                 <div class="dl-info-item">
-                    <span class="dl-info-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span class="dl-info-label u-flex-center-gap-2">
                         <div style="width: 1.5rem; height: 1.5rem; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-map-marker-alt" style="color: #ef4444; font-size: 0.7rem;"></i>
                         </div>
@@ -146,15 +162,15 @@
                 @endphp
                 @if(count($fotosArray) > 0)
                 <div class="dl-info-item">
-                    <span class="dl-info-label" style="display: flex; align-items: center; gap: 0.5rem;">
-                        <div style="width: 1.5rem; height: 1.5rem; background: #f0f9ff; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-camera" style="color: #0891b2; font-size: 0.7rem;"></i>
+                    <span class="dl-info-label u-flex-center-gap-2">
+                        <div class="u-dot-blue">
+                            <i class="fas fa-camera u-flex-center-gap-2"></i>
                         </div>
                         Dokumentasi Kegiatan ({{ count($fotosArray) }} foto)
                     </span>
                     <div class="dl-foto-grid">
                         @foreach($fotosArray as $index => $foto)
-                        <div onclick="openGallery({{ $index }})" class="dl-foto-item">
+                        <div class="dl-foto-item" data-index="{{ $index }}">
                             <img src="{{ asset('storage/' . $foto) }}" alt="Dokumentasi {{ $index + 1 }}">
                         </div>
                         @endforeach
@@ -231,9 +247,9 @@
 
                     <div class="dl-info-item">
                         <span class="dl-info-label">Dibuat oleh</span>
-                        <p class="dl-info-value" style="display: flex; align-items: center; gap: 0.5rem;">
-                            <div style="width: 1.5rem; height: 1.5rem; background: #f0f9ff; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-user" style="color: #0891b2; font-size: 0.7rem;"></i>
+                        <p class="dl-info-value u-flex-center-gap-2">
+                            <div class="u-dot-blue">
+                                <i class="fas fa-user u-flex-center-gap-2"></i>
                             </div>
                             {{ $report->creator->name ?? 'Unknown' }}
                         </p>
@@ -258,9 +274,9 @@
                     
                     <div class="dl-info-item">
                         <span class="dl-info-label">Tanggal Pembuatan</span>
-                        <p class="dl-info-value" style="display: flex; align-items: center; gap: 0.5rem;">
-                            <div style="width: 1.5rem; height: 1.5rem; background: #f0f9ff; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-clock" style="color: #0891b2; font-size: 0.7rem;"></i>
+                        <p class="dl-info-value u-flex-center-gap-2">
+                            <div class="u-dot-blue">
+                                <i class="fas fa-clock u-flex-center-gap-2"></i>
                             </div>
                             {{ $report->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                         </p>
@@ -281,20 +297,20 @@
 </div>
 
 {{-- MODAL GALLERY --}}
-<div id="galleryOverlay" class="dl-gallery-overlay" onclick="closeGallery(event)">
-    <button class="dl-gallery-close" onclick="closeGallery()">
+<div id="galleryOverlay" class="dl-gallery-overlay" data-fotos='{{ json_encode($fotosArray ?? []) }}' data-storage="{{ asset('storage') }}">
+    <button class="dl-gallery-close" >
         <i class="fas fa-times"></i>
     </button>
     
-    <div class="dl-gallery-container sd-lightbox" onclick="event.stopPropagation()">
+    <div class="dl-gallery-container sd-lightbox" >
         <div class="dl-gallery-image-wrapper">
             <img id="galleryImage" class="dl-gallery-image" src="" alt="Dokumentasi">
         </div>
         
-        <button class="dl-gallery-nav prev" onclick="navigateGallery(-1)">
+        <button class="dl-gallery-nav prev" >
             <i class="fas fa-chevron-left"></i>
         </button>
-        <button class="dl-gallery-nav next" onclick="navigateGallery(1)">
+        <button class="dl-gallery-nav next" >
             <i class="fas fa-chevron-right"></i>
         </button>
         
@@ -310,107 +326,8 @@
     </div>
 </div>
 
-<script>
-    const galleryFotos = @json($fotosArray ?? []);
-    let currentIndex = 0;
-    let isAnimating = false;
-    
-    function openGallery(index) {
-        currentIndex = index;
-        updateGalleryImage('zoom-in');
-        updateGalleryUI(); 
-        const overlay = document.getElementById('galleryOverlay');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeGallery(event) {
-        if (event && event.target !== document.getElementById('galleryOverlay')) return;
-        const overlay = document.getElementById('galleryOverlay');
-        overlay.style.opacity = '0';
-        setTimeout(() => {
-            overlay.classList.remove('active');
-            overlay.style.opacity = '';
-        }, 300);
-        document.body.style.overflow = '';
-    }
-    
-    function navigateGallery(direction) {
-        if (isAnimating || galleryFotos.length <= 1) return;
-        isAnimating = true;
-        
-        const animClass = direction > 0 ? 'slide-left' : 'slide-right';
-        const nextIndex = (currentIndex + direction + galleryFotos.length) % galleryFotos.length;
-        
-        const img = document.getElementById('galleryImage');
-        
-        img.style.opacity = '0';
-        
-        setTimeout(() => {
-            currentIndex = nextIndex;
-            img.src = '{{ asset("storage") }}/' + galleryFotos[currentIndex];
-            img.className = 'dl-gallery-image ' + animClass;
-            
-            setTimeout(() => {
-                img.style.opacity = '1';
-            }, 50);
-            
-            updateGalleryUI();
-            
-            setTimeout(() => {
-                isAnimating = false;
-                img.className = 'dl-gallery-image';
-            }, 400);
-        }, 200);
-    }
-    
-    function updateGalleryImage(animClass = 'zoom-in') {
-        const img = document.getElementById('galleryImage');
-        img.src = '{{ asset("storage") }}/' + galleryFotos[currentIndex];
-        img.className = 'dl-gallery-image ' + animClass;
-        updateGalleryUI();
-    }
-    
-    function updateGalleryUI() {
-        document.getElementById('galleryCounter').textContent = (currentIndex + 1) + ' / ' + galleryFotos.length;
-        document.getElementById('galleryDownload').href = '{{ asset("storage") }}/' + galleryFotos[currentIndex];
-        
-        const prevBtn = document.querySelector('.dl-gallery-nav.prev');
-        const nextBtn = document.querySelector('.dl-gallery-nav.next');
-        
-        if (galleryFotos.length <= 1) {
-            prevBtn.style.display = 'none';
-            nextBtn.style.display = 'none';
-        } else {
-            prevBtn.style.display = 'flex';
-            nextBtn.style.display = 'flex';
-        }
-
-        updateThumbnails();
-    }
-    
-    function updateThumbnails() {
-        const container = document.getElementById('galleryThumbnails');
-        container.innerHTML = '';
-        galleryFotos.forEach((foto, index) => {
-            const thumb = document.createElement('div');
-            thumb.className = 'dl-gallery-thumb' + (index === currentIndex ? ' active' : '');
-            thumb.innerHTML = '<img src="{{ asset("storage") }}/' + foto + '" alt="Thumb">';
-            thumb.onclick = () => {
-                if (index !== currentIndex) {
-                    navigateGallery(index - currentIndex);
-                }
-            };
-            container.appendChild(thumb);
-        });
-    }
-    
-    document.addEventListener('keydown', (e) => {
-        const overlay = document.getElementById('galleryOverlay');
-        if (!overlay || !overlay.classList.contains('active')) return;
-        if (e.key === 'Escape') closeGallery();
-        if (e.key === 'ArrowLeft') navigateGallery(-1);
-        if (e.key === 'ArrowRight') navigateGallery(1);
-    });
-</script>
+@push('scripts')
+    <script src="{{ asset('assets/sidongan/js/lapor-kegiatan-show.js') }}"></script>
+@endpush
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

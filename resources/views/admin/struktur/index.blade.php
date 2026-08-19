@@ -1,83 +1,31 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Manajemen Struktur')
 @section('page-title', 'Struktur Organisasi')
 @section('content')
 
 {{-- CSS untuk Responsive Mobile --}}
-<style>
-@media (max-width: 768px) {
-    /* Header adjustments */
-    .struktur-header {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 1rem !important;
-    }
-    .struktur-header .btn {
-        width: 100% !important;
-        justify-content: center !important;
-    }
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-struktur-index.css') }}">
 
-    /* Tabs container adjustments */
-    .tabs-container {
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch;
-    }
-    .tabs-container::-webkit-scrollbar {
-        height: 4px;
-    }
-    .tabs-container::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 4px;
-    }
 
-    /* Toolbar: Tampilkan di kanan atas, Search di bawah full width */
-    .struktur-toolbar-row {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 0.75rem !important;
-        width: 100% !important;
-    }
-
-    /* Dropdown Tampilkan rata kanan di mobile */
-    .struktur-perpage-wrapper {
-        display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
-    }
-
-    .struktur-form-wrapper {
-        width: auto !important;
-        flex-shrink: 0 !important;
-    }
-
-    /* Search input full width */
-    .struktur-search-wrapper {
-        width: 100% !important;
-        flex-shrink: 1 !important;
-    }
-
-    .struktur-search-input {
-        width: 100% !important;
-    }
-}
-</style>
-
-<div style="margin-bottom:2rem">
+<div class="u-mb-8">
     {{-- Header Section --}}
-    <div class="struktur-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap">
-        <div style="flex:1;min-width:0">
-            <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0;letter-spacing:-0.5px">Struktur Organisasi</h1>
-            <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Kelola data sesuai bagan organisasi asli PKK Kabupaten Toba</p>
+    <div class="struktur-header u-a12">
+        <div class="u-flex-1-min">
+            <h1 class="u-page-title-tight">Struktur Organisasi</h1>
+            <p class="u-muted">Kelola data sesuai bagan organisasi asli PKK Kabupaten Toba</p>
         </div>
-        <a href="{{ route('admin.struktur.create') }}" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;white-space:nowrap;flex-shrink:0">
+        <a href="{{ route('admin.struktur.create') }}" class="btn btn-primary u-inline-flex-gap-2-nowrap">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Tambah Anggota
         </a>
     </div>
 
     {{-- TABS --}}
-    <div style="margin-bottom:1rem">
-        <div class="tabs-container" style="display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem;overflow-x:auto">
+    <div class="u-mb-4">
+        <div class="tabs-container u-tabs-row">
             @php
                 $tabs = [
                     'pengurus' => ['label' => 'Pengurus Inti', 'count' => $pengurusCount],
@@ -102,12 +50,10 @@
                     ]);
                 @endphp
                 <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}"
-                   style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};white-space:nowrap"
-                   onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}"
-                   onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
+                   style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};border:none;font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};white-space:nowrap">
                     {{ $tabData['label'] }}
                     @if($tabData['count'] > 0)
-                        <span style="background:rgba(0,0,0,0.05);color:var(--text-muted);padding:2px 8px;border-radius:12px;font-size:0.75rem">{{ $tabData['count'] }}</span>
+                        <span class="u-badge-soft">{{ $tabData['count'] }}</span>
                     @endif
                 </a>
             @endforeach
@@ -115,17 +61,17 @@
     </div>
 
     {{-- Search & Tampilkan --}}
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+    <div class="u-header-row-wrap">
         {{-- Search Form --}}
-        <div class="struktur-search-wrapper" style="flex:1;min-width:200px">
+        <div class="struktur-search-wrapper u-flex-1-min-200">
             <form method="GET" action="{{ route('admin.struktur.index') }}">
                 <input type="hidden" name="tab" value="{{ $currentTab }}">
-                <div style="position:relative">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
+                <div class="u-relative">
+                    <svg class="u-position-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"/>
                         <path d="m21 21-4.35-4.35"/>
                     </svg>
-                    <input type="text" name="search" value="{{ request('search') }}" class="struktur-search-input" placeholder="Cari nama atau jabatan..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;width:100%;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                    <input type="text" name="search" value="{{ request('search') }}" class="struktur-search-input u-input-icon-left" placeholder="Cari nama atau jabatan...">
                     @if(request('search'))
                         <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -139,18 +85,18 @@
         </div>
 
         {{-- Per Page Dropdown --}}
-        <div class="struktur-perpage-wrapper" style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0">
-            <form method="GET" action="{{ route('admin.struktur.index') }}" class="struktur-form-wrapper" style="display:flex;align-items:center;gap:0.5rem">
+        <div class="struktur-perpage-wrapper u-flex-center-gap-2-shrink">
+            <form method="GET" action="{{ route('admin.struktur.index') }}" class="struktur-form-wrapper u-flex-center-gap-2">
                 <input type="hidden" name="tab" value="{{ $currentTab }}">
-                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-                <div style="position:relative">
-                    <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                <label class="u-a3">Tampilkan:</label>
+                <div class="u-relative">
+                    <select class="u-select-mini" name="per_page">
                         <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
                         <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
                         <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
                         <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
                     </select>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                    <svg class="u-select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
                 </div>
@@ -160,7 +106,7 @@
 
     {{-- Main Card --}}
     <div class="struktur-card">
-        <div class="table-container" style="padding:0">
+        <div class="table-container u-p-0">
             @php
                 $strukturColumns = [
                     [
@@ -250,3 +196,4 @@
     </div>
 </div>
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

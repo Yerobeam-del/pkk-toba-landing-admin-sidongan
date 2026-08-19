@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 /**
  * Navigation & SPA Router
  */
@@ -525,3 +528,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 50);
 });
+/* Dikembangkan oleh Institut Teknologi Del */

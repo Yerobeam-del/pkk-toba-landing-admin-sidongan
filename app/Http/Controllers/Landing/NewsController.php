@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Landing;
 
 use App\Http\Controllers\Controller;
@@ -28,3 +33,4 @@ class NewsController extends Controller
         return view('modules.landing.news-detail', compact('news', 'relatedNews'));
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

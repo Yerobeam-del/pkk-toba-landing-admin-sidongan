@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 class AnggotaKeluarga extends BaseSiedaModel
@@ -32,3 +37,4 @@ class AnggotaKeluarga extends BaseSiedaModel
         return $this->belongsTo(Keluarga::class, 'no_kk', 'no_kk');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

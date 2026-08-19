@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 class Warga extends BaseSiedaModel
@@ -58,3 +63,4 @@ class Warga extends BaseSiedaModel
         return $this->hasMany(AnggotaKeluarga::class, 'nik', 'nik');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,0 +1,20 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/sieda-data/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+    .sieda-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .sieda-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--text-dark); margin: 0 0 0.25rem 0; letter-spacing: -0.5px; }
+    .sieda-header p { color: var(--text-muted); margin: 0; font-size: 0.9rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { background: #f8fafc; text-align: left; padding: 0.75rem; font-weight: 600; color: #334155; border-bottom: 2px solid #e2e8f0; }
+    td { padding: 0.75rem; border-bottom: 1px solid #f1f5f9; }
+    tr:hover td { background: #fafbfc; }
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; border-radius: 6px; }
+    .card { border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+

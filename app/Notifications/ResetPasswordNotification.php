@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -90,3 +95,4 @@ class ResetPasswordNotification extends Notification
         ];
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

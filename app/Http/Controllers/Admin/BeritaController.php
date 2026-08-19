@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -210,3 +215,4 @@ class BeritaController extends Controller
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus.');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

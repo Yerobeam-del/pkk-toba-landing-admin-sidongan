@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <section class="stats-section">
     <div class="stats-grid">
         <div class="stat-item" id="stat1"><div class="stat-number" data-target="16">0</div><div class="stat-label">Kecamatan</div></div>
@@ -6,3 +9,4 @@
         <div class="stat-item" id="stat4"><div class="stat-number" data-target="2">0</div><div class="stat-label">Aplikasi Aktif</div></div>
     </div>
 </section>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

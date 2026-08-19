@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
@@ -74,3 +79,4 @@ class CategoryController extends Controller
             ->with('success', 'Kategori berhasil dihapus!');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

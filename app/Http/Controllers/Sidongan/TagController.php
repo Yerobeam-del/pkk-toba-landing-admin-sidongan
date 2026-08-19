@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
@@ -58,3 +63,4 @@ class TagController extends Controller
             ->with('success', 'Tag berhasil dihapus!');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -50,8 +55,9 @@ class ActivityReport extends Model
     // ==========================================================
     // ATURAN AKSES LAPORAN BERSAMA
     // ==========================================================
-    // Laporan dimiliki ROLE, bukan perorangan:
-    //   - boleh MENGUBAH : sesama anggota role pemilik laporan
+    // Satu surat = SATU laporan, dikerjakan bersama oleh semua role tujuan
+    // disposisi (bukan perorangan, bukan per role):
+    //   - boleh MENGUBAH : semua role tujuan disposisi surat itu
     //   - boleh MELIHAT  : semua role tujuan disposisi surat itu, plus Ketua
     // Ditaruh di model agar aturannya satu sumber, tidak tersebar di controller.
 
@@ -70,7 +76,7 @@ class ActivityReport extends Model
         return $data['target_roles'] ?? [];
     }
 
-    /** Boleh mengubah: hanya anggota role pemilik laporan. */
+    /** Boleh mengubah: semua role tujuan disposisi surat (laporan milik surat). */
     public function bolehDiubahOleh(?User $user): bool
     {
         if (!$user || empty($user->sidongan_role)) {
@@ -82,7 +88,7 @@ class ActivityReport extends Model
             return $this->created_by === $user->id;
         }
 
-        return $this->role === $user->sidongan_role;
+        return in_array($user->sidongan_role, $this->peranTujuanSurat(), true);
     }
 
     /** Boleh melihat: pemilik role, seluruh role tujuan disposisi, dan Ketua. */
@@ -103,3 +109,4 @@ class ActivityReport extends Model
         return in_array($user->sidongan_role, $this->peranTujuanSurat(), true);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

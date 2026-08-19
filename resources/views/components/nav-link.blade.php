@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @props(['active'])
 
 @php
@@ -9,3 +12,4 @@ $classes = ($active ?? false)
 <a {{ $attributes->merge(['class' => $classes]) }}>
     {{ $slot }}
 </a>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

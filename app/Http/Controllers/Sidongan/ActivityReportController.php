@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
@@ -39,21 +44,18 @@ class ActivityReportController extends Controller
         }
         
         // FILTER STATUS
+        // Satu surat = satu laporan: filter berdasarkan laporan (status apa pun),
+        // tidak lagi dibatasi role pembuatnya.
         if ($request->filled('status')) {
             $status = $request->status;
             
             if ($status === 'draft') {
-                // Perlu Dilaporkan = dokumen yang BELUM ada laporan dari user ini
-                // Laporan milik ROLE: surat dianggap sudah dilaporkan bila
-                // rekan serole sudah membuatnya.
-                $query->whereDoesntHave('activityReports', function($q) use ($role) {
-                    $q->where('role', $role);
-                });
+                // Perlu Dilaporkan = surat yang BELUM ada laporan sama sekali
+                $query->whereDoesntHave('activityReports');
             } else {
-                // Status lain = filter berdasarkan activity_reports dengan status tertentu
-                $query->whereHas('activityReports', function($q) use ($role, $status) {
-                    $q->where('role', $role)
-                      ->where('activity_reports.status', $status);
+                // Status lain = filter surat berdasarkan status laporannya
+                $query->whereHas('activityReports', function($q) use ($status) {
+                    $q->where('activity_reports.status', $status);
                 });
             }
         }
@@ -73,7 +75,6 @@ class ActivityReportController extends Controller
                 )
             ')
             ->whereColumn('activity_reports.document_id', 'sidongan_documents.id')
-            ->where('activity_reports.role', $role)
             ->orderBy('activity_reports.created_at', 'desc')
             ->limit(1)
         )
@@ -83,20 +84,18 @@ class ActivityReportController extends Controller
         $perPage = $request->per_page ?? 10;
         $documents = $query->paginate($perPage)->withQueryString();
         
-        // STATS
-        // Statistik dihitung per ROLE agar sesama anggota melihat angka yang sama
-        $totalLaporan = \App\Models\ActivityReport::where('role', $role)->count();
-        $menungguVerifikasi = \App\Models\ActivityReport::where('role', $role)->where('status', 'menunggu_verifikasi')->count();
-        $disetujui = \App\Models\ActivityReport::where('role', $role)->where('status', 'disetujui')->count();
-        $ditolak = \App\Models\ActivityReport::where('role', $role)->where('status', 'ditolak')->count();
+        // STATS dihitung per surat (satu surat = satu laporan):
+        // hanya surat yang didisposisi ke role user ini yang dihitung.
+        $baseStats = \App\Models\Document::where('disposisi_data', 'LIKE', '%' . $role . '%')
+            ->whereNotIn('sidongan_documents.status', ['diarsipkan', 'menunggu_disposisi']);
         
-        // Perlu Dilaporkan = dokumen yang didisposisi ke user ini tapi BELUM ada laporan
-        $perluDilaporkan = \App\Models\Document::where('disposisi_data', 'LIKE', '%' . $role . '%')
-            ->whereNotIn('sidongan_documents.status', ['diarsipkan', 'menunggu_disposisi'])
-            ->whereDoesntHave('activityReports', function($q) use ($role) {
-                $q->where('role', $role);
-            })
-            ->count();
+        $totalLaporan = (clone $baseStats)->count();
+        $menungguVerifikasi = (clone $baseStats)->whereHas('activityReports', fn($q) => $q->where('activity_reports.status', 'menunggu_verifikasi'))->count();
+        $disetujui = (clone $baseStats)->whereHas('activityReports', fn($q) => $q->where('activity_reports.status', 'disetujui'))->count();
+        $ditolak = (clone $baseStats)->whereHas('activityReports', fn($q) => $q->where('activity_reports.status', 'ditolak'))->count();
+        
+        // Perlu Dilaporkan = surat yang didisposisi ke role user ini tapi BELUM ada laporan
+        $perluDilaporkan = (clone $baseStats)->whereDoesntHave('activityReports')->count();
         
         return view('sidongan.lapor-kegiatan.index', compact(
             'user', 'documents', 'totalLaporan', 'menungguVerifikasi',
@@ -107,6 +106,7 @@ class ActivityReportController extends Controller
     public function create($document_id = null)
     {
         $document = null;
+        $previousReport = null;
         
         if ($document_id) {
             $document = \App\Models\Document::findOrFail($document_id);
@@ -133,9 +133,18 @@ class ActivityReportController extends Controller
             if (!in_array($user->sidongan_role, $targetRoles)) {
                 abort(403, 'Anda tidak berhak membuat laporan untuk surat ini.');
             }
+
+            // Revisi setelah ditolak: ambil laporan ditolak TERAKHIR agar form
+            // langsung terisi data sebelumnya. Satu surat = satu laporan, jadi
+            // siapa pun dari role tujuan disposisi boleh mengisi ulang — laporan
+            // baru nanti dicatat atas nama orang yang mengisi.
+            $previousReport = \App\Models\ActivityReport::where('document_id', $document_id)
+                ->where('status', 'ditolak')
+                ->orderBy('created_at', 'desc')
+                ->first();
         }
         
-        return view('sidongan.lapor-kegiatan.create', compact('document'));
+        return view('sidongan.lapor-kegiatan.create', compact('document', 'previousReport'));
     }
 
     public function store(Request $request)
@@ -182,26 +191,24 @@ class ActivityReportController extends Controller
             }
         }
         
-        // CEK APAKAH ADA LAPORAN YANG DITOLAK SEBELUMNYA
-        // Laporan dimiliki ROLE, jadi revisi mencari laporan role ini —
-        // bukan hanya laporan yang kebetulan dibuat orang yang sedang login.
-        $rejectedReport = \App\Models\ActivityReport::where('document_id', $validated['document_id'])
-            ->where('role', $user->sidongan_role)
-            ->where('status', 'ditolak')
-            ->first();
-        
-        // Satu surat + satu role = satu laporan. Bila rekan serole sudah membuat
-        // (dan belum ditolak), arahkan untuk mengedit laporan itu, jangan buat baru.
-        $laporanRoleAda = \App\Models\ActivityReport::where('document_id', $validated['document_id'])
-            ->where('role', $user->sidongan_role)
+        // Satu surat = SATU laporan. Bila sudah ada laporan apa pun (dari role
+        // mana pun) yang belum ditolak, arahkan ke laporan itu — jangan buat baru.
+        $laporanAda = \App\Models\ActivityReport::where('document_id', $validated['document_id'])
             ->where('status', '!=', 'ditolak')
+            ->orderBy('created_at', 'desc')
             ->first();
 
-        if ($laporanRoleAda) {
+        if ($laporanAda) {
             return redirect()
-                ->route('sidongan.lapor_kegiatan.show', $laporanRoleAda->id)
-                ->with('warning', 'Surat ini sudah dilaporkan oleh rekan serole Anda. Silakan periksa atau perbarui laporan tersebut.');
+                ->route('sidongan.lapor_kegiatan.show', $laporanAda->id)
+                ->with('warning', 'Surat ini sudah dilaporkan. Silakan periksa atau perbarui laporan tersebut.');
         }
+
+        // Ada laporan yang ditolak sebelumnya → pengajuan ini adalah revisi
+        $rejectedReport = \App\Models\ActivityReport::where('document_id', $validated['document_id'])
+            ->where('status', 'ditolak')
+            ->orderBy('created_at', 'desc')
+            ->first();
 
         if ($rejectedReport) {
             // BUAT LAPORAN BARU (jangan update laporan yang ditolak,
@@ -315,7 +322,7 @@ class ActivityReportController extends Controller
         $user = auth()->guard('sidongan')->user();
         
         if (!$report->bolehDiubahOleh($user)) {
-            abort(403, 'Laporan ini milik role lain, Anda tidak berhak mengeditnya.');
+            abort(403, 'Anda tidak berhak mengedit laporan ini.');
         }
         
         // HANYA blokir jika sudah disetujui. Status 'ditolak' BOLEH diedit untuk revisi.
@@ -332,7 +339,7 @@ class ActivityReportController extends Controller
         $user = auth()->guard('sidongan')->user();
         
         if (!$report->bolehDiubahOleh($user)) {
-            abort(403, 'Laporan ini milik role lain, Anda tidak berhak mengubahnya.');
+            abort(403, 'Anda tidak berhak mengubah laporan ini.');
         }
         
         // HANYA blokir jika sudah disetujui. Status 'ditolak' BOLEH diupdate untuk revisi.
@@ -438,3 +445,4 @@ class ActivityReportController extends Controller
             ->with('success', 'Laporan kegiatan berhasil dihapus!');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

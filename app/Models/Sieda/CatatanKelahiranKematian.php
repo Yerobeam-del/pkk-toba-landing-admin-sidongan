@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 class CatatanKelahiranKematian extends BaseSiedaModel
@@ -47,3 +52,4 @@ class CatatanKelahiranKematian extends BaseSiedaModel
         return $this->belongsTo(KelompokDasawisma::class, 'id_group_dasawisma');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

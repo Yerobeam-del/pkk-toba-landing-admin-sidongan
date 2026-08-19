@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace Database\Seeders;
 
 use App\Models\Permission;
@@ -150,3 +155,4 @@ class AdditionalRolesSeeder extends Seeder
         $this->command->info('Selesai. Role administrator & anggota tidak diubah.');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

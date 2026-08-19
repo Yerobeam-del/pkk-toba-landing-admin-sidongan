@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @props(['status'])
 
 @if ($status)
@@ -5,3 +8,4 @@
         {{ $status }}
     </div>
 @endif
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

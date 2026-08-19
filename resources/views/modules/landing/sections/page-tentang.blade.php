@@ -1,215 +1,20 @@
-<style>
-    .tentang-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
-        align-items: start;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 4rem 2rem;
-    }
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
+    @once
+    @push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/modules-landing-sections-page-tentang.css') }}">
+    @endpush
+    @endonce
 
-    .tentang-text h2 {
-        font-size: 2rem;
-        font-weight: 800;
-        color: var(--primary);
-        margin-bottom: 1rem;
-        line-height: 1.3;
-    }
 
-    .tentang-text p {
-        color: var(--text-muted);
-        line-height: 1.8;
-        margin-bottom: 1.5rem;
-        font-size: 1rem;
-    }
-
-    .tentang-list {
-        list-style: none;
-        padding: 0;
-        margin: 2rem 0;
-    }
-
-    .tentang-list li {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 12px 0;
-        color: #334155;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        border-bottom: 1px solid #f1f5f9;
-    }
-
-    .tentang-list li:last-child {
-        border-bottom: none;
-    }
-
-    .tentang-list li svg {
-        flex-shrink: 0;
-        margin-top: 3px;
-        color: #10b981;
-        width: 20px;
-        height: 20px;
-    }
-
-    .tentang-map-wrapper {
-        position: sticky;
-        top: 100px;
-        border-radius: 24px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-        background: #fff;
-        overflow: hidden;
-    }
-
-    .tentang-map-header {
-        background: linear-gradient(135deg, #14b8a6, #0f766e);
-        color: #fff;
-        padding: 1.5rem 2rem;
-    }
-
-    .tentang-map-header h3 {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin: 0 0 0.5rem 0;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color: #fff;
-    }
-
-    .tentang-map-header p {
-        font-size: 0.95rem;
-        margin: 0 0 1rem 0;
-        opacity: 0.95;
-        color: #fff;
-        line-height: 1.6;
-    }
-
-    .tentang-map-header a {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #fff;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
-        background: rgba(255,255,255,0.2);
-        border-radius: 8px;
-        transition: all 0.3s;
-    }
-
-    .tentang-map-header a:hover {
-        background: rgba(255,255,255,0.3);
-        transform: translateY(-2px);
-    }
-
-    .tentang-map-frame {
-        width: 100%;
-        height: 450px;
-    }
-
-    .tentang-map-frame iframe {
-        width: 100% !important;
-        height: 100% !important;
-        border: none !important;
-        display: block;
-    }
-
-    .map-tips {
-        background: #f8fafc;
-        padding: 1rem 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .map-tips > div {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #64748b;
-        font-size: 0.85rem;
-    }
-
-    .map-tips .divider {
-        width: 1px;
-        height: 20px;
-        background: #e2e8f0;
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-        .tentang-container {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            padding: 2rem 1rem;
-        }
-
-        .tentang-text {
-            order: 1;
-        }
-
-        .tentang-map-wrapper {
-            order: 2;
-            margin-top: 2rem;
-            position: static;
-        }
-
-        .tentang-text h2 {
-            font-size: 1.5rem;
-        }
-
-        .tentang-text p {
-            font-size: 0.95rem;
-        }
-
-        .tentang-list li {
-            font-size: 0.9rem;
-            padding: 10px 0;
-        }
-
-        .tentang-map-header {
-            padding: 1.25rem 1rem;
-        }
-
-        .tentang-map-header h3 {
-            font-size: 1.1rem;
-        }
-
-        .tentang-map-header p {
-            font-size: 0.85rem;
-        }
-
-        .tentang-map-frame {
-            height: 350px !important;
-        }
-
-        .map-tips {
-            padding: 0.75rem 1rem;
-        }
-
-        .map-tips > div {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
-        }
-
-        .map-tips .divider {
-            display: none;
-        }
-    }
-</style>
-
-<div class="page" id="page-tentang" style="display: none;">
-    <div class="page-header" style="background: linear-gradient(135deg, var(--primary), var(--primary-light));">
+<div class="page u-hidden" id="page-tentang">
+    <div class="page-header u-a75">
         <div class="page-header-content" style="padding: 4rem 2rem 2rem; text-align: center; color: #fff;">
             <h1 id="tentangJudul" style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">Tentang Kami</h1>
             <p id="tentangSubjudul" style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 1rem;">Informasi tentang PKK Kabupaten Toba</p>
             <div class="breadcrumb" style="display: flex; justify-content: center; gap: 0.5rem; font-size: 0.9rem;">
-                <a href="#" onclick="navigateTo('beranda'); return false;" style="color: #fff; text-decoration: none; opacity: 0.8; cursor: pointer;">Beranda</a>
+                <a href="#" data-nav="beranda" style="color: #fff; text-decoration: none; opacity: 0.8; cursor: pointer;">Beranda</a>
                 <span style="opacity: 0.6;">/</span>
                 <span class="current" style="font-weight: 600;">Tentang</span>
             </div>
@@ -266,7 +71,7 @@
                 {{-- Map Info Header --}}
                 <div class="tentang-map-header">
                     <h3 id="tentangMapsTitle">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                        <svg class="u-shrink-0" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                             <circle cx="12" cy="10" r="3"/>
                         </svg>
@@ -306,64 +111,10 @@
     </section>
 </div>
 
-<script>
-// Load Tentang Kami data
-async function loadTentangKami() {
-    try {
-        const response = await fetch('/api/v1/tentang');
-        const result = await response.json();
+    @once
+    @push('scripts')
+    <script src="{{ asset('assets/landing/js/modules-landing-sections-page-tentang.js') }}"></script>
+    @endpush
+    @endonce
 
-        if (!result.success) throw new Error(result.message);
-
-        const data = result.data;
-
-        // Update text content
-        document.getElementById('tentangJudul').textContent = data.judul || 'Tentang Kami';
-        document.getElementById('tentangSubjudul').textContent = data.subjudul || 'Informasi tentang PKK Kabupaten Toba';
-        document.getElementById('tentangHeading').textContent = data.heading || 'Memberdayakan Keluarga, Mensejahterakan Masyarakat';
-        document.getElementById('tentangDeskripsi').textContent = data.deskripsi || 'PKK Kabupaten Toba berkomitmen untuk terus berinovasi...';
-
-        // Update programs list
-        const programsList = document.getElementById('tentangPrograms');
-        if (data.program_list && data.program_list.length > 0) {
-            programsList.innerHTML = data.program_list.map(program => `
-                <li>
-                    <svg fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                    <span>${program}</span>
-                </li>
-            `).join('');
-        }
-
-        // Update maps
-        const mapsContainer = document.getElementById('tentangMaps');
-        if (data.maps_embed_code) {
-            mapsContainer.innerHTML = data.maps_embed_code;
-        }
-
-        // Update maps link
-        if (data.maps_link) {
-            const mapsLink = document.getElementById('tentangMapsLink');
-            if (mapsLink) {
-                mapsLink.href = data.maps_link;
-            }
-        }
-
-    } catch (error) {
-        console.error('❌ Error loading tentang kami:', error);
-    }
-}
-
-// Initialize
-document.addEventListener('DOMContentLoaded', function() {
-    const page = document.getElementById('page-tentang');
-    if (page) {
-        page.style.display = 'block';
-        loadTentangKami();
-    }
-});
-
-// Expose for SPA navigation
-window.loadTentangKami = loadTentangKami;
-</script>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

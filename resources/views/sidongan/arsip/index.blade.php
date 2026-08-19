@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('sidongan.layouts.app')
 @section('title', 'Arsip Surat - SIDONGAN')
 
@@ -24,73 +27,15 @@
     $currentDirection = request('direction', 'desc');
 @endphp
 
-<style>
-    .arsip-row {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border-left: 3px solid transparent;
-        position: relative;
-    }
-    .arsip-row::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: linear-gradient(180deg, #8b5cf6, #7c3aed);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    .arsip-row:hover {
-        background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%) !important;
-        border-left-color: #8b5cf6;
-        transform: translateX(4px);
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
-    }
-    .arsip-row:hover::before {
-        opacity: 1;
-    }
-    .stats-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .stats-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    }
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    .animate-slide-in {
-        animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        opacity: 0;
-    }
-    .btn-action {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .btn-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-    }
-    .filter-btn {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .filter-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-</style>
+    <link rel="stylesheet" href="{{ asset('assets/sidongan/css/sidongan-arsip-index.css') }}">
 
-<div class="sd-page" style="padding: 0 1.5rem;">
+
+<div class="sd-page u-px-6">
     {{-- Header Section --}}
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;" class="animate-slide-in">
         <div>
-            <h1 style="font-size: 1.75rem; font-weight: 700; color: #1e293b; margin: 0 0 0.5rem 0; letter-spacing: -0.025em;">Arsip Surat</h1>
-            <p style="font-size: 0.95rem; color: #64748b; margin: 0; line-height: 1.6;">Lihat dan unduh dokumen yang telah selesai diproses</p>
+            <h1 class="u-h2-slate">Arsip Surat</h1>
+            <p class="u-text-muted-lead">Lihat dan unduh dokumen yang telah selesai diproses</p>
         </div>
     </div>
 
@@ -187,30 +132,30 @@
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
         {{-- Total Arsip - UNGU --}}
         <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);">
-            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(10px);"></div>
-            <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
-            <div style="display: flex; align-items: center; gap: 1rem; position: relative; z-index: 1;">
-                <div style="width: 4rem; height: 4rem; background: rgba(255,255,255,0.25); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                    <i class="fas fa-archive" style="font-size: 1.75rem;"></i>
+            <div class="u-deco-circle-tr"></div>
+            <div class="u-deco-circle-bl"></div>
+            <div class="u-flex-center-gap-4-rel">
+                <div class="u-icon-badge-md">
+                    <i class="fas fa-archive u-text-1xl"></i>
                 </div>
                 <div>
-                    <p style="font-size: 0.875rem; opacity: 0.95; margin: 0 0 0.25rem 0; font-weight: 500;">Total Arsip</p>
-                    <p style="font-size: 2.5rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.05em;">{{ $totalArsip ?? 0 }}</p>
+                    <p class="u-subtitle-sm">Total Arsip</p>
+                    <p class="u-a76">{{ $totalArsip ?? 0 }}</p>
                 </div>
             </div>
         </div>
         
         {{-- Arsip Bulan Ini - HIJAU --}}
         <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);">
-            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(10px);"></div>
-            <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
-            <div style="display: flex; align-items: center; gap: 1rem; position: relative; z-index: 1;">
-                <div style="width: 4rem; height: 4rem; background: rgba(255,255,255,0.25); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                    <i class="fas fa-calendar-check" style="font-size: 1.75rem;"></i>
+            <div class="u-deco-circle-tr"></div>
+            <div class="u-deco-circle-bl"></div>
+            <div class="u-flex-center-gap-4-rel">
+                <div class="u-icon-badge-md">
+                    <i class="fas fa-calendar-check u-text-1xl"></i>
                 </div>
                 <div>
-                    <p style="font-size: 0.875rem; opacity: 0.95; margin: 0 0 0.25rem 0; font-weight: 500;">Arsip Bulan Ini</p>
-                    <p style="font-size: 2.5rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.05em;">{{ $arsipBulanIni ?? 0 }}</p>
+                    <p class="u-subtitle-sm">Arsip Bulan Ini</p>
+                    <p class="u-a76">{{ $arsipBulanIni ?? 0 }}</p>
                     <p style="font-size: 0.75rem; opacity: 0.9; margin: 0.25rem 0 0 0;">{{ $statsPeriodText }}</p>
                 </div>
             </div>
@@ -218,15 +163,15 @@
         
         {{-- Arsip Tahun Ini - ORANGE --}}
         <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #f97316, #ea580c); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);">
-            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(10px);"></div>
-            <div style="position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
-            <div style="display: flex; align-items: center; gap: 1rem; position: relative; z-index: 1;">
-                <div style="width: 4rem; height: 4rem; background: rgba(255,255,255,0.25); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                    <i class="fas fa-calendar-alt" style="font-size: 1.75rem;"></i>
+            <div class="u-deco-circle-tr"></div>
+            <div class="u-deco-circle-bl"></div>
+            <div class="u-flex-center-gap-4-rel">
+                <div class="u-icon-badge-md">
+                    <i class="fas fa-calendar-alt u-text-1xl"></i>
                 </div>
                 <div>
-                    <p style="font-size: 0.875rem; opacity: 0.95; margin: 0 0 0.25rem 0; font-weight: 500;">Arsip Tahun Ini</p>
-                    <p style="font-size: 2.5rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.05em;">{{ $arsipTahunIni ?? 0 }}</p>
+                    <p class="u-subtitle-sm">Arsip Tahun Ini</p>
+                    <p class="u-a76">{{ $arsipTahunIni ?? 0 }}</p>
                     <p style="font-size: 0.75rem; opacity: 0.9; margin: 0.25rem 0 0 0;">{{ $filterYear ?? now()->format('Y') }}</p>
                 </div>
             </div>
@@ -235,42 +180,42 @@
 
     {{-- Filter Section --}}
     <div style="background: white; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; padding: 1.25rem; margin-bottom: 1.5rem;" class="animate-slide-in">
-        <form id="filterForm" method="GET" action="{{ route('sidongan.arsip') }}">
+        <form id="filterForm" method="GET" action="{{ route('sidongan.arsip') }}" data-base-url="{{ route('sidongan.arsip') }}">
             
             {{-- Row 1: Search, Tampilkan, Tahun --}}
             <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; align-items: end; margin-bottom: 1rem;">
                 <div>
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Cari Arsip</label>
-                    <div style="position: relative;">
+                    <label class="u-label-slate">Cari Arsip</label>
+                    <div class="u-relative">
                         <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
-                        <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Cari berdasarkan judul atau nomor..." style="width: 100%; padding: 0.625rem 1rem 0.625rem 2.5rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s;" onfocus="this.style.borderColor='#8b5cf6'; this.style.boxShadow='0 0 0 3px rgba(139,92,246,0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                        <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Cari berdasarkan judul atau nomor..." style="width: 100%; padding: 0.625rem 1rem 0.625rem 2.5rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s;">
                     </div>
                 </div>
 
                 <div>
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Tampilkan</label>
-                    <div style="position: relative;">
-                        <select name="per_page" id="perPageSelect" style="width: 100%; padding: 0.625rem 2.5rem 0.625rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: white; cursor: pointer; appearance: none;" onchange="document.getElementById('filterForm').submit()">
+                    <label class="u-label-slate">Tampilkan</label>
+                    <div class="u-relative">
+                        <select class="u-a77" name="per_page" id="perPageSelect">
                             @foreach([10, 25, 50, 100] as $value)
                                 <option value="{{ $value }}" {{ (request('per_page', 10) == $value) ? 'selected' : '' }}>
                                     {{ $value }} arsip
                                 </option>
                             @endforeach
                         </select>
-                        <i class="fas fa-chevron-down" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; font-size: 0.75rem;"></i>
+                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
 
                 <div>
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Tahun</label>
-                    <div style="position: relative;">
-                        <select name="year" id="yearSelect" style="width: 100%; padding: 0.625rem 2.5rem 0.625rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: white; cursor: pointer; appearance: none;" onchange="document.getElementById('filterForm').submit()">
+                    <label class="u-label-slate">Tahun</label>
+                    <div class="u-relative">
+                        <select class="u-a77" name="year" id="yearSelect">
                             <option value="">Semua Tahun</option>
                             @for($year = date('Y'); $year >= date('Y')-5; $year--)
                                 <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
                             @endfor
                         </select>
-                        <i class="fas fa-chevron-down" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; font-size: 0.75rem;"></i>
+                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
             </div>
@@ -278,31 +223,31 @@
             {{-- Row 2: Bulan, Tanggal, Reset --}}
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 1rem; align-items: end; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
                 <div>
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Bulan</label>
-                    <div style="position: relative;">
-                        <select name="filter_month" style="width: 100%; padding: 0.625rem 2.5rem 0.625rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: white; cursor: pointer; appearance: none;" onchange="document.getElementById('filterForm').submit()">
+                    <label class="u-label-slate">Bulan</label>
+                    <div class="u-relative">
+                        <select class="u-a77" name="filter_month">
                             <option value="">Semua Bulan</option>
                             @foreach(['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'] as $num => $name)
                                 <option value="{{ $num }}" {{ request('filter_month') == $num ? 'selected' : '' }}>{{ $name }}</option>
                             @endforeach
                         </select>
-                        <i class="fas fa-chevron-down" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; font-size: 0.75rem;"></i>
+                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
 
                 <div>
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Dari Tanggal</label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}" style="width: 100%; padding: 0.625rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: white;" onchange="document.getElementById('filterForm').submit()">
+                    <label class="u-label-slate">Dari Tanggal</label>
+                    <input type="date" name="date_from" value="{{ request('date_from') }}" style="width: 100%; padding: 0.625rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: white;">
                 </div>
 
                 <div>
-                    <label style="display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Sampai Tanggal</label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}" style="width: 100%; padding: 0.625rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: white;" onchange="document.getElementById('filterForm').submit()">
+                    <label class="u-label-slate">Sampai Tanggal</label>
+                    <input type="date" name="date_to" value="{{ request('date_to') }}" style="width: 100%; padding: 0.625rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: white;">
                 </div>
 
                 <div style="display: flex; gap: 0.5rem; align-items: end;">
-                    <button type="button" onclick="resetFilters()" style="padding: 0.625rem 1rem; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
-                        <i class="fas fa-undo" style="margin-right: 0.35rem;"></i>
+                    <button type="button" data-action="reset-filters" style="padding: 0.625rem 1rem; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap;">
+                        <i class="fas fa-undo u-mr-1"></i>
                         Reset
                     </button>
                 </div>
@@ -329,7 +274,7 @@
                         {{ $sortLabel }} ({{ $directionLabel }})
                     </span>
                 </div>
-                <button type="button" onclick="resetSorting()" style="padding: 0.35rem 0.75rem; background: #8b5cf6; color: white; border: none; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#7c3aed'" onmouseout="this.style.background='#8b5cf6'">
+                <button type="button" data-action="reset-sorting" style="padding: 0.35rem 0.75rem; background: #8b5cf6; color: white; border: none; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
                     <i class="fas fa-times" style="margin-right: 0.25rem;"></i>
                     Hapus Urutan
                 </button>
@@ -339,45 +284,45 @@
     </div>
 
     {{-- Tabel Arsip --}}
-    <div style="background: white; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; overflow: hidden;" class="animate-slide-in">
+    <div class="animate-slide-in u-a78">
         @if(isset($documents) && $documents->count() > 0)
         <div class="sd-table-wrap" style="overflow-x: auto;">
 <table style="width: 100%; border-collapse: collapse;">
     <thead style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">
         <tr>
             <th style="padding: 1rem; text-align: center; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; width: 60px; cursor: pointer; white-space: nowrap;"
-                onclick="window.location.href='{{ sortUrl('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}'">
-                <span style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                data-sort-url="{{ sortUrl('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                <span class="u-a14">
                     NO {!! sortIcon('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
-            <th style="padding: 1rem; text-align: left; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; cursor: pointer; white-space: nowrap;" 
-                onclick="window.location.href='{{ sortUrl('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}'">
-                <span style="display: inline-flex; align-items: center; gap: 0.25rem;">
+            <th class="u-th-plain" 
+                data-sort-url="{{ sortUrl('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                <span class="u-a14">
                     NO. AGENDA {!! sortIcon('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
-            <th style="padding: 1rem; text-align: left; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; cursor: pointer; white-space: nowrap;"
-                onclick="window.location.href='{{ sortUrl('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}'">
-                <span style="display: inline-flex; align-items: center; gap: 0.25rem;">
+            <th class="u-th-plain"
+                data-sort-url="{{ sortUrl('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                <span class="u-a14">
                     PERIHAL {!! sortIcon('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
-            <th style="padding: 1rem; text-align: left; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; cursor: pointer; white-space: nowrap;"
-                onclick="window.location.href='{{ sortUrl('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}'">
-                <span style="display: inline-flex; align-items: center; gap: 0.25rem;">
+            <th class="u-th-plain"
+                data-sort-url="{{ sortUrl('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                <span class="u-a14">
                     NO. SURAT {!! sortIcon('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
-            <th style="padding: 1rem; text-align: left; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; cursor: pointer; white-space: nowrap;"
-                onclick="window.location.href='{{ sortUrl('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}'">
-                <span style="display: inline-flex; align-items: center; gap: 0.25rem;">
+            <th class="u-th-plain"
+                data-sort-url="{{ sortUrl('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                <span class="u-a14">
                     TANGGAL {!! sortIcon('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
-            <th style="padding: 1rem; text-align: left; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; cursor: pointer; white-space: nowrap;"
-                onclick="window.location.href='{{ sortUrl('disposisi_count', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}'">
-                <span style="display: inline-flex; align-items: center; gap: 0.25rem;">
+            <th class="u-th-plain"
+                data-sort-url="{{ sortUrl('disposisi_count', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                <span class="u-a14">
                     DISPOSISI {!! sortIcon('disposisi_count', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
@@ -386,7 +331,7 @@
     </thead>
     <tbody>
         @foreach($documents as $index => $doc)
-        <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+        <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;">
             <td data-label="No" style="padding: 1rem; text-align: center; font-weight: 600; color: #64748b; font-size: 0.875rem;">
                 {{ $documents->firstItem() + $index }}
             </td>
@@ -443,20 +388,16 @@
                     <a href="{{ route('sidongan.documents.show', $doc) }}"
                     class="sd-icon-btn"
                     style="display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: #dbeafe; color: #2563eb; border-radius: 0.375rem; text-decoration: none; transition: all 0.2s;"
-                    onmouseover="this.style.background='#bfdbfe'" 
-                    onmouseout="this.style.background='#dbeafe'"
                     title="Lihat Detail">
-                        <i class="fas fa-eye" style="font-size: 0.875rem;"></i>
+                        <i class="fas fa-eye u-text-sm"></i>
                     </a>
                     
                     <a href="{{ route('sidongan.documents.disposisi-print', $doc) }}"
                     target="_blank"
                     class="sd-icon-btn"
                     style="display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; background: #d1fae5; color: #059669; border-radius: 0.375rem; text-decoration: none; transition: all 0.2s;"
-                    onmouseover="this.style.background='#a7f3d0'" 
-                    onmouseout="this.style.background='#d1fae5'"
                     title="Cetak Lembar Disposisi">
-                        <i class="fas fa-print" style="font-size: 0.875rem;"></i>
+                        <i class="fas fa-print u-text-sm"></i>
                     </a>
                 </div>
             </td>
@@ -469,19 +410,18 @@
         {{-- Pagination --}}
         @if($documents->hasPages())
         <div style="padding: 1.25rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div style="font-size: 0.875rem; color: #64748b;">
+            <div class="u-text-sm-muted-2">
                 Menampilkan <strong>{{ $documents->firstItem() }}</strong> - <strong>{{ $documents->lastItem() }}</strong> dari <strong>{{ $documents->total() }}</strong> arsip
             </div>
             
-            <div class="sd-pagination" style="display: flex; gap: 0.35rem; align-items: center;">
+            <div class="sd-pagination u-a79">
                 @if($documents->onFirstPage())
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #f1f5f9; color: #94a3b8; border-radius: 0.375rem; font-size: 0.875rem; cursor: not-allowed;">
+                    <span class="u-a15">
                         <i class="fas fa-chevron-left"></i>
                     </span>
                 @else
                     <a href="{{ $documents->previousPageUrl() }}" 
-                    style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #8b5cf6; color: white; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                    onmouseover="this.style.background='#7c3aed'" onmouseout="this.style.background='#8b5cf6'">
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #8b5cf6; color: white; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 @endif
@@ -500,12 +440,11 @@
                 
                 @if($startPage > 1)
                     <a href="{{ $documents->url(1) }}" 
-                    style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: white; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                    onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='white'">
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: white; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;">
                         1
                     </a>
                     @if($startPage > 2)
-                        <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; color: #94a3b8; font-size: 0.875rem;">...</span>
+                        <span class="u-a16">...</span>
                     @endif
                 @endif
                 
@@ -516,8 +455,7 @@
                         </span>
                     @else
                         <a href="{{ $documents->url($i) }}" 
-                        style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: white; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='white'">
+                        style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: white; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;">
                             {{ $i }}
                         </a>
                     @endif
@@ -525,23 +463,21 @@
                 
                 @if($endPage < $lastPage)
                     @if($endPage < $lastPage - 1)
-                        <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; color: #94a3b8; font-size: 0.875rem;">...</span>
+                        <span class="u-a16">...</span>
                     @endif
                     <a href="{{ $documents->url($lastPage) }}" 
-                    style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: white; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                    onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='white'">
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: white; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;">
                         {{ $lastPage }}
                     </a>
                 @endif
                 
                 @if($documents->hasMorePages())
                     <a href="{{ $documents->nextPageUrl() }}" 
-                    style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #8b5cf6; color: white; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;"
-                    onmouseover="this.style.background='#7c3aed'" onmouseout="this.style.background='#8b5cf6'">
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #8b5cf6; color: white; border-radius: 0.375rem; font-size: 0.875rem; text-decoration: none; transition: all 0.2s;">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 @else
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: #f1f5f9; color: #94a3b8; border-radius: 0.375rem; font-size: 0.875rem; cursor: not-allowed;">
+                    <span class="u-a15">
                         <i class="fas fa-chevron-right"></i>
                     </span>
                 @endif
@@ -549,10 +485,10 @@
         </div>
         @else
         <div style="padding: 1.25rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: #f8fafc;">
-            <div style="font-size: 0.875rem; color: #64748b;">
+            <div class="u-text-sm-muted-2">
                 Menampilkan <strong>{{ $documents->firstItem() ?? 0 }}</strong> - <strong>{{ $documents->lastItem() ?? 0 }}</strong> dari <strong>{{ $documents->total() }}</strong> arsip
             </div>
-            <div style="font-size: 0.875rem; color: #94a3b8;">
+            <div class="u-text-xs-muted">
                 <i class="fas fa-info-circle"></i> Semua arsip ditampilkan dalam satu halaman
             </div>
         </div>
@@ -562,7 +498,7 @@
             <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #f3e8ff, #e9d5ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15); animation: float 3s ease-in-out infinite;">
                 <i class="fas fa-archive" style="color: #8b5cf6; font-size: 3rem;"></i>
             </div>
-            <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0 0 0.5rem 0;">Tidak Ada Arsip</h3>
+            <h3 class="u-h3-slate">Tidak Ada Arsip</h3>
             <p style="font-size: 0.95rem; color: #64748b; margin: 0; line-height: 1.6; max-width: 400px; margin-left: auto; margin-right: auto;">
                 Dokumen yang telah selesai diproses akan muncul di sini.
             </p>
@@ -571,52 +507,8 @@
     </div>
 </div>
 
-<script>
-    let searchTimeout;
-    const searchInput = document.getElementById('searchInput');
-    const filterForm = document.getElementById('filterForm');
-
-    searchInput?.addEventListener('input', function(e) {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            filterForm.submit();
-        }, 500);
-    });
-
-    function applyQuickFilter(type) {
-        const form = document.getElementById('filterForm');
-        
-        if (type === 'this_month') {
-            const monthSelect = form.querySelector('[name="filter_month"]');
-            const currentMonth = new Date().getMonth() + 1;
-            const monthStr = currentMonth.toString().padStart(2, '0');
-            if (monthSelect) monthSelect.value = monthStr;
-        } else if (type === 'this_year') {
-            const yearSelect = form.querySelector('[name="year"]');
-            const currentYear = new Date().getFullYear();
-            if (yearSelect) yearSelect.value = currentYear;
-        } else if (type === 'recent') {
-            const dateFrom = form.querySelector('[name="date_from"]');
-            const dateTo = form.querySelector('[name="date_to"]');
-            const today = new Date();
-            const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
-            
-            if (dateFrom) dateFrom.value = lastMonth.toISOString().slice(0, 10);
-            if (dateTo) dateTo.value = today.toISOString().slice(0, 10);
-        }
-        
-        form.submit();
-    }
-
-    function resetFilters() {
-        window.location.href = '{{ route("sidongan.arsip") }}';
-    }
-
-    function resetSorting() {
-        const url = new URL(window.location.href);
-        url.searchParams.delete('sort');
-        url.searchParams.delete('direction');
-        window.location.href = url.toString();
-    }
-</script>
+@push('scripts')
+    <script src="{{ asset('assets/sidongan/js/arsip-index.js') }}"></script>
+@endpush
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

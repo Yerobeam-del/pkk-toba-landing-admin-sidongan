@@ -1,4 +1,9 @@
 <?php
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -42,3 +47,4 @@ class TentangKamiController extends Controller
             ->with('success', 'Konten Tentang Kami berhasil diperbarui');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

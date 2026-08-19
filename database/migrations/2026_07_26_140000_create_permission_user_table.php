@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -90,3 +95,4 @@ return new class extends Migration
         Schema::dropIfExists('permission_user');
     }
 };
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Providers;
 
 use Illuminate\Support\Facades\View;
@@ -19,3 +24,4 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('sidongan.layouts.app', SidonganNotificationComposer::class);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

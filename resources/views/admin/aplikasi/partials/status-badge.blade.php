@@ -1,5 +1,8 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @if($app->status == 'active')
-    <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(34,197,94,0.1);color:#166534">
+    <span class="u-badge-green">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
         Aktif
     </span>
@@ -18,3 +21,4 @@
         Tidak Diketahui
     </span>
 @endif
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

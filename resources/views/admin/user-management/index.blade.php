@@ -1,109 +1,82 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Manajemen Akun')
 @section('page-title', 'Manajemen Akun')
 
 @section('content')
-<style>
-/* Responsive untuk Mobile */
-@media (max-width: 768px) {
-    .struktur-header {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 1rem !important;
-    }
-    .struktur-header h1 { font-size: 1.25rem !important; }
-    .struktur-header .btn { width: 100% !important; justify-content: center !important; }
-    .tabs-container { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-    .tabs-container::-webkit-scrollbar { height: 4px; }
-    .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
-    .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-user-management-index.css') }}">
 
-    /* Search & Tampilkan adjustments for mobile */
-    .user-search-wrapper {
-        width: 100% !important;
-        min-width: 100% !important;
-    }
-    .user-search-input {
-        width: 100% !important;
-    }
-    .user-perpage-wrapper {
-        width: 100% !important;
-        justify-content: flex-end !important;
-    }
-    .user-form-wrapper {
-        width: auto !important;
-    }
-}
-</style>
 
-<div style="margin-bottom:2rem">
+<div class="u-mb-8">
 
     {{-- Header Section --}}
-    <div class="struktur-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap">
-        <div style="flex:1;min-width:0">
-            <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0;letter-spacing:-0.5px">Manajemen Akun</h1>
-            <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Kelola akun pengguna dan hak akses aplikasi sistem PKK</p>
+    <div class="struktur-header u-a12">
+        <div class="u-flex-1-min">
+            <h1 class="u-page-title-tight">Manajemen Akun</h1>
+            <p class="u-muted">Kelola akun pengguna dan hak akses aplikasi sistem PKK</p>
         </div>
-        <a href="{{ route('admin.user-management.create') }}" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;white-space:nowrap;flex-shrink:0">
+        <a href="{{ route('admin.user-management.create') }}" class="btn btn-primary u-inline-flex-gap-2-nowrap">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Tambah Akun
         </a>
     </div>
 
     {{-- Stats Cards --}}
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-bottom:2rem">
-        <div class="stat-card" style="background:linear-gradient(135deg,#3182ce,#2b6cb0);color:#fff">
-            <div style="display:flex;align-items:flex-start;gap:1rem">
-                <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+    <div class="u-a4">
+        <div class="stat-card u-badge-blue">
+            <div class="u-flex-start-gap-4">
+                <div class="u-icon-badge">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
-                <div style="flex:1">
-                    <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Total Pengguna</p>
-                    <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ \App\Models\User::count() }}</p>
+                <div class="u-flex-1">
+                    <p class="u-subtitle">Total Pengguna</p>
+                    <p class="u-h1-hero">{{ \App\Models\User::count() }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="stat-card" style="background:linear-gradient(135deg,#38a169,#2f855a);color:#fff">
-            <div style="display:flex;align-items:flex-start;gap:1rem">
-                <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <div class="stat-card u-badge-green-solid">
+            <div class="u-flex-start-gap-4">
+                <div class="u-icon-badge">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
-                <div style="flex:1">
-                    <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Pengguna Aktif</p>
-                    <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ \App\Models\User::whereNotNull('email_verified_at')->count() }}</p>
+                <div class="u-flex-1">
+                    <p class="u-subtitle">Pengguna Aktif</p>
+                    <p class="u-h1-hero">{{ \App\Models\User::whereNotNull('email_verified_at')->count() }}</p>
                 </div>
             </div>
         </div>
 
         <div class="stat-card" style="background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff">
-            <div style="display:flex;align-items:flex-start;gap:1rem">
-                <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div class="u-flex-start-gap-4">
+                <div class="u-icon-badge">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 </div>
-                <div style="flex:1">
-                    <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Pengguna Nonaktif</p>
-                    <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ \App\Models\User::whereNull('email_verified_at')->count() }}</p>
+                <div class="u-flex-1">
+                    <p class="u-subtitle">Pengguna Nonaktif</p>
+                    <p class="u-h1-hero">{{ \App\Models\User::whereNull('email_verified_at')->count() }}</p>
                 </div>
             </div>
         </div>
 
         <div class="stat-card" style="background:linear-gradient(135deg,#805ad5,#6b46c1);color:#fff">
-            <div style="display:flex;align-items:flex-start;gap:1rem">
-                <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div class="u-flex-start-gap-4">
+                <div class="u-icon-badge">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                 </div>
-                <div style="flex:1">
-                    <p style="font-size:0.85rem;opacity:0.9;margin:0 0 0.25rem 0">Punya Akses Aplikasi</p>
-                    <p style="font-size:1.85rem;font-weight:800;margin:0;line-height:1.1">{{ \App\Models\User::whereHas('applications')->count() }}</p>
+                <div class="u-flex-1">
+                    <p class="u-subtitle">Punya Akses Aplikasi</p>
+                    <p class="u-h1-hero">{{ \App\Models\User::whereHas('applications')->count() }}</p>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- TABS --}}
-    <div style="margin-bottom:1rem">
-        <div class="tabs-container" style="display:flex;align-items:flex-end;gap:0.25rem;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:0.5rem;overflow-x:auto">
+    <div class="u-mb-4">
+        <div class="tabs-container u-tabs-row">
             @php
                 $tabs = [
                     'all' => 'Semua Pengguna',
@@ -117,7 +90,7 @@
                     $isActive = $tab === $key;
                     $url = request()->fullUrlWithQuery(['tab' => $key, 'page' => 1, 'per_page' => request('per_page', 10)]);
                 @endphp
-                <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};white-space:nowrap" onmouseover="if(!this.classList.contains('active')){this.style.background='rgba(13, 148, 136, 0.05)';this.style.color='var(--primary)'}" onmouseout="if(!this.classList.contains('active')){this.style.background='transparent';this.style.color='var(--text-muted)'}">
+                <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};white-space:nowrap">
                     {{ $label }}
                     @if($key !== 'all')
                         @php
@@ -127,7 +100,7 @@
                             if($key === 'with-access') $badgeCount = \App\Models\User::whereHas('applications')->count();
                         @endphp
                         @if($badgeCount > 0)
-                            <span style="background:rgba(0,0,0,0.05);color:var(--text-muted);padding:2px 8px;border-radius:12px;font-size:0.75rem">{{ $badgeCount }}</span>
+                            <span class="u-badge-soft">{{ $badgeCount }}</span>
                         @endif
                     @endif
                 </a>
@@ -136,17 +109,17 @@
     </div>
 
     {{-- Search & Tampilkan --}}
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+    <div class="u-header-row-wrap">
         {{-- Search Form --}}
-        <div class="user-search-wrapper" style="flex:1;min-width:200px">
+        <div class="user-search-wrapper u-flex-1-min-200">
             <form method="GET" action="{{ route('admin.user-management.index') }}">
                 <input type="hidden" name="tab" value="{{ $tab }}">
-                <div style="position:relative">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted)">
+                <div class="u-relative">
+                    <svg class="u-position-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"/>
                         <path d="m21 21-4.35-4.35"/>
                     </svg>
-                    <input type="text" name="search" value="{{ request('search') }}" class="user-search-input" placeholder="Cari nama atau email..." style="padding:0.5rem 0.75rem 0.5rem 2.5rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;width:100%;transition:all 0.2s" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                    <input type="text" name="search" value="{{ request('search') }}" class="user-search-input u-input-icon-left" placeholder="Cari nama atau email...">
                     @if(request('search'))
                         <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -160,19 +133,19 @@
         </div>
 
         {{-- Per Page Dropdown --}}
-        <div class="user-perpage-wrapper" style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0">
-            <form method="GET" action="{{ route('admin.user-management.index') }}" class="user-form-wrapper" style="display:flex;align-items:center;gap:0.5rem">
+        <div class="user-perpage-wrapper u-flex-center-gap-2-shrink">
+            <form method="GET" action="{{ route('admin.user-management.index') }}" class="user-form-wrapper u-flex-center-gap-2">
                 <input type="hidden" name="tab" value="{{ $tab }}">
-                <label style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:500">Tampilkan:</label>
-                <div style="position:relative">
-                    <select name="per_page" onchange="this.form.submit()" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.06);border-radius:8px;font-size:0.9rem;min-width:80px;transition:all 0.2s;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none" onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 3px rgba(13, 148, 136, 0.1)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)';this.style.boxShadow='none'">
+                <label class="u-a3">Tampilkan:</label>
+                <div class="u-relative">
+                    <select class="u-select-mini" name="per_page">
                         <option value="5" {{ request('per_page', 10) == 5 ? 'selected' : '' }}>5</option>
                         <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
                         <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
                         <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
                         <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
                     </select>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none">
+                    <svg class="u-select-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
                 </div>
@@ -182,7 +155,7 @@
 
     {{-- Main Card --}}
     <div class="struktur-card">
-        <div class="table-container" style="padding:0">
+        <div class="table-container u-p-0">
 
             @php
                 $userColumns = [
@@ -197,13 +170,13 @@
                                 : strtoupper(substr($item->name, 0, 1));
 
                             return '
-                                <div style="display:flex;align-items:center;gap:0.75rem">
+                                <div class="u-flex-center-gap-3">
                                     <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0">
                                         ' . $avatarHtml . '
                                     </div>
                                     <div>
-                                        <div style="font-weight:600;color:var(--text-dark)">' . $item->name . '</div>
-                                        <div style="font-size:0.85rem;color:var(--text-muted)">' . Str::limit($item->email, 20) . '</div>
+                                        <div class="u-a30">' . $item->name . '</div>
+                                        <div class="u-text-muted-sm">' . Str::limit($item->email, 20) . '</div>
                                     </div>
                                 </div>
                             ';
@@ -224,7 +197,7 @@
                             if ($count > 0) {
                                 return '<span style="background:rgba(128,90,213,0.1);color:#6b46c1;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600">' . $count . ' aplikasi</span>';
                             }
-                            return '<span style="color:var(--text-muted);font-size:0.85rem">-</span>';
+                            return '<span class="u-a31">-</span>';
                         }
                     ],
                     [
@@ -234,9 +207,9 @@
                         'type' => 'callback',
                         'callback' => function($item, $value) {
                             if ($value) {
-                                return '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(34,197,94,0.1);color:#166534"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Aktif</span>';
+                                return '<span class="u-badge-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Aktif</span>';
                             }
-                            return '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(239,68,68,0.1);color:#dc2626"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Nonaktif</span>';
+                            return '<span class="u-a67"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Nonaktif</span>';
                         }
                     ],
                     [
@@ -264,13 +237,13 @@
                     $html = '';
                     if (auth()->user()->sidongan_role === 'super_admin') {
                         $statusAction = $item->email_verified_at
-                            ? '<button type="button" onclick="toggleStatus('.$item->id.', \''.addslashes($item->name).'\', true)" title="Nonaktifkan Akun" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'#fef3c7\';this.style.color=\'#d97706\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>'
-                            : '<button type="button" onclick="toggleStatus('.$item->id.', \''.addslashes($item->name).'\', false)" title="Aktifkan Akun" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'#f0fdf4\';this.style.color=\'#16a34a\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>';
+                            ? '<button type="button" data-toggle-status="1" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Nonaktifkan Akun" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>'
+                            : '<button type="button" data-toggle-status="0" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Aktifkan Akun" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>';
 
                         $html .= $statusAction;
 
                         // Tombol Reset Password
-                        $html .= '<button type="button" onclick="showResetPasswordModal('.$item->id.', \''.addslashes($item->name).'\')" title="Reset Password" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'#f0fdf4\';this.style.color=\'#16a34a\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#94a3b8\'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>';
+                        $html .= '<button type="button" data-reset-password-id="'.$item->id.'" data-reset-password-name="'.addslashes($item->name).'" title="Reset Password" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>';
                     }
                     return $html;
                 }
@@ -298,27 +271,23 @@
         <form id="resetPasswordForm">
             <input type="hidden" id="resetPasswordUserId" value="">
 
-            <div class="form-group" style="margin-bottom:1rem">
+            <div class="form-group u-mb-4">
                 <label for="resetPasswordInput" style="display:block;font-weight:600;color:#1e293b;margin-bottom:0.5rem;font-size:0.9rem">Password Baru</label>
                 <input type="password" id="resetPasswordInput" name="password" required placeholder="Minimal 8 karakter"
-                    style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;font-family:inherit;transition:all 0.2s"
-                    onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 4px rgba(20,184,166,0.1)'"
-                    onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'">
+                    style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;font-family:inherit;transition:all 0.2s">
             </div>
 
-            <div class="form-group" style="margin-bottom:1.25rem">
+            <div class="form-group u-a62">
                 <label for="resetPasswordConfirmInput" style="display:block;font-weight:600;color:#1e293b;margin-bottom:0.5rem;font-size:0.9rem">Konfirmasi Password Baru</label>
                 <input type="password" id="resetPasswordConfirmInput" name="password_confirmation" required placeholder="Ulangi password baru"
-                    style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;font-family:inherit;transition:all 0.2s"
-                    onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 4px rgba(20,184,166,0.1)'"
-                    onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'">
+                    style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;font-family:inherit;transition:all 0.2s">
             </div>
 
-            <div style="display:flex;gap:0.75rem">
-                <button type="button" onclick="closeResetPasswordModal()" style="flex:1;padding:0.75rem;background:#f1f5f9;color:#64748b;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:all 0.2s" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
+            <div class="u-a64">
+                <button type="button" data-action="close-reset-password" style="flex:1;padding:0.75rem;background:#f1f5f9;color:#64748b;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:all 0.2s">
                     Batal
                 </button>
-                <button type="submit" id="resetPasswordSubmitBtn" style="flex:1;padding:0.75rem;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:all 0.2s;box-shadow:0 4px 12px rgba(20,184,166,0.3)" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+                <button type="submit" id="resetPasswordSubmitBtn" style="flex:1;padding:0.75rem;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:all 0.2s;box-shadow:0 4px 12px rgba(20,184,166,0.3)">
                     Reset Password
                 </button>
             </div>
@@ -326,118 +295,8 @@
     </div>
 </div>
 
-<script>
-// ==========================================
-// TOGGLE STATUS FUNCTION
-// ==========================================
-async function toggleStatus(userId, userName, currentStatus) {
-    const action = currentStatus ? 'menonaktifkan' : 'mengaktifkan';
-    try {
-        const confirmed = await Toast.confirm(
-            `Apakah Anda yakin ingin <strong>${action}</strong> akun <strong>"${userName}"</strong>?`,
-            { title: 'Konfirmasi Perubahan Status', confirmText: 'Ya, Ubah', cancelText: 'Batal', type: 'warning' }
-        );
-        if (!confirmed) return;
-
-        const response = await fetch(`/admin/user-management/${userId}/toggle-status`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            if (typeof Toast !== 'undefined') Toast.success(data.message);
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            if (typeof Toast !== 'undefined') Toast.error(data.message);
-            else Toast.warning(data.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        if (typeof Toast !== 'undefined') Toast.error('Terjadi kesalahan saat mengubah status akun');
-        else Toast.error('Terjadi kesalahan saat mengubah status akun');
-    }
-}
-
-// ==========================================
-// RESET PASSWORD MODAL
-// ==========================================
-function showResetPasswordModal(userId, userName) {
-    document.getElementById('resetPasswordUserId').value = userId;
-    document.getElementById('resetPasswordUserName').textContent = userName;
-    document.getElementById('resetPasswordInput').value = '';
-    document.getElementById('resetPasswordConfirmInput').value = '';
-    document.getElementById('resetPasswordModal').style.display = 'flex';
-}
-
-function closeResetPasswordModal() {
-    document.getElementById('resetPasswordModal').style.display = 'none';
-}
-
-// Close modal on overlay click
-document.getElementById('resetPasswordModal').addEventListener('click', function(e) {
-    if (e.target === this) closeResetPasswordModal();
-});
-
-// Handle form submit
-document.getElementById('resetPasswordForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const userId = document.getElementById('resetPasswordUserId').value;
-    const password = document.getElementById('resetPasswordInput').value;
-    const passwordConfirm = document.getElementById('resetPasswordConfirmInput').value;
-    const submitBtn = document.getElementById('resetPasswordSubmitBtn');
-
-    if (password.length < 8) {
-        if (typeof Toast !== 'undefined') Toast.warning('Password minimal 8 karakter!');
-        else alert('Password minimal 8 karakter!');
-        return;
-    }
-
-    if (password !== passwordConfirm) {
-        if (typeof Toast !== 'undefined') Toast.warning('Konfirmasi password tidak cocok!');
-        else alert('Konfirmasi password tidak cocok!');
-        return;
-    }
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Menyimpan...';
-
-    try {
-        const response = await fetch(`/admin/user-management/${userId}/reset-password`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                password: password,
-                password_confirmation: passwordConfirm
-            })
-        });
-
-        const data = await response.json();
-        
-        if (data.success) {
-            if (typeof Toast !== 'undefined') Toast.success(data.message);
-            closeResetPasswordModal();
-        } else {
-            if (typeof Toast !== 'undefined') Toast.error(data.message);
-            else alert(data.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        if (typeof Toast !== 'undefined') Toast.error('Terjadi kesalahan saat mereset password');
-        else alert('Terjadi kesalahan saat mereset password');
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Reset Password';
-    }
-});
-</script>
+@push('scripts')
+    <script src="{{ asset('assets/admin/js/user-management-index.js') }}"></script>
+@endpush
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

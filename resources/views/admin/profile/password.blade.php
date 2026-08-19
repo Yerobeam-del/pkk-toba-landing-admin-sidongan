@@ -1,15 +1,18 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Ubah Password')
 @section('page-title', 'Ubah Password')
 
 @section('content')
 
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+<div class="u-header-row-plain">
     <div>
-        <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0">Ubah Password</h1>
-        <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Perbarui password akun Anda</p>
+        <h1 class="u-page-title">Ubah Password</h1>
+        <p class="u-muted">Perbarui password akun Anda</p>
     </div>
-    <div style="display:flex;align-items:center;gap:0.5rem">
+    <div class="u-flex-center-gap-2">
         @if (session('sso_from_sieda'))
         {{-- Diakses dari SIEDA: tombol kembali diganti menjadi Kembali ke SIEDA --}}
         <a href="{{ app(\App\Services\SsoTokenService::class)->buildCallbackUrl(auth()->user()->email) }}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:600;transition:all 0.2s">
@@ -30,7 +33,7 @@
 @endif
 
 @if($errors->any())
-<div style="background:#fef2f2;padding:1rem;margin-bottom:1.5rem;border-radius:10px;color:#dc2626">
+<div class="u-a34">
     <ul style="margin:0;padding-left:1.25rem">
         @foreach($errors->all() as $error)
         <li>{{ $error }}</li>
@@ -44,40 +47,40 @@
         @csrf
         @method('PUT')
         
-        <div style="margin-bottom:1.25rem">
-            <label style="display:block;font-weight:600;margin-bottom:0.5rem;color:var(--text-dark)">Password Saat Ini <span style="color:#ef4444">*</span></label>
-            <input type="password" 
+        <div class="u-a62">
+            <label class="u-label-dark">Password Saat Ini <span class="u-text-danger">*</span></label>
+            <input class="u-a63" type="password" 
                    name="current_password" 
                    required 
-                   style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem"
+                  
                    placeholder="Masukkan password saat ini">
             @error('current_password')
             <p style="color:#ef4444;font-size:0.85rem;margin-top:0.25rem">{{ $message }}</p>
             @enderror
         </div>
         
-        <div style="margin-bottom:1.25rem">
-            <label style="display:block;font-weight:600;margin-bottom:0.5rem;color:var(--text-dark)">Password Baru <span style="color:#ef4444">*</span></label>
-            <input type="password" 
+        <div class="u-a62">
+            <label class="u-label-dark">Password Baru <span class="u-text-danger">*</span></label>
+            <input class="u-a63" type="password" 
                    name="password" 
                    required 
-                   style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem"
+                  
                    placeholder="Masukkan password baru">
             @error('password')
             <p style="color:#ef4444;font-size:0.85rem;margin-top:0.25rem">{{ $message }}</p>
             @enderror
         </div>
         
-        <div style="margin-bottom:1.5rem">
-            <label style="display:block;font-weight:600;margin-bottom:0.5rem;color:var(--text-dark)">Konfirmasi Password Baru <span style="color:#ef4444">*</span></label>
-            <input type="password" 
+        <div class="u-mb-6">
+            <label class="u-label-dark">Konfirmasi Password Baru <span class="u-text-danger">*</span></label>
+            <input class="u-a63" type="password" 
                    name="password_confirmation" 
                    required 
-                   style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem"
+                  
                    placeholder="Konfirmasi password baru">
         </div>
         
-        <div style="display:flex;gap:0.75rem">
+        <div class="u-a64">
             <button type="submit" class="btn btn-primary" style="flex:1;display:flex;align-items:center;justify-content:center;gap:0.5rem">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 Update Password
@@ -87,3 +90,4 @@
 </div>
 
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

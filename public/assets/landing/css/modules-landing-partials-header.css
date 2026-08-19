@@ -1,0 +1,81 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/modules/landing/partials/header.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+        /* CSS sama seperti sebelumnya */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .navbar.scrolled {
+            background: rgba(20, 83, 76, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .navbar-inner {
+            max-width: 1400px; margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            position: relative;
+        }
+        .navbar-brand { display: flex; align-items: center; gap: 12px; cursor: pointer; z-index: 1002; }
+        .navbar-logo { width: 40px; height: 40px; object-fit: contain; }
+        .navbar-title { display: flex; flex-direction: column; line-height: 1.2; }
+        .navbar-title span:first-child { font-weight: 800; font-size: 1.05rem; color: #fff; letter-spacing: 0.5px; }
+        .navbar-title span:last-child { font-size: 0.7rem; color: rgba(255,255,255,0.7); font-weight: 500; }
+        .navbar-links { display: flex; align-items: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
+        .nav-link {
+            color: rgba(255,255,255,0.9); text-decoration: none; font-size: 0.875rem; font-weight: 600;
+            padding: 6px 10px; border-radius: 6px; transition: all 0.2s ease; cursor: pointer;
+        }
+        .nav-link:hover { color: #fff; background: rgba(255,255,255,0.15); }
+        .nav-link.active-link { color: #fbbf24; background: rgba(251, 191, 36, 0.15); font-weight: 700; }
+        /* justify-content & align-items WAJIB center: di mobile ada aturan
+           min-height:44px (target sentuh) di style.css, sehingga tanpa ini
+           ketiga garis menempel di atas kotak dan terlihat lebih tinggi
+           daripada logo di sebelahnya. */
+        .hamburger {
+            display: none; flex-direction: column; gap: 5px; cursor: pointer;
+            padding: 5px; z-index: 1002; background: none; border: none;
+            justify-content: center; align-items: center;
+        }
+        .hamburger span { width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s ease; }
+        .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .mobile-menu {
+            position: absolute; top: 100%; left: 0; right: 0;
+            background: rgba(20, 83, 76, 0.98);
+            backdrop-filter: blur(15px);
+            padding: 1rem 2rem 2rem 2rem;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0; visibility: hidden; transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        .mobile-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mobile-menu .nav-link {
+            display: block; width: 100%; padding: 12px 15px;
+            border-radius: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 1rem; text-align: left;
+        }
+        .mobile-menu .nav-link:hover { background: rgba(255,255,255,0.05); }
+        @media (max-width: 1100px) {
+            .navbar-links { display: none; }
+            .hamburger { display: flex; }
+            .navbar-title span:last-child { display: none; }
+        }
+        @media (min-width: 1101px) {
+            .mobile-menu { display: none !important; }
+        }
+    

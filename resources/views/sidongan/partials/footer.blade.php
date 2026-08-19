@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <footer class="admin-footer">
     <div class="admin-footer-inner">
         <div class="admin-footer-left">
@@ -12,3 +15,4 @@
         </div>
     </div>
 </footer>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

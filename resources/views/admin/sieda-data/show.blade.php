@@ -1,21 +1,13 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Detail — ' . $config['label'])
 @section('page-title', 'Detail — ' . $config['label'])
 
 @section('content')
-<style>
-    .sieda-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-    .detail-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-    .detail-table tr { border-bottom: 1px solid #e2e8f0; }
-    .detail-table tr:last-child { border-bottom: none; }
-    .detail-table th { text-align: left; padding: 0.75rem 1rem 0.75rem 0; color: #64748b; font-weight: 600; width: 220px; vertical-align: top; padding-top: 1rem; }
-    .detail-table td { padding: 0.75rem 0.5rem; color: #1e293b; vertical-align: top; padding-top: 1rem; }
-    .card { border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    .section-heading { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 0.75rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; color: #334155; }
-    .section-heading:first-of-type { margin-top: 0; }
-    .data-nilai-null { color: #94a3b8; font-style: italic; }
-    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
-</style>
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-sieda-data-show.css') }}">
+
 
 {{-- Header --}}
 <div class="sieda-header">
@@ -31,12 +23,12 @@
     </div>
     <div>
         @if ($item->active)
-            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(34,197,94,0.1);color:#166534">
+            <span class="u-badge-green">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                 Aktif
             </span>
         @else
-            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;background:rgba(239,68,68,0.1);color:#dc2626">
+            <span class="u-a67">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 Terhapus
             </span>
@@ -59,8 +51,7 @@
         </div>
 
         <div style="display:flex; gap:0.5rem; align-items:center">
-            <form method="POST" action="{{ route('admin.sieda-data.force-delete', [$module, $item->{$config['id_field']}]) }}"
-                  onsubmit="return confirm('HAPUS PERMANEN: Data akan hilang dari database SIEDA dan TIDAK bisa dikembalikan. Lanjutkan?')">
+            <form method="POST" action="{{ route('admin.sieda-data.force-delete', [$module, $item->{$config['id_field']}]) }}" id="forceDeleteForm">
                 @csrf @method('DELETE')
                 <button type="submit" class="btn btn-sm" style="background:linear-gradient(135deg,#ef4444,#b91c1c); color:white; border:none; border-radius:8px; padding:0.5rem 0.875rem; display:inline-flex; align-items:center; gap:0.5rem">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -105,3 +96,4 @@
 </div>
 
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

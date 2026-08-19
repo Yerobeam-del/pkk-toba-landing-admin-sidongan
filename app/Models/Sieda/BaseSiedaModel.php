@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 use Illuminate\Database\Eloquent\Model;
@@ -47,3 +52,4 @@ abstract class BaseSiedaModel extends Model
      */
     abstract public static function moduleName(): string;
 }
+/* Dikembangkan oleh Institut Teknologi Del */

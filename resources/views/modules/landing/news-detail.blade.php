@@ -1,14 +1,13 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('modules.landing.layouts.app')
 
 @section('title', $news->title . ' - Berita')
 
 @push('styles')
-<style>
-    body:has(.news-detail-wrapper) #newsModal,
-    body:has(.news-detail-wrapper) .news-modal-overlay {
-        display: none !important;
-    }
-</style>
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/modules-landing-news-detail.css') }}">
+
 @endpush
 
 @section('content')
@@ -20,7 +19,7 @@
             <nav class="news-breadcrumb" aria-label="Breadcrumb">
                 <a href="{{ route('landing.home') }}">Beranda</a>
                 <span>/</span>
-                <a href="{{ url('/#berita') }}" onclick="window.location.href='{{ url('/#berita') }}'; return false;">Berita</a>
+                <a href="{{ url('/#berita') }}" >Berita</a>
                 <span>/</span>
                 <span class="current">{{ Str::limit($news->title, 40) }}</span>
             </nav>
@@ -145,34 +144,8 @@
 </div>
 
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Hapus modal dari DOM
-        var modal = document.getElementById('newsModal');
-        if (modal && modal.parentNode) {
-            modal.parentNode.removeChild(modal);
-        }
+    <script src="{{ asset('assets/landing/js/modules-landing-news-detail.js') }}"></script>
 
-        // Reset body
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-
-        // Lazy load images
-        var images = document.querySelectorAll('.news-detail-content img');
-        images.forEach(function(img) {
-            img.setAttribute('loading', 'lazy');
-        });
-
-        // Set active navbar
-        document.querySelectorAll('.navbar-links a').forEach(function(link) {
-            link.classList.remove('active-link');
-            var text = link.textContent.trim().toLowerCase();
-            var href = link.getAttribute('href') || '';
-            if (text === 'berita' || href.includes('/berita')) {
-                link.classList.add('active-link');
-            }
-        });
-    });
-</script>
 @endpush
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

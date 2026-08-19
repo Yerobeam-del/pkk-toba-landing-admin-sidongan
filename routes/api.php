@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -83,3 +88,4 @@ Route::prefix('v1')->group(function () {
     });
     
 });
+/* Dikembangkan oleh Institut Teknologi Del */

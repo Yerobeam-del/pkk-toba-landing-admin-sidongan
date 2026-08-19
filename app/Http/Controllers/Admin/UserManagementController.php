@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -447,3 +452,4 @@ class UserManagementController extends Controller
         ]);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

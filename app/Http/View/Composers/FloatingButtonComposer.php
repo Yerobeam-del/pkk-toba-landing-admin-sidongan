@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\View\Composers;
 
 use App\Models\Application;
@@ -24,3 +29,4 @@ class FloatingButtonComposer
         $view->with('floatingApps', $applications);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

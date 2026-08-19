@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -43,3 +48,4 @@ class Dokumen extends Model
         return $this->document_date?->translatedFormat('d F Y');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

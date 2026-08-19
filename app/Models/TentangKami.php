@@ -1,4 +1,9 @@
 <?php
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -24,3 +29,4 @@ class TentangKami extends Model
         return static::first();
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

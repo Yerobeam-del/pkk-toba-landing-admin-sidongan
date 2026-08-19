@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @php
     $color = $color ?? 'gray';
     $bgColors = [
@@ -20,36 +23,10 @@
     <p class="empty-state-message">{{ $message }}</p>
 </div>
 
-<style>
-    .empty-state {
-        padding: 3rem 2rem;
-        text-align: center;
-    }
+    @once
+    @push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/sidongan/css/sidongan-dashboard-components-empty-state.css') }}">
+    @endpush
+    @endonce
 
-    .empty-state-icon {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1rem;
-    }
-
-    .empty-state-icon i {
-        font-size: 1.5rem;
-    }
-
-    .empty-state-title {
-        font-size: 0.9rem;
-        color: #1e293b;
-        margin: 0;
-        font-weight: 600;
-    }
-
-    .empty-state-message {
-        font-size: 0.875rem;
-        color: #64748b;
-        margin: 0.25rem 0 0 0;
-    }
-</style>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

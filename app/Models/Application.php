@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -114,3 +119,4 @@ class Application extends Model
             ->withTimestamps();
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,0 +1,392 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * Layout Admin Panel — dipisah dari HTML (admin/layouts/app.blade.php)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+:root {
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 80px;
+    --header-height: 64px;
+    --primary: #14b8a6;
+    --sidebar-bg: #0f172a;
+    --sidebar-hover: #1e293b;
+    --sidebar-active: rgba(20,184,166,0.15);
+    --text-light: #f8fafc;
+    --text-muted: #94a3b8;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* RESET & BASE */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #f1f5f9;
+    color: #334155;
+    overflow-x: hidden;
+}
+
+/* ==========================================
+   SIDEBAR & LAYOUT
+   Semua styling sidebar, header, dan layout
+   kini berada di global.css (satu sumber).
+   ========================================== */
+
+/* User Profile Dropdown Animation */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+    .user-text { display: none !important; }
+}
+
+.user-profile-btn:hover .user-text span:first-child {
+    color: var(--primary);
+}
+
+/* ==========================================
+   FIX CKEDITOR LIST DISPLAY
+   ========================================== */
+
+/* Editor content area */
+.ck.ck-content ul,
+.ck.ck-content ol {
+    padding-left: 2.5rem !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    list-style-position: outside !important;
+}
+
+.ck.ck-content ul li,
+.ck.ck-content ol li {
+    margin: 0.5rem 0 !important;
+    padding-left: 0.25rem !important;
+    line-height: 1.8 !important;
+}
+
+/* Ensure list markers are visible */
+.ck.ck-content ul {
+    list-style-type: disc !important;
+}
+
+.ck.ck-content ol {
+    list-style-type: decimal !important;
+}
+
+/* Fix for nested lists */
+.ck.ck-content ul ul,
+.ck.ck-content ol ol,
+.ck.ck-content ul ol,
+.ck.ck-content ol ul {
+    padding-left: 2rem !important;
+    margin: 0.5rem 0 !important;
+}
+
+/* Blockquote fix */
+.ck.ck-content blockquote {
+    padding: 0.5rem 1rem 0.5rem 1.5rem !important;
+    margin: 1rem 0 !important;
+    border-left: 4px solid #e2e8f0 !important;
+    background: #f8fafc !important;
+}
+
+/* Also fix for frontend display */
+.news-detail-content ul,
+.news-detail-content ol {
+    padding-left: 2rem !important;
+    margin: 1rem 0 !important;
+    list-style-position: outside !important;
+}
+
+.news-detail-content ul li,
+.news-detail-content ol li {
+    margin: 0.5rem 0 !important;
+    line-height: 1.8 !important;
+}
+
+/* ==========================================
+ADMIN FOOTER
+========================================== */
+.admin-footer {
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+    padding: 1.5rem 2rem;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+}
+
+.admin-footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-footer-left {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.admin-footer-left strong {
+    color: #334155;
+    font-weight: 600;
+}
+
+.admin-footer-right {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    align-items: center;
+}
+
+.admin-footer-right strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.admin-footer-divider {
+    color: rgba(0,0,0,0.15);
+}
+
+.admin-footer-link {
+    display: inline-flex;
+    align-items: center;
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.admin-footer-link:hover {
+    color: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .admin-footer {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .admin-footer-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+
+    .admin-footer-right {
+        display: none;
+    }
+}
+
+/* ==========================================
+   USER PROFILE DROPDOWN (dipindah dari inline)
+   ========================================== */
+.header-right {
+    position: relative;
+}
+
+.user-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.user-profile-btn:hover {
+    background: #f1f5f9;
+}
+
+.user-text {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.user-text-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #334155;
+    line-height: 1.2;
+}
+
+.user-text-role {
+    font-size: 0.7rem;
+    color: #94a3b8;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--primary), #0d9488);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-menu-arrow {
+    transition: transform 0.2s;
+}
+
+.user-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    min-width: 220px;
+    z-index: 1000;
+    animation: slideIn 0.2s ease;
+}
+
+.user-menu.open {
+    display: block;
+}
+
+.user-menu-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.user-menu-header-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #334155;
+}
+
+.user-menu-header-email {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.user-menu-body {
+    padding: 0.5rem 0;
+}
+
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    color: #334155;
+    text-decoration: none;
+    transition: background 0.2s;
+    font-size: 0.9rem;
+}
+
+.user-menu-item:hover {
+    background: #f8fafc;
+}
+
+.user-menu-divider {
+    border-top: 1px solid #f1f5f9;
+    margin: 0.5rem 0;
+}
+
+.user-menu-footer {
+    padding: 0.5rem 0;
+}
+
+.user-menu-logout {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ef4444;
+    transition: background 0.2s;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.user-menu-logout:hover {
+    background: #fef2f2;
+}
+
+/* Separator bagian "Sistem" di sidebar */
+.sidebar-section-separator {
+    margin-top: 1.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * Tombol aksi tabel & pagination (menggantikan onmouseover/onmouseout inline)
+ * ============================================================ */
+.action-btn {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #94a3b8;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.action-btn:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+.action-btn.btn-delete:hover {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.sd-paginate {
+    padding: 0.5rem 0.9rem;
+    background: #fff;
+    color: var(--text-dark);
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    min-width: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    transition: all 0.2s;
+}
+.sd-paginate:hover {
+    background: #f8fafc;
+    border-color: var(--primary);
+    color: var(--primary);
+}

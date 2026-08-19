@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -37,3 +42,4 @@ class MigrateNewsCategorySeeder extends Seeder
         echo "Selesai! {$newsItems->count()} berita dimigrasi.\n";
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

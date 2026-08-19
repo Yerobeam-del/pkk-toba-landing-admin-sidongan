@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -63,3 +68,4 @@ class AuthenticatedSessionController extends Controller
         return redirect('/');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

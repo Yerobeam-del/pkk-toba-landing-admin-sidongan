@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -32,3 +37,4 @@ class SuperAdminSeeder extends Seeder
         }
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

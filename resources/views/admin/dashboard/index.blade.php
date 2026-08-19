@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 
 @section('title', 'Dashboard - Admin PKK Toba')
@@ -35,7 +38,7 @@
 </div>
 
 <div class="card">
-    <h3 style="margin-bottom:1rem">Statistik Cepat</h3>
+    <h3 class="u-mb-4">Statistik Cepat</h3>
     <div class="form-grid">
         <div class="form-group">
             <label>Kecamatan</label>
@@ -59,3 +62,4 @@
     </div>
 </div>
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

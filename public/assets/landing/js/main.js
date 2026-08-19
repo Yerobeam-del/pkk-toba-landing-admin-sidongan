@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 console.log('Main JS Loaded');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -53,3 +56,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+/* Dikembangkan oleh Institut Teknologi Del */

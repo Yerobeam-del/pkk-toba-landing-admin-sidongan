@@ -1,0 +1,41 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/user-management/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .struktur-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    .struktur-header h1 { font-size: 1.25rem !important; }
+    .struktur-header .btn { width: 100% !important; justify-content: center !important; }
+    .tabs-container { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+    .tabs-container::-webkit-scrollbar { height: 4px; }
+    .tabs-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+    .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+
+    /* Search & Tampilkan adjustments for mobile */
+    .user-search-wrapper {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    .user-search-input {
+        width: 100% !important;
+    }
+    .user-perpage-wrapper {
+        width: 100% !important;
+        justify-content: flex-end !important;
+    }
+    .user-form-wrapper {
+        width: auto !important;
+    }
+}
+

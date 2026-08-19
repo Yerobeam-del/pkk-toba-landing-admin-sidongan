@@ -1,0 +1,32 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/aplikasi/index.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+.aplikasi-header {
+flex-direction: column !important;
+align-items: flex-start !important;
+gap: 1rem !important;
+}
+
+.aplikasi-header h1 {
+font-size: 1.25rem !important;
+}
+
+.aplikasi-header .btn {
+width: 100% !important;
+justify-content: center !important;
+}
+
+.stats-grid {
+grid-template-columns: 1fr !important;
+}
+}
+

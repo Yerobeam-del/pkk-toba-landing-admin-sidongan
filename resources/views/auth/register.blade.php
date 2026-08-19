@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
@@ -50,3 +53,4 @@
         </div>
     </form>
 </x-guest-layout>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

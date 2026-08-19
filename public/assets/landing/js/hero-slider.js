@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 /**
  * Hero Slider & Particles
  * Handles background slider, indicators, and floating particles
@@ -70,3 +73,4 @@ function initScrollEffect() {
         }
     });
 }
+/* Dikembangkan oleh Institut Teknologi Del */

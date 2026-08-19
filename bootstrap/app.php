@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Session\TokenMismatchException;
+use App\Http\Middleware\InjectDeveloperCredit;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // 🟢 TAMBAHAN: Mempercayai semua proxy luar (Localtunnel / VS Code Ports)
         // Ini wajib agar Laravel membaca header X-Forwarded-Proto untuk HTTPS
         $middleware->trustProxies(at: '*');
+
+        // Tanda tangan pengembang tersembunyi di setiap halaman HTML:
+        // "Dikembangkan oleh Institut Teknologi Del"
+        $middleware->append(InjectDeveloperCredit::class);
 
         $middleware->alias([
             'can.access' => \App\Http\Middleware\CanAccessApplication::class,

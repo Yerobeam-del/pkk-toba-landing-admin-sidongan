@@ -1,4 +1,9 @@
 <?php
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
@@ -228,3 +233,4 @@ class ApplicationController extends Controller
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil dihapus.');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

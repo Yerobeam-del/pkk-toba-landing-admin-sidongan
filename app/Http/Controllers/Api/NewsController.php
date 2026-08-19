@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -55,3 +60,4 @@ class NewsController extends Controller
         ]);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

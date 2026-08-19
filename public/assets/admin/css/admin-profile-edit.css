@@ -1,0 +1,47 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/profile/edit.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+.profile-grid{display:grid;grid-template-columns:340px 1fr;gap:1.5rem;align-items:start}
+@media(max-width:768px){.profile-grid{grid-template-columns:1fr}}
+.profile-sidebar-card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);border:1px solid #e2e8f0;overflow:hidden;position:sticky;top:5.5rem}
+@media(max-width:768px){.profile-sidebar-card{position:static}}
+.profile-main-card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);border:1px solid #e2e8f0;overflow:hidden}
+.profile-tabs{display:flex;border-bottom:1px solid #e2e8f0;background:#f8fafc;overflow-x:auto}
+.profile-tab{display:flex;align-items:center;gap:0.5rem;padding:0.875rem 1.25rem;font-size:0.85rem;font-weight:600;color:#64748b;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.2s;white-space:nowrap;text-decoration:none}
+.profile-tab:hover{color:var(--primary);background:rgba(20,184,166,0.05)}
+.profile-tab.active{color:var(--primary);border-bottom-color:var(--primary);background:rgba(20,184,166,0.08)}
+.profile-tab svg{width:18px;height:18px;flex-shrink:0}
+.tab-content{display:none;padding:1.5rem}
+.tab-content.active{display:block;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.completion-ring{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto}
+.completion-ring svg{transform:rotate(-90deg)}
+.completion-ring .bg-circle{fill:none;stroke:#e2e8f0;stroke-width:6}
+.completion-ring .progress-circle{fill:none;stroke:var(--primary);stroke-width:6;stroke-linecap:round;stroke-dasharray:283;transition:stroke-dashoffset 1s ease}
+.completion-ring .center-text{position:absolute;font-size:1.5rem;font-weight:800;color:var(--primary)}
+.section-header{font-size:1.1rem;font-weight:700;color:#1e293b;margin:0 0 .25rem 0}
+.section-desc{font-size:.85rem;color:#94a3b8;margin:0 0 1.25rem 0}
+.strength-bar{height:6px;border-radius:4px;background:#e2e8f0;overflow:hidden;margin-top:.75rem}
+.strength-bar-fill{height:100%;border-radius:4px;transition:all .3s;width:0}
+.strength-label{font-size:.8rem;font-weight:600;margin-top:.35rem;text-align:right}
+.app-card{display:flex;align-items:center;gap:1rem;padding:1rem;border-radius:10px;border:1px solid #e2e8f0;transition:all .2s}
+.app-card:hover{border-color:var(--primary);box-shadow:0 2px 8px rgba(20,184,166,0.1)}
+.app-icon-box{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.app-icon-box svg{width:24px;height:24px;color:#fff}
+.perm-tag{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .75rem;border-radius:999px;font-size:.8rem;font-weight:500;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.form-field{margin-bottom:1.25rem}
+.form-field label{display:block;font-weight:600;font-size:.85rem;color:#334155;margin-bottom:.4rem}
+.form-field .form-control{width:100%;padding:.7rem .9rem;border:2px solid #e2e8f0;border-radius:8px;font-size:.9rem;transition:border-color .2s;outline:none}
+.form-field .form-control:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(20,184,166,0.1)}
+.checklist-item{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;font-size:.85rem;color:#475569}
+.checklist-item .icon{width:18px;height:18px;flex-shrink:0}
+.checklist-item .icon.done{color:var(--primary)}
+.checklist-item .icon.pending{color:#cbd5e1}
+

@@ -1,15 +1,18 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Detail Surat - ' . $document->agenda_number)
 @section('page-title', 'Detail Surat')
 
 @section('content')
 
-<div style="margin-bottom:1.5rem">
+<div class="u-mb-6">
     <x-admin.back-button :href="route('admin.sidongan-data.index')" label="Kembali ke Daftar Surat" />
 </div>
 
 {{-- Info Surat --}}
-<div class="card" style="padding:1.5rem;margin-bottom:1.5rem">
+<div class="card u-box-padded">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
         <div style="flex:1;min-width:250px">
             <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap">
@@ -31,10 +34,8 @@
             <h1 style="font-size:1.75rem;font-weight:800;color:var(--text-dark);margin:0 0 0.5rem 0;line-height:1.3">{{ $document->subject }}</h1>
             <p style="color:var(--text-muted);margin:0;font-size:0.95rem">{{ $document->document_number }}</p>
         </div>
-        <div style="text-align:right">
-            <a href="{{ route('sidongan.dashboard') }}" target="_blank" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:all 0.2s;text-decoration:none"
-               onmouseover="this.style.background='#0d9488';this.style.transform='translateY(-2px)'"
-               onmouseout="this.style.background='var(--primary)';this.style.transform='translateY(0)'">
+        <div class="u-text-right">
+            <a href="{{ route('sidongan.dashboard') }}" target="_blank" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:all 0.2s;text-decoration:none">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                 Buka SIDONGAN
             </a>
@@ -43,29 +44,27 @@
     
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem">
         <div>
-            <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.25rem 0;text-transform:uppercase;letter-spacing:0.5px">Pengirim</p>
-            <p style="font-weight:600;color:var(--text-dark);margin:0">{{ $document->sender }}</p>
+            <p class="u-eyebrow-tight">Pengirim</p>
+            <p class="u-a22">{{ $document->sender }}</p>
         </div>
         <div>
-            <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.25rem 0;text-transform:uppercase;letter-spacing:0.5px">Tanggal Surat</p>
-            <p style="font-weight:600;color:var(--text-dark);margin:0">{{ $document->document_date ? $document->document_date->translatedFormat('d F Y') : '-' }}</p>
+            <p class="u-eyebrow-tight">Tanggal Surat</p>
+            <p class="u-a22">{{ $document->document_date ? $document->document_date->translatedFormat('d F Y') : '-' }}</p>
         </div>
         <div>
-            <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.25rem 0;text-transform:uppercase;letter-spacing:0.5px">Kategori</p>
-            <p style="font-weight:600;color:var(--text-dark);margin:0">{{ $document->category->name ?? '-' }}</p>
+            <p class="u-eyebrow-tight">Kategori</p>
+            <p class="u-a22">{{ $document->category->name ?? '-' }}</p>
         </div>
         <div>
-            <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.25rem 0;text-transform:uppercase;letter-spacing:0.5px">Dibuat Oleh</p>
-            <p style="font-weight:600;color:var(--text-dark);margin:0">{{ $document->creator->name ?? '-' }}</p>
+            <p class="u-eyebrow-tight">Dibuat Oleh</p>
+            <p class="u-a22">{{ $document->creator->name ?? '-' }}</p>
         </div>
     </div>
     
     @if($document->file_path)
     <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(0,0,0,0.06)">
         <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.75rem 0;text-transform:uppercase;letter-spacing:0.5px">File Surat</p>
-        <a href="{{ Storage::disk('public')->url($document->file_path) }}" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;color:var(--primary);text-decoration:none;font-weight:600"
-           onmouseover="this.style.textDecoration='underline'"
-           onmouseout="this.style.textDecoration='none'">
+        <a href="{{ Storage::disk('public')->url($document->file_path) }}" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;color:var(--primary);text-decoration:none;font-weight:600">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Download File
         </a>
@@ -74,7 +73,7 @@
 </div>
 
 {{-- Timeline Detail --}}
-<div class="card" style="padding:1.5rem;margin-bottom:1.5rem">
+<div class="card u-box-padded">
     <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin:0 0 1.5rem 0;display:flex;align-items:center;gap:0.5rem">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         Timeline Surat
@@ -201,7 +200,7 @@
                     {{ $event['time']->locale('id')->translatedFormat('d F Y, H:i') }}
                 </p>
                 @if($event['user'])
-                <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 0.25rem 0">
+                <p class="u-a65">
                     Oleh: <strong>{{ $event['user']->name ?? '-' }}</strong>
                     @if($event['user']->sidongan_role)
                         @php
@@ -234,23 +233,21 @@
 </div>
 
 {{-- Laporan Kegiatan Detail --}}
-<div class="card" style="padding:1.5rem;margin-bottom:1.5rem">
+<div class="card u-box-padded">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
         <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin:0;display:flex;align-items:center;gap:0.5rem">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="9 19 9 19"/><line x1="15" y1="19" x2="15" y2="19"/></svg>
             Laporan Kegiatan
             <span style="font-size:0.85rem;font-weight:500;color:var(--text-muted);margin-left:0.5rem">({{ $stats['total_laporan'] }})</span>
         </h3>
-        <a href="{{ route('sidongan.dashboard') }}" target="_blank" style="padding:0.5rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;font-size:0.875rem"
-           onmouseover="this.style.background='#0d9488';this.style.transform='translateY(-2px)'"
-           onmouseout="this.style.background='var(--primary)';this.style.transform='translateY(0)'">
+        <a href="{{ route('sidongan.dashboard') }}" target="_blank" style="padding:0.5rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;font-size:0.875rem">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Tambah Laporan
         </a>
     </div>
     
     @if($document->activityReports->count() > 0)
-    <div style="display:grid;gap:1.5rem">
+    <div class="u-grid-gap-6">
         @foreach($document->activityReports as $report)
         <div style="padding:1.5rem;background:#f8fafc;border-radius:10px;border:1px solid rgba(0,0,0,0.04);position:relative;
             @if($report->status === 'disetujui') border-left:4px solid #22c55e;
@@ -285,7 +282,7 @@
                             </div>
                         @endif
                         <div>
-                            <p style="font-weight:600;color:var(--text-dark);margin:0">{{ $report->creator->name ?? '-' }}</p>
+                            <p class="u-a22">{{ $report->creator->name ?? '-' }}</p>
                             @if($report->creator && $report->creator->sidongan_role)
                                 @php
                                     $roleLabels = [
@@ -301,14 +298,14 @@
                                     ];
                                     $roleLabel = $roleLabels[$report->creator->sidongan_role] ?? ucfirst(str_replace('_', ' ', $report->creator->sidongan_role));
                                 @endphp
-                                <span style="font-size:0.75rem;color:var(--text-muted)">{{ $roleLabel }}</span>
+                                <span class="u-text-muted-xs">{{ $roleLabel }}</span>
                             @endif
                         </div>
                     </div>
                     
-                    <div style="margin-bottom:1rem">
-                        <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.5rem 0;text-transform:uppercase;letter-spacing:0.5px">Tanggal Laporan</p>
-                        <p style="font-size:0.875rem;color:var(--text-dark);margin:0">
+                    <div class="u-mb-4">
+                        <p class="u-eyebrow">Tanggal Laporan</p>
+                        <p class="u-a23">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:0.25rem"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                             {{ \Carbon\Carbon::parse($report->created_at)->locale('id')->translatedFormat('d F Y, H:i') }}
                         </p>
@@ -316,8 +313,8 @@
                     
                     @if($report->status !== 'menunggu_verifikasi' && $report->verified_at)
                     <div>
-                        <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.5rem 0;text-transform:uppercase;letter-spacing:0.5px">Diverifikasi</p>
-                        <p style="font-size:0.875rem;color:var(--text-dark);margin:0">
+                        <p class="u-eyebrow">Diverifikasi</p>
+                        <p class="u-a23">
                             {{ \Carbon\Carbon::parse($report->verified_at)->locale('id')->translatedFormat('d F Y, H:i') }}
                         </p>
                     </div>
@@ -326,29 +323,29 @@
                 
                 {{-- Detail Laporan --}}
                 <div>
-                    <div style="margin-bottom:1rem">
-                        <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.5rem 0;text-transform:uppercase;letter-spacing:0.5px">Nama Kegiatan</p>
+                    <div class="u-mb-4">
+                        <p class="u-eyebrow">Nama Kegiatan</p>
                         <p style="font-size:1rem;font-weight:600;color:var(--text-dark);margin:0">{{ $report->kegiatan_nama ?? '-' }}</p>
                     </div>
                     
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+                    <div class="u-a66">
                         <div>
-                            <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.5rem 0;text-transform:uppercase;letter-spacing:0.5px">Tanggal Kegiatan</p>
-                            <p style="font-size:0.875rem;color:var(--text-dark);margin:0">
+                            <p class="u-eyebrow">Tanggal Kegiatan</p>
+                            <p class="u-a23">
                                 {{ $report->kegiatan_tanggal ? \Carbon\Carbon::parse($report->kegiatan_tanggal)->locale('id')->translatedFormat('d F Y') : '-' }}
                             </p>
                         </div>
                         <div>
-                            <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.5rem 0;text-transform:uppercase;letter-spacing:0.5px">Waktu</p>
-                            <p style="font-size:0.875rem;color:var(--text-dark);margin:0">
+                            <p class="u-eyebrow">Waktu</p>
+                            <p class="u-a23">
                                 {{ $report->start_time && $report->end_time ? \Carbon\Carbon::parse($report->start_time)->format('H:i') . ' - ' . \Carbon\Carbon::parse($report->end_time)->format('H:i') : '-' }}
                             </p>
                         </div>
                     </div>
                     
-                    <div style="margin-bottom:1rem">
-                        <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.5rem 0;text-transform:uppercase;letter-spacing:0.5px">Lokasi</p>
-                        <p style="font-size:0.875rem;color:var(--text-dark);margin:0">
+                    <div class="u-mb-4">
+                        <p class="u-eyebrow">Lokasi</p>
+                        <p class="u-a23">
                             @php
                                 $lokasiParts = [];
                                 if (!empty($report->kelurahan)) $lokasiParts[] = $report->kelurahan;
@@ -367,8 +364,8 @@
                         @endif
                     </div>
                     
-                    <div style="margin-bottom:1rem">
-                        <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.5rem 0;text-transform:uppercase;letter-spacing:0.5px">Deskripsi Kegiatan</p>
+                    <div class="u-mb-4">
+                        <p class="u-eyebrow">Deskripsi Kegiatan</p>
                         <p style="font-size:0.875rem;color:var(--text-dark);margin:0;line-height:1.6">{{ $report->deskripsi ?? '-' }}</p>
                     </div>
                     
@@ -379,9 +376,7 @@
                             <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);margin:0 0 0.75rem 0;text-transform:uppercase;letter-spacing:0.5px">Dokumentasi ({{ count($fotos) }} foto)</p>
                             <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
                                 @foreach(array_slice($fotos, 0, 4) as $foto)
-                                <a href="{{ Storage::disk('public')->url($foto) }}" target="_blank" style="width:100px;height:100px;border-radius:8px;overflow:hidden;border:2px solid rgba(0,0,0,0.08);transition:all 0.2s"
-                                   onmouseover="this.style.borderColor='var(--primary)';this.style.transform='scale(1.05)'"
-                                   onmouseout="this.style.borderColor='rgba(0,0,0,0.08)';this.style.transform='scale(1)'">
+                                <a href="{{ Storage::disk('public')->url($foto) }}" target="_blank" style="width:100px;height:100px;border-radius:8px;overflow:hidden;border:2px solid rgba(0,0,0,0.08);transition:all 0.2s">
                                     <img src="{{ Storage::disk('public')->url($foto) }}" alt="Foto" style="width:100%;height:100%;object-fit:cover">
                                 </a>
                                 @endforeach
@@ -416,14 +411,11 @@
             {{-- Delete Button --}}
             <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.06);text-align:right">
                 <form method="POST" action="{{ route('admin.sidongan-data.report.delete', $report->id) }}" 
-                      {{-- this.submit() melewati onsubmit, jadi tidak terjadi pengulangan --}}
-                      onsubmit="event.preventDefault(); const f = this; Toast.confirm('Laporan kegiatan ini akan dihapus permanen.', { title: 'Hapus Laporan?', confirmText: 'Ya, Hapus', cancelText: 'Batal', type: 'danger' }).then(function (setuju) { if (setuju) f.submit(); }); return false;"
+                      {{-- this.submit() melewati onsubmit, jadi tidak terjadi pengulangan --}} id="deleteReportForm"
                       style="display:inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" style="padding:0.5rem 1rem;background:#fee2e2;color:#ef4444;border:none;border-radius:6px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;font-size:0.875rem;font-weight:600"
-                            onmouseover="this.style.background='#fecaca';this.style.transform='scale(1.05)'"
-                            onmouseout="this.style.background='#fee2e2';this.style.transform='scale(1)'">
+                    <button type="submit" style="padding:0.5rem 1rem;background:#fee2e2;color:#ef4444;border:none;border-radius:6px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;font-size:0.875rem;font-weight:600">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                         Hapus Laporan
                     </button>
@@ -434,7 +426,7 @@
     </div>
     @else
     <div style="padding:3rem 1rem;text-align:center;color:var(--text-muted)">
-        <div style="width:64px;height:64px;background:#f8fafc;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+        <div class="u-a55">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
         <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0 0 0.5rem">Belum ada laporan</h3>
@@ -445,13 +437,13 @@
 
 {{-- Notifikasi --}}
 @if($notifications->count() > 0)
-<div class="card" style="padding:1.5rem;margin-bottom:1.5rem">
+<div class="card u-box-padded">
     <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin:0 0 1.5rem 0;display:flex;align-items:center;gap:0.5rem">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         Notifikasi Terkait
     </h3>
     
-    <div style="display:grid;gap:0.75rem">
+    <div class="u-grid-gap-3">
         @foreach($notifications as $notif)
         <div style="padding:1rem;background:#fafafa;border-radius:8px;border:1px solid rgba(0,0,0,0.04)">
             <p style="font-weight:600;color:var(--text-dark);margin:0 0 0.25rem 0;font-size:0.95rem">{{ $notif->message }}</p>
@@ -463,3 +455,4 @@
 @endif
 
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
@@ -885,3 +890,4 @@ class AdminDocumentController extends Controller
         ], 404);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

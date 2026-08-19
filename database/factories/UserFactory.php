@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -42,3 +47,4 @@ class UserFactory extends Factory
         ]);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,10 +1,13 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <div class="page" id="page-sk">
     <div class="page-header">
         <div class="page-header-content">
             <h1>SK & Dokumen</h1>
             <p>Surat Keputusan dan dokumen resmi PKK Kabupaten Toba</p>
             <div class="breadcrumb">
-                <a onclick="navigateTo('beranda')">Beranda</a>
+                <a data-nav="beranda">Beranda</a>
                 <span>/</span>
                 <span class="current">SK & Dokumen</span>
             </div>
@@ -37,7 +40,7 @@
                                 </svg>
                                 Tampilkan:
                             </label>
-                            <select id="perPageSelect" class="sk-perpage-select" onchange="changePerPage(this.value)">
+                            <select id="perPageSelect" class="sk-perpage-select" >
                                 <option value="5" selected>5</option>
                                 <option value="10">10</option>
                                 <option value="15">15</option>
@@ -115,7 +118,7 @@
             {{-- PAGINATION --}}
             <div id="paginationWrapper" class="sk-pagination-wrapper">
                 <div class="sk-pagination-container">
-                    <button id="prevPageBtn" class="sk-pagination-btn" onclick="changeSKPage('prev')" disabled>
+                    <button id="prevPageBtn" class="sk-pagination-btn" data-sk-page="prev" disabled>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="15 18 9 12 15 6"/>
                         </svg>
@@ -124,7 +127,7 @@
 
                     <div id="pageNumbers" class="sk-page-numbers"></div>
 
-                    <button id="nextPageBtn" class="sk-pagination-btn" onclick="changeSKPage('next')">
+                    <button id="nextPageBtn" class="sk-pagination-btn" data-sk-page="next">
                         <span class="desktop-only">Selanjutnya</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="9 18 15 12 9 6"/>
@@ -136,7 +139,7 @@
             </div>
 
             {{-- Empty State --}}
-            <div id="emptyState" class="sk-empty-state" style="display:none">
+            <div id="emptyState" class="sk-empty-state u-hidden">
                 <div class="sk-empty-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -151,7 +154,7 @@
                 <h3 class="sk-empty-title" id="emptyStateTitle">Belum Ada Dokumen</h3>
 
                 {{-- Search Term Display (box terpisah) --}}
-                <div id="emptyStateSearchTerm" class="sk-empty-search-term" style="display:none"></div>
+                <div id="emptyStateSearchTerm" class="sk-empty-search-term u-hidden"></div>
 
                 {{-- Message --}}
                 <p class="sk-empty-text" id="emptyStateText">
@@ -160,7 +163,7 @@
                 </p>
 
                 {{-- Tombol 1: Kembali ke Beranda --}}
-                <a id="btnBackToHome" href="#" onclick="if(typeof navigateTo==='function')navigateTo('beranda'); return false;" class="sk-back-btn">
+                <a id="btnBackToHome" href="#" data-nav="beranda" class="sk-back-btn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -169,7 +172,7 @@
                 </a>
 
                 {{-- Tombol 2: Tampilkan Semua Dokumen --}}
-                <button type="button" id="btnShowAllDocs" onclick="clearSearchAndShowAll()" class="sk-back-btn sk-btn-secondary" style="display:none">
+                <button type="button" id="btnShowAllDocs" data-action="clear-search-sk" class="sk-back-btn sk-btn-secondary u-hidden">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                         <path d="M3 3v5h5"/>
@@ -181,53 +184,10 @@
     </section>
 </div>
 
-<script>
-// ==========================================
-// INISIALISASI PER PAGE & SEARCH
-// ==========================================
-let searchTimeout;
+    @once
+    @push('scripts')
+    <script src="{{ asset('assets/landing/js/modules-landing-sections-page-sk.js') }}"></script>
+    @endpush
+    @endonce
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Load per_page dari localStorage
-    const savedPerPage = localStorage.getItem('sk_per_page') || '5';
-    currentPerPage = parseInt(savedPerPage);
-
-    const perPageSelect = document.getElementById('perPageSelect');
-    if (perPageSelect) {
-        perPageSelect.value = currentPerPage;
-    }
-});
-
-// Change per page
-function changePerPage(value) {
-    currentPerPage = parseInt(value);
-    localStorage.setItem('sk_per_page', currentPerPage);
-    currentSearchTerm = '';
-    originalSearchTerm = ''; // ← Reset juga (variable dari navigation.js)
-
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.value = '';
-
-    if (typeof loadSKDocuments === 'function') {
-        loadSKDocuments(1);
-    }
-}
-
-// Search functionality dengan debounce
-const searchInput = document.getElementById('searchInput');
-if (searchInput) {
-    searchInput.addEventListener('input', function(e) {
-        const term = e.target.value; // ← Preserve original case
-        originalSearchTerm = term;   // ← Gunakan variable dari navigation.js
-
-        clearTimeout(searchTimeout);
-
-        searchTimeout = setTimeout(() => {
-            currentSearchTerm = term.toLowerCase().trim(); // ← Untuk API (case-insensitive)
-            if (typeof loadSKDocuments === 'function') {
-                loadSKDocuments(1);
-            }
-        }, 300);
-    });
-}
-</script>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

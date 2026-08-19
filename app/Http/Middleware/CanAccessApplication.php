@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Middleware;
 
 use Closure;
@@ -34,3 +39,4 @@ class CanAccessApplication
         abort(403, 'Anda tidak memiliki akses ke aplikasi ini.');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

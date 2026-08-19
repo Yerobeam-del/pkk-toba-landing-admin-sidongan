@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -27,3 +32,4 @@ class PasswordController extends Controller
         return back()->with('status', 'password-updated');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

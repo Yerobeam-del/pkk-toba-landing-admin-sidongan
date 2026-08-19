@@ -1,45 +1,25 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @extends('admin.layouts.app')
 @section('title', 'Tambah Akun')
 @section('page-title', 'Tambah Akun Baru')
 
-<style>
-/* Responsive untuk Mobile */
-@media (max-width: 768px) {
-    .form-grid-2 {
-        grid-template-columns: 1fr !important;
-    }
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-user-management-create.css') }}">
 
-    .permission-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    .email-input-group {
-        flex-direction: column !important;
-    }
-
-    .email-input-group input[type="text"] {
-        width: 100% !important;
-    }
-
-    .email-domain {
-        width: 100% !important;
-        text-align: center !important;
-    }
-}
-</style>
 
 @section('content')
 
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+<div class="u-header-row-plain">
     <div>
-        <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0">Tambah Akun Baru</h1>
-        <p style="color:var(--text-muted);margin:0;font-size:0.9rem">Buat akun pengguna baru</p>
+        <h1 class="u-page-title">Tambah Akun Baru</h1>
+        <p class="u-muted">Buat akun pengguna baru</p>
     </div>
     <x-admin.back-button :href="route('admin.user-management.index')" />
 </div>
 
 @if($errors->any())
-<div style="background:#fef2f2;padding:1rem;margin-bottom:1.5rem;border-radius:10px;color:#dc2626">
+<div class="u-a34">
     <strong>Terjadi kesalahan:</strong>
     <ul style="margin:0.5rem 0 0 0;padding-left:1.25rem">
         @foreach($errors->all() as $error)
@@ -49,28 +29,27 @@
 </div>
 @endif
 
-<div class="card" style="padding:1.5rem;border-radius:12px">
+<div class="card u-a71">
     <form action="{{ route('admin.user-management.store') }}" method="POST">
         @csrf
 
-        <div style="display:grid;gap:1.5rem">
+        <div class="u-grid-gap-6">
 
             {{-- Nama Lengkap (Full Width) --}}
             <div>
-                <label style="font-weight:600;display:block;margin-bottom:0.5rem">Nama Lengkap *</label>
+                <label class="u-label-simple">Nama Lengkap *</label>
                 <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
             </div>
 
             {{-- Grid 2 Kolom: Email & Phone --}}
-            <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div class="form-grid-2 u-grid-2-plain">
                 {{-- Email --}}
                 <div>
-                    <label style="display:block;font-weight:600;margin-bottom:0.5rem;color:var(--text-dark)">Email <span style="color:#ef4444">*</span></label>
-                    <div class="email-input-group" style="display:flex;align-items:center;gap:0.5rem">
+                    <label class="u-label-dark">Email <span class="u-text-danger">*</span></label>
+                    <div class="email-input-group u-flex-center-gap-2">
                         <input type="text" id="email_username" name="email_username" placeholder="username"
                             value="{{ old('email_username') }}"
-                            style="flex:1;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;outline:none"
-                            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='#e2e8f0'" required>
+                            style="flex:1;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;outline:none" required>
                         <span class="email-domain" style="padding:0.75rem 1rem;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:8px;font-size:0.95rem;color:#64748b;font-weight:600">
                             @pkk-toba.id
                         </span>
@@ -81,42 +60,42 @@
 
                 {{-- Phone --}}
                 <div>
-                    <label style="font-weight:600;display:block;margin-bottom:0.5rem">Nomor Telepon</label>
+                    <label class="u-label-simple">Nomor Telepon</label>
                     <input type="text" name="phone_number" class="form-control" value="{{ old('phone_number') }}">
                 </div>
 
                 {{-- Personal Email --}}
                 <div>
-                    <label style="font-weight:600;display:block;margin-bottom:0.5rem">
+                    <label class="u-label-simple">
                         Email Pribadi
                         <span style="font-weight:400;color:var(--text-muted);font-size:0.8rem">(Gmail, Yahoo, dll)</span>
                     </label>
                     <input type="email" name="personal_email" class="form-control" value="{{ old('personal_email') }}" placeholder="namaketua@gmail.com">
-                    <small style="color:var(--text-muted);display:block;margin-top:0.25rem">
+                    <small class="u-hint-tight">
                         Email pribadi untuk menerima link reset password jika lupa password.
                     </small>
                 </div>
             </div>
 
             {{-- Grid 2 Kolom: Password & Confirm --}}
-            <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div class="form-grid-2 u-grid-2-plain">
                 <div>
-                    <label style="font-weight:600;display:block;margin-bottom:0.5rem">Password *</label>
+                    <label class="u-label-simple">Password *</label>
                     <input type="password" name="password" class="form-control" required>
                 </div>
 
                 <div>
-                    <label style="font-weight:600;display:block;margin-bottom:0.5rem">Konfirmasi Password *</label>
+                    <label class="u-label-simple">Konfirmasi Password *</label>
                     <input type="password" name="password_confirmation" class="form-control" required>
                 </div>
             </div>
 
             {{-- Grid 2 Kolom: Role & SIDONGAN Role --}}
-            <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div class="form-grid-2 u-grid-2-plain">
                 {{-- Role Admin Panel --}}
                 <div>
-                    <label style="font-weight:600;display:block;margin-bottom:0.5rem">Role Admin Panel <span style="color:#ef4444">*</span></label>
-                    <select name="role_id" id="roleSelect" class="form-control" required onchange="togglePermissionSection()">
+                    <label class="u-label-simple">Role Admin Panel <span class="u-text-danger">*</span></label>
+                    <select name="role_id" id="roleSelect" class="form-control" required >
                         <option value="">-- Pilih Role --</option>
                         @foreach($roles as $role)
                             {{-- Hanya tampilkan Super Admin jika user yang login adalah Super Admin --}}
@@ -127,14 +106,14 @@
                             @endif
                         @endforeach
                     </select>
-                    <small style="color:var(--text-muted);display:block;margin-top:0.25rem">
+                    <small class="u-hint-tight">
                         Administrator: Akses penuh | Anggota: Akses terbatas
                     </small>
                 </div>
 
                 {{-- SIDONGAN Role (Conditional) --}}
-                <div id="sidonganRoleSection" style="display:none">
-                    <label style="font-weight:600;display:block;margin-bottom:0.5rem">Peran di SIDONGAN <span style="color:#ef4444">*</span></label>
+                <div class="u-hidden" id="sidonganRoleSection">
+                    <label class="u-label-simple">Peran di SIDONGAN <span class="u-text-danger">*</span></label>
                     <select name="sidongan_role" id="sidonganRole" class="form-control">
                         <option value="">-- Pilih Peran --</option>
                         @foreach($sidonganRoles as $key => $label)
@@ -143,20 +122,20 @@
                             </option>
                         @endforeach
                     </select>
-                    <small style="color:var(--text-muted);display:block;margin-top:0.25rem">
+                    <small class="u-hint-tight">
                         Pilih peran untuk akses SIDONGAN
                     </small>
                 </div>
 
                 {{-- SIEDA Role (Conditional) --}}
-                <div id="siedaRoleSection" style="display:none">
-                    <label style="font-weight:600;display:block;margin-bottom:0.5rem">Peran di SIEDA <span style="color:#ef4444">*</span></label>
+                <div class="u-hidden" id="siedaRoleSection">
+                    <label class="u-label-simple">Peran di SIEDA <span class="u-text-danger">*</span></label>
                     <select name="sieda_role" id="siedaRole" class="form-control">
                         <option value="">-- Pilih Peran --</option>
                         <option value="operator" {{ old('sieda_role') == 'operator' ? 'selected' : '' }}>Operator</option>
                         <option value="kader" {{ old('sieda_role') == 'kader' ? 'selected' : '' }}>Kader</option>
                     </select>
-                    <small style="color:var(--text-muted);display:block;margin-top:0.25rem">
+                    <small class="u-hint-tight">
                         Pilih peran untuk akses SIEDA
                     </small>
                 </div>
@@ -165,33 +144,33 @@
                 <div id="siedaWilayahSection" style="display:none; grid-column: 1 / -1;">
                     <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 1.25rem;">
                         <h4 style="font-size: 0.95rem; font-weight: 700; color: #0369a1; margin: 0 0 1rem 0;">
-                            <i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>
+                            <i class="fas fa-map-marker-alt u-mr-2"></i>
                             Wilayah Akses SIEDA
                         </h4>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="u-grid-2-gap-4">
                             {{-- Kecamatan Dropdown --}}
                             <div id="kecamatanField">
-                                <label style="font-weight: 600; display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">
-                                    Kecamatan <span style="color: #ef4444;">*</span>
+                                <label class="u-a40">
+                                    Kecamatan <span class="u-text-danger">*</span>
                                 </label>
                                 <select name="sieda_kecamatan" id="siedaKecamatan" class="form-control">
                                     <option value="">-- Pilih Kecamatan --</option>
                                 </select>
-                                <small style="color: var(--text-muted); display: block; margin-top: 0.25rem;">
+                                <small class="u-a41">
                                     Operator: Akses semua desa di kecamatan ini
                                 </small>
                             </div>
 
                             {{-- Kelurahan Dropdown --}}
-                            <div id="kelurahanField" style="display: none;">
-                                <label style="font-weight: 600; display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">
-                                    Desa/Kelurahan <span style="color: #ef4444;">*</span>
+                            <div class="u-hidden" id="kelurahanField">
+                                <label class="u-a40">
+                                    Desa/Kelurahan <span class="u-text-danger">*</span>
                                 </label>
                                 <select name="sieda_kelurahan" id="siedaKelurahan" class="form-control">
                                     <option value="">-- Pilih Desa/Kelurahan --</option>
                                 </select>
-                                <small style="color: var(--text-muted); display: block; margin-top: 0.25rem;">
+                                <small class="u-a41">
                                     Kader: Hanya akses desa ini
                                 </small>
                             </div>
@@ -202,7 +181,7 @@
 
             {{-- Permission Section (Hanya untuk Anggota) --}}
             <div id="permissionSection" style="display:none;border:1px solid var(--border);border-radius:8px;padding:1.25rem;background:#f8fafc">
-                <label style="font-weight:600;display:block;margin-bottom:0.5rem">Permission Akses</label>
+                <label class="u-label-simple">Permission Akses</label>
                 <small style="color:var(--text-muted);display:block;margin-bottom:1rem">
                     Akses tambahan khusus untuk akun ini saja, di luar akses bawaan role yang dipilih.
                     Tidak memengaruhi akun lain dengan role yang sama.
@@ -217,14 +196,14 @@
                             <div style="display:grid;gap:0.5rem">
                                 @foreach($perms as $perm)
                                     @if($perm->name !== 'publish-berita')
-                                    <label class="custom-checkbox-label" style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.4rem 0.5rem;border-radius:6px;transition:all 0.2s" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                                    <label class="custom-checkbox-label" style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.4rem 0.5rem;border-radius:6px;transition:all 0.2s">
                                         <input type="checkbox" name="permissions[]" value="{{ $perm->id }}" class="permission-checkbox custom-checkbox-input" data-group="{{ $group }}" style="display:none">
-                                        <div class="custom-checkbox-box" style="width:20px;height:20px;border:2px solid #cbd5e1;border-radius:5px;background:#fff;transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                                            <svg class="custom-checkbox-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity:0;transform:scale(0.5);transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1)">
+                                        <div class="custom-checkbox-box u-a42">
+                                            <svg class="custom-checkbox-check u-check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                                                 <polyline points="20 6 9 17 4 12"/>
                                             </svg>
                                         </div>
-                                        <span style="font-size:0.9rem;color:#334155;user-select:none">{{ $perm->display_name }}</span>
+                                        <span class="u-a43">{{ $perm->display_name }}</span>
                                     </label>
                                     @endif
                                 @endforeach
@@ -236,17 +215,17 @@
 
             {{-- Aplikasi yang Diakses --}}
             <div>
-                <label style="font-weight:600;display:block;margin-bottom:0.5rem">Aplikasi yang Diakses</label>
+                <label class="u-label-simple">Aplikasi yang Diakses</label>
                 <div style="border:1px solid var(--border);border-radius:8px;padding:1rem;max-height:250px;overflow-y:auto;background:#f8fafc">
                     @forelse($applications as $app)
-                    <label class="custom-checkbox-label" style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.5rem;border-radius:6px;transition:all 0.2s;margin-bottom:0.25rem" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='transparent'">
+                    <label class="custom-checkbox-label" style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.5rem;border-radius:6px;transition:all 0.2s;margin-bottom:0.25rem">
                         <input type="checkbox" name="applications[]" value="{{ $app->id }}" class="application-checkbox custom-checkbox-input" data-app-name="{{ $app->name }}" data-app-short="{{ $app->short_name }}" style="display:none">
-                        <div class="custom-checkbox-box" style="width:20px;height:20px;border:2px solid #cbd5e1;border-radius:5px;background:#fff;transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                            <svg class="custom-checkbox-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity:0;transform:scale(0.5);transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1)">
+                        <div class="custom-checkbox-box u-a42">
+                            <svg class="custom-checkbox-check u-check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"/>
                             </svg>
                         </div>
-                        <span style="font-size:0.9rem;color:#334155;user-select:none">{{ $app->name }}</span>
+                        <span class="u-a43">{{ $app->name }}</span>
                     </label>
                     @empty
                     <p style="color:var(--text-muted);margin:0;text-align:center;padding:1rem">Belum ada aplikasi</p>
@@ -269,266 +248,8 @@
     </form>
 </div>
 
-<script>
-// ==========================================
-// CUSTOM CHECKBOX HANDLER
-// ==========================================
-function initCustomCheckboxes() {
-    const checkboxes = document.querySelectorAll('.custom-checkbox-input');
+    <script src="{{ asset('assets/admin/js/admin-user-management-create.js') }}"></script>
 
-    checkboxes.forEach(checkbox => {
-        const label = checkbox.closest('.custom-checkbox-label');
-        const box = label.querySelector('.custom-checkbox-box');
-        const check = label.querySelector('.custom-checkbox-check');
-
-        // Set initial state
-        updateCustomCheckbox(box, check, checkbox.checked);
-
-        // On change
-        checkbox.addEventListener('change', function() {
-            updateCustomCheckbox(box, check, this.checked);
-        });
-    });
-}
-
-function updateCustomCheckbox(box, check, isChecked) {
-    if (!box || !check) return;
-
-    if (isChecked) {
-        box.style.background = 'linear-gradient(135deg, #14b8a6, #0d9488)';
-        box.style.borderColor = '#14b8a6';
-        box.style.boxShadow = '0 2px 8px rgba(20,184,166,0.3)';
-        check.style.opacity = '1';
-        check.style.transform = 'scale(1)';
-    } else {
-        box.style.background = '#fff';
-        box.style.borderColor = '#cbd5e1';
-        box.style.boxShadow = 'none';
-        check.style.opacity = '0';
-        check.style.transform = 'scale(0.5)';
-    }
-}
-
-// ==========================================
-// EMAIL GENERATOR
-// ==========================================
-function updateEmail() {
-    const username = document.getElementById('email_username').value.trim();
-    const fullEmail = document.getElementById('email_full');
-    fullEmail.value = username ? username + '@pkk-toba.id' : '';
-}
-
-// ==========================================
-// TOGGLE PERMISSION SECTION
-// ==========================================
-function togglePermissionSection() {
-    const roleSelect = document.getElementById('roleSelect');
-    const permissionSection = document.getElementById('permissionSection');
-    const selectedOption = roleSelect.options[roleSelect.selectedIndex];
-    const roleName = selectedOption ? selectedOption.text.toLowerCase() : '';
-
-    if (roleName.includes('anggota')) {
-        permissionSection.style.display = 'block';
-    } else {
-        permissionSection.style.display = 'none';
-        const checkboxes = document.querySelectorAll('#permissionSection input[type="checkbox"]');
-        checkboxes.forEach(cb => {
-            cb.checked = false;
-            const label = cb.closest('.custom-checkbox-label');
-            const box = label.querySelector('.custom-checkbox-box');
-            const check = label.querySelector('.custom-checkbox-check');
-            updateCustomCheckbox(box, check, false);
-        });
-    }
-}
-
-// ==========================================
-// INITIALIZATION
-// ==========================================
-document.getElementById('email_username').addEventListener('input', updateEmail);
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Init email
-    updateEmail();
-
-    // Init permission section
-    togglePermissionSection();
-
-    // Init custom checkboxes
-    initCustomCheckboxes();
-
-    // SIDONGAN Role Logic
-    const checkboxes = document.querySelectorAll('input[name="applications[]"]');
-    const sidonganRoleSection = document.getElementById('sidonganRoleSection');
-    const sidonganRoleSelect = document.getElementById('sidonganRole');
-
-    function checkSidonganStatus() {
-        let isSidonganChecked = false;
-
-        checkboxes.forEach(checkbox => {
-            const appShort = (checkbox.dataset.appShort || '').toLowerCase();
-            if (appShort === 'sidongan' && checkbox.checked) {
-                isSidonganChecked = true;
-            }
-        });
-
-        if (isSidonganChecked) {
-            sidonganRoleSection.style.display = 'block';
-            if (sidonganRoleSelect) sidonganRoleSelect.required = true;
-        } else {
-            sidonganRoleSection.style.display = 'none';
-            if (sidonganRoleSelect) {
-                sidonganRoleSelect.required = false;
-                sidonganRoleSelect.value = '';
-            }
-        }
-    }
-
-    // SIEDA Role Logic
-    const siedaRoleSection = document.getElementById('siedaRoleSection');
-    const siedaRoleSelect = document.getElementById('siedaRole');
-
-    function checkSiedaStatus() {
-        let isSiedaChecked = false;
-
-        checkboxes.forEach(checkbox => {
-            const appShort = (checkbox.dataset.appShort || '').toLowerCase();
-            if (appShort === 'sieda' && checkbox.checked) {
-                isSiedaChecked = true;
-            }
-        });
-
-        if (isSiedaChecked) {
-            siedaRoleSection.style.display = 'block';
-            if (siedaRoleSelect) siedaRoleSelect.required = true;
-        } else {
-            siedaRoleSection.style.display = 'none';
-            if (siedaRoleSelect) {
-                siedaRoleSelect.required = false;
-                siedaRoleSelect.value = '';
-            }
-        }
-    }
-
-    // SIEDA Wilayah Access Logic
-    const siedaWilayahSection = document.getElementById('siedaWilayahSection');
-    const siedaKecamatanSelect = document.getElementById('siedaKecamatan');
-    const siedaKelurahanSelect = document.getElementById('siedaKelurahan');
-    const kecamatanField = document.getElementById('kecamatanField');
-    const kelurahanField = document.getElementById('kelurahanField');
-
-    // Load Kecamatan from API
-    async function loadKecamatan() {
-        try {
-            // Kabupaten Toba code is 12.12
-            const response = await fetch('/api/v1/wilayah/districts/12.12');
-            const result = await response.json();
-
-            if (result.success && result.data) {
-                siedaKecamatanSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
-                result.data.forEach(kec => {
-                    const option = document.createElement('option');
-                    option.value = kec.code;
-                    option.textContent = kec.name;
-                    option.dataset.code = kec.code;
-                    siedaKecamatanSelect.appendChild(option);
-                });
-            }
-        } catch (error) {
-            console.error('Error loading kecamatan:', error);
-            siedaKecamatanSelect.innerHTML = '<option value="">Gagal memuat data</option>';
-        }
-    }
-
-    // Load Kelurahan based on Kecamatan
-    async function loadKelurahan(districtCode) {
-        if (!districtCode) {
-            siedaKelurahanSelect.innerHTML = '<option value="">-- Pilih Desa/Kelurahan --</option>';
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/v1/wilayah/villages/${districtCode}`);
-            const result = await response.json();
-
-            if (result.success && result.data) {
-                siedaKelurahanSelect.innerHTML = '<option value="">-- Pilih Desa/Kelurahan --</option>';
-                result.data.forEach(kel => {
-                    const option = document.createElement('option');
-                    option.value = kel.code;
-                    option.textContent = kel.name;
-                    siedaKelurahanSelect.appendChild(option);
-                });
-            }
-        } catch (error) {
-            console.error('Error loading kelurahan:', error);
-            siedaKelurahanSelect.innerHTML = '<option value="">Gagal memuat data</option>';
-        }
-    }
-
-    // Handle SIEDA Role Change
-    function handleSiedaRoleChange() {
-        const selectedRole = siedaRoleSelect ? siedaRoleSelect.value : '';
-
-        if (selectedRole === 'operator' || selectedRole === 'kader') {
-            siedaWilayahSection.style.display = 'block';
-            loadKecamatan();
-
-            if (selectedRole === 'operator') {
-                // Operator: hanya pilih kecamatan
-                kecamatanField.style.display = 'block';
-                kelurahanField.style.display = 'none';
-                siedaKecamatanSelect.required = true;
-                siedaKelurahanSelect.required = false;
-                siedaKelurahanSelect.value = '';
-            } else if (selectedRole === 'kader') {
-                // Kader: pilih kecamatan dan kelurahan
-                kecamatanField.style.display = 'block';
-                kelurahanField.style.display = 'block';
-                siedaKecamatanSelect.required = true;
-                siedaKelurahanSelect.required = true;
-            }
-        } else {
-            siedaWilayahSection.style.display = 'none';
-            siedaKecamatanSelect.required = false;
-            siedaKelurahanSelect.required = false;
-            siedaKecamatanSelect.value = '';
-            siedaKelurahanSelect.value = '';
-        }
-    }
-
-    // Event listener for SIEDA role change
-    if (siedaRoleSelect) {
-        siedaRoleSelect.addEventListener('change', handleSiedaRoleChange);
-    }
-
-    // Event listener for Kecamatan change
-    if (siedaKecamatanSelect) {
-        siedaKecamatanSelect.addEventListener('change', function() {
-            if (siedaRoleSelect && siedaRoleSelect.value === 'kader') {
-                loadKelurahan(this.value);
-            }
-        });
-    }
-
-    // Call on initial load if editing
-    if (siedaRoleSelect && siedaRoleSelect.value) {
-        handleSiedaRoleChange();
-    }
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', checkSiedaStatus);
-    });
-
-    // Initial check
-    checkSiedaStatus();
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', checkSidonganStatus);
-    });
-
-    checkSidonganStatus();
-});
-</script>
 
 @endsection
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 /**
  * News Handler - Dynamic Content from API
  * Fetches news data from Laravel API endpoint
@@ -468,3 +471,4 @@ if (typeof module !== 'undefined' && module.exports) {
         changeNewsPerPage
     };
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 use Illuminate\Support\Str;
 
 return [
@@ -216,3 +221,4 @@ return [
     'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
 
 ];
+/* Dikembangkan oleh Institut Teknologi Del */

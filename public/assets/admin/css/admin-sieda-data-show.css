@@ -1,0 +1,22 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/sieda-data/show.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+    .sieda-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .detail-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .detail-table tr { border-bottom: 1px solid #e2e8f0; }
+    .detail-table tr:last-child { border-bottom: none; }
+    .detail-table th { text-align: left; padding: 0.75rem 1rem 0.75rem 0; color: #64748b; font-weight: 600; width: 220px; vertical-align: top; padding-top: 1rem; }
+    .detail-table td { padding: 0.75rem 0.5rem; color: #1e293b; vertical-align: top; padding-top: 1rem; }
+    .card { border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .section-heading { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 0.75rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; color: #334155; }
+    .section-heading:first-of-type { margin-top: 0; }
+    .data-nilai-null { color: #94a3b8; font-style: italic; }
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+

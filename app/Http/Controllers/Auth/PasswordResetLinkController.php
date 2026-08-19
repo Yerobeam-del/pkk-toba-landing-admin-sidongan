@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -98,3 +103,4 @@ class PasswordResetLinkController extends Controller
             ->withErrors(['email' => __($status)]);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

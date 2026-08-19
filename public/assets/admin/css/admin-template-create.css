@@ -1,0 +1,40 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/admin/template/create.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+/* Responsive untuk Mobile */
+@media (max-width: 768px) {
+    .template-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    
+    .template-header h1 {
+        font-size: 1.25rem !important;
+    }
+    
+    .template-header .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    .form-grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .status-options {
+        flex-direction: column !important;
+    }
+    
+    .status-options label {
+        width: 100% !important;
+    }
+}
+

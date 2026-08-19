@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -31,3 +36,4 @@ class SuperAdminRoleSeeder extends Seeder
         }
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

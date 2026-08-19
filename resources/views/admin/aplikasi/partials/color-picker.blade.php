@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @php
     // Dipakai bersama oleh form tambah & edit aplikasi.
     // $current = warna tersimpan (boleh null berarti memakai warna default).
@@ -7,8 +10,8 @@
     $pickerValue  = $current ?: $defaultColor;
 @endphp
 
-<div style="margin-bottom:1.5rem">
-    <label style="font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem">
+<div id="colorPickerSection" data-default-color="{{ $defaultColor }}" class="u-mb-6">
+    <label class="u-label">
         Warna Kartu di Landing Page
     </label>
 
@@ -78,73 +81,8 @@
         </div>
     </div>
 </div>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}
 
-<script>
-(function () {
-    const DEFAULT_COLOR = @json($defaultColor);
-
-    const hexInput  = document.getElementById('colorHex');
-    const picker    = document.getElementById('colorPicker');
-    const resetBtn  = document.getElementById('colorReset');
-    const swatches  = document.querySelectorAll('.color-swatch');
-
-    // Rumus turunan warna — HARUS sama dengan yang dipakai landing page
-    // (page-aplikasi.blade.php & apps-home.blade.php) agar pratinjau jujur.
-    function mixWhite(hex, ratio) {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
-        const m = (v) => Math.round(v + (255 - v) * ratio);
-        return `rgb(${m(r)}, ${m(g)}, ${m(b)})`;
-    }
-
-    const isValidHex = (v) => /^#[0-9a-fA-F]{6}$/.test(v);
-
-    function currentColor() {
-        const v = (hexInput.value || '').trim().toLowerCase();
-        return isValidHex(v) ? v : DEFAULT_COLOR;
-    }
-
-    function render() {
-        const c = currentColor();
-
-        document.getElementById('cpHeader').style.background =
-            `linear-gradient(135deg, ${mixWhite(c, 0.88)}, ${mixWhite(c, 0.96)})`;
-        document.getElementById('cpCircle').style.background = mixWhite(c, 0.7);
-        document.getElementById('cpIcon').style.background =
-            `linear-gradient(135deg, ${c}, ${mixWhite(c, 0.28)})`;
-        document.getElementById('cpName').style.color = c;
-        document.getElementById('cpBtn').style.background = c;
-
-        picker.value = c;
-
-        // Tandai swatch yang sedang aktif
-        swatches.forEach((s) => {
-            const aktif = s.dataset.color.toLowerCase() === c && isValidHex((hexInput.value || '').trim());
-            s.style.borderColor = aktif ? '#0f172a' : 'transparent';
-            s.style.transform = aktif ? 'scale(1.08)' : 'none';
-        });
-    }
-
-    swatches.forEach((s) => {
-        s.addEventListener('click', () => {
-            hexInput.value = s.dataset.color.toLowerCase();
-            render();
-        });
-    });
-
-    picker.addEventListener('input', () => {
-        hexInput.value = picker.value.toLowerCase();
-        render();
-    });
-
-    hexInput.addEventListener('input', render);
-
-    resetBtn.addEventListener('click', () => {
-        hexInput.value = '';
-        render();
-    });
-
-    render();
-})();
-</script>
+@push('scripts')
+<script src="{{ asset('assets/admin/js/aplikasi-color-picker.js') }}"></script>
+@endpush

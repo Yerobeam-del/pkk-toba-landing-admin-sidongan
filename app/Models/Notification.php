@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -44,3 +49,4 @@ class Notification extends Model
         return true;
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

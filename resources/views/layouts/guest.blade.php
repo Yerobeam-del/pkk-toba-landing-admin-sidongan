@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -28,3 +31,4 @@
         </div>
     </body>
 </html>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

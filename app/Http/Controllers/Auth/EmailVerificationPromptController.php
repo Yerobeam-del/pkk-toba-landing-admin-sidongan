@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -19,3 +24,4 @@ class EmailVerificationPromptController extends Controller
                     : view('auth.verify-email');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

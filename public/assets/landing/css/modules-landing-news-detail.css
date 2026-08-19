@@ -1,0 +1,15 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/modules/landing/news-detail.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+    body:has(.news-detail-wrapper) #newsModal,
+    body:has(.news-detail-wrapper) .news-modal-overlay {
+        display: none !important;
+    }
+

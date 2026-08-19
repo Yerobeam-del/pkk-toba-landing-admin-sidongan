@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 <section class="news-home-section" style="padding: 4rem 2rem;">
     <div style="text-align: center; margin-bottom: 3rem;">
         <div style="display: inline-block; padding: 0.5rem 1rem; background: rgba(39,103,73,0.1); border-radius: 50px; color: #276749; font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem;">BERITA TERKINI</div>
@@ -19,14 +22,14 @@
         <article class="news-card-home"
                  data-link="{{ route('news.show', $news->slug ?? $news->id) }}"
                  style="background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: transform 0.3s;"
-                 onmouseover="this.style.transform='translateY(-5px)'"
-                 onmouseout="this.style.transform='translateY(0)'">
+                 
+                 >
 
             <img src="{{ $news->image_path ? asset('storage/' . $news->image_path) : 'https://via.placeholder.com/400x200?text=No+Image' }}"
                  alt="{{ $news->title }}"
                  style="width: 100%; height: 200px; object-fit: cover; display: block;">
 
-            <div style="padding: 1.5rem;">
+            <div class="u-p-6">
                 <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.75rem;">
                     {{ $news->published_at?->locale('id')->translatedFormat('d F Y') ?? '-' }}
                 </div>
@@ -58,3 +61,4 @@
         @endforelse
     </div>
 </section>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

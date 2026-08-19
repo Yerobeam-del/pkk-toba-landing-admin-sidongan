@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 class RefStatusKeluarga extends BaseSiedaModel
@@ -12,3 +17,4 @@ class RefStatusKeluarga extends BaseSiedaModel
     public static function moduleName(): string { return 'Referensi Status Keluarga'; }
     public static function primaryKey(): string { return 'id'; }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

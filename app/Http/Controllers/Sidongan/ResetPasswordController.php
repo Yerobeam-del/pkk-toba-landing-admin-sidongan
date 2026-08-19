@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
@@ -55,3 +60,4 @@ class ResetPasswordController extends Controller
                 ->withErrors(['email' => __($status)]);
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

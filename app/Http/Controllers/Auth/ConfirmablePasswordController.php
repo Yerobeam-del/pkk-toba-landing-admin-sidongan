@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -38,3 +43,4 @@ class ConfirmablePasswordController extends Controller
         return redirect()->intended(route('dashboard', absolute: false));
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 use App\Models\ActivityReport;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -48,3 +53,4 @@ return new class extends Migration
         }
     }
 };
+/* Dikembangkan oleh Institut Teknologi Del */

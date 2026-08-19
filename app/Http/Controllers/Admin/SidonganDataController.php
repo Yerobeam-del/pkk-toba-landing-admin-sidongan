@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -323,3 +328,4 @@ class SidonganDataController extends Controller
         return round($bytes, $precision) . ' ' . $units[$pow];
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

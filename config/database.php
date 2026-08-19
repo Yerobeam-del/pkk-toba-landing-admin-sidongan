@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 use Illuminate\Support\Str;
 
 return [
@@ -188,3 +193,4 @@ return [
     ],
 
 ];
+/* Dikembangkan oleh Institut Teknologi Del */

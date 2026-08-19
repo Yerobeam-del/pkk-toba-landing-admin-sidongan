@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @php
     $user = auth()->guard('sidongan')->user();
     $currentUser = $user;
@@ -25,10 +28,10 @@
             <line x1="9" y1="3" x2="9" y2="21"></line>
         </svg>
     </button>
-    <div class="header-right" style="position:relative">
+    <div class="header-right u-relative">
         
-        <div style="position: relative;">
-            <button onclick="toggleNotificationPopup()" class="toggle-btn" style="position: relative; margin-right: 0.5rem;">
+        <div class="u-relative">
+            <button data-action="toggle-notification-popup" class="toggle-btn" style="position: relative; margin-right: 0.5rem;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
@@ -45,21 +48,19 @@
                 <div style="padding: 1rem 1.25rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
                     <h3 style="font-size: 1rem; font-weight: 700; color: #1e293b; margin: 0;">Notifikasi</h3>
                     @if($sidonganUnreadCount > 0)
-                    <button onclick="markAllAsRead()" style="font-size: 0.75rem; color: #2563eb; background: none; border: none; cursor: pointer; font-weight: 500;">Tandai semua dibaca</button>
+                    <button data-action="mark-all-read" style="font-size: 0.75rem; color: #2563eb; background: none; border: none; cursor: pointer; font-weight: 500;">Tandai semua dibaca</button>
                     @endif
                 </div>
                 
                 <div style="max-height: 350px; overflow-y: auto;">
                     @forelse($sidonganNotifications as $notif)
-                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid #f1f5f9; background: #eff6ff; cursor: pointer; transition: background 0.2s;" 
-                        onmouseover="this.style.background='#dbeafe'" 
-                        onmouseout="this.style.background='#eff6ff'"
-                        onclick="markNotificationReadAndRedirect({{ $notif->id }}, '{{ route('sidongan.documents.show', $notif->related_id) }}')">
+                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid #f1f5f9; background: #eff6ff; cursor: pointer; transition: background 0.2s;"
+                        data-notif-id="{{ $notif->id }}" data-notif-url="{{ route('sidongan.documents.show', $notif->related_id) }}">
                         <div style="display: flex; gap: 0.75rem; align-items: start;">
                             <div style="width: 2rem; height: 2rem; background: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                 <i class="fas fa-bell" style="color: #3b82f6; font-size: 0.85rem;"></i>
                             </div>
-                            <div style="flex: 1; min-width: 0;">
+                            <div class="u-flex-1-min">
                                 <p style="font-size: 0.85rem; font-weight: 500; color: #0f172a; margin: 0 0 0.25rem 0; line-height: 1.4;">
                                     {{ Str::limit($notif->message, 80) }}
                                 </p>
@@ -90,7 +91,7 @@
         </div>
         
         @if($currentUser)
-        <button onclick="toggleUserMenu()" class="user-profile-btn" style="display:flex;align-items:center;gap:0.75rem;background:none;border:none;cursor:pointer;padding:0.5rem 0.75rem;border-radius:8px;transition:background 0.2s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+        <button data-action="toggle-user-menu" class="user-profile-btn" style="display:flex;align-items:center;gap:0.75rem;background:none;border:none;cursor:pointer;padding:0.5rem 0.75rem;border-radius:8px;transition:background 0.2s">
             <div class="user-text" style="text-align:right;display:flex;flex-direction:column;align-items:flex-end">
                 <span style="font-weight:600;font-size:0.9rem;color:#334155;line-height:1.2">{{ $currentUser->name }}</span>
                 <span style="font-size:0.7rem;color:#94a3b8">{{ $currentUser->sidongan_role_name }}</span>
@@ -121,7 +122,7 @@
                 <div style="font-size:0.75rem;color:#94a3b8">{{ $currentUser->sidongan_role_name }}</div>
             </div>
             <div style="padding:0.5rem 0;border-bottom:1px solid #f1f5f9">
-                <a href="https://{{ config('app.landing_domain', 'tp-pkk.tobakab.go.id') }}/personal-email" target="_blank" rel="noopener noreferrer" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:#334155;transition:background 0.2s;text-align:left;font-size:0.85rem;text-decoration:none;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+                <a href="https://{{ config('app.landing_domain', 'tp-pkk.tobakab.go.id') }}/personal-email" target="_blank" rel="noopener noreferrer" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:#334155;transition:background 0.2s;text-align:left;font-size:0.85rem;text-decoration:none;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="2" y="4" width="20" height="16" rx="2"/>
                         <path d="M22 7l-10 7L2 7"/>
@@ -131,7 +132,7 @@
             </div>
             <form method="POST" action="{{ route('sidongan.logout') }}" style="padding:0.5rem 0">
                 @csrf
-                <button type="submit" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:#ef4444;transition:background 0.2s;text-align:left;font-size:0.9rem" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='transparent'">
+                <button type="submit" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:#ef4444;transition:background 0.2s;text-align:left;font-size:0.9rem">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                         <polyline points="16 17 21 12 16 7"/>
@@ -144,3 +145,4 @@
         @endif
     </div>
 </header>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

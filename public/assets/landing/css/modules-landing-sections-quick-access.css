@@ -1,0 +1,32 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS halaman: resources/views/modules/landing/sections/quick-access.blade.php
+ * (diekstrak dari blok <style> di dalam view)
+ *
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
+
+
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr) !important; /* 5 kartu = 1 baris */
+            gap: 1.25rem;
+            width: 100%;
+        }
+
+        /* Tablet: 3 kolom per baris */
+        @media (max-width: 1024px) {
+            .quick-access-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        }
+
+        /* HP Besar: 2 kolom per baris */
+        @media (max-width: 640px) {
+            .quick-access-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+
+        /* HP Kecil: 1 kolom */
+        @media (max-width: 480px) {
+            .quick-access-grid { grid-template-columns: 1fr !important; }
+        }
+    

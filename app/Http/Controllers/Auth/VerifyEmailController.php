@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -25,3 +30,4 @@ class VerifyEmailController extends Controller
         return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

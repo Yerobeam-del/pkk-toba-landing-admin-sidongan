@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 function removeTreeConnectors() {
     ['org-connector-svg', 'tree-svg-connector', 'middle-connector-svg', 'pokja-connector-svg'].forEach(id => {
         document.getElementById(id)?.remove();
@@ -94,3 +97,4 @@ window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => drawTreeConnectors(), 200);
 });
+/* Dikembangkan oleh Institut Teknologi Del */

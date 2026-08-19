@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Services;
 
 use Illuminate\Support\Facades\Storage;
@@ -176,3 +181,4 @@ class DocumentPreviewService
         return null;
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

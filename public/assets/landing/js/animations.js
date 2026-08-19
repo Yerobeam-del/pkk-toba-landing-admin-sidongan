@@ -1,3 +1,6 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 /**
  * Animations Module
  * Handles scroll animations, counter animations, tab switching
@@ -66,3 +69,4 @@ function initTabSwitching() {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { initScrollAnimations, animateCounter, initTabSwitching };
 }
+/* Dikembangkan oleh Institut Teknologi Del */

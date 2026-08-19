@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models\Sieda;
 
 class Keluarga extends BaseSiedaModel
@@ -39,3 +44,4 @@ class Keluarga extends BaseSiedaModel
         return $this->hasMany(AnggotaKeluarga::class, 'no_kk', 'no_kk');
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

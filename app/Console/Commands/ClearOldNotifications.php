@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -37,3 +42,4 @@ class ClearOldNotifications extends Command
         return Command::SUCCESS;
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */

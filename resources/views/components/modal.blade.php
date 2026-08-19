@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @props([
     'name',
     'show' => false,
@@ -76,3 +79,4 @@ $maxWidth = [
         {{ $slot }}
     </div>
 </div>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

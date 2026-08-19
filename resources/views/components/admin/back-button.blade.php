@@ -1,3 +1,6 @@
+{{-- ============================================================
+     Dikembangkan oleh Institut Teknologi Del
+     ============================================================ --}}
 @props(['href', 'label' => 'Kembali'])
 
 {{--
@@ -22,3 +25,4 @@
     </svg>
     <span>{{ $label }}</span>
 </a>
+{{-- Dikembangkan oleh Institut Teknologi Del --}}

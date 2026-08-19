@@ -1,5 +1,10 @@
 <?php
 
+
+
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -54,3 +59,4 @@ class Wilayah extends Model
         return $query;
     }
 }
+/* Dikembangkan oleh Institut Teknologi Del */
