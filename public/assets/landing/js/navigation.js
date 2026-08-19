@@ -39,7 +39,7 @@ function navigateTo(pageId) {
     });
     
     const navLinks = document.getElementById('navLinks');
-    const hamburger = document.getElementById('hamburger');
+    const hamburger = document.getElementById('hamburgerBtn');
     if (navLinks) navLinks.classList.remove('active');
     if (hamburger) hamburger.classList.remove('active');
     
@@ -80,7 +80,7 @@ function navigateTo(pageId) {
 
 function toggleMenu() {
     const navLinks = document.getElementById('navLinks');
-    const hamburger = document.getElementById('hamburger');
+    const hamburger = document.getElementById('hamburgerBtn');
     if (navLinks) navLinks.classList.toggle('active');
     if (hamburger) hamburger.classList.toggle('active');
 }
