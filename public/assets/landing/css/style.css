@@ -1233,7 +1233,7 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .template-card-filename svg { flex-shrink: 0; color: var(--text-muted); opacity: 0.7; }
 .template-card-filename span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; font-family: inherit; font-size: 0.8rem; font-weight: 500; color: #4a5568; }
 .template-card-filename:hover { background: rgba(0, 0, 0, 0.05); border-color: rgba(0, 0, 0, 0.1); }
-.template-preview-modal { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+.template-preview-modal { position: fixed; inset: 0; z-index: 9999; display: none; align-items: center; justify-content: center; padding: 2rem; }
 .template-preview-modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); }
 .template-preview-modal-content { position: relative; background: #fff; border-radius: 16px; max-width: 900px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: modalSlideUp 0.3s ease; }
 @keyframes modalSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
