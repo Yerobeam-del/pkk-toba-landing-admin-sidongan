@@ -72,7 +72,7 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .navbar.scrolled { background-color: var(--primary); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15); padding: 0.6rem 2rem; }
 .navbar-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
 .navbar-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer; }
-.navbar-logo { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.3); transition: transform 0.3s ease; }
+.navbar-logo { width: 56px; height: 56px; object-fit: contain; transition: transform 0.3s ease; }
 .navbar-logo:hover { transform: rotate(10deg) scale(1.05); }
 .navbar-title { display: flex; flex-direction: column; }
 .navbar-title span:first-child { font-size: 1.1rem; font-weight: 700; color: #fff; letter-spacing: 1px; line-height: 1.2; }
