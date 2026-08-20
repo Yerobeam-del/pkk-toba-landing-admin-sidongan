@@ -10,7 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/sidongan/images/Logo-SIDONGAN-white.svg') }}">
+    {{-- Favicon - Theme Aware --}}
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg') }}">
     <title>@yield('title', 'SIDONGAN - PKK Kabupaten Toba')</title>
 
     <!-- Google Fonts -->

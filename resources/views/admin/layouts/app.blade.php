@@ -11,8 +11,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Panel - PKK Kabupaten Toba')</title>
 
-    {{-- Favicon untuk Tab Browser (Format SVG) --}}
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel-White.svg') }}">
+    {{-- Favicon untuk Tab Browser (Format SVG) - Theme Aware --}}
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel-ThemeAware.svg') }}">
 
     {{-- Fallback untuk browser lama yang tidak mendukung SVG --}}
     <link rel="alternate icon" type="image/png" href="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}">

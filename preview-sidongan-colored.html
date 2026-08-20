@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview - Logo SIDONGAN Colored</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f0f2f5; padding: 2rem; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { font-size: 1.5rem; font-weight: 800; color: #1a1a2e; margin-bottom: 0.5rem; text-align: center; }
+        .subtitle { color: #666; text-align: center; margin-bottom: 2rem; font-size: 0.9rem; }
+        .card { background: #fff; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .card h2 { font-size: 1.1rem; font-weight: 700; color: #14534c; margin-bottom: 1rem; }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.7rem; font-weight: 600; margin-left: 0.5rem; }
+        .badge.new { background: #d4edda; color: #155724; }
+        
+        .comparison-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1rem; }
+        .comparison-item { text-align: center; }
+        .comparison-box { 
+            width: 100%; 
+            aspect-ratio: 1; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 1.5rem;
+            position: relative;
+        }
+        .comparison-box.light-bg { background: #ffffff; border: 2px solid #e0e0e0; }
+        .comparison-box.dark-bg { background: #1a1a2e; border: 2px solid #333; }
+        .comparison-box img { max-width: 70%; max-height: 70%; object-fit: contain; }
+        .comparison-label { 
+            position: absolute; 
+            bottom: 8px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .comparison-item p { margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; color: #555; }
+        
+        .explanation { background: #f8f9fa; border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+        .explanation h3 { font-size: 1rem; font-weight: 700; color: #14534c; margin-bottom: 1rem; }
+        .explanation ul { list-style: none; }
+        .explanation li { padding: 0.4rem 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .explanation li::before { content: "✅"; }
+        
+        .color-info { display: flex; gap: 1rem; margin-top: 1rem; }
+        .color-box { 
+            flex: 1; 
+            padding: 1rem; 
+            border-radius: 8px; 
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .color-box.green { background: #14534c; color: #fff; }
+        .color-box.white { background: #ffffff; border: 2px solid #e0e0e0; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Logo SIDONGAN - Colored Version</h1>
+        <p class="subtitle">Versi colored untuk light mode menggunakan warna PKK hijau</p>
+
+        <div class="card">
+            <h2>Perbandingan Sebelum vs Sesudah <span class="badge new">BARU</span></h2>
+            
+            <div class="comparison-grid">
+                <!-- Light Mode -->
+                <div class="comparison-item">
+                    <div class="comparison-box light-bg">
+                        <img src="public/assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg" alt="Logo Theme-Aware Light Mode">
+                        <span class="comparison-label">☀️ Light Mode</span>
+                    </div>
+                    <p>Background Putih</p>
+                </div>
+                
+                <!-- Dark Mode -->
+                <div class="comparison-item">
+                    <div class="comparison-box dark-bg">
+                        <img src="public/assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg" alt="Logo Theme-Aware Dark Mode">
+                        <span class="comparison-label">🌙 Dark Mode</span>
+                    </div>
+                    <p>Background Gelap</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📋 Perbandingan dengan Logo Sebelumnya</h2>
+            
+            <div class="comparison-grid">
+                <!-- Old: White on light -->
+                <div class="comparison-item">
+                    <div class="comparison-box light-bg">
+                        <img src="public/assets/sidongan/images/Logo-SIDONGAN-white.svg" alt="Logo White (Lama)">
+                        <span class="comparison-label">❌ Lama (putih)</span>
+                    </div>
+                    <p>Terlihat pudar di background putih</p>
+                </div>
+                
+                <!-- New: Green on light -->
+                <div class="comparison-item">
+                    <div class="comparison-box light-bg">
+                        <img src="public/assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg" alt="Logo Theme-Aware (Baru)">
+                        <span class="comparison-label">✅ Baru (hijau)</span>
+                    </div>
+                    <p>Jelas terlihat di background putih</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="explanation">
+                <h3>⚙️ Cara Kerja</h3>
+                <ul>
+                    <li>SVG menggunakan <code>@media (prefers-color-scheme)</code></li>
+                    <li><strong>Light mode:</strong> Logo di-recolor menjadi hijau PKK (#14534c) menggunakan <code>feColorMatrix</code></li>
+                    <li><strong>Dark mode:</strong> Logo tetap putih (sudah terlihat jelas)</li>
+                    <li>Otomatis menyesuaikan dengan tema browser</li>
+                </ul>
+                
+                <div class="color-info">
+                    <div class="color-box green">
+                        ☀️ Light Mode<br>
+                        <strong>Hijau PKK #14534c</strong>
+                    </div>
+                    <div class="color-box white">
+                        🌙 Dark Mode<br>
+                        <strong>Putih</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

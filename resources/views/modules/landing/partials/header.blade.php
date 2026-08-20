@@ -13,9 +13,11 @@
     <div class="navbar-inner">
         <a href="{{ route('landing.home') }}" class="navbar-brand">
             <img src="{{ asset('assets/landing/images/PKK-Logo.png') }}" alt="Logo" class="navbar-logo">
+            <div class="navbar-divider"></div>
             <div class="navbar-title">
-                <span>PKK KAB. TOBA</span>
-                <span>Kabupaten Toba, Sumatera Utara</span>
+                <span class="navbar-title-main">TP - PKK</span>
+                <span class="navbar-title-sub">Kabupaten Toba</span>
+                <span class="navbar-title-region">Provinsi Sumatera Utara</span>
             </div>
         </a>
 

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview - Theme Aware Favicons</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f0f2f5; padding: 2rem; }
+
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { font-size: 1.8rem; font-weight: 800; color: #1a1a2e; margin-bottom: 0.5rem; text-align: center; }
+        .subtitle { color: #666; text-align: center; margin-bottom: 2rem; font-size: 0.95rem; }
+
+        .card { background: #fff; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .card h2 { font-size: 1.2rem; font-weight: 700; color: #14534c; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+        .card h2 .icon { font-size: 1.4rem; }
+
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem; }
+        .badge.new { background: #d4edda; color: #155724; }
+
+        .preview-section { margin-top: 1.5rem; }
+        .preview-label { font-size: 0.85rem; font-weight: 600; color: #666; margin-bottom: 0.75rem; }
+
+        .browser-tabs { display: flex; gap: 0; margin-bottom: 0; }
+        .browser-tab { display: flex; align-items: center; gap: 8px; padding: 0.75rem 1.25rem; border-radius: 10px 10px 0 0; font-size: 0.85rem; font-weight: 600; min-width: 220px; }
+        .browser-tab.light { background: #e8eaed; color: #333; }
+        .browser-tab.dark { background: #2d2d44; color: #e0e0e0; }
+        .browser-tab svg { width: 16px; height: 16px; }
+        .browser-tab .close { margin-left: auto; opacity: 0.5; cursor: pointer; }
+
+        .browser-bar { display: flex; align-items: center; padding: 0.5rem 1rem; border-radius: 0 0 8px 8px; font-size: 0.75rem; }
+        .browser-bar.light { background: #f8f9fa; color: #666; border: 1px solid #e0e0e0; border-top: none; }
+        .browser-bar.dark { background: #1a1a2e; color: #888; border: 1px solid #333; border-top: none; }
+        .browser-bar .url { flex: 1; }
+        .browser-bar .lock { margin-right: 6px; }
+
+        .favicon-showcase { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
+        .favicon-item { text-align: center; }
+        .favicon-item .favicon-box { width: 80px; height: 80px; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 12px; }
+        .favicon-item .favicon-box.light { background: #f0f0f0; border: 1px solid #e0e0e0; }
+        .favicon-item .favicon-box.dark { background: #1a1a2e; border: 1px solid #333; }
+        .favicon-item .favicon-box svg { width: 56px; height: 56px; }
+        .favicon-item p { margin-top: 0.5rem; font-size: 0.8rem; font-weight: 600; color: #666; }
+
+        .how-it-works { background: #f8f9fa; border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+        .how-it-works h3 { font-size: 1rem; font-weight: 700; color: #14534c; margin-bottom: 1rem; }
+        .how-it-works ul { list-style: none; }
+        .how-it-works li { padding: 0.4rem 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .how-it-works li::before { content: "✅"; }
+        .how-it-works code { background: #e8eaed; padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; }
+
+        .files-list { margin-top: 1rem; background: #fff; border-radius: 8px; padding: 1rem; border: 1px solid #e0e0e0; }
+        .files-list h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .files-list code { display: block; padding: 0.2rem 0; font-size: 0.8rem; color: #14534c; }
+        .files-list .new { color: #28a745; }
+        .files-list .changed { color: #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Theme-Aware Favicons</h1>
+        <p class="subtitle">Favicon otomatis menyesuaikan dengan tema browser (terang/gelap)</p>
+
+        <!-- Admin Panel -->
+        <div class="card">
+            <h2><span class="icon">🔐</span> Admin Panel <span class="badge new">BARU</span></h2>
+
+            <div class="preview-section">
+                <p class="preview-label">☀️ Light Mode Browser:</p>
+                <div class="browser-tabs">
+                    <div class="browser-tab light">
+                        <svg viewBox="0 0 32 32" width="16" height="16">
+                            <path fill="#14534c" d="M16 2 L28 8 L28 18 C28 25 23 30 16 32 C9 30 4 25 4 18 L4 8 Z"/>
+                            <path fill="#1a7a6e" d="M16 4 L26 9 L26 18 C26 24 22 28 16 30 C10 28 6 24 6 18 L6 9 Z"/>
+                            <polygon fill="#fbbf24" points="16,5 17.2,8 20.5,8 18,10 19,13.5 16,11.5 13,13.5 14,10 11.5,8 14.8,8"/>
+                            <text x="16" y="24" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="14" fill="#ffffff">A</text>
+                        </svg>
+                        <span>Login - Admin Panel</span>
+                        <span class="close">✕</span>
+                    </div>
+                </div>
+                <div class="browser-bar light">
+                    <span class="lock">🔒</span>
+                    <span class="url">tp-pkk.tobakab.go.id/admin/login</span>
+                </div>
+            </div>
+
+            <div class="preview-section" style="margin-top: 1.5rem;">
+                <p class="preview-label">🌙 Dark Mode Browser:</p>
+                <div class="browser-tabs">
+                    <div class="browser-tab dark">
+                        <svg viewBox="0 0 32 32" width="16" height="16">
+                            <path fill="rgba(255,255,255,0.15)" d="M16 2 L28 8 L28 18 C28 25 23 30 16 32 C9 30 4 25 4 18 L4 8 Z"/>
+                            <path fill="rgba(255,255,255,0.25)" d="M16 4 L26 9 L26 18 C26 24 22 28 16 30 C10 28 6 24 6 18 L6 9 Z"/>
+                            <polygon fill="#fbbf24" points="16,5 17.2,8 20.5,8 18,10 19,13.5 16,11.5 13,13.5 14,10 11.5,8 14.8,8"/>
+                            <text x="16" y="24" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="14" fill="#ffffff">A</text>
+                        </svg>
+                        <span>Login - Admin Panel</span>
+                        <span class="close">✕</span>
+                    </div>
+                </div>
+                <div class="browser-bar dark">
+                    <span class="lock">🔒</span>
+                    <span class="url">tp-pkk.tobakab.go.id/admin/login</span>
+                </div>
+            </div>
+
+            <div class="favicon-showcase">
+                <div class="favicon-item">
+                    <div class="favicon-box light">
+                        <svg viewBox="0 0 32 32">
+                            <path fill="#14534c" d="M16 2 L28 8 L28 18 C28 25 23 30 16 32 C9 30 4 25 4 18 L4 8 Z"/>
+                            <path fill="#1a7a6e" d="M16 4 L26 9 L26 18 C26 24 22 28 16 30 C10 28 6 24 6 18 L6 9 Z"/>
+                            <polygon fill="#fbbf24" points="16,5 17.2,8 20.5,8 18,10 19,13.5 16,11.5 13,13.5 14,10 11.5,8 14.8,8"/>
+                            <text x="16" y="24" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="14" fill="#ffffff">A</text>
+                        </svg>
+                    </div>
+                    <p>☀️ Light Mode</p>
+                </div>
+                <div class="favicon-item">
+                    <div class="favicon-box dark">
+                        <svg viewBox="0 0 32 32">
+                            <path fill="rgba(255,255,255,0.15)" d="M16 2 L28 8 L28 18 C28 25 23 30 16 32 C9 30 4 25 4 18 L4 8 Z"/>
+                            <path fill="rgba(255,255,255,0.25)" d="M16 4 L26 9 L26 18 C26 24 22 28 16 30 C10 28 6 24 6 18 L6 9 Z"/>
+                            <polygon fill="#fbbf24" points="16,5 17.2,8 20.5,8 18,10 19,13.5 16,11.5 13,13.5 14,10 11.5,8 14.8,8"/>
+                            <text x="16" y="24" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="14" fill="#ffffff">A</text>
+                        </svg>
+                    </div>
+                    <p>🌙 Dark Mode</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIDONGAN -->
+        <div class="card">
+            <h2><span class="icon">📋</span> SIDONGAN <span class="badge new">BARU</span></h2>
+
+            <div class="preview-section">
+                <p class="preview-label">☀️ Light Mode Browser:</p>
+                <div class="browser-tabs">
+                    <div class="browser-tab light">
+                        <svg viewBox="0 0 32 32" width="16" height="16">
+                            <rect fill="#14534c" x="5" y="2" width="22" height="28" rx="2"/>
+                            <path fill="#0d3d36" d="M20 2 L27 9 L20 9 Z"/>
+                            <rect fill="rgba(255,255,255,0.6)" x="8" y="12" width="16" height="2" rx="1"/>
+                            <rect fill="rgba(255,255,255,0.4)" x="8" y="16" width="12" height="2" rx="1"/>
+                            <rect fill="rgba(255,255,255,0.4)" x="8" y="20" width="14" height="2" rx="1"/>
+                            <polygon fill="#fbbf24" points="16,3 16.8,5 19,5 17.3,6.5 18,8.5 16,7.2 14,8.5 14.7,6.5 13,5 15.2,5"/>
+                            <text x="16" y="27" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="10" fill="#ffffff">S</text>
+                        </svg>
+                        <span>Login - SIDONGAN</span>
+                        <span class="close">✕</span>
+                    </div>
+                </div>
+                <div class="browser-bar light">
+                    <span class="lock">🔒</span>
+                    <span class="url">tp-pkk.tobakab.go.id/sidongan-login</span>
+                </div>
+            </div>
+
+            <div class="preview-section" style="margin-top: 1.5rem;">
+                <p class="preview-label">🌙 Dark Mode Browser:</p>
+                <div class="browser-tabs">
+                    <div class="browser-tab dark">
+                        <svg viewBox="0 0 32 32" width="16" height="16">
+                            <rect fill="rgba(255,255,255,0.15)" x="5" y="2" width="22" height="28" rx="2"/>
+                            <path fill="rgba(255,255,255,0.1)" d="M20 2 L27 9 L20 9 Z"/>
+                            <rect fill="rgba(255,255,255,0.5)" x="8" y="12" width="16" height="2" rx="1"/>
+                            <rect fill="rgba(255,255,255,0.35)" x="8" y="16" width="12" height="2" rx="1"/>
+                            <rect fill="rgba(255,255,255,0.35)" x="8" y="20" width="14" height="2" rx="1"/>
+                            <polygon fill="#fbbf24" points="16,3 16.8,5 19,5 17.3,6.5 18,8.5 16,7.2 14,8.5 14.7,6.5 13,5 15.2,5"/>
+                            <text x="16" y="27" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="10" fill="#ffffff">S</text>
+                        </svg>
+                        <span>Login - SIDONGAN</span>
+                        <span class="close">✕</span>
+                    </div>
+                </div>
+                <div class="browser-bar dark">
+                    <span class="lock">🔒</span>
+                    <span class="url">tp-pkk.tobakab.go.id/sidongan-login</span>
+                </div>
+            </div>
+
+            <div class="favicon-showcase">
+                <div class="favicon-item">
+                    <div class="favicon-box light">
+                        <svg viewBox="0 0 32 32">
+                            <rect fill="#14534c" x="5" y="2" width="22" height="28" rx="2"/>
+                            <path fill="#0d3d36" d="M20 2 L27 9 L20 9 Z"/>
+                            <rect fill="rgba(255,255,255,0.6)" x="8" y="12" width="16" height="2" rx="1"/>
+                            <rect fill="rgba(255,255,255,0.4)" x="8" y="16" width="12" height="2" rx="1"/>
+                            <rect fill="rgba(255,255,255,0.4)" x="8" y="20" width="14" height="2" rx="1"/>
+                            <polygon fill="#fbbf24" points="16,3 16.8,5 19,5 17.3,6.5 18,8.5 16,7.2 14,8.5 14.7,6.5 13,5 15.2,5"/>
+                            <text x="16" y="27" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="10" fill="#ffffff">S</text>
+                        </svg>
+                    </div>
+                    <p>☀️ Light Mode</p>
+                </div>
+                <div class="favicon-item">
+                    <div class="favicon-box dark">
+                        <svg viewBox="0 0 32 32">
+                            <rect fill="rgba(255,255,255,0.15)" x="5" y="2" width="22" height="28" rx="2"/>
+                            <path fill="rgba(255,255,255,0.1)" d="M20 2 L27 9 L20 9 Z"/>
+                            <rect fill="rgba(255,255,255,0.5)" x="8" y="12" width="16" height="2" rx="1"/>
+                            <rect fill="rgba(255,255,255,0.35)" x="8" y="16" width="12" height="2" rx="1"/>
+                            <rect fill="rgba(255,255,255,0.35)" x="8" y="20" width="14" height="2" rx="1"/>
+                            <polygon fill="#fbbf24" points="16,3 16.8,5 19,5 17.3,6.5 18,8.5 16,7.2 14,8.5 14.7,6.5 13,5 15.2,5"/>
+                            <text x="16" y="27" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="10" fill="#ffffff">S</text>
+                        </svg>
+                    </div>
+                    <p>🌙 Dark Mode</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How it works -->
+        <div class="card">
+            <div class="how-it-works">
+                <h3>⚙️ Cara Kerja</h3>
+                <ul>
+                    <li>Menggunakan CSS <code>@media (prefers-color-scheme)</code> di dalam SVG</li>
+                    <li>Otomatis mendeteksi tema browser (terang/gelap)</li>
+                    <li>Menampilkan versi yang sesuai secara otomatis</li>
+                    <li>Berfungsi di Chrome, Firefox, Safari, Edge</li>
+                </ul>
+
+                <div class="files-list">
+                    <h4>📁 File yang diubah:</h4>
+                    <code class="changed">✦ resources/views/auth/login.blade.php</code>
+                    <code class="changed">✦ resources/views/admin/layouts/app.blade.php</code>
+                    <code class="changed">✦ resources/views/sidongan-auth/login.blade.php</code>
+                    <code class="changed">✦ resources/views/sidongan/layouts/app.blade.php</code>
+
+                    <h4 style="margin-top: 1rem;">📁 File baru:</h4>
+                    <code class="new">✦ public/assets/admin/images/Logo_Admin-Panel-ThemeAware.svg</code>
+                    <code class="new">✦ public/assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg</code>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
