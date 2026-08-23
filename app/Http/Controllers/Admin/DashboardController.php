@@ -22,62 +22,63 @@ class DashboardController extends Controller
     public function index()
     {
         try {
-            // Optimasi: Kurangi jumlah query dengan menggabungkan hitungan
-            $counts = DB::selectOne('
-                SELECT
-                    (SELECT COUNT(*) FROM news) as total_berita,
-                    (SELECT COUNT(*) FROM users WHERE email_verified_at IS NOT NULL) as total_pengurus,
-                    (SELECT COUNT(*) FROM templates) as total_template,
-                    (SELECT COUNT(*) FROM applications WHERE is_active = 1) as total_aplikasi,
-                    (SELECT COUNT(*) FROM users) as total_users,
-                    (SELECT COUNT(*) FROM documents) as total_sk_dokumen,
-                    (SELECT COUNT(*) FROM news WHERE MONTH(created_at) = ? AND YEAR(created_at) = ?) as berita_bulan_ini,
-                    (SELECT COUNT(*) FROM users WHERE MONTH(created_at) = ? AND YEAR(created_at) = ?) as users_bulan_ini
-            ', [
-                now()->month, now()->year,
-                now()->month, now()->year,
-            ]);
+            // Hitung secara terpisah agar jika satu tabel gagal, yang lain tetap jalan
+            $counts = new \stdClass();
+            try { $counts->total_berita = News::count(); } catch (\Exception $e) { $counts->total_berita = 0; }
+            try { $counts->total_pengurus = User::whereNotNull('email_verified_at')->count(); } catch (\Exception $e) { $counts->total_pengurus = 0; }
+            try { $counts->total_template = Template::count(); } catch (\Exception $e) { $counts->total_template = 0; }
+            try { $counts->total_aplikasi = Application::where('is_active', true)->count(); } catch (\Exception $e) { $counts->total_aplikasi = 0; }
+            try { $counts->total_users = User::count(); } catch (\Exception $e) { $counts->total_users = 0; }
+            try { $counts->total_sk_dokumen = Document::count(); } catch (\Exception $e) { $counts->total_sk_dokumen = 0; }
+            try { $counts->berita_bulan_ini = News::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(); } catch (\Exception $e) { $counts->berita_bulan_ini = 0; }
+            try { $counts->users_bulan_ini = User::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(); } catch (\Exception $e) { $counts->users_bulan_ini = 0; }
 
             // Eager load relasi untuk menghindari N+1
-            $beritaTerbaru = News::latest()->take(5)->get(['id', 'title', 'created_at']);
-            $usersTerbaru = User::with('role:id,name,display_name')
-                ->latest()
-                ->take(5)
-                ->get(['id', 'name', 'role_id', 'created_at']);
+            try { $beritaTerbaru = News::latest()->take(5)->get(['id', 'title', 'created_at']); } catch (\Exception $e) { $beritaTerbaru = collect(); }
+            try { $usersTerbaru = User::with('role:id,name,display_name')->latest()->take(5)->get(['id', 'name', 'role_id', 'created_at']); } catch (\Exception $e) { $usersTerbaru = collect(); }
 
-            // Data untuk chart (6 bulan terakhir)
-            $chartData = DB::select('
-                SELECT
-                    DATE_FORMAT(created_at, "%Y-%m") as month,
-                    COUNT(*) as count
-                FROM (
-                    SELECT created_at FROM news UNION ALL
-                    SELECT created_at FROM users WHERE email_verified_at IS NOT NULL
-                ) combined
-                WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-                GROUP BY month
-                ORDER BY month ASC
-            ');
+            // Data untuk chart (6 bulan terakhir) — resilient per tabel
+            $chartData = [];
+            try {
+                $chartData = DB::select('
+                    SELECT
+                        DATE_FORMAT(created_at, "%Y-%m") as month,
+                        COUNT(*) as count
+                    FROM (
+                        SELECT created_at FROM news UNION ALL
+                        SELECT created_at FROM users WHERE email_verified_at IS NOT NULL
+                    ) combined
+                    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+                    GROUP BY month
+                    ORDER BY month ASC
+                ');
+            } catch (\Exception $e) {
+                $chartData = [];
+            }
 
             // Recent activity (gabungan dari berita terbaru + user terbaru)
             $recentActivities = collect();
-            foreach ($beritaTerbaru as $b) {
-                $recentActivities->push([
-                    'type' => 'berita',
-                    'icon' => 'newspaper',
-                    'text' => 'Berita "' . Str::limit($b->title, 40) . '" diterbitkan',
-                    'time' => $b->created_at,
-                ]);
+            try {
+                foreach ($beritaTerbaru as $b) {
+                    $recentActivities->push([
+                        'type' => 'berita',
+                        'icon' => 'newspaper',
+                        'text' => 'Berita "' . Str::limit($b->title, 40) . '" diterbitkan',
+                        'time' => $b->created_at,
+                    ]);
+                }
+                foreach ($usersTerbaru as $u) {
+                    $recentActivities->push([
+                        'type' => 'user',
+                        'icon' => 'user',
+                        'text' => 'Akun "' . $u->name . '" dibuat',
+                        'time' => $u->created_at,
+                    ]);
+                }
+                $recentActivities = $recentActivities->sortByDesc('time')->take(8)->values();
+            } catch (\Exception $e) {
+                $recentActivities = collect();
             }
-            foreach ($usersTerbaru as $u) {
-                $recentActivities->push([
-                    'type' => 'user',
-                    'icon' => 'user',
-                    'text' => 'Akun "' . $u->name . '" dibuat',
-                    'time' => $u->created_at,
-                ]);
-            }
-            $recentActivities = $recentActivities->sortByDesc('time')->take(8)->values();
 
             $data = [
                 'totalBerita' => $counts->total_berita ?? 0,

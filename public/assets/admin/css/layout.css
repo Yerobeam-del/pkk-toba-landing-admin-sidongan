@@ -390,3 +390,110 @@ ADMIN FOOTER
     border-color: var(--primary);
     color: var(--primary);
 }
+
+/* ==========================================
+   DARK MODE — Layout Components
+   ========================================== */
+
+/* --- User Profile Button --- */
+.dark-mode .user-profile-btn:hover {
+    background: #334155;
+}
+.dark-mode .user-text-name {
+    color: var(--text-dark);
+}
+.dark-mode .user-text-role {
+    color: var(--text-muted);
+}
+.dark-mode .user-avatar {
+    border-color: #334155;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* --- User Dropdown Menu --- */
+.dark-mode .user-menu {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.dark-mode .user-menu-header {
+    border-bottom-color: #334155;
+}
+.dark-mode .user-menu-header-title {
+    color: var(--text-dark);
+}
+.dark-mode .user-menu-header-email {
+    color: var(--text-muted);
+}
+.dark-mode .user-menu-item {
+    color: var(--text-dark);
+}
+.dark-mode .user-menu-item:hover {
+    background: rgba(255,255,255,0.05);
+}
+.dark-mode .user-menu-divider {
+    border-top-color: #334155;
+}
+.dark-mode .user-menu-logout {
+    color: #f87171;
+}
+.dark-mode .user-menu-logout:hover {
+    background: rgba(239,68,68,0.1);
+}
+.dark-mode .user-menu-arrow {
+    color: var(--text-muted);
+}
+
+/* --- Admin Footer --- */
+.dark-mode .admin-footer {
+    background: #1e293b;
+    border-top-color: #334155;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+}
+.dark-mode .admin-footer-left {
+    color: var(--text-muted);
+}
+.dark-mode .admin-footer-left strong {
+    color: var(--text-dark);
+}
+.dark-mode .admin-footer-right {
+    color: var(--text-muted);
+}
+.dark-mode .admin-footer-right strong {
+    color: var(--primary);
+}
+.dark-mode .admin-footer-divider {
+    color: rgba(255,255,255,0.15);
+}
+.dark-mode .admin-footer-link {
+    color: var(--text-muted);
+}
+.dark-mode .admin-footer-link:hover {
+    color: var(--primary);
+}
+
+/* --- Table action buttons --- */
+.dark-mode .action-btn {
+    color: var(--text-muted);
+}
+.dark-mode .action-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: #60a5fa;
+}
+.dark-mode .action-btn.btn-delete:hover {
+    background: rgba(239,68,68,0.1);
+    color: #f87171;
+}
+
+/* --- Pagination --- */
+.dark-mode .sd-paginate {
+    background: #1e293b;
+    border-color: #334155;
+    color: var(--text-dark);
+}
+.dark-mode .sd-paginate:hover {
+    background: #334155;
+    border-color: var(--primary);
+}
+
+/* Dikembangkan oleh Institut Teknologi Del */

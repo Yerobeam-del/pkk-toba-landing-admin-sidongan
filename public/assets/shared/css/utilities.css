@@ -765,3 +765,141 @@
 
 /* u-text-xxs — font-size: 0.6rem; */
 .u-text-xxs { font-size: 0.6rem; }
+
+/* ============================================================
+   DARK MODE — Utility overrides
+   Menggunakan selector .dark-mode untuk mengubah warna hardcoded
+   pada utility classes agar sesuai tema gelap.
+   ============================================================ */
+.dark-mode {
+  /* --- Background resets --- */
+  .u-a5, .u-a9, .u-a27, .u-a56, .u-box-soft {
+    background: #1e293b;
+  }
+  .u-a5:hover, .u-a9:hover, .u-a27:hover {
+    background: rgba(255,255,255,0.06);
+  }
+  .u-a10, .u-a28, .u-a42 {
+    background: #1e293b;
+    border-color: #475569;
+  }
+
+  /* --- Text colors --- */
+  .u-a43, .u-check-label, .u-check-label-block {
+    color: var(--text-dark);
+  }
+  .u-a30, .u-a32, .u-a22 {
+    color: var(--text-dark);
+  }
+  .u-label-slate, .u-label-dark, .u-label, .u-label-gray, .u-label-simple {
+    color: var(--text-dark);
+  }
+  .u-h3-slate, .u-h2-slate, .u-section-title-dark, .u-section-title-slate {
+    color: var(--text-dark);
+  }
+  .u-ellipsis-title, .u-text-sm-strong {
+    color: var(--text-dark);
+  }
+
+  /* --- Input backgrounds --- */
+  .u-a6, .u-a24, .u-a49, .u-a50, .u-a63, .u-a77, .u-input-block {
+    background: #1e293b;
+    border-color: #334155;
+    color: var(--text-dark);
+  }
+  .u-a6:focus, .u-a24:focus, .u-a49:focus, .u-a50:focus, .u-input-block:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(20,184,166,0.2);
+  }
+
+  /* --- Select --- */
+  .u-select-mini {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: var(--text-dark);
+  }
+  .u-select-mini option {
+    background: #1e293b;
+    color: var(--text-dark);
+  }
+
+  /* --- Search input --- */
+  .u-input-icon-left {
+    background: #1e293b;
+    border-color: #334155;
+    color: var(--text-dark);
+  }
+
+  /* --- Alert boxes --- */
+  .u-inline-alert-danger {
+    background: rgba(239,68,68,0.1);
+    border-color: rgba(239,68,68,0.2);
+    color: #fca5a5;
+  }
+  .u-a34 {
+    background: rgba(239,68,68,0.1);
+    color: #fca5a5;
+  }
+
+  /* --- Badge variants --- */
+  .u-badge-soft {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-muted);
+  }
+  .u-badge-green {
+    background: rgba(34,197,94,0.15);
+    color: #4ade80;
+  }
+  .u-a67 {
+    background: rgba(239,68,68,0.15);
+    color: #f87171;
+  }
+
+  /* --- Card backgrounds --- */
+  .u-card-white, .u-a78 {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  /* --- Pagination --- */
+  .u-a58 {
+    background: #1e293b;
+    border-color: #334155;
+    color: var(--text-dark);
+  }
+  .u-a58:hover {
+    background: #334155;
+  }
+
+  /* --- Text muted overrides --- */
+  .u-field-note {
+    color: var(--text-muted);
+  }
+  .u-text-sm-muted-2, .u-text-sm-muted {
+    color: var(--text-muted);
+  }
+  .u-text-muted-lead {
+    color: var(--text-muted);
+  }
+  .u-text-xs-muted {
+    color: var(--text-muted);
+  }
+
+  /* --- Form actions border --- */
+  .u-form-actions {
+    border-top-color: rgba(255,255,255,0.08);
+  }
+
+  /* --- Row dividers --- */
+  .u-row-divider-border {
+    border-bottom-color: rgba(255,255,255,0.08);
+  }
+
+  /* --- Code chips --- */
+  .u-code-chip {
+    background: #334155;
+    color: var(--text-dark);
+  }
+}
+
+/* Dikembangkan oleh Institut Teknologi Del */

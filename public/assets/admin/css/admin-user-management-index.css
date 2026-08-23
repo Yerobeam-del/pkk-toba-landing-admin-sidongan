@@ -39,3 +39,452 @@
     }
 }
 
+
+/* =========================================
+   STAT CARD VARIANTS (replace inline styles)
+   ========================================= */
+.um-stat-red {
+    background: linear-gradient(135deg, #e53e3e, #c53030);
+    color: #fff;
+}
+.um-stat-purple {
+    background: linear-gradient(135deg, #805ad5, #6b46c1);
+    color: #fff;
+}
+
+/* =========================================
+   EXPORT BUTTON
+   ========================================= */
+.um-export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f0fdf4;
+    color: #166534;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #bbf7d0;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+/* =========================================
+   TAB BUTTONS
+   ========================================= */
+.um-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.um-tab-btn.active {
+    color: var(--primary);
+    background: rgba(13, 148, 136, 0.1);
+    border-bottom: 2px solid var(--primary);
+}
+.um-tab-btn:not(.active) {
+    color: var(--text-muted);
+    background: transparent;
+    border-bottom: 2px solid transparent;
+}
+
+/* =========================================
+   SEARCH CLEAR BUTTON
+   ========================================= */
+.um-search-clear {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+/* =========================================
+   BULK ACTION BAR
+   ========================================= */
+.um-bulk-bar {
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(20,184,166,0.08), rgba(20,184,166,0.04));
+    border: 1px solid rgba(20,184,166,0.2);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.um-bulk-count {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+.um-bulk-btns {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.um-bulk-activate {
+    padding: 0.4rem 0.75rem;
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+.um-bulk-deactivate {
+    padding: 0.4rem 0.75rem;
+    background: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+.um-bulk-delete {
+    padding: 0.4rem 0.75rem;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+.um-bulk-cancel {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* =========================================
+   MODAL STYLES (Reset Password + New Account)
+   ========================================= */
+.um-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+.um-modal-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 440px;
+    margin: 1rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease;
+}
+.um-modal-icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+.um-modal-icon-box--teal {
+    background: rgba(20,184,166,0.1);
+}
+.um-modal-icon-box--green {
+    background: rgba(34,197,94,0.1);
+}
+.um-modal-title {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+.um-modal-subtitle {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+.um-modal-label {
+    display: block;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+.um-modal-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+.um-modal-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(20,184,166,0.1);
+}
+.um-modal-btns {
+    display: flex;
+    gap: 0.75rem;
+}
+.um-modal-btn-cancel {
+    flex: 1;
+    padding: 0.75rem;
+    background: #f1f5f9;
+    color: #64748b;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+.um-modal-btn-cancel:hover {
+    background: #e2e8f0;
+}
+.um-modal-btn-primary {
+    flex: 1;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, var(--primary), #0d9488);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(20,184,166,0.3);
+}
+.um-modal-btn-primary:hover {
+    box-shadow: 0 6px 16px rgba(20,184,166,0.4);
+}
+.um-modal-btn-close {
+    width: 100%;
+    padding: 0.625rem;
+    background: transparent;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    margin-top: 1rem;
+}
+.um-modal-btn-close:hover {
+    background: #f1f5f9;
+}
+
+/* --- Credentials Card --- */
+.um-cred-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+.um-cred-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.um-cred-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-top: 0.25rem;
+}
+.um-cred-value--email {
+    color: var(--primary);
+    font-family: monospace;
+}
+.um-cred-value--note {
+    color: #64748b;
+    font-style: italic;
+}
+
+/* --- Copy Buttons --- */
+.um-copy-btn-primary {
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, var(--primary), #0d9488);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(20,184,166,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.um-copy-btn-secondary {
+    width: 100%;
+    padding: 0.625rem;
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* --- User row avatar --- */
+.um-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--primary), #0d9488);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.um-app-badge {
+    background: rgba(128,90,213,0.1);
+    color: #6b46c1;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* =========================================
+   D
+
+/* =========================================
+   DARK MODE — Admin User Management
+   ========================================= */
+.dark-mode .um-export-btn {
+    background: rgba(34,197,94,0.1);
+    color: #4ade80;
+    border-color: rgba(34,197,94,0.3);
+}
+.dark-mode .um-bulk-bar {
+    background: linear-gradient(135deg, rgba(20,184,166,0.12), rgba(20,184,166,0.06));
+    border-color: rgba(20,184,166,0.25);
+}
+.dark-mode .um-bulk-activate {
+    background: rgba(34,197,94,0.1);
+    color: #4ade80;
+    border-color: rgba(34,197,94,0.3);
+}
+.dark-mode .um-bulk-deactivate {
+    background: rgba(245,158,11,0.1);
+    color: #fbbf24;
+    border-color: rgba(245,158,11,0.3);
+}
+.dark-mode .um-bulk-delete {
+    background: rgba(239,68,68,0.1);
+    color: #f87171;
+    border-color: rgba(239,68,68,0.3);
+}
+.dark-mode .um-modal-card {
+    background: #1e293b;
+}
+.dark-mode .um-modal-title {
+    color: var(--text-dark);
+}
+.dark-mode .um-modal-subtitle {
+    color: var(--text-muted);
+}
+.dark-mode .um-modal-label {
+    color: var(--text-dark);
+}
+.dark-mode .um-modal-input {
+    background: #0f172a;
+    border-color: #334155;
+    color: var(--text-dark);
+}
+.dark-mode .um-modal-btn-cancel {
+    background: #334155;
+    color: var(--text-muted);
+}
+.dark-mode .um-modal-btn-cancel:hover {
+    background: #475569;
+}
+.dark-mode .um-modal-btn-close {
+    border-color: #334155;
+    color: var(--text-muted);
+}
+.dark-mode .um-modal-btn-close:hover {
+    background: #334155;
+}
+.dark-mode .um-cred-card {
+    background: #0f172a;
+    border-color: #334155;
+}
+.dark-mode .um-cred-label {
+    color: var(--text-muted);
+}
+.dark-mode .um-cred-value {
+    color: var(--text-dark);
+}
+.dark-mode .um-cred-value--note {
+    color: var(--text-muted);
+}
+.dark-mode .um-copy-btn-secondary {
+    background: #334155;
+    color: var(--text-muted);
+}
+.dark-mode .um-app-badge {
+    background: rgba(128,90,213,0.2);
+    color: #a78bfa;
+}
+.dark-mode .um-stat-red {
+    background: linear-gradient(135deg, #991b1b, #7f1d1d);
+}
+.dark-mode .um-stat-purple {
+    background: linear-gradient(135deg, #6b21a8, #581c87);
+}

@@ -19,7 +19,7 @@
         </div>
         <div class="u-a64">
             @if(auth()->user()->hasRole('super_admin'))
-            <a href="{{ route('admin.user-management.export', ['tab' => $tab]) }}" class="btn" style="display:inline-flex;align-items:center;gap:0.5rem;background:#f0fdf4;color:#166534;padding:0.5rem 1rem;border-radius:8px;border:1px solid #bbf7d0;text-decoration:none;font-weight:600;font-size:0.85rem;transition:all 0.2s;white-space:nowrap">
+            <a href="{{ route('admin.user-management.export', ['tab' => $tab]) }}" class="btn um-export-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Export CSV
             </a>
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <div class="stat-card" style="background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff">
+        <div class="stat-card um-stat-red">
             <div class="u-flex-start-gap-4">
                 <div class="u-icon-badge">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <div class="stat-card" style="background:linear-gradient(135deg,#805ad5,#6b46c1);color:#fff">
+        <div class="stat-card um-stat-purple">
             <div class="u-flex-start-gap-4">
                 <div class="u-icon-badge">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -98,7 +98,7 @@
                     $isActive = $tab === $key;
                     $url = request()->fullUrlWithQuery(['tab' => $key, 'page' => 1, 'per_page' => request('per_page', 10)]);
                 @endphp
-                <a href="{{ $url }}" class="tab-btn {{ $isActive ? 'active' : '' }}" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:8px;text-decoration:none;color:{{ $isActive ? 'var(--primary)' : 'var(--text-muted)' }};background:{{ $isActive ? 'rgba(13, 148, 136, 0.1)' : 'transparent' }};font-weight:600;font-size:0.9rem;transition:all 0.2s;border-bottom:2px solid {{ $isActive ? 'var(--primary)' : 'transparent' }};white-space:nowrap">
+                <a href="{{ $url }}" class="tab-btn um-tab-btn {{ $isActive ? 'active' : '' }}">
                     {{ $label }}
                     @if($key !== 'all')
                         @php
@@ -129,7 +129,7 @@
                     </svg>
                     <input type="text" name="search" value="{{ request('search') }}" class="user-search-input u-input-icon-left" placeholder="Cari nama atau email...">
                     @if(request('search'))
-                        <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
+                        <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" class="um-search-clear" title="Hapus pencarian">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="18" y1="6" x2="6" y2="18"/>
                                 <line x1="6" y1="6" x2="18" y2="18"/>
@@ -163,20 +163,20 @@
 
     {{-- Bulk Action Bar (hidden by default, shown when checkboxes selected) --}}
     @if(auth()->user()->hasRole('super_admin'))
-    <div id="bulkActionBar" style="display:none;padding:0.75rem 1rem;background:linear-gradient(135deg,rgba(20,184,166,0.08),rgba(20,184,166,0.04));border:1px solid rgba(20,184,166,0.2);border-radius:10px;margin-bottom:1rem;display:none;align-items:center;gap:1rem;flex-wrap:wrap">
-        <span style="font-size:0.85rem;font-weight:600;color:var(--primary)"><span id="bulkCount">0</span> dipilih</span>
-        <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
-            <button type="button" onclick="bulkAction('activate')" class="btn" style="padding:0.4rem 0.75rem;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:0.375rem">
+    <div id="bulkActionBar" class="um-bulk-bar" style="display:none">
+        <span class="um-bulk-count"><span id="bulkCount">0</span> dipilih</span>
+        <div class="um-bulk-btns">
+            <button type="button" onclick="bulkAction('activate')" class="um-bulk-activate">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Aktifkan
             </button>
-            <button type="button" onclick="bulkAction('deactivate')" class="btn" style="padding:0.4rem 0.75rem;background:#fffbeb;color:#d97706;border:1px solid #fde68a;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:0.375rem">
+            <button type="button" onclick="bulkAction('deactivate')" class="um-bulk-deactivate">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Nonaktifkan
             </button>
-            <button type="button" onclick="bulkAction('delete')" class="btn" style="padding:0.4rem 0.75rem;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:0.375rem">
+            <button type="button" onclick="bulkAction('delete')" class="um-bulk-delete">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Hapus
             </button>
         </div>
-        <button type="button" onclick="clearBulkSelection()" style="margin-left:auto;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;font-weight:500;display:inline-flex;align-items:center;gap:0.25rem">
+        <button type="button" onclick="clearBulkSelection()" class="um-bulk-cancel">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Batal
         </button>
     </div>
@@ -210,7 +210,7 @@
 
                             return '
                                 <div class="u-flex-center-gap-3">
-                                    <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0">
+                                    <div class="um-user-avatar">
                                         ' . $avatarHtml . '
                                     </div>
                                     <div>
@@ -234,7 +234,7 @@
                         'callback' => function($item, $value) {
                             $count = $item->applications->count();
                             if ($count > 0) {
-                                return '<span style="background:rgba(128,90,213,0.1);color:#6b46c1;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600">' . $count . ' aplikasi</span>';
+                                return '<span class="um-app-badge">' . $count . ' aplikasi</span>';
                             }
                             return '<span class="u-a31">-</span>';
                         }
@@ -276,13 +276,13 @@
                     $html = '';
                     if (auth()->user()->sidongan_role === 'super_admin') {
                         $statusAction = $item->email_verified_at
-                            ? '<button type="button" data-toggle-status="1" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Nonaktifkan Akun" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>'
-                            : '<button type="button" data-toggle-status="0" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Aktifkan Akun" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>';
+                            ? '<button type="button" class="action-btn" data-toggle-status="1" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Nonaktifkan Akun"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>'
+                            : '<button type="button" class="action-btn" data-toggle-status="0" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Aktifkan Akun"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>';
 
                         $html .= $statusAction;
 
                         // Tombol Reset Password
-                        $html .= '<button type="button" data-reset-password-id="'.$item->id.'" data-reset-password-name="'.addslashes($item->name).'" title="Reset Password" style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:6px;border:none;cursor:pointer;transition:all 0.2s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>';
+                        $html .= '<button type="button" class="action-btn" data-reset-password-id="'.$item->id.'" data-reset-password-name="'.addslashes($item->name).'" title="Reset Password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>';
                     }
                     return $html;
                 }
@@ -294,39 +294,39 @@
 {{-- ==========================================
      MODAL RESET PASSWORD
      ========================================== --}}
-<div id="resetPasswordModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
-    <div style="background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:420px;margin:1rem;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:slideIn 0.3s ease">
+<div id="resetPasswordModal" class="um-modal-overlay">
+    <div class="um-modal-card" style="max-width:420px">
         <div style="text-align:center;margin-bottom:1.5rem">
-            <div style="width:56px;height:56px;background:rgba(20,184,166,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+            <div class="um-modal-icon-box um-modal-icon-box--teal">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
             </div>
-            <h3 style="margin:0 0 0.25rem 0;font-size:1.15rem;font-weight:700;color:#1e293b">Reset Password</h3>
-            <p style="margin:0;color:#64748b;font-size:0.9rem">Akun: <strong id="resetPasswordUserName"></strong></p>
+            <h3 class="um-modal-title">Reset Password</h3>
+            <p class="um-modal-subtitle">Akun: <strong id="resetPasswordUserName"></strong></p>
         </div>
 
         <form id="resetPasswordForm">
             <input type="hidden" id="resetPasswordUserId" value="">
 
             <div class="form-group u-mb-4">
-                <label for="resetPasswordInput" style="display:block;font-weight:600;color:#1e293b;margin-bottom:0.5rem;font-size:0.9rem">Password Baru</label>
+                <label for="resetPasswordInput" class="um-modal-label">Password Baru</label>
                 <input type="password" id="resetPasswordInput" name="password" required placeholder="Minimal 8 karakter"
-                    style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;font-family:inherit;transition:all 0.2s">
+                    class="um-modal-input">
             </div>
 
             <div class="form-group u-a62">
-                <label for="resetPasswordConfirmInput" style="display:block;font-weight:600;color:#1e293b;margin-bottom:0.5rem;font-size:0.9rem">Konfirmasi Password Baru</label>
+                <label for="resetPasswordConfirmInput" class="um-modal-label">Konfirmasi Password Baru</label>
                 <input type="password" id="resetPasswordConfirmInput" name="password_confirmation" required placeholder="Ulangi password baru"
-                    style="width:100%;padding:0.75rem 1rem;border:2px solid #e2e8f0;border-radius:10px;font-size:0.95rem;font-family:inherit;transition:all 0.2s">
+                    class="um-modal-input">
             </div>
 
             <div class="u-a64">
-                <button type="button" data-action="close-reset-password" style="flex:1;padding:0.75rem;background:#f1f5f9;color:#64748b;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:all 0.2s">
+                <button type="button" data-action="close-reset-password" class="um-modal-btn-cancel">
                     Batal
                 </button>
-                <button type="submit" id="resetPasswordSubmitBtn" style="flex:1;padding:0.75rem;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:all 0.2s;box-shadow:0 4px 12px rgba(20,184,166,0.3)">
+                <button type="submit" id="resetPasswordSubmitBtn" class="um-modal-btn-primary">
                     Reset Password
                 </button>
             </div>
@@ -413,49 +413,49 @@
     @endif
 
     @if(session('new_account'))
-    <div id="newAccountModal" style="display:flex;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
-        <div style="background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:440px;margin:1rem;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:slideIn 0.3s ease">
+    <div id="newAccountModal" class="um-modal-overlay" style="display:flex">
+        <div class="um-modal-card">
             {{-- Header --}}
             <div style="text-align:center;margin-bottom:1.5rem">
-                <div style="width:56px;height:56px;background:rgba(34,197,94,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+                <div class="um-modal-icon-box um-modal-icon-box--green">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"/>
                     </svg>
                 </div>
-                <h3 style="margin:0 0 0.25rem 0;font-size:1.15rem;font-weight:700;color:#1e293b">Akun Berhasil Dibuat!</h3>
-                <p style="margin:0;color:#64748b;font-size:0.9rem">Salin kredensial di bawah untuk dikirim ke pengguna</p>
+                <h3 class="um-modal-title">Akun Berhasil Dibuat!</h3>
+                <p class="um-modal-subtitle">Salin kredensial di bawah untuk dikirim ke pengguna</p>
             </div>
 
             {{-- Credentials Card --}}
-            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem">
+            <div class="um-cred-card">
                 <div style="margin-bottom:0.75rem">
-                    <span style="font-size:0.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px">Nama</span>
-                    <div style="font-size:0.95rem;font-weight:600;color:#1e293b;margin-top:0.25rem">{{ session('new_account.name') }}</div>
+                    <span class="um-cred-label">Nama</span>
+                    <div class="um-cred-value">{{ session('new_account.name') }}</div>
                 </div>
                 <div style="margin-bottom:0.75rem">
-                    <span style="font-size:0.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px">Email</span>
-                    <div style="font-size:0.95rem;font-weight:600;color:var(--primary);margin-top:0.25rem;font-family:monospace">{{ session('new_account.email') }}</div>
+                    <span class="um-cred-label">Email</span>
+                    <div class="um-cred-value um-cred-value--email">{{ session('new_account.email') }}</div>
                 </div>
                 <div>
-                    <span style="font-size:0.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px">Password</span>
-                    <div style="font-size:0.95rem;color:#64748b;margin-top:0.25rem;font-style:italic">Dikirim saat pembuatan akun</div>
+                    <span class="um-cred-label">Password</span>
+                    <div class="um-cred-value um-cred-value--note">Dikirim saat pembuatan akun</div>
                 </div>
             </div>
 
             {{-- Copy Buttons --}}
             <div style="display:grid;gap:0.5rem;margin-bottom:1rem">
-                <button type="button" onclick="copyCredentials('full')" id="copyFullBtn" style="width:100%;padding:0.75rem;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:all 0.2s;box-shadow:0 4px 12px rgba(20,184,166,0.3);display:flex;align-items:center;justify-content:center;gap:0.5rem">
+                <button type="button" onclick="copyCredentials('full')" id="copyFullBtn" class="um-copy-btn-primary">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                     <span>Salin Pesan Lengkap</span>
                 </button>
-                <button type="button" onclick="copyCredentials('email')" id="copyEmailBtn" style="width:100%;padding:0.625rem;background:#f1f5f9;color:#475569;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;font-size:0.85rem;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:0.5rem">
+                <button type="button" onclick="copyCredentials('email')" id="copyEmailBtn" class="um-copy-btn-secondary">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                     <span>Salin Email Saja</span>
                 </button>
             </div>
 
             {{-- Close --}}
-            <button type="button" onclick="document.getElementById('newAccountModal').style.display='none'" style="width:100%;padding:0.625rem;background:transparent;color:#64748b;border:1px solid #e2e8f0;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;font-size:0.85rem;transition:all 0.2s">
+            <button type="button" onclick="document.getElementById('newAccountModal').style.display='none'" class="um-modal-btn-close">
                 Tutup
             </button>
         </div>

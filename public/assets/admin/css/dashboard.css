@@ -58,8 +58,214 @@
   background: rgba(20,184,166,0.1); color: var(--primary);
 }
 
+/* ==========================================
+   STAT CARD COLOR VARIANTS
+   ========================================== */
+.dash-stat-blue {
+  background: linear-gradient(135deg, #3182ce, #2b6cb0);
+  color: #fff;
+}
+.dash-stat-green {
+  background: linear-gradient(135deg, #38a169, #2f855a);
+  color: #fff;
+}
+.dash-stat-orange {
+  background: linear-gradient(135deg, #ed8936, #dd6b20);
+  color: #fff;
+}
+.dash-stat-red {
+  background: linear-gradient(135deg, #e53e3e, #c53030);
+  color: #fff;
+}
+.dash-stat-purple {
+  background: linear-gradient(135deg, #805ad5, #6b46c1);
+  color: #fff;
+}
+.dash-stat-teal {
+  background: linear-gradient(135deg, #319795, #285e61);
+  color: #fff;
+}
+
+/* Subtitle/caption dalam stat card berwarna harus tetap terlihat */
+.stat-card.dash-stat-blue .u-subtitle,
+.stat-card.dash-stat-green .u-subtitle,
+.stat-card.dash-stat-orange .u-subtitle,
+.stat-card.dash-stat-red .u-subtitle,
+.stat-card.dash-stat-purple .u-subtitle,
+.stat-card.dash-stat-teal .u-subtitle,
+.stat-card.dash-stat-blue .u-caption,
+.stat-card.dash-stat-green .u-caption,
+.stat-card.dash-stat-orange .u-caption,
+.stat-card.dash-stat-red .u-caption,
+.stat-card.dash-stat-purple .u-caption,
+.stat-card.dash-stat-teal .u-caption {
+  color: rgba(255,255,255,0.85);
+}
+
+/* Dashboard grid — duplikat .stats-grid untuk row 1 */
+.dash-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Quick action cards row 2 layout */
+.dash-chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dash-recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Card inner shadow — lebih halus */
+.dash-card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 2rem;}
+
+/* Activity item hover */
+.dash-activity-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.dash-activity-item:hover {
+  background: #f8fafc;
+}
+
+/* Activity icon */
+.dash-activity-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dash-activity-icon--berita {
+  background: rgba(59,130,246,0.1);
+  color: #3b82f6;}
+.dash-activity-icon--user {
+  background: rgba(239,68,68,0.1);
+  color: #ef4444;
+}
+
+/* Activity text */
+.dash-activity-text {
+  flex: 1;
+  min-width: 0;
+}
+.dash-activity-title {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;}
+.dash-activity-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Card title with icon */
+.dash-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Recent item card */
+.dash-recent-item {
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 3px solid var(--primary);
+}
+.dash-recent-title {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+/* User avatar in recent list */
+.dash-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #0d9488);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   DARK MODE — Dashboard
+   ========================================== */
+.dark-mode .dash-stat-blue {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+.dark-mode .dash-stat-green {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+}
+.dark-mode .dash-stat-orange {
+  background: linear-gradient(135deg, #c2410c, #9a3412);}
+.dark-mode .dash-stat-red {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+}
+.dark-mode .dash-stat-purple {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);}
+.dark-mode .dash-stat-teal {
+  background: linear-gradient(135deg, #0d9488, #115e59);
+}
+
+.dark-mode .dash-activity-item:hover {
+  background: rgba(255,255,255,0.03);
+}
+.dark-mode .dash-activity-title {
+  color: #e2e8f0;
+}
+.dark-mode .dash-activity-time {
+  color: #94a3b8;
+}
+.dark-mode .dash-recent-item {
+  background: #0f172a;
+}
+.dark-mode .dash-recent-title {
+  color: #e2e8f0;
+}
+.dark-mode .dash-card {
+  background: #1e293b;
+  border-color: rgba(255,255,255,0.08);
+}
+.dark-mode .quick-action-btn.is-locked {
+  background: #0f172a;
+}
+.dark-mode .quick-action-btn.is-locked .action-icon {
+  background: #334155;
+}
+
 @media (max-width: 768px) {
   .dashboard-header { flex-direction: column; align-items: flex-start; }
   .stats-grid, .quick-actions { grid-template-columns: 1fr; }
+  .dash-stats-row { grid-template-columns: 1fr; }
+  .dash-chart-grid { grid-template-columns: 1fr; }
+  .dash-recent-grid { grid-template-columns: 1fr; }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

@@ -12,9 +12,9 @@
 </div>
 
 {{-- Stats Cards Row 1 --}}
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-bottom:1.5rem">
+<div class="dash-stats-row">
     {{-- Total Berita --}}
-    <div class="stat-card" style="background:linear-gradient(135deg,#3182ce,#2b6cb0);color:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+    <div class="stat-card dash-stat-blue">
         <div class="u-flex-start-gap-4">
             <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
@@ -31,7 +31,7 @@
     </div>
 
     {{-- Total Aplikasi --}}
-    <div class="stat-card" style="background:linear-gradient(135deg,#38a169,#2f855a);color:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+    <div class="stat-card dash-stat-green">
         <div class="u-flex-start-gap-4">
             <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -45,7 +45,7 @@
     </div>
 
     {{-- Pengurus --}}
-    <div class="stat-card" style="background:linear-gradient(135deg,#ed8936,#dd6b20);color:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+    <div class="stat-card dash-stat-orange">
         <div class="u-flex-start-gap-4">
             <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -59,7 +59,7 @@
     </div>
 
     {{-- Total Users --}}
-    <div class="stat-card" style="background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+    <div class="stat-card dash-stat-red">
         <div class="u-flex-start-gap-4">
             <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -79,7 +79,7 @@
 {{-- Stats Cards Row 2 --}}
 <div class="u-a4">
     {{-- Template --}}
-    <div class="stat-card" style="background:linear-gradient(135deg,#805ad5,#6b46c1);color:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+    <div class="stat-card dash-stat-purple">
         <div class="u-flex-start-gap-4">
             <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
@@ -93,7 +93,7 @@
     </div>
 
     {{-- SK & Dokumen --}}
-    <div class="stat-card" style="background:linear-gradient(135deg,#319795,#285e61);color:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+    <div class="stat-card dash-stat-teal">
         <div class="u-flex-start-gap-4">
             <div class="u-icon-badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -145,7 +145,7 @@
     ];
 @endphp
 
-<div class="card" style="border:none;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:2rem">
+<div class="card dash-card">
     <h2 class="card-title">Aksi Cepat</h2>
     <div class="quick-actions">
         @foreach ($quickActions as $aksi)
@@ -177,10 +177,10 @@
 </div>
 
 {{-- Chart & Activity Log --}}
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem">
+<div class="dash-chart-grid">
     {{-- Chart --}}
-    <div class="card" style="border:none;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-        <h2 class="card-title" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem">
+    <div class="card dash-card">
+        <h2 class="card-title dash-card-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
             Aktivitas 6 Bulan Terakhir
         </h2>
@@ -190,24 +190,24 @@
     </div>
 
     {{-- Activity Log --}}
-    <div class="card" style="border:none;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-        <h2 class="card-title" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem">
+    <div class="card dash-card">
+        <h2 class="card-title dash-card-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             Aktivitas Terbaru
         </h2>
         <div style="display:flex;flex-direction:column;gap:0.5rem;max-height:220px;overflow-y:auto">
             @forelse($recentActivities as $activity)
-            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.625rem;border-radius:8px;transition:background 0.2s" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                <div style="width:32px;height:32px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;{{ $activity['type'] === 'berita' ? 'background:rgba(59,130,246,0.1);color:#3b82f6' : 'background:rgba(239,68,68,0.1);color:#ef4444' }}">
+            <div class="dash-activity-item">
+                <div class="dash-activity-icon {{ $activity['type'] === 'berita' ? 'dash-activity-icon--berita' : 'dash-activity-icon--user' }}">
                     @if($activity['type'] === 'berita')
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>
                     @else
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     @endif
                 </div>
-                <div style="flex:1;min-width:0">
-                    <div style="font-size:0.85rem;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ $activity['text'] }}</div>
-                    <div style="font-size:0.75rem;color:var(--text-muted)">{{ $activity['time']->diffForHumans() }}</div>
+                <div class="dash-activity-text">
+                    <div class="dash-activity-title">{{ $activity['text'] }}</div>
+                    <div class="dash-activity-time">{{ $activity['time']->diffForHumans() }}</div>
                 </div>
             </div>
             @empty
@@ -218,11 +218,11 @@
 </div>
 
 {{-- Recent Items --}}
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:2rem">
+<div class="dash-recent-grid">
 
     {{-- Latest News --}}
-    <div class="card" style="border:none;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-        <h2 class="card-title" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem">
+    <div class="card dash-card">
+        <h2 class="card-title dash-card-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
                 <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
                 <path d="M18 14h-8"/>
@@ -233,8 +233,8 @@
         </h2>
         <div style="display:flex;flex-direction:column;gap:0.75rem">
             @forelse($beritaTerbaru ?? [] as $berita)
-                <div style="padding:0.75rem;background:#f8fafc;border-radius:8px;border-left:3px solid var(--primary)">
-                    <div style="font-weight:600;color:var(--text-dark);font-size:0.9rem;margin-bottom:0.25rem">
+                <div class="dash-recent-item">
+                    <div class="dash-recent-title">
                         {{ Str::limit($berita->title ?? 'Tanpa Judul', 50) }}
                     </div>
                     <div class="u-text-muted-xs2">
@@ -248,8 +248,8 @@
     </div>
 
     {{-- Latest Users --}}
-    <div class="card" style="border:none;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-        <h2 class="card-title" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem">
+    <div class="card dash-card">
+        <h2 class="card-title dash-card-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e53e3e" stroke-width="2">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                 <circle cx="9" cy="7" r="4"/>
@@ -261,7 +261,7 @@
         <div style="display:flex;flex-direction:column;gap:0.75rem">
             @forelse($usersTerbaru ?? [] as $user)
                 <div class="u-a56">
-                    <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#0d9488);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.85rem">
+                    <div class="dash-user-avatar">
                         {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
                     </div>
                     <div class="u-flex-1-min">
