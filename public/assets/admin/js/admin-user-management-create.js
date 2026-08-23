@@ -2,11 +2,7 @@
  * Dikembangkan oleh Institut Teknologi Del
  * ============================================================
  * JS halaman: resources/views/admin/user-management/create.blade.php
- * (diekstrak dari blok <script> di dalam view)
- *
- * Dikembangkan oleh Institut Teknologi Del
  * ============================================================ */
-
 
 // ==========================================
 // CUSTOM CHECKBOX HANDLER
@@ -15,7 +11,9 @@ function initCustomCheckboxes() {
     const checkboxes = document.querySelectorAll('.custom-checkbox-input');
 
     checkboxes.forEach(checkbox => {
-        const label = checkbox.closest('.custom-checkbox-label');
+        const label = checkbox.closest('.custom-checkbox-label, .permission-item, .app-item');
+        if (!label) return;
+
         const box = label.querySelector('.custom-checkbox-box');
         const check = label.querySelector('.custom-checkbox-check');
 
@@ -23,7 +21,7 @@ function initCustomCheckboxes() {
         updateCustomCheckbox(box, check, checkbox.checked);
 
         // On change
-        checkbox.addEventListener('change', function() {
+        checkbox.addEventListener('change', function () {
             updateCustomCheckbox(box, check, this.checked);
         });
     });
@@ -48,12 +46,198 @@ function updateCustomCheckbox(box, check, isChecked) {
 }
 
 // ==========================================
-// EMAIL GENERATOR
+// EMAIL GENERATOR + PREVIEW
 // ==========================================
+let emailCheckTimeout = null;
+
 function updateEmail() {
     const username = document.getElementById('email_username').value.trim();
     const fullEmail = document.getElementById('email_full');
-    fullEmail.value = username ? username + '@pkk-toba.id' : '';
+    const preview = document.getElementById('email_preview');
+
+    const email = username ? username + '@pkk-toba.id' : '';
+    fullEmail.value = email;
+    preview.textContent = email || 'username@pkk-toba.id';
+
+    // Debounced availability check
+    clearTimeout(emailCheckTimeout);
+    const statusEl = document.getElementById('emailStatus');
+    if (!statusEl) return;
+
+    if (username.length < 3) {
+        statusEl.style.display = 'none';
+        return;
+    }
+
+    // Show checking state
+    statusEl.style.display = 'flex';
+    statusEl.className = 'email-status email-status--checking';
+    statusEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Mengecek...';
+
+    emailCheckTimeout = setTimeout(() => {
+        checkEmailAvailability(email);
+    }, 500);
+}
+
+async function checkEmailAvailability(email) {
+    const statusEl = document.getElementById('emailStatus');
+    if (!statusEl) return;
+
+    try {
+        const response = await fetch(`/admin/user-management/check-email?email=${encodeURIComponent(email)}`);
+        const result = await response.json();
+
+        statusEl.style.display = 'flex';
+
+        if (result.available) {
+            statusEl.className = 'email-status email-status--available';
+            statusEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ' + result.message;
+        } else {
+            statusEl.className = 'email-status email-status--taken';
+            statusEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> ' + result.message;
+        }
+    } catch (error) {
+        statusEl.style.display = 'none';
+    }
+}
+
+// ==========================================
+// GENERATE RANDOM PASSWORD
+// ==========================================
+function generateRandomPassword() {
+    const length = 16;
+    const uppercase = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    const lowercase = 'abcdefghjkmnpqrstuvwxyz';
+    const numbers = '23456789';
+    const symbols = '!@#$%^&*()-_=+';
+
+    // Pastikan ada minimal 1 dari setiap tipe
+    let password = '';
+    password += uppercase[Math.floor(Math.random() * uppercase.length)];
+    password += lowercase[Math.floor(Math.random() * lowercase.length)];
+    password += numbers[Math.floor(Math.random() * numbers.length)];
+    password += symbols[Math.floor(Math.random() * symbols.length)];
+
+    // Isi sisa panjang dengan campuran semua karakter
+    const allChars = uppercase + lowercase + numbers + symbols;
+    for (let i = password.length; i < length; i++) {
+        password += allChars[Math.floor(Math.random() * allChars.length)];
+    }
+
+    // Acak urutan karakter
+    password = password.split('').sort(() => Math.random() - 0.5).join('');
+
+    // Isi ke field password & confirm
+    const passwordInput = document.getElementById('passwordInput');
+    const confirmInput = document.getElementById('passwordConfirmInput');
+    if (passwordInput) {
+        passwordInput.value = password;
+        passwordInput.type = 'text';
+        // Trigger events
+        passwordInput.dispatchEvent(new Event('input'));
+    }
+    if (confirmInput) {
+        confirmInput.value = password;
+        confirmInput.type = 'text';
+        confirmInput.dispatchEvent(new Event('input'));
+    }
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(password).then(() => {
+        // Tampilkan feedback pada tombol
+        const btn = document.querySelector('.generate-password-btn');
+        if (btn) {
+            const originalHTML = btn.innerHTML;
+            btn.classList.add('copied');
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Tersalin ke Clipboard!';
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerHTML = originalHTML;
+            }, 2000);
+        }
+        if (typeof Toast !== 'undefined') {
+            Toast.success('Password berhasil dibuat & disalin ke clipboard!');
+        }
+    }).catch(() => {
+        if (typeof Toast !== 'undefined') {
+            Toast.success('Password berhasil dibuat! Silakan copy manual.');
+        }
+    });
+}
+
+// ==========================================
+// PASSWORD VISIBILITY TOGGLE
+// ==========================================
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+
+    // Update icon
+    if (isPassword) {
+        btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+    } else {
+        btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    }
+}
+
+// ==========================================
+// PASSWORD STRENGTH INDICATOR
+// ==========================================
+function checkPasswordStrength(password) {
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+    if (/\d/.test(password)) score++;
+    if (/[^a-zA-Z0-9]/.test(password)) score++;
+
+    if (score <= 2) return 'weak';
+    if (score <= 3) return 'medium';
+    return 'strong';
+}
+
+function updatePasswordStrength() {
+    const passwordInput = document.getElementById('passwordInput');
+    const strengthEl = document.getElementById('passwordStrength');
+    if (!passwordInput || !strengthEl) return;
+
+    const val = passwordInput.value;
+    if (val.length === 0) {
+        strengthEl.style.display = 'none';
+        return;
+    }
+
+    strengthEl.style.display = 'block';
+    const strength = checkPasswordStrength(val);
+    strengthEl.setAttribute('data-strength', strength);
+}
+
+// ==========================================
+// PASSWORD MATCH CHECKER
+// ==========================================
+function checkPasswordMatch() {
+    const password = document.getElementById('passwordInput');
+    const confirm = document.getElementById('passwordConfirmInput');
+    const matchEl = document.getElementById('passwordMatch');
+
+    if (!password || !confirm || !matchEl) return;
+
+    if (confirm.value.length === 0) {
+        matchEl.style.display = 'none';
+        return;
+    }
+
+    matchEl.style.display = 'flex';
+    if (password.value === confirm.value) {
+        matchEl.className = 'password-match match';
+        matchEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Cocok';
+    } else {
+        matchEl.className = 'password-match no-match';
+        matchEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Tidak cocok';
+    }
 }
 
 // ==========================================
@@ -72,7 +256,8 @@ function togglePermissionSection() {
         const checkboxes = document.querySelectorAll('#permissionSection input[type="checkbox"]');
         checkboxes.forEach(cb => {
             cb.checked = false;
-            const label = cb.closest('.custom-checkbox-label');
+            const label = cb.closest('.permission-item');
+            if (!label) return;
             const box = label.querySelector('.custom-checkbox-box');
             const check = label.querySelector('.custom-checkbox-check');
             updateCustomCheckbox(box, check, false);
@@ -81,13 +266,36 @@ function togglePermissionSection() {
 }
 
 // ==========================================
+// FORM SUBMIT LOADING STATE
+// ==========================================
+function initFormSubmit() {
+    const form = document.getElementById('createUserForm');
+    const submitBtn = document.getElementById('submitBtn');
+    if (!form || !submitBtn) return;
+
+    form.addEventListener('submit', function () {
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+        submitBtn.querySelector('span').textContent = 'Menyimpan...';
+    });
+}
+
+// ==========================================
 // INITIALIZATION
 // ==========================================
-document.getElementById('email_username').addEventListener('input', updateEmail);
-
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Init email
-    updateEmail();
+    const emailUsername = document.getElementById('email_username');
+    if (emailUsername) {
+        emailUsername.addEventListener('input', updateEmail);
+        updateEmail();
+    }
+
+    // Init password features
+    const passwordInput = document.getElementById('passwordInput');
+    const confirmInput = document.getElementById('passwordConfirmInput');
+    if (passwordInput) passwordInput.addEventListener('input', updatePasswordStrength);
+    if (confirmInput) confirmInput.addEventListener('input', checkPasswordMatch);
 
     // Init permission section
     togglePermissionSection();
@@ -158,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load Kecamatan from API
     async function loadKecamatan() {
         try {
-            // Kabupaten Toba code is 12.12
             const response = await fetch('/api/v1/wilayah/districts/12.12');
             const result = await response.json();
 
@@ -213,14 +420,12 @@ document.addEventListener('DOMContentLoaded', function() {
             loadKecamatan();
 
             if (selectedRole === 'operator') {
-                // Operator: hanya pilih kecamatan
                 kecamatanField.style.display = 'block';
                 kelurahanField.style.display = 'none';
                 siedaKecamatanSelect.required = true;
                 siedaKelurahanSelect.required = false;
                 siedaKelurahanSelect.value = '';
             } else if (selectedRole === 'kader') {
-                // Kader: pilih kecamatan dan kelurahan
                 kecamatanField.style.display = 'block';
                 kelurahanField.style.display = 'block';
                 siedaKecamatanSelect.required = true;
@@ -242,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listener for Kecamatan change
     if (siedaKecamatanSelect) {
-        siedaKecamatanSelect.addEventListener('change', function() {
+        siedaKecamatanSelect.addEventListener('change', function () {
             if (siedaRoleSelect && siedaRoleSelect.value === 'kader') {
                 loadKelurahan(this.value);
             }
@@ -266,15 +471,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     checkSidonganStatus();
+
+    // Init role select change handler
+    const roleSelectCreate = document.getElementById('roleSelect');
+    if (roleSelectCreate) {
+        roleSelectCreate.addEventListener('change', togglePermissionSection);
+    }
+
+    // Init form submit loading
+    initFormSubmit();
 });
-
-
 
 // ============================================================
 // Dikembangkan oleh Institut Teknologi Del
-// CHANGE DELEGATION (menggantikan onchange inline)
 // ============================================================
-const roleSelectCreate = document.getElementById('roleSelect');
-if (roleSelectCreate) {
-    roleSelectCreate.addEventListener('change', togglePermissionSection);
-}

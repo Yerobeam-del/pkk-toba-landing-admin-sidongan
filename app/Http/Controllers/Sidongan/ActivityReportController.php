@@ -31,7 +31,9 @@ class ActivityReportController extends Controller
         // EXCLUDE: Surat yang sudah diarsipkan atau menunggu disposisi
         $query = \App\Models\Document::where('disposisi_data', 'LIKE', '%' . $role . '%')
             ->whereNotIn('sidongan_documents.status', ['diarsipkan', 'menunggu_disposisi'])
-            ->with(['creator']);
+            ->with(['creator', 'activityReports' => function($q) {
+                $q->with('creator')->latest();
+            }]);
         
         // FILTER SEARCH
         if ($request->filled('search')) {
@@ -178,7 +180,9 @@ class ActivityReportController extends Controller
         $targetRoles = $dispo['target_roles'] ?? [];
         
         if (!in_array($user->sidongan_role, $targetRoles)) {
-            return back()->withErrors(['document_id' => 'Gagal: Anda tidak berhak melapor untuk surat ini.'])->withInput();
+            return back()->with('error', 'Gagal: Anda tidak berhak melapor untuk surat ini.')
+                ->withErrors(['document_id' => 'Gagal: Anda tidak berhak melapor untuk surat ini.'])
+                ->withInput();
         }
         
         // Handle upload foto
@@ -281,6 +285,12 @@ class ActivityReportController extends Controller
         $successMessage = $action === 'revisi' 
             ? 'Laporan revisi berhasil dikirim untuk verifikasi ulang!'
             : 'Laporan kegiatan berhasil dikirim untuk verifikasi!';
+
+        \App\Models\AdminActivityLog::log('created', 'laporan', $report->id, [
+            'kegiatan_nama' => $validated['kegiatan_nama'],
+            'document_id' => $validated['document_id'],
+            'action' => $action,
+        ], $user->id);
         
         return redirect()->route('sidongan.lapor_kegiatan.index')
             ->with('success', $successMessage);
@@ -382,6 +392,11 @@ class ActivityReportController extends Controller
             $fotoPaths = json_decode($report->fotos, true) ?? [];
         }
         
+        \App\Models\AdminActivityLog::log('updated', 'laporan', $report->id, [
+            'kegiatan_nama' => $validated['kegiatan_nama'],
+            'action' => 'revisi',
+        ], auth()->guard('sidongan')->id());
+
         $report->update([
             'kegiatan_nama' => $validated['kegiatan_nama'],
             'kegiatan_tanggal' => $validated['kegiatan_tanggal'],
@@ -433,7 +448,12 @@ class ActivityReportController extends Controller
         
         // Hapus laporan
         $documentId = $report->document_id;
+        $reportId = $report->id;
         $report->delete();
+
+        \App\Models\AdminActivityLog::log('deleted', 'laporan', $reportId, [
+            'document_id' => $documentId,
+        ], $user->id);
         
         // UPDATE STATUS DOKUMEN SETELAH HAPUS LAPORAN
         $document = \App\Models\Document::find($documentId);

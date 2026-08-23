@@ -45,3 +45,79 @@
 .checklist-item .icon.done{color:var(--primary)}
 .checklist-item .icon.pending{color:#cbd5e1}
 
+/* === PROFILE HEADER === */
+.profile-header{padding:2rem 1.5rem 1.5rem;text-align:center;background:linear-gradient(180deg,rgba(20,184,166,0.06) 0%,transparent 100%)}
+.profile-header h1{font-size:1.5rem;font-weight:800;color:#1e293b;margin:0 0 0.25rem 0}
+.profile-header p{color:#94a3b8;margin:0;font-size:0.9rem}
+
+/* === NAV BUTTONS === */
+.profile-nav{display:flex;gap:0.5rem;flex-wrap:wrap}
+.profile-nav-primary{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:600;transition:all 0.2s}
+.profile-nav-secondary{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#f1f5f9;color:#475569;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:500;transition:all 0.2s}
+
+/* === SUCCESS ALERT === */
+.profile-success-alert{background:#f0fdf4;padding:1rem;margin-bottom:1.5rem;border-radius:10px;color:#166534;display:flex;align-items:center;gap:0.75rem}
+.profile-success-alert svg{flex-shrink:0}
+.profile-success-alert ul{margin:0;padding-left:1.25rem}
+
+/* === AVATAR === */
+.profile-avatar-wrap{position:relative;display:inline-block;margin-bottom:0.75rem}
+.profile-avatar-lg{width:90px;height:90px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.1);margin:0 auto}
+.profile-avatar-md{width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+.profile-avatar-img{width:100%;height:100%;object-fit:cover}
+.profile-avatar-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;font-weight:700}
+.profile-avatar-fallback-lg{font-size:2rem}
+.profile-avatar-fallback-md{font-size:1.25rem}
+.profile-avatar-badge{position:absolute;bottom:2px;right:2px;width:22px;height:22px;background:var(--primary);border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.profile-avatar-badge-lg{bottom:-2px;right:-2px;width:26px;height:26px;color:#fff;cursor:pointer}
+
+/* === USER INFO === */
+.profile-user-name{font-size:1.1rem;font-weight:700;color:#1e293b;margin:0 0 0.25rem 0}
+.profile-user-email{color:#64748b;margin:0;font-size:0.85rem}
+.profile-user-tags{display:flex;gap:0.35rem;justify-content:center;margin-top:0.5rem;flex-wrap:wrap}
+.profile-tag{display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;font-weight:500}
+.profile-tag-role{background:#f5f3ff;color:#6d28d9}
+.profile-tag-sieda{background:#ecfeff;color:#0e7490}
+.profile-tag-admin{background:#f0fdf4;color:#15803d}
+
+/* === SIDEBAR SECTIONS === */
+.profile-sidebar-section{padding:1.25rem 1.5rem;border-top:1px solid #f1f5f9}
+.profile-sidebar-label{font-size:0.85rem;font-weight:600;color:#64748b;margin:0 0 0.75rem 0;text-align:center}
+.profile-sidebar-list{display:flex;flex-direction:column;gap:0.5rem}
+.profile-sidebar-item{display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:#475569}
+.profile-sidebar-item svg{flex-shrink:0;color:#94a3b8}
+
+/* === PROGRESS RING === */
+.profile-progress-wrap{margin-top:0.75rem}
+
+/* === AVATAR UPLOAD === */
+.profile-avatar-upload{display:flex;align-items:center;gap:1.25rem;padding:1rem;background:#f8fafc;border-radius:10px;border:1px dashed #e2e8f0}
+.profile-avatar-upload-info{font-weight:600;font-size:0.9rem;color:#1e293b;margin:0 0 0.15rem 0}
+.profile-avatar-upload-hint{font-size:0.8rem;color:#94a3b8;margin:0}
+
+/* === FORM === */
+.profile-form-grid{display:grid;gap:1.5rem;max-width:600px}
+.profile-field-row{display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:#475569}
+.profile-field-row svg{flex-shrink:0;color:#94a3b8}
+.profile-submit-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer}
+.profile-submit-btn:hover{filter:brightness(0.9);transform:translateY(-1px)}
+
+/* === PERMISSION TAGS === */
+.profile-perm-grid{display:flex;flex-wrap:wrap;gap:0.5rem}
+.profile-perm-icon{width:36px;height:36px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.profile-perm-icon-sm{width:40px;height:40px}
+.profile-app-label{margin:0;font-weight:600;font-size:0.85rem;color:#1e293b}
+.profile-app-url{margin:0;font-size:0.8rem;color:#94a3b8}
+.profile-app-link{font-size:0.8rem;color:var(--primary);font-weight:500}
+.profile-section-title{margin:0;font-weight:600;font-size:0.9rem;color:#1e293b}
+.profile-section-label{margin:0 0 0.5rem 0;font-size:0.85rem;font-weight:600;color:#64748b}
+
+/* === DARK MODE === */
+body.dark-mode .profile-header h1{color:#f1f5f9}
+body.dark-mode .profile-user-name{color:#f1f5f9}
+body.dark-mode .profile-sidebar-item{color:#94a3b8}
+body.dark-mode .profile-avatar-upload{background:#1e293b;border-color:#334155}
+body.dark-mode .profile-avatar-upload-info{color:#e2e8f0}
+body.dark-mode .profile-field-row{color:#94a3b8}
+body.dark-mode .profile-app-label{color:#e2e8f0}
+body.dark-mode .profile-section-title{color:#e2e8f0}

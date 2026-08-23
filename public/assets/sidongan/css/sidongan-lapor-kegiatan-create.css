@@ -1,109 +1,390 @@
 /* ============================================================
  * Dikembangkan oleh Institut Teknologi Del
- * ============================================================
  * CSS halaman: resources/views/sidongan/lapor-kegiatan/create.blade.php
- * (diekstrak dari blok <style> di dalam view)
- *
- * Dikembangkan oleh Institut Teknologi Del
  * ============================================================ */
 
+/* ===== CONTAINER ===== */
+.lapor-container {
+    padding: 0 1.5rem;
+}
 
-    /* Container tanpa max-width */
-    .lapor-container {
-        padding: 0 1.5rem;
-    }
-    
-    /* Responsive Grid */
-    .responsive-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-        align-items: start;
-    }
-    
-    /* Mobile Responsive */
-    @media (max-width: 968px) {
-        .lapor-container {
-            padding: 0 1rem;
-        }
-        
-        .responsive-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-        
-        .detail-surat-card {
-            position: static !important;
-            margin-bottom: 1rem;
-        }
-        
-        .form-header h1 {
-            font-size: 1.125rem !important;
-        }
-        
-        .form-header p {
-            font-size: 0.75rem !important;
-        }
-        
-        .section-title {
-            font-size: 0.8rem !important;
-        }
-        
-        .info-row {
-            flex-direction: column !important;
-            gap: 0.25rem !important;
-        }
-        
-        .info-label, .info-value {
-            font-size: 0.75rem !important;
-        }
-        
-        .btn-submit {
-            width: 100% !important;
-            justify-content: center !important;
-        }
-        
-        .btn-group {
-            flex-direction: column-reverse !important;
-            gap: 0.5rem !important;
-        }
-        
-        .btn-group > * {
-            width: 100% !important;
-        }
-        
-        .location-grid {
-            grid-template-columns: 1fr !important;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .lapor-container {
-            padding: 0 0.75rem;
-        }
-        
-        .form-header h1 {
-            font-size: 1rem !important;
-        }
-        
-        .time-grid {
-            grid-template-columns: 1fr !important;
-        }
-    }
+/* ===== RESPONSIVE GRID ===== */
+.responsive-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
 
+/* ===== PAGE HEADER ===== */
+.lk-page-header {
+    background: linear-gradient(135deg, #0891b2, #14b8a6);
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    box-shadow: 0 4px 20px rgba(8, 145, 178, 0.2);
+}
 
-/* ============================================================
- * Dikembangkan oleh Institut Teknologi Del
- * Efek fokus & hover (menggantikan onfocus/onblur/onmouseover/onmouseout inline)
- * ============================================================ */
+.lk-page-header-icon {
+    font-size: 1.5rem;
+    color: white;
+}
 
-/* Fokus ring (dipasang lewat kelas .u-field-focused oleh JS) */
+/* ===== DETAIL SURAT CARD (LEFT COLUMN) ===== */
+.lk-detail-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    position: sticky;
+    top: 1rem;
+}
+
+.lk-detail-card-header {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 2px solid #bae6fd;
+}
+
+.lk-detail-card-badges {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.lk-badge-agenda {
+    font-size: 0.8rem;
+    font-family: monospace;
+    background: #0891b2;
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+}
+
+.lk-badge-status {
+    font-size: 0.8rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.lk-detail-subject {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #0c4a6e;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ===== INFO SECTIONS ===== */
+.lk-info-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.lk-agenda-number {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0891b2;
+    font-family: monospace;
+}
+
+.lk-saran-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.lk-saran-box {
+    background: #eff6ff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-size: 0.85rem;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+    line-height: 1.6;
+}
+
+/* ===== LAMPIRAN ===== */
+.lk-lampiran-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.lk-lampiran-icon-box {
+    width: 3rem;
+    height: 3rem;
+    background: #fee2e2;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lk-lampiran-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 0.125rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ===== DISPOSISI ===== */
+.lk-dispo-targets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.lk-dispo-target-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.6rem;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 0.375rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.lk-dispo-action-badge {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    background: #f3e8ff;
+    color: #7c3aed;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.lk-dispo-comment {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    font-size: 0.8rem;
+    color: #475569;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+/* ===== FORM HEADER (RIGHT COLUMN) ===== */
+.lk-form-header {
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    border-bottom: 2px solid #86efac;
+}
+
+.lk-form-header-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #16a34a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(22,163,74,0.3);
+    color: white;
+    font-size: 1rem;
+}
+
+.lk-form-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.lk-form-subtitle {
+    font-size: 0.8rem;
+    color: #166534;
+    margin: 0;
+}
+
+/* ===== FORM INPUTS ===== */
+.lk-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.lk-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.lk-time-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-bottom: 0.35rem;
+}
+
+.lk-durasi-feedback {
+    display: none;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+}
+
+/* ===== REJECTED REPORT WARNING ===== */
+.lk-rejected-alert {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 4px solid #ef4444;
+    border-radius: 0.5rem;
+}
+
+.lk-rejected-title {
+    color: #b91c1c;
+    font-size: 0.9rem;
+}
+
+.lk-rejected-note {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #7f1d1d;
+    line-height: 1.6;
+}
+
+.lk-rejected-note-single {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #7f1d1d;
+}
+
+.lk-rejected-hint {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.8rem;
+    color: #991b1b;
+}
+
+/* ===== LOCATION SECTION ===== */
+.lk-location-section {
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+}
+
+.lk-location-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ===== DROPZONE ===== */
+.lk-dropzone {
+    border: 2px dashed #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: #f8fafc;
+}
+
+.lk-dropzone-icon {
+    font-size: 3rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+
+.lk-dropzone-title {
+    font-size: 0.95rem;
+    color: #475569;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.lk-file-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+/* ===== FILE COUNTER ===== */
+.lk-file-counter {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.5rem;
+    display: none;
+}
+
+.lk-file-counter-text {
+    font-size: 0.85rem;
+    color: #1e40af;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* ===== FOTO LABEL ===== */
+.lk-foto-hint {
+    color: #64748b;
+    font-weight: 400;
+}
+
+/* ===== FORM FOOTER ===== */
+.lk-form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.lk-form-footer-btns {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.lk-error-text {
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-top: 0.5rem;
+}
+
+/* =========================================
+   EXISTING UTILITY CLASSES (kept)
+   ========================================= */
 .u-field-focused {
     border-color: #0891b2 !important;
     box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1) !important;
 }
 
-/* Tombol kembali (header) */
 .sd-btn-back {
     display: inline-flex;
     align-items: center;
@@ -124,117 +405,9 @@
     transform: translateY(-2px);
 }
 
-/* Tombol lihat dokumen */
 .sd-doc-view {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 2.5rem;
-    height: 2.5rem;
-    background: #dbeafe;
-    color: #2563eb;
-    border-radius: 0.375rem;
-    text-decoration: none;
-    transition: all 0.2s;
-    flex-shrink: 0;
-}
-.sd-doc-view:hover {
-    background: #bfdbfe;
-    transform: translateY(-2px);
-}
-
-/* Tombol "Tambah Foto" */
-.sd-btn-add-more {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1rem;
-    background: linear-gradient(135deg, #0891b2, #14b8a6);
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(8, 145, 178, 0.2);
-}
-.sd-btn-add-more:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(8, 145, 178, 0.3);
-}
-
-/* Tombol "Ganti File" */
-.sd-btn-change {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1rem;
-    background: white;
-    border: 1px solid #e2e8f0;
-    color: #64748b;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.sd-btn-change:hover {
-    background: #f8fafc;
-    color: #334155;
-}
-
-/* Tombol reset */
-.sd-btn-reset {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.sd-btn-reset:hover {
-    background: #e2e8f0;
-}
-
-/* Tombol batal */
-.sd-btn-cancel {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s;
-}
-.sd-btn-cancel:hover {
-    background: #e2e8f0;
-}
-
-/* Tombol submit */
-.sd-btn-submit {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #0891b2, #14b8a6);
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(8, 145, 178, 0.2);
-}
-.sd-btn-submit:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
-}
+ 

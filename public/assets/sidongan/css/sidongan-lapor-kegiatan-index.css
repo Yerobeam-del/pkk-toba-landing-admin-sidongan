@@ -1,94 +1,306 @@
 /* ============================================================
  * Dikembangkan oleh Institut Teknologi Del
- * ============================================================
  * CSS halaman: resources/views/sidongan/lapor-kegiatan/index.blade.php
- * (diekstrak dari blok <style> di dalam view)
- *
- * Dikembangkan oleh Institut Teknologi Del
  * ============================================================ */
 
+/* ===== STATS GRID ===== */
+.lk-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
 
-    .laporan-item {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border-left: 3px solid transparent;
-        position: relative;
-        overflow: hidden;
-    }
-    .laporan-item::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: linear-gradient(180deg, #0ea5e9, #0284c7);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    .btn-action {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .btn-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-    .stats-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .stats-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    }
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    .animate-slide-in {
-        animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        opacity: 0;
-    }
+/* ===== STATS CARDS ===== */
+.lk-stat-card {
+    border-radius: 1rem;
+    padding: 1.5rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    /* ======================================== */
-    /* MOBILE RESPONSIVE - PHONE (max 640px)    */
-    /* ======================================== */
-    /* Catatan: aturan untuk .mobile-container, .mobile-header, .stats-grid,
-       .filter-grid, .laporan-header, .laporan-actions, .laporan-title,
-       .laporan-meta, .disposisi-box, .pagination-info, dan .pagination-buttons
-       sudah dihapus karena kelas-kelas itu tidak pernah dipasang di markup
-       halaman ini (aturannya mati, tidak pernah berlaku). Tata letak mobile
-       kini dipegang kelas bersama sd-* di assets/sidongan/css/style.css. */
-    @media (max-width: 640px) {
-        /* Kartu statistik lebih rapat di layar ponsel */
-        .stats-card {
-            padding: 1rem !important;
-        }
+.lk-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
 
-        /* Kartu laporan lebih rapat di layar ponsel */
-        .laporan-item {
-            padding: 1rem !important;
-        }
-    }
+.lk-stat-blue {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+}
 
-    /* ======================================== */
-    /* MOBILE RESPONSIVE - SMALL (max 380px)    */
-    /* ======================================== */
-    @media (max-width: 380px) {
-        .stats-card {
-            padding: 0.75rem !important;
-        }
-    }
+.lk-stat-orange {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+}
 
+.lk-stat-green {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+}
 
-/* ============================================================
- * Dikembangkan oleh Institut Teknologi Del
- * Efek fokus & hover (menggantikan onfocus/onblur/onmouseover/onmouseout inline)
- * ============================================================ */
+.lk-stat-red {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
 
-/* Fokus ring filter */
+/* ===== FILTER CARD ===== */
+.lk-filter-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.lk-filter-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1rem;
+    align-items: end;
+}
+
+.lk-search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 0.875rem;
+    pointer-events: none;
+}
+
+.lk-search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.625rem;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+/* ===== LIST CONTAINER ===== */
+.lk-list-container {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+/* ===== LIST ITEM ===== */
+.lk-item {
+    padding: 1.5rem 1.75rem;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.lk-item:last-child {
+    border-bottom: none;
+}
+
+.lk-item:hover {
+    background: var(--lk-bg, #f0f9ff);
+    border-left-color: var(--lk-border, #0ea5e9) !important;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== LIST HEADER ===== */
+.lk-list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+/* ===== BADGES ===== */
+.lk-agenda-badge {
+    font-size: 0.8rem;
+    font-family: monospace;
+    background: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.lk-status-badge {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.lk-status-icon {
+    margin-right: 0.35rem;
+    font-size: 0.65rem;
+}
+
+/* ===== DOC TITLE ===== */
+.lk-doc-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.4;
+}
+
+/* ===== META ROW ===== */
+.lk-meta-row {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.lk-meta-icon-box {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lk-meta-icon {
+    font-size: 0.7rem;
+}
+
+/* ===== ACTIONS ===== */
+.lk-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    flex-direction: column;
+}
+
+.lk-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
+    transition: all 0.2s;
+}
+
+.lk-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.lk-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    background: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid #fed7aa;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+}
+
+.lk-btn-outline:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== DISPOSISI BOX ===== */
+.lk-dispo-box {
+    border-left: 3px solid;
+    border-radius: 0.5rem;
+    padding: 0.875rem 1rem;
+}
+
+.lk-dispo-row {
+    display: flex;
+    align-items: start;
+    gap: 0.75rem;
+}
+
+.lk-dispo-icon-box {
+    width: 2rem;
+    height: 2rem;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.lk-dispo-label {
+    font-size: 0.8rem;
+    margin: 0 0 0.375rem 0;
+    font-weight: 700;
+}
+
+.lk-dispo-text {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ===== EMPTY STATE ===== */
+.lk-empty-icon-box {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+    animation: float 3s ease-in-out infinite;
+}
+
+.lk-empty-icon {
+    color: #0ea5e9;
+    font-size: 3rem;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+}
+
+/* ===== FILTER FOCUS ===== */
 #filterForm input:focus,
 #filterForm select:focus {
     outline: none;
@@ -96,15 +308,7 @@
     box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
 }
 
-/* Kartu laporan — warna tema dari custom property */
-.laporan-item:hover {
-    background: var(--lk-bg, #f0f9ff);
-    border-left-color: var(--lk-border, #0ea5e9) !important;
-    transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Pagination */
+/* ===== PAGINATION ===== */
 .sd-page-btn {
     display: inline-flex;
     align-items: center;
@@ -116,18 +320,65 @@
     text-decoration: none;
     transition: all 0.2s;
 }
+
 .sd-page-btn-white {
     background: white;
     color: #475569;
     border: 1px solid #e2e8f0;
 }
+
 .sd-page-btn-white:hover {
     background: #f1f5f9;
 }
+
 .sd-page-btn-sky {
     background: #0ea5e9;
     color: white;
 }
+
 .sd-page-btn-sky:hover {
     background: #0284c7;
 }
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 640px) {
+    .lk-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .lk-filter-grid {
+        grid-template-columns: 1fr;
+    }
+    .lk-stat-card {
+        padding: 1rem;
+    }
+    .lk-item {
+        padding: 1rem;
+    }
+    .lk-list-head {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .lk-actions {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 380px) {
+    .lk-stat-card {
+        padding: 0.75rem;
+    }
+}
+
+/* =========================================
+   DARK MODE
+   ========================================= */
+body.dark-mode .lk-filter-card,
+body.dark-mode .lk-list-container {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+body.dark-mode .lk-search-input {
+    background: #0f172

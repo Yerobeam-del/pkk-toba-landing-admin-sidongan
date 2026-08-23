@@ -11,11 +11,11 @@
     // Helper function untuk sort icon
     function sortIcon($field, $currentSort, $currentDirection) {
         if ($currentSort !== $field) {
-            return '<i class="fas fa-sort" style="color: rgba(255,255,255,0.6); margin-left: 0.5rem;"></i>';
+            return '<i class="fas fa-sort sd-sort-icon sd-sort-icon-inactive"></i>';
         }
         return $currentDirection === 'asc' 
-            ? '<i style="color: white; margin-left: 0.5rem;" class="fas fa-sort-up"></i>'
-            : '<i style="color: white; margin-left: 0.5rem;" class="fas fa-sort-down"></i>';
+            ? '<i class="fas fa-sort-up sd-sort-icon sd-sort-icon-active"></i>'
+            : '<i class="fas fa-sort-down sd-sort-icon sd-sort-icon-active"></i>';
     }
     
     // Helper function untuk sort URL
@@ -31,14 +31,14 @@
 
 <div class="sd-page u-px-6">
     {{-- Header Section --}}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;" class="animate-slide-in">
+    <div class="sd-index-header animate-slide-in">
         <div>
             <h1 class="u-h2-slate">Daftar Surat</h1>
             <p class="u-text-muted-lead">Kelola semua dokumen surat masuk dan keluar</p>
         </div>
         @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
-        <a href="{{ route('sidongan.documents.create') }}" class="btn-action" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #0891b2, #06b6d4); color: white; text-decoration: none; border-radius: 0.75rem; font-weight: 600; box-shadow: 0 4px 12px rgba(8, 145, 178, 0.25); font-size: 0.95rem;">
-            <i class="fas fa-plus" style="font-size: 1rem;"></i>
+        <a href="{{ route('sidongan.documents.create') }}" class="sd-btn-create btn-action">
+            <i class="fas fa-plus"></i>
             <span>Buat Surat Baru</span>
         </a>
         @endif
@@ -55,9 +55,9 @@
         $statMenunggu = (clone $statsQuery)->whereIn('status', ['menunggu_disposisi', 'menunggu_verifikasi'])->count();
     @endphp
     
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+    <div class="sd-stats-grid">
         {{-- Total Surat --}}
-        <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);">
+        <div class="stats-card animate-slide-in sd-stats-total">
             <div class="u-deco-circle-tr"></div>
             <div class="u-deco-circle-bl"></div>
             <div class="u-flex-center-gap-4-rel">
@@ -72,7 +72,7 @@
         </div>
         
         {{-- Selesai --}}
-        <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);">
+        <div class="stats-card animate-slide-in sd-stats-selesai">
             <div class="u-deco-circle-tr"></div>
             <div class="u-deco-circle-bl"></div>
             <div class="u-flex-center-gap-4-rel">
@@ -87,7 +87,7 @@
         </div>
         
         {{-- Berjalan --}}
-        <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #f97316, #ea580c); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);">
+        <div class="stats-card animate-slide-in sd-stats-berjalan">
             <div class="u-deco-circle-tr"></div>
             <div class="u-deco-circle-bl"></div>
             <div class="u-flex-center-gap-4-rel">
@@ -102,7 +102,7 @@
         </div>
         
         {{-- Menunggu Disposisi --}}
-        <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #eab308, #ca8a04); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2);">
+        <div class="stats-card animate-slide-in sd-stats-menunggu">
             <div class="u-deco-circle-tr"></div>
             <div class="u-deco-circle-bl"></div>
             <div class="u-flex-center-gap-4-rel">
@@ -118,16 +118,16 @@
     </div>
 
     {{-- Filter Section --}}
-    <div style="background: white; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; padding: 1.25rem; margin-bottom: 1.5rem;" class="animate-slide-in">
+    <div class="sd-filter-card animate-slide-in">
         <form id="filterForm" method="GET" action="{{ route('sidongan.documents.index') }}" data-base-url="{{ route('sidongan.documents.index') }}">
             
             {{-- Row 1: Search, Per Page, Status --}}
-            <div style="display: grid; grid-template-columns: 2fr 0.5fr 1fr; gap: 1rem; align-items: end; margin-bottom: 1rem;">
+            <div class="sd-filter-row-1">
                 <div>
                     <label class="u-label-slate">Cari Dokumen</label>
                     <div class="u-relative">
-                        <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
-                        <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Ketik untuk mencari berdasarkan judul atau nomor..." style="width: 100%; padding: 0.625rem 1rem 0.625rem 2.5rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s;">
+                        <i class="fas fa-search sd-search-icon"></i>
+                        <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Ketik untuk mencari berdasarkan judul atau nomor..." class="sd-filter-input">
                     </div>
                 </div>
 
@@ -162,21 +162,21 @@
             </div>
 
             {{-- Row 2: Quick Filters, Date Filters, Reset --}}
-            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto; gap: 1rem; align-items: end; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+            <div class="sd-filter-row-2">
                 
                 <div>
                     <label class="u-label-slate">Filter Cepat</label>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <button type="button" data-filter-status="menunggu_disposisi" class="filter-btn" style="padding: 0.5rem 0.75rem; background: {{ request('status') == 'menunggu_disposisi' ? '#fef3c7' : '#f1f5f9' }}; color: {{ request('status') == 'menunggu_disposisi' ? '#92400e' : '#475569' }}; border: 1px solid {{ request('status') == 'menunggu_disposisi' ? '#fde68a' : '#e2e8f0' }}; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                            <i style="margin-right: 0.35rem; font-size: 0.7rem;" class="fas fa-hourglass-half"></i>
+                    <div class="sd-quick-filters">
+                        <button type="button" data-filter-status="menunggu_disposisi" class="filter-btn sd-filter-btn-dynamic {{ request('status') == 'menunggu_disposisi' ? 'sd-filter-active-menunggu' : 'sd-filter-inactive' }}">
+                            <i class="fas fa-hourglass-half"></i>
                             Menunggu Disposisi
                         </button>
-                        <button type="button" data-filter-status="berjalan" class="filter-btn" style="padding: 0.5rem 0.75rem; background: {{ request('status') == 'berjalan' ? '#ffedd5' : '#f1f5f9' }}; color: {{ request('status') == 'berjalan' ? '#c2410c' : '#475569' }}; border: 1px solid {{ request('status') == 'berjalan' ? '#fed7aa' : '#e2e8f0' }}; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                            <i style="margin-right: 0.35rem; font-size: 0.7rem;" class="fas fa-spinner"></i>
+                        <button type="button" data-filter-status="berjalan" class="filter-btn sd-filter-btn-dynamic {{ request('status') == 'berjalan' ? 'sd-filter-active-berjalan' : 'sd-filter-inactive' }}">
+                            <i class="fas fa-spinner"></i>
                             Berjalan
                         </button>
-                        <button type="button" data-filter-status="selesai" class="filter-btn" style="padding: 0.5rem 0.75rem; background: {{ request('status') == 'selesai' ? '#d1fae5' : '#f1f5f9' }}; color: {{ request('status') == 'selesai' ? '#065f46' : '#475569' }}; border: 1px solid {{ request('status') == 'selesai' ? '#a7f3d0' : '#e2e8f0' }}; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                            <i style="margin-right: 0.35rem; font-size: 0.7rem;" class="fas fa-check-circle"></i>
+                        <button type="button" data-filter-status="selesai" class="filter-btn sd-filter-btn-dynamic {{ request('status') == 'selesai' ? 'sd-filter-active-selesai' : 'sd-filter-inactive' }}">
+                            <i class="fas fa-check-circle"></i>
                             Selesai
                         </button>
                     </div>
@@ -210,16 +210,16 @@
 
                 <div>
                     <label class="u-label-slate">Dari Tanggal</label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}" style="width: 100%; padding: 0.625rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: white;">
+                    <input type="date" name="date_from" value="{{ request('date_from') }}" class="sd-filter-date">
                 </div>
 
                 <div>
                     <label class="u-label-slate">Sampai Tanggal</label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}" style="width: 100%; padding: 0.625rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: white;">
+                    <input type="date" name="date_to" value="{{ request('date_to') }}" class="sd-filter-date">
                 </div>
 
-                <div style="display: flex; gap: 0.5rem; align-items: end;">
-                    <button type="button" data-action="reset-filters" style="padding: 0.625rem 1rem; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap;">
+                <div class="sd-filter-reset-wrap">
+                    <button type="button" data-action="reset-filters" class="sd-btn-reset-filter">
                         <i class="fas fa-undo u-mr-1"></i>
                         Reset
                     </button>
@@ -227,10 +227,10 @@
             </div>
 
             @if($currentSort)
-            <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #1e40af;">
+            <div class="sd-sort-indicator">
+                <div class="sd-sort-info">
                     <i class="fas fa-sort-amount-down"></i>
-                    <span style="font-weight: 600;">Diurutkan:</span>
+                    <span class="sd-sort-info strong">Diurutkan:</span>
                     <span>
                         @php
                             $sortLabels = [
@@ -248,8 +248,8 @@
                         {{ $sortLabel }} ({{ $directionLabel }})
                     </span>
                 </div>
-                <button type="button" data-action="reset-sorting" style="padding: 0.35rem 0.75rem; background: #3b82f6; color: white; border: none; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                    <i style="margin-right: 0.25rem;" class="fas fa-times"></i>
+                <button type="button" data-action="reset-sorting" class="sd-btn-clear-sort">
+                    <i class="fas fa-times" style="margin-right: 0.25rem;"></i>
                     Hapus Urutan
                 </button>
             </div>
@@ -257,14 +257,46 @@
         </form>
     </div>
 
+    {{-- Bulk Action Bar --}}
+    <div id="bulkActionBar" class="sd-bulk-bar" class="sd-bulk-bar sd-bulk-hidden">
+        <div class="sd-bulk-bar-inner">
+            <div class="sd-bulk-bar-info">
+                <i class="fas fa-check-circle"></i>
+                <span id="bulkSelectedCount">0</span> surat dipilih
+            </div>
+            <div class="sd-bulk-bar-actions">
+                @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
+                <button type="button" data-action="bulk-archive" class="sd-bulk-btn sd-bulk-btn-archive">
+                    <i class="fas fa-archive"></i>
+                    Arsipkan
+                </button>
+                <button type="button" data-action="bulk-delete" class="sd-bulk-btn sd-bulk-btn-delete">
+                    <i class="fas fa-trash-alt"></i>
+                    Hapus
+                </button>
+                @endif
+                <button type="button" data-action="bulk-cancel" class="sd-bulk-btn sd-bulk-btn-cancel">
+                    <i class="fas fa-times"></i>
+                    Batal
+                </button>
+            </div>
+        </div>
+    </div>
+
     {{-- Documents Table --}}
     <div class="animate-slide-in u-a78">
         @if(isset($documents) && $documents->count() > 0)
-        <div class="sd-table-wrap" style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead style="background: linear-gradient(135deg, #0891b2, #14b8a6); color: white;">
+        <div class="sd-table-wrap">
+            <table class="sd-doc-table" id="documentsTable">
+                <thead>
                     <tr>
-                        <th style="padding: 1rem; text-align: center; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; width: 60px; cursor: pointer; white-space: nowrap;"
+                        <th class="sd-th-checkbox">
+                            <label class="sd-checkbox-label">
+                                <input type="checkbox" id="selectAll" class="sd-checkbox-input">
+                                <span class="sd-checkbox-box"></span>
+                            </label>
+                        </th>
+                        <th
                             data-sort-url="{{ sortUrl('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                             <span class="u-a14">
                                 NO {!! sortIcon('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
@@ -294,40 +326,46 @@
                                 TANGGAL {!! sortIcon('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                             </span>
                         </th>
-                        <th style="padding: 1rem; text-align: left; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; white-space: nowrap;">DISPOSISI</th>
+                        <th class="sd-th-static">DISPOSISI</th>
                         <th class="u-th-plain"
                             data-sort-url="{{ sortUrl('status', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                             <span class="u-a14">
                                 STATUS {!! sortIcon('status', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                             </span>
                         </th>
-                        <th style="padding: 1rem; text-align: left; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; min-width: 220px; white-space: nowrap;">AKSI TERAKHIR</th>
-                        <th style="padding: 1rem; text-align: center; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; white-space: nowrap;">AKSI</th>
+                        <th class="sd-th-static" style="min-width: 220px;">AKSI TERAKHIR</th>
+                        <th class="sd-th-actions">AKSI</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     @foreach($documents as $index => $doc)
                     <tr class="sd-row">
-                        <td data-label="No" style="padding: 1rem; text-align: center; font-weight: 600; color: #64748b; font-size: 0.875rem;">
+                        <td class="sd-td-checkbox">
+                            <label class="sd-checkbox-label">
+                                <input type="checkbox" name="doc_ids[]" value="{{ $doc->id }}" class="sd-checkbox-input doc-checkbox">
+                                <span class="sd-checkbox-box"></span>
+                            </label>
+                        </td>
+                        <td data-label="No" class="sd-cell-no">
                             {{ $documents->firstItem() + $index }}
                         </td>
-                        <td data-label="No. Agenda" style="padding: 1rem; font-weight: 600; color: #3b82f6; font-family: monospace; font-size: 0.875rem;">
+                        <td data-label="No. Agenda" class="sd-cell-agenda">
                             {{ $doc->agenda_number ?? '-' }}
                         </td>
                         
                         <td data-label="Perihal" class="sd-cell-stack u-p-4">
-                            <div style="font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;">{{ Str::limit($doc->subject ?? $doc->title, 60) }}</div>
+                            <div class="sd-cell-subject">{{ Str::limit($doc->subject ?? $doc->title, 60) }}</div>
                             @if($doc->sender)
-                            <div style="font-size: 0.75rem; color: #64748b;">{{ $doc->sender }}</div>
+                            <div class="sd-cell-sender">{{ $doc->sender }}</div>
                             @endif
                         </td>
                         
-                        <td style="padding: 1rem; color: #475569; font-size: 0.875rem;" data-label="No. Surat">
+                        <td class="sd-cell-text" data-label="No. Surat">
                             {{ $doc->document_number ?? '-' }}
                         </td>
                         
-                        <td style="padding: 1rem; color: #475569; font-size: 0.875rem;" data-label="Tanggal">
+                        <td class="sd-cell-text" data-label="Tanggal">
                             {{ $doc->document_date ? $doc->document_date->locale('id')->translatedFormat('d F Y') : '-' }}
                         </td>
                         
@@ -349,12 +387,12 @@
                                 ];
                             @endphp
                             @foreach($disposisiData['target_roles'] as $role)
-                                <span style="display: inline-block; padding: 0.25rem 0.5rem; background: #dbeafe; color: #1e40af; border-radius: 0.25rem; font-size: 0.75rem; margin: 0.125rem;">
+                                <span class="sd-dispo-chip">
                                     {{ $rolesMap[$role] ?? ucfirst(str_replace('_', ' ', $role)) }}
                                 </span>
                             @endforeach
                             @else
-                                <span style="color: #94a3b8; font-size: 0.75rem;">Belum</span>
+                                <span class="sd-dispo-none">Belum</span>
                             @endif
                         </td>
                         
@@ -385,37 +423,37 @@
                             @endphp
 
                             @if($doc->status === 'menunggu_disposisi')
-                                <span style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.375rem 0.75rem; background: #fef3c7; color: #92400e; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">
+                                <span class="sd-badge sd-badge-menunggu">
                                     <i class="fas fa-hourglass-half u-text-xs"></i>
                                     Menunggu Disposisi
                                 </span>
 
                             @elseif($doc->status === 'berjalan')
-                                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                                    <span style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.375rem 0.75rem; background: #ffedd5; color: #9a3412; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; width: fit-content;">
+                                <div class="sd-status-col">
+                                    <span class="sd-badge sd-badge-berjalan sd-badge-fit">
                                         <i class="fas fa-spinner fa-spin u-text-xs"></i>
                                         Berjalan
                                     </span>
                                     
                                     @if($hasRejected)
                                         @foreach($rejectedReports as $rejected)
-                                            <div style="padding: 0.5rem 0.75rem; background: #fef2f2; border-left: 3px solid #ef4444; border-radius: 0.25rem; font-size: 0.75rem;">
-                                                <div style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.25rem;">
-                                                    <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.5rem; background: #fee2e2; color: #991b1b; border-radius: 0.25rem; font-size: 0.7rem; font-weight: 600;">
+                                            <div class="sd-report-card sd-report-rejected">
+                                                <div class="sd-report-head">
+                                                    <span class="sd-report-tag sd-report-tag-red">
                                                         <i class="fas fa-times-circle u-text-xxs"></i>
                                                         Laporan Ditolak
                                                     </span>
                                                 </div>
-                                                <div style="color: #991b1b; font-weight: 600; display: flex; align-items: center; gap: 0.35rem;">
+                                                <div class="sd-report-user-red">
                                                     <i class="fas fa-user u-text-xs"></i>
                                                     {{ $rejected->creator->name ?? 'Unknown' }}
                                                 </div>
                                                 @if($rejected->catatan_verifikasi)
-                                                    <div style="color: #7f1d1d; font-style: italic; font-size: 0.7rem; line-height: 1.4; margin-top: 0.25rem;">
+                                                    <div class="sd-report-note-red">
                                                         "{{ Str::limit($rejected->catatan_verifikasi, 60) }}"
                                                     </div>
                                                 @endif
-                                                <div style="color: #94a3b8; font-size: 0.65rem; margin-top: 0.2rem;">
+                                                <div class="sd-report-time-sm">
                                                     {{ $rejected->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                                 </div>
                                             </div>
@@ -424,18 +462,18 @@
                                     
                                     @if($hasApproved)
                                         @foreach($approvedReports as $approved)
-                                            <div style="padding: 0.5rem 0.75rem; background: #f0fdf4; border-left: 3px solid #22c55e; border-radius: 0.25rem; font-size: 0.75rem;">
-                                                <div style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.25rem;">
-                                                    <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.5rem; background: #d1fae5; color: #065f46; border-radius: 0.25rem; font-size: 0.7rem; font-weight: 600;">
+                                            <div class="sd-report-card sd-report-approved">
+                                                <div class="sd-report-head">
+                                                    <span class="sd-report-tag sd-report-tag-green">
                                                         <i class="fas fa-check-circle u-text-xxs"></i>
                                                         Laporan Disetujui
                                                     </span>
                                                 </div>
-                                                <div style="color: #065f46; font-weight: 600; display: flex; align-items: center; gap: 0.35rem;">
+                                                <div class="sd-report-user-green">
                                                     <i class="fas fa-user u-text-xs"></i>
                                                     {{ $approved->creator->name ?? 'Unknown' }}
                                                 </div>
-                                                <div style="color: #94a3b8; font-size: 0.65rem; margin-top: 0.2rem;">
+                                                <div class="sd-report-time-sm">
                                                     {{ $approved->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                                 </div>
                                             </div>
@@ -444,18 +482,18 @@
                                     
                                     @if($hasPending)
                                         @foreach($pendingReports as $pending)
-                                            <div style="padding: 0.5rem 0.75rem; background: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 0.25rem; font-size: 0.75rem;">
-                                                <div style="display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.25rem;">
-                                                    <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.5rem; background: #dbeafe; color: #1e40af; border-radius: 0.25rem; font-size: 0.7rem; font-weight: 600;">
+                                            <div class="sd-report-card sd-report-pending">
+                                                <div class="sd-report-head">
+                                                    <span class="sd-report-tag sd-report-tag-blue">
                                                         <i class="fas fa-clock u-text-xxs"></i>
                                                         Menunggu Verifikasi
                                                     </span>
                                                 </div>
-                                                <div style="color: #1e40af; font-weight: 600; display: flex; align-items: center; gap: 0.35rem;">
+                                                <div class="sd-report-user-blue">
                                                     <i class="fas fa-user u-text-xs"></i>
                                                     {{ $pending->creator->name ?? 'Unknown' }}
                                                 </div>
-                                                <div style="color: #94a3b8; font-size: 0.65rem; margin-top: 0.2rem;">
+                                                <div class="sd-report-time-sm">
                                                     {{ $pending->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                                 </div>
                                             </div>
@@ -463,8 +501,8 @@
                                     @endif
                                     
                                     @if(!$hasReport)
-                                        <div style="padding: 0.5rem 0.75rem; background: #f8fafc; border-left: 3px solid #cbd5e1; border-radius: 0.25rem; font-size: 0.75rem;">
-                                            <div style="color: #64748b; display: flex; align-items: center; gap: 0.35rem;">
+                                        <div class="sd-report-card sd-report-none">
+                                            <div class="sd-no-report">
                                                 <i class="fas fa-file-circle-xmark u-text-xs"></i>
                                                 Belum ada laporan
                                             </div>
@@ -473,14 +511,14 @@
                                 </div>
 
                             @elseif($doc->status === 'menunggu_verifikasi')
-                                <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-                                    <span style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.375rem 0.75rem; background: #dbeafe; color: #1e40af; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; width: fit-content;">
+                                <div class="sd-status-col-sm">
+                                    <span class="sd-badge sd-badge-verifikasi sd-badge-fit">
                                         <i class="fas fa-clock u-text-xs"></i>
                                         Menunggu Verifikasi
                                     </span>
                                     @if($allReported)
-                                        <div style="padding: 0.5rem 0.75rem; background: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 0.25rem; font-size: 0.75rem;">
-                                            <div style="color: #1e40af; font-weight: 600; display: flex; align-items: center; gap: 0.35rem;">
+                                        <div class="sd-verify-note">
+                                            <div class="sd-verify-note-text">
                                                 <i class="fas fa-clock u-text-xs"></i>
                                                 Laporan sedang menunggu verifikasi ketua
                                             </div>
@@ -489,19 +527,19 @@
                                 </div>
 
                             @elseif($doc->status === 'selesai')
-                                <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-                                    <span style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.375rem 0.75rem; background: #d1fae5; color: #065f46; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; width: fit-content;">
+                                <div class="sd-status-col-sm">
+                                    <span class="sd-badge sd-badge-selesai sd-badge-fit">
                                         <i class="fas fa-check-circle u-text-xs"></i>
                                         Selesai
                                     </span>
                                     @if($hasApproved)
                                         @foreach($approvedReports as $approved)
-                                            <div style="padding: 0.5rem 0.75rem; background: #f0fdf4; border-left: 3px solid #22c55e; border-radius: 0.25rem; font-size: 0.75rem;">
-                                                <div style="color: #065f46; font-weight: 600; display: flex; align-items: center; gap: 0.35rem;">
+                                            <div class="sd-done-note">
+                                                <div class="sd-done-note-text">
                                                     <i class="fas fa-user u-text-xs"></i>
                                                     {{ $approved->creator->name ?? 'Unknown' }}
                                                 </div>
-                                                <div style="color: #94a3b8; font-size: 0.65rem; margin-top: 0.15rem;">
+                                                <div class="sd-report-time-xs">
                                                     {{ $approved->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                                 </div>
                                             </div>
@@ -510,13 +548,13 @@
                                 </div>
 
                             @elseif($doc->status === 'diarsipkan')
-                                <span style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.375rem 0.75rem; background: #f3e8ff; color: #7c3aed; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">
+                                <span class="sd-badge sd-badge-arsip">
                                     <i class="fas fa-archive u-text-xs"></i>
                                     Diarsipkan
                                 </span>
 
                             @else
-                                <span style="display: inline-block; padding: 0.375rem 0.75rem; background: #f1f5f9; color: #475569; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">
+                                <span class="sd-badge sd-badge-default">
                                     {{ ucfirst(str_replace('_', ' ', $doc->status)) }}
                                 </span>
                             @endif
@@ -597,33 +635,33 @@
             @if($latestAction['user']->avatar)
                 <img src="{{ asset('storage/' . $latestAction['user']->avatar) }}" 
                      alt="{{ $latestAction['user']->name }}"
-                     style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                     class="sd-action-avatar">
             @else
-                <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 0.75rem; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div class="sd-action-avatar-placeholder">
                     {{ strtoupper(substr($latestAction['user']->name, 0, 1)) }}
                 </div>
             @endif
             
             <div class="u-flex-1-min">
-                <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.5rem; background: {{ $color['bg'] }}; color: {{ $color['text'] }}; border-radius: 0.25rem; font-size: 0.7rem; font-weight: 600; margin-bottom: 0.25rem;">
+                <span class="sd-action-badge" style="background: {{ $color['bg'] }}; color: {{ $color['text'] }};">
                     <i class="fas {{ $color['icon'] }} u-text-xxs"></i>
                     {{ $latestAction['action'] }}
                 </span>
-                <div style="font-weight: 600; color: #0f172a; font-size: 0.875rem;">
+                <div class="sd-action-user">
                     {{ $latestAction['user']->name }}
                 </div>
-                <div style="font-size: 0.7rem; color: #64748b;">
+                <div class="sd-action-time">
                     {{ $latestAction['time']->locale('id')->translatedFormat('d F Y, H.i') }}
                 </div>
             </div>
         </div>
     @else
-        <span style="color: #94a3b8; font-size: 0.85rem;">-</span>
+        <span class="sd-no-action">-</span>
     @endif
 </td>
                         
-                        <td data-label="Aksi" class="sd-cell-stack" style="padding: 1rem; white-space: nowrap;">
-                            <div class="sd-actions" style="display: flex; gap: 0.5rem; justify-content: center;">
+                        <td data-label="Aksi" class="sd-cell-stack sd-action-cell">
+                            <div class="sd-actions sd-actions-row">
                                 <a href="{{ route('sidongan.documents.show', $doc) }}"
                                 class="sd-icon-btn sd-icon-view"
                                 
@@ -694,7 +732,7 @@
         </div>
 
         @if($documents->hasPages())
-        <div style="padding: 1.25rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div class="sd-pagination-footer">
             <div class="u-text-sm-muted-2">
                 Menampilkan <strong>{{ $documents->firstItem() }}</strong> - <strong>{{ $documents->lastItem() }}</strong> dari <strong>{{ $documents->total() }}</strong> surat
             </div>
@@ -769,7 +807,7 @@
             </div>
         </div>
         @else
-        <div style="padding: 1.25rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: #f8fafc;">
+        <div class="sd-pagination-footer-alt">
             <div class="u-text-sm-muted-2">
                 Menampilkan <strong>{{ $documents->firstItem() ?? 0 }}</strong> - <strong>{{ $documents->lastItem() ?? 0 }}</strong> dari <strong>{{ $documents->total() }}</strong> surat
             </div>
@@ -779,15 +817,15 @@
         </div>
         @endif
         @else
-            <div style="padding: 4rem 2rem; text-align: center;">
-                <div style="width: 96px; height: 96px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; animation: float 3s ease-in-out infinite;">
-                    <i class="fas fa-inbox" style="color: #0891b2; font-size: 3rem;"></i>
+            <div class="sd-empty-state">
+                <div class="sd-empty-icon-box">
+                    <i class="fas fa-inbox sd-empty-icon"></i>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e293b; margin: 0 0 0.5rem 0;">Belum Ada Dokumen</h3>
-                <p style="font-size: 0.875rem; color: #64748b; margin: 0 0 1.5rem 0; max-width: 400px; margin-left: auto; margin-right: auto;">Belum ada dokumen surat yang ditemukan.</p>
+                <h3 class="sd-empty-title">Belum Ada Dokumen</h3>
+                <p class="sd-empty-desc">Belum ada dokumen surat yang ditemukan.</p>
                 @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
-                <a href="{{ route('sidongan.documents.create') }}" class="btn-action" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #0891b2, #06b6d4); color: white; text-decoration: none; border-radius: 0.75rem; font-weight: 600; box-shadow: 0 4px 12px rgba(8, 145, 178, 0.25); font-size: 0.95rem;">
-                    <i class="fas fa-plus" style="font-size: 1rem;"></i>
+                <a href="{{ route('sidongan.documents.create') }}" class="btn-action sd-empty-btn">
+                    <i class="fas fa-plus"></i>
                     <span>Buat Surat Pertama</span>
                 </a>
                 @endif

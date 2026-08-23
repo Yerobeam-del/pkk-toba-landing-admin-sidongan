@@ -841,6 +841,173 @@
 }
 
 /* =========================================
+   NEW UTILITY CLASSES (replacing inline styles)
+   ========================================= */
+
+.ds-section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0891b2;
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ds-form-inline {
+    display: inline;
+}
+
+.ds-saran-wrapper {
+    padding-top: 0.75rem;
+}
+
+.ds-no-attachment {
+    text-align: center;
+    padding: 2rem;
+}
+
+.ds-no-attachment-icon {
+    color: #cbd5e1;
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.ds-no-attachment-text {
+    color: #64748b;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.ds-dispo-icon-orange {
+    color: #f97316;
+}
+
+.ds-role-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.ds-text-muted {
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.ds-map-icon {
+    color: #ef4444;
+    margin-right: 0.5rem;
+}
+
+.ds-foto-label {
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.ds-clearfix {
+    clear: both;
+}
+
+/* Avatar image + fallback */
+.ds-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+.ds-timeline-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.ds-avatar-fallback {
+    display: none;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: 50%;
+}
+
+.ds-avatar-fallback-blue {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+}
+
+.ds-avatar-fallback-orange {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.ds-avatar-fallback-green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.ds-avatar-fallback-purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.ds-avatar-fallback-red {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+/* Verification detail boxes */
+.ds-verif-detail {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+}
+
+.ds-verif-detail-success {
+    background: #f0fdf4;
+    border-left: 3px solid #10b981;
+}
+
+.ds-verif-detail-danger {
+    background: #fef2f2;
+    border-left: 3px solid #ef4444;
+}
+
+.ds-verif-detail-title {
+    font-size: 0.9rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.ds-verif-detail-success .ds-verif-detail-title {
+    color: #065f46;
+}
+
+.ds-verif-detail-danger .ds-verif-detail-title {
+    color: #991b1b;
+}
+
+.ds-verif-detail-meta {
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.ds-verif-detail-success .ds-verif-detail-meta {
+    color: #065f46;
+}
+
+.ds-verif-detail-danger .ds-verif-detail-meta {
+    color: #991b1b;
+}
+
+.ds-verif-detail-meta:not(:last-child) {
+    margin-bottom: 0.25rem;
+}
+
+/* =========================================
    RESPONSIVE - TABLET (max 1024px)
    ========================================= */
 @media (max-width: 1024px) {
@@ -1034,5 +1201,169 @@
     .ds-timeline-desc {
         font-size: 0.8rem;
     }
+}
+
+/* =========================================
+   DARK MODE
+   ========================================= */
+body.dark-mode .ds-status-section,
+body.dark-mode .ds-card,
+body.dark-mode .ds-saran-box,
+body.dark-mode .ds-lampiran-box,
+body.dark-mode .ds-lampiran-name,
+body.dark-mode .ds-timeline-title,
+body.dark-mode .ds-timeline-quote,
+body.dark-mode .ds-timeline-note,
+body.dark-mode .ds-disposisi-comment-text {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body.dark-mode .ds-subject-title,
+body.dark-mode .ds-card-header h3,
+body.dark-mode .ds-timeline-title,
+body.dark-mode .ds-laporan-name {
+    color: #f1f5f9;
+}
+
+body.dark-mode .ds-info-label,
+body.dark-mode .ds-disposisi-label,
+body.dark-mode .ds-disposisi-comment-label,
+body.dark-mode .ds-laporan-date,
+body.dark-mode .ds-laporan-info-label,
+body.dark-mode .ds-disposisi-footer,
+body.dark-mode .ds-timeline-date,
+body.dark-mode .ds-timeline-desc,
+body.dark-mode .ds-timeline-meta,
+body.dark-mode .ds-timeline-note {
+    color: #94a3b8;
+}
+
+body.dark-mode .ds-info-value,
+body.dark-mode .ds-laporan-info-value,
+body.dark-mode .ds-laporan-deskripsi,
+body.dark-mode .ds-timeline-desc strong {
+    color: #e2e8f0;
+}
+
+body.dark-mode .ds-info-row {
+    border-bottom-color: #334155;
+}
+
+body.dark-mode .ds-section-title {
+    color: #22d3ee;
+}
+
+body.dark-mode .ds-role-badge,
+body.dark-mode .ds-disposisi-badge {
+    background: #1e3a5f;
+    color: #60a5fa;
+}
+
+body.dark-mode .ds-disposisi-action {
+    background: #2e1065;
+    color: #c4b5fd;
+}
+
+body.dark-mode .ds-timeline-line {
+    background: #334155;
+}
+
+body.dark-mode .ds-badge-agenda {
+    background: #1e3a5f;
+    color: #60a5fa;
+}
+
+body.dark-mode .ds-card-header-blue {
+    background: linear-gradient(135deg, #0c1f3f, #0f2744);
+    border-bottom-color: #1e3a5f;
+}
+
+body.dark-mode .ds-card-header-green {
+    background: linear-gradient(135deg, #052e16, #0a3d1a);
+    border-bottom-color: #14532d;
+}
+
+body.dark-mode .ds-card-header-orange {
+    background: linear-gradient(135deg, #3b1a00, #431407);
+    border-bottom-color: #7c2d12;
+}
+
+body.dark-mode .ds-verif-detail-success {
+    background: #052e16;
+    border-left-color: #22c55e;
+}
+
+body.dark-mode .ds-verif-detail-danger {
+    background: #3b0f0f;
+    border-left-color: #ef4444;
+}
+
+body.dark-mode .ds-verif-detail-title,
+body.dark-mode .ds-verif-detail-meta {
+    color: #d1fae5;
+}
+
+body.dark-mode .ds-verif-detail-danger .ds-verif-detail-title,
+body.dark-mode .ds-verif-detail-danger .ds-verif-detail-meta {
+    color: #fecaca;
+}
+
+body.dark-mode .ds-laporan-card-menunggu_verifikasi,
+body.dark-mode .ds-laporan-card-disetujui,
+body.dark-mode .ds-laporan-card-ditolak,
+body.dark-mode .ds-laporan-card-draft {
+    background: #1e293b;
+}
+
+body.dark-mode .ds-laporan-card-menunggu_verifikasi { border-color: #7c2d12; }
+body.dark-mode .ds-laporan-card-disetujui { border-color: #14532d; }
+body.dark-mode .ds-laporan-card-ditolak { border-color: #3b0f0f; }
+body.dark-mode .ds-laporan-card-draft { border-color: #1e3a5f; }
+
+body.dark-mode .ds-laporan-foto-item {
+    border-color: #334155;
+}
+
+body.dark-mode .ds-disposisi-comment {
+    background: #0f172a;
+    border-left-color: #475569;
+}
+
+body.dark-mode .ds-no-attachment-text {
+    color: #94a3b8;
+}
+
+body.dark-mode .ds-no-attachment-icon {
+    color: #475569;
+}
+
+body.dark-mode .ds-text-muted {
+    color: #64748b;
+}
+
+body.dark-mode .ds-laporan-lokasi-box {
+    background: #1e293b;
+}
+
+body.dark-mode .ds-laporan-deskripsi {
+    background: #0f172a;
+    color: #cbd5e1;
+}
+
+body.dark-mode .ds-timeline-note-success,
+body.dark-mode .ds-timeline-note-danger {
+    background: #0f172a;
+}
+
+body.dark-mode .ds-timeline-note-success {
+    border-left-color: #22c55e;
+    color: #86efac;
+}
+
+body.dark-mode .ds-timeline-note-danger {
+    border-left-color: #ef4444;
+    color: #fca5a5;
 }
 /* Dikembangkan oleh Institut Teknologi Del */

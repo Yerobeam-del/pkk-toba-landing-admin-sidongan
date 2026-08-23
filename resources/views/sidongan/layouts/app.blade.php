@@ -25,7 +25,7 @@
 
     @stack('styles')
 </head>
-<body>
+<body data-success="{{ session('success') }}" data-error="{{ session('error') }}" data-warning="{{ session('warning') }}" data-info="{{ session('info') }}">
 
     @php
         $currentUser = auth()->guard('sidongan')->user();
@@ -49,6 +49,47 @@
             @include('sidongan.partials.top-header')
 
             <main class="content-area">
+                {{-- Breadcrumb Navigation --}}
+                @php
+                    $segments = collect(explode('/', trim(request()->path(), '/')))->filter();
+                    $breadcrumbMap = [
+                        'sidongan' => 'Dashboard',
+                        'dashboard' => 'Dashboard',
+                        'documents' => 'Daftar Surat',
+                        'create' => 'Buat Surat Baru',
+                        'edit' => 'Edit Surat',
+                        'disposisi' => 'Disposisi',
+                        'form' => 'Formulir',
+                        'verifikasi' => 'Verifikasi',
+                        'lapor-kegiatan' => 'Lapor Kegiatan',
+                        'arsip' => 'Arsip Surat',
+                        'notifications' => 'Notifikasi',
+                        'admin' => 'Admin',
+                        'tags' => 'Tag',
+                        'categories' => 'Kategori',
+                    ];
+                @endphp
+                @if($segments->count() > 1)
+                <nav class="sd-breadcrumb" aria-label="Breadcrumb">
+                    <ol class="sd-breadcrumb-list">
+                        @foreach($segments as $i => $segment)
+                            @php
+                                $label = $breadcrumbMap[$segment] ?? ucfirst(str_replace('-', ' ', $segment));
+                                $isNumeric = is_numeric($segment);
+                                $isLast = $loop->last;
+                            @endphp
+                            @if($isNumeric)
+                                <li class="sd-breadcrumb-item sd-breadcrumb-current">Detail</li>
+                            @elseif(!$isLast)
+                                <li class="sd-breadcrumb-item"><a class="sd-breadcrumb-link" href="#">{{ $label }}</a><span class="sd-breadcrumb-sep">/</span></li>
+                            @else
+                                <li class="sd-breadcrumb-item sd-breadcrumb-current">{{ $label }}</li>
+                            @endif
+                        @endforeach
+                    </ol>
+                </nav>
+                @endif
+
                 @yield('content')
             </main>
 
@@ -62,8 +103,25 @@
          Toast untuk pesan validasi & konfirmasi (menggantikan alert/confirm bawaan). --}}
     @include('sidongan.partials.toast')
 
+    <!-- SIDONGAN Shared JS -->
+    <script src="{{ asset('assets/sidongan/js/sidongan-shared.js') }}"></script>
     <!-- SIDONGAN JS -->
     <script src="{{ asset('assets/sidongan/js/app.js') }}"></script>
+
+    {{-- Dark Mode Toggle --}}
+    <script>
+    (function() {
+        var saved = localStorage.getItem('sidongan-theme');
+        if (saved === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+        } else if (!saved) {
+            // Auto-detect prefers-color-scheme
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        }
+    })();
+    </script>
 
     @stack('scripts')
 </body>

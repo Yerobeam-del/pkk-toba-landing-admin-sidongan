@@ -295,4 +295,111 @@ tr:hover td { background: #fafbfc; }
   box-shadow: 0 0 0 3px rgba(20,184,166,0.1);
   border-color: var(--primary);
 }
+
+/* ==========================================
+   BREADCRUMB
+   ========================================== */
+.admin-breadcrumb {
+  margin-bottom: 1rem;
+}
+
+.admin-breadcrumb ol {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.admin-breadcrumb li {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.admin-breadcrumb a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.admin-breadcrumb a:hover {
+  color: var(--primary);
+}
+
+.admin-breadcrumb li.active span {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.breadcrumb-sep {
+  color: #cbd5e1;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   DARK MODE
+   ========================================== */
+.dark-mode {
+  --bg-light: #0f172a;
+  --card-bg: #1e293b;
+  --text-dark: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode body {
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+.dark-mode .card,
+.dark-mode .struktur-card,
+.dark-mode .stat-card {
+  background: var(--card-bg);
+  border-color: var(--border);
+}
+
+.dark-mode .top-header {
+  background: #1e293b;
+  border-bottom-color: var(--border);
+}
+
+.dark-mode .form-control {
+  background: #1e293b;
+  border-color: #334155;
+  color: var(--text-dark);
+}
+
+.dark-mode .form-control:focus {
+  background: #1e293b;
+}
+
+.dark-mode table th {
+  background: #1e293b;
+  color: var(--text-muted);
+}
+
+.dark-mode table td {
+  border-bottom-color: var(--border);
+  color: var(--text-dark);
+}
+
+.dark-mode tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
+
+.dark-mode .toggle-btn {
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+.dark-mode .toggle-btn:hover {
+  background: #334155;
+  color: var(--primary);
+}
+
 /* Dikembangkan oleh Institut Teknologi Del */

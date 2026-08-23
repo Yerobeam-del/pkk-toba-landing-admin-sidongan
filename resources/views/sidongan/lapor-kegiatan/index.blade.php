@@ -20,10 +20,9 @@
     </div>
 
     {{-- Stats Cards --}}
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
+    <div class="lk-stats-grid">
         {{-- Perlu Dilaporkan - BIRU --}}
-        <div class="stats-card animate-slide-in" 
-            style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);">
+        <div class="stats-card animate-slide-in lk-stat-card lk-stat-blue">
             <div class="u-deco-circle-tr"></div>
             <div class="u-deco-circle-bl"></div>
             
@@ -42,8 +41,7 @@
         </div>
         
         {{-- Menunggu Verifikasi - ORANGE --}}
-        <div class="stats-card animate-slide-in" 
-            style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);">
+        <div class="stats-card animate-slide-in lk-stat-card lk-stat-orange">
             <div class="u-deco-circle-tr"></div>
             <div class="u-deco-circle-bl"></div>
             
@@ -62,8 +60,7 @@
         </div>
         
         {{-- Disetujui - HIJAU --}}
-        <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);" class="stats-card animate-slide-in" 
-           >
+        <div class="stats-card animate-slide-in lk-stat-card lk-stat-green">
             <div class="u-deco-circle-tr"></div>
             <div class="u-deco-circle-bl"></div>
             
@@ -82,8 +79,7 @@
         </div>
         
         {{-- Ditolak - MERAH --}}
-        <div class="stats-card animate-slide-in" 
-            style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);">
+        <div class="stats-card animate-slide-in lk-stat-card lk-stat-red">
             <div class="u-deco-circle-tr"></div>
             <div class="u-deco-circle-bl"></div>
             
@@ -103,14 +99,14 @@
     </div>
 
     {{-- Filter Section --}}
-    <div style="background: white; border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" class="animate-slide-in">
+    <div class="lk-filter-card animate-slide-in">
         <form id="filterForm" method="GET">
-            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; align-items: end;">
+            <div class="lk-filter-grid">
                 <div>
                     <label class="u-label-gray">Cari Laporan</label>
                     <div class="u-relative">
-                        <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 0.875rem; pointer-events: none;"></i>
-                        <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Cari berdasarkan judul kegiatan..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; border: 1px solid #e5e7eb; border-radius: 0.625rem; font-size: 0.9rem; transition: all 0.2s;">
+                        <i class="fas fa-search lk-search-icon"></i>
+                        <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Cari berdasarkan judul kegiatan..." class="lk-search-input">
                     </div>
                 </div>
                 
@@ -144,7 +140,7 @@
     </div>
 
     {{-- List Container --}}
-    <div style="background: white; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; overflow: hidden;" class="animate-slide-in">
+    <div class="lk-list-container animate-slide-in">
         @if(isset($documents) && $documents->count() > 0)
             <div class="u-p-0">
                 @foreach($documents as $doc)
@@ -152,9 +148,7 @@
                         // Satu surat = SATU laporan: laporan apa pun (dari role tujuan
                         // mana pun) yang sudah ada harus terbaca di sini agar suratnya
                         // tidak tampil sebagai "Perlu Dilaporkan" untuk kedua kalinya.
-                        $existingReport = \App\Models\ActivityReport::where('document_id', $doc->id)
-                            ->orderBy('created_at', 'desc')
-                            ->first();
+                        $existingReport = $doc->activityReports->sortBy('created_at')->last() ?? null;
                         
                         $statusConfig = [
                             null => ['bg' => '#f0f9ff', 'border' => '#bae6fd', 'text' => '#075985', 'btn' => '#0ea5e9', 'label' => 'Perlu Dilaporkan', 'icon' => 'fa-pen'],
@@ -167,48 +161,42 @@
                         $theme = $statusConfig[$existingReport->status ?? null] ?? $statusConfig[null];
                     @endphp
                     
-                    <div class="laporan-item animate-slide-in" 
-                        style="padding: 1.5rem 1.75rem; border-bottom: {{ $loop->last ? 'none' : '1px solid #f3f4f6' }}; 
-                                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                                border-left: 3px solid transparent;
-                                position: relative;
-                                overflow: hidden;
-                                --lk-bg: {{ $theme['bg'] }};
-                                --lk-border: {{ $theme['btn'] }};">
+                    <div class="laporan-item animate-slide-in lk-item" 
+                        style="--lk-bg: {{ $theme['bg'] }}; --lk-border: {{ $theme['btn'] }};">
                         
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;" class="sd-list-head">
+                        <div class="lk-list-head sd-list-head">
                             <div class="u-flex-1">
                                 <div class="u-flex-1">
-                                    <span style="font-size: 0.8rem; font-family: monospace; background: white; color: {{ $theme['text'] }}; padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-weight: 700; border: 1px solid {{ $theme['border'] }}; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                    <span class="lk-agenda-badge" style="color: {{ $theme['text'] }}; border: 1px solid {{ $theme['border'] }};">
                                         {{ $doc->agenda_number }}
                                     </span>
-                                    <span style="font-size: 0.75rem; padding: 0.375rem 0.875rem; border-radius: 9999px; font-weight: 600; background: {{ $theme['btn'] }}; color: white; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
-                                        <i class="fas {{ $theme['icon'] }}" style="margin-right: 0.35rem; font-size: 0.65rem;"></i>
+                                    <span class="lk-status-badge" style="background: {{ $theme['btn'] }};">
+                                        <i class="fas {{ $theme['icon'] }} lk-status-icon"></i>
                                         {{ $theme['label'] }}
                                     </span>
                                 </div>
                                 
-                                <h4 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin: 0 0 0.75rem 0; line-height: 1.4;">
+                                <h4 class="lk-doc-title">
                                     {{ $doc->subject ?? $doc->title }}
                                 </h4>
                                 
-                                <div style="display: flex; gap: 1.5rem; font-size: 0.875rem; color: #64748b; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                                <div class="lk-meta-row">
                                     <span class="u-flex-center-gap-2">
-                                        <div style="width: 1.5rem; height: 1.5rem; background: {{ $theme['bg'] }}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                            <i class="fas fa-user" style="color: {{ $theme['btn'] }}; font-size: 0.7rem;"></i>
+                                        <div class="lk-meta-icon-box" style="background: {{ $theme['bg'] }};">
+                                            <i class="fas fa-user lk-meta-icon" style="color: {{ $theme['btn'] }};"></i>
                                         </div>
                                         {{ $doc->sender }}
                                     </span>
                                     <span class="u-flex-center-gap-2">
-                                        <div style="width: 1.5rem; height: 1.5rem; background: {{ $theme['bg'] }}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                            <i class="fas fa-calendar" style="color: {{ $theme['btn'] }}; font-size: 0.7rem;"></i>
+                                        <div class="lk-meta-icon-box" style="background: {{ $theme['bg'] }};">
+                                            <i class="fas fa-calendar lk-meta-icon" style="color: {{ $theme['btn'] }};"></i>
                                         </div>
                                         {{ $doc->created_at->locale('id')->translatedFormat('d F Y') }}
                                     </span>
                                 </div>
                             </div>
                             
-                            <div style="display: flex; gap: 0.5rem; flex-shrink: 0; flex-direction: column;" class="sd-list-actions">
+                            <div class="lk-actions sd-list-actions">
                                 @if($existingReport)
                                     @if($existingReport->status === 'ditolak')
                                         {{-- Surat ditolak: siapa pun dari role tujuan disposisi boleh
@@ -216,13 +204,12 @@
                                              Revisi di tempat tetap tersedia sebagai opsi kedua. --}}
                                         <a href="{{ route('sidongan.lapor_kegiatan.create', ['document_id' => $doc->id]) }}" 
                                         class="btn-action"
-                                        style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1rem; background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; text-decoration: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);">
+                                        class="btn-action lk-btn-primary">
                                             <i class="fas fa-plus"></i>
                                             <span>Buat Laporan</span>
                                         </a>
                                         <a href="{{ route('sidongan.lapor_kegiatan.edit', $existingReport->id) }}" 
-                                        class="btn-action"
-                                        style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1rem; background: white; color: #c2410c; text-decoration: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; border: 1px solid #fed7aa; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                        class="btn-action lk-btn-outline" style="color: #c2410c;">
                                             <i class="fas fa-edit"></i>
                                             <span>Revisi Laporan</span>
                                         </a>
@@ -230,7 +217,7 @@
                                         {{-- Tombol Lihat untuk status lainnya --}}
                                         <a href="{{ route('sidongan.lapor_kegiatan.show', $existingReport->id) }}" 
                                         class="btn-action"
-                                        style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1rem; background: white; color: {{ $theme['text'] }}; text-decoration: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; border: 1px solid {{ $theme['border'] }}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                        class="btn-action lk-btn-outline" style="color: {{ $theme['text'] }}; border-color: {{ $theme['border'] }};">
                                             <i class="fas fa-eye"></i>
                                             <span>Lihat</span>
                                         </a>
@@ -238,7 +225,7 @@
                                 @else
                                     <a href="{{ route('sidongan.lapor_kegiatan.create', ['document_id' => $doc->id]) }}" 
                                     class="btn-action"
-                                    style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1rem; background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; text-decoration: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);">
+                                    class="btn-action lk-btn-primary">
                                         <i class="fas fa-plus"></i>
                                         <span>Buat Laporan</span>
                                     </a>
@@ -251,14 +238,14 @@
                                 $dispo = is_string($doc->disposisi_data) ? json_decode($doc->disposisi_data, true) : $doc->disposisi_data;
                             @endphp
                             @if(isset($dispo['action']))
-                            <div style="background: {{ $theme['bg'] }}; border-left: 3px solid {{ $theme['btn'] }}; border-radius: 0.5rem; padding: 0.875rem 1rem;">
-                                <div style="display: flex; align-items: start; gap: 0.75rem;">
-                                    <div style="width: 2rem; height: 2rem; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div class="lk-dispo-box" style="background: {{ $theme['bg'] }}; border-left-color: {{ $theme['btn'] }};">
+                                <div class="lk-dispo-row">
+                                    <div class="lk-dispo-icon-box">
                                         <i class="fas fa-info-circle" style="color: {{ $theme['btn'] }}; font-size: 0.875rem;"></i>
                                     </div>
                                     <div class="u-flex-1">
-                                        <p style="font-size: 0.8rem; color: {{ $theme['text'] }}; margin: 0 0 0.375rem 0; font-weight: 700;">Instruksi Disposisi</p>
-                                        <p style="font-size: 0.875rem; color: #64748b; margin: 0; line-height: 1.5;">
+                                        <p class="lk-dispo-label" style="color: {{ $theme['text'] }};">Instruksi Disposisi</p>
+                                        <p class="lk-dispo-text">
                                             <strong>{{ $dispo['action'] }}</strong>
                                             @if(isset($dispo['comment']) && $dispo['comment'])
                                                 - "{{ Str::limit($dispo['comment'], 100) }}"
@@ -361,8 +348,8 @@
             @endif
         @else
             <div class="animate-slide-in u-a117">
-                <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15); animation: float 3s ease-in-out infinite;">
-                    <i class="fas fa-inbox" style="color: #0ea5e9; font-size: 3rem;"></i>
+                <div class="lk-empty-icon-box">
+                    <i class="fas fa-inbox lk-empty-icon"></i>
                 </div>
                 <h4 class="u-h3-slate">Tidak Ada Laporan</h4>
                 <p class="u-text-muted-lead">

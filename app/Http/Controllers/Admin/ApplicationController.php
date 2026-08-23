@@ -7,6 +7,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
+use App\Models\AdminActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -127,6 +128,7 @@ class ApplicationController extends Controller
             if ($currentBerandaCount >= 2) {
                 return redirect()->back()
                     ->withInput()
+                    ->with('error', 'Maksimal hanya 2 aplikasi yang bisa tampil di Beranda.')
                     ->withErrors(['show_in_quick_access' => 'Maksimal hanya 2 aplikasi yang bisa tampil di Beranda.']);
             }
             $validated['show_in_quick_access'] = 1;
@@ -151,6 +153,7 @@ class ApplicationController extends Controller
         }
 
         Application::create($validated);
+        AdminActivityLog::log('created', 'aplikasi', null, ['name' => $validated['name'] ?? '']);
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil ditambahkan!');
     }
 
@@ -204,6 +207,7 @@ class ApplicationController extends Controller
                 if ($currentBerandaCount >= 2) {
                     return redirect()->back()
                         ->withInput()
+                        ->with('error', 'Maksimal hanya 2 aplikasi yang bisa tampil di Beranda.')
                         ->withErrors(['show_in_quick_access' => 'Maksimal hanya 2 aplikasi yang bisa tampil di Beranda.']);
                 }
             }
@@ -221,6 +225,7 @@ class ApplicationController extends Controller
         }
 
         $aplikasi->update($validated);
+        AdminActivityLog::log('updated', 'aplikasi', $aplikasi->id, ['name' => $aplikasi->name ?? '']);
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil diperbarui.');
     }
 
@@ -229,6 +234,7 @@ class ApplicationController extends Controller
         if ($aplikasi->icon) {
             Storage::disk('public')->delete($aplikasi->icon);
         }
+        AdminActivityLog::log('deleted', 'aplikasi', $aplikasi->id, ['name' => $aplikasi->name ?? '']);
         $aplikasi->delete();
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil dihapus.');
     }

@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Pokja;
 use App\Models\StrukturMember;
+use App\Models\AdminActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -250,6 +251,7 @@ class StrukturController extends Controller
             'photo_path' => $photoPath, // <-- INI YANG SEBELUMNYA HILANG
         ]);
 
+        AdminActivityLog::log('created', 'struktur', null, ['name' => $validated['name'] ?? '', 'position' => $validated['position'] ?? '']);
         return redirect()->route('admin.struktur.index')->with('success', 'Data berhasil ditambahkan.');
     }
 
@@ -303,12 +305,14 @@ class StrukturController extends Controller
             'photo_path' => $photoPath, // <-- INI YANG SEBELUMNYA HILANG
         ]);
 
+        AdminActivityLog::log('updated', 'struktur', $struktur->id, ['name' => $struktur->name ?? '']);
         return redirect()->route('admin.struktur.index')->with('success', 'Data berhasil diperbarui.');
     }
 
     public function destroy(StrukturMember $struktur)
     {
         if ($struktur->photo_path) Storage::disk('public')->delete($struktur->photo_path);
+        AdminActivityLog::log('deleted', 'struktur', $struktur->id, ['name' => $struktur->name ?? '']);
         $struktur->delete();
         return redirect()->route('admin.struktur.index')->with('success', 'Data berhasil dihapus.');
     }

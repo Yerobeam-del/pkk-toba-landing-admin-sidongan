@@ -331,6 +331,9 @@ Route::domain(config('app.landing_domain'))->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\UserManagementController::class, 'index'])->name('index');
             Route::get('/create', [App\Http\Controllers\Admin\UserManagementController::class, 'create'])->name('create');
             Route::post('/', [App\Http\Controllers\Admin\UserManagementController::class, 'store'])->name('store');
+            Route::get('/check-email', [App\Http\Controllers\Admin\UserManagementController::class, 'checkEmail'])->name('check-email');
+            Route::get('/export', [App\Http\Controllers\Admin\UserManagementController::class, 'export'])->name('export');
+            Route::post('/bulk-action', [App\Http\Controllers\Admin\UserManagementController::class, 'bulkAction'])->name('bulk-action');
             Route::get('/desas/{kecamatanKode}', [App\Http\Controllers\Admin\UserManagementController::class, 'getDesas'])->name('desas');
             Route::get('/{user}/edit', [App\Http\Controllers\Admin\UserManagementController::class, 'edit'])->name('edit');
             Route::put('/{user}', [App\Http\Controllers\Admin\UserManagementController::class, 'update'])->name('update');
@@ -468,6 +471,8 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
         Route::get('/documents/{document}/download', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'download'])->name('documents.download');
         Route::get('/documents/{document}/disposisi-print', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'printDisposisi'])->name('documents.disposisi-print');
         Route::patch('/documents/{document}/archive', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'archive'])->name('documents.archive');
+        Route::post('/documents/bulk-archive', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'bulkArchive'])->name('documents.bulk-archive');
+        Route::post('/documents/bulk-delete', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'bulkDelete'])->name('documents.bulk-delete');
 
         Route::get('/disposisi', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'disposisi'])->name('disposisi');
         Route::get('/disposisi/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'showDisposisiForm'])->name('disposisi.form');

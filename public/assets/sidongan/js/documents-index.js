@@ -156,4 +156,107 @@
             }
         });
     }
+
+    // ===============================
+    // Bulk Actions
+    // ===============================
+    const selectAll = document.getElementById('selectAll');
+    const bulkBar = document.getElementById('bulkActionBar');
+    const bulkCount = document.getElementById('bulkSelectedCount');
+    const docCheckboxes = document.querySelectorAll('.doc-checkbox');
+
+    function getSelectedIds() {
+        return Array.from(document.querySelectorAll('.doc-checkbox:checked')).map(cb => cb.value);
+    }
+
+    function updateBulkBar() {
+        const count = getSelectedIds().length;
+        if (bulkBar) {
+            bulkBar.style.display = count > 0 ? 'block' : 'none';
+            if (bulkCount) bulkCount.textContent = count;
+        }
+        if (selectAll) {
+            selectAll.checked = count > 0 && count === docCheckboxes.length;
+            selectAll.indeterminate = count > 0 && count < docCheckboxes.length;
+        }
+    }
+
+    if (selectAll) {
+        selectAll.addEventListener('change', function () {
+            docCheckboxes.forEach(cb => { cb.checked = selectAll.checked; });
+            updateBulkBar();
+        });
+    }
+
+    docCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateBulkBar);
+    });
+
+    // Bulk action buttons
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        const action = btn.getAttribute('data-action');
+
+        if (action === 'bulk-cancel') {
+            docCheckboxes.forEach(cb => { cb.checked = false; });
+            if (selectAll) selectAll.checked = false;
+            updateBulkBar();
+            return;
+        }
+
+        if (action === 'bulk-archive' || action === 'bulk-delete') {
+            const ids = getSelectedIds();
+            if (ids.length === 0) return;
+
+            const isDelete = action === 'bulk-delete';
+            const url = isDelete
+                ? '/sidongan/documents/bulk-delete'
+                : '/sidongan/documents/bulk-archive';
+            const label = isDelete ? 'menghapus' : 'mengarsipkan';
+            const countLabel = ids.length + ' surat';
+
+            Toast.confirm('Apakah Anda yakin ingin ' + label + ' <strong>' + countLabel + '</strong>?<br><small style="color:#64748b;">' + (isDelete ? 'Tindakan ini tidak dapat dibatalkan.' : 'Surat akan dipindahkan ke Arsip.') + '</small>', {
+                title: 'Konfirmasi ' + (isDelete ? 'Hapus' : 'Arsipkan') + ' Massal',
+                confirmText: 'Ya, ' + (isDelete ? 'Hapus' : 'Arsipkan'),
+                cancelText: 'Batal',
+                type: isDelete ? 'danger' : 'warning'
+            }).then((confirmed) => {
+                if (!confirmed) return;
+
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ ids: ids })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Toast.success(data.message || 'Berhasil!');
+                        setTimeout(() => { window.location.reload(); }, 1000);
+                    } else {
+                        Toast.error(data.message || 'Gagal memproses.');
+                        btn.disabled = false;
+                        btn.innerHTML = isDelete
+                            ? '<i class="fas fa-trash-alt"></i> Hapus'
+                            : '<i class="fas fa-archive"></i> Arsipkan';
+                    }
+                })
+                .catch(() => {
+                    Toast.error('Terjadi kesalahan jaringan.');
+                    btn.disabled = false;
+                    btn.innerHTML = isDelete
+                        ? '<i class="fas fa-trash-alt"></i> Hapus'
+                        : '<i class="fas fa-archive"></i> Arsipkan';
+                });
+            });
+        }
+    });
 })();

@@ -32,24 +32,29 @@ class AdminDocumentController extends Controller
             return redirect()->route('sidongan.login');
         }
         
-        // Build stats query berdasarkan role
-        $statsQuery = Document::query();
-        
-        // Filter berdasarkan role user
+        // Build base query berdasarkan role
+        $baseQuery = Document::query();
         if ($user->hasSidonganRole('sekretaris')) {
-            // Sekretaris: hanya surat yang dibuatnya
-            $statsQuery->where('created_by', $user->id);
+            $baseQuery->where('created_by', $user->id);
         } elseif (!$user->hasSidonganRole('ketua')) {
-            // Role lain (Ketua Pengurus, Bendahara, Staf Ahli): 
-            // Hanya surat yang sudah didisposisi ke mereka (status = 'berjalan')
             $userRole = $user->sidongan_role;
-            $statsQuery->where('status', 'berjalan')
+            $baseQuery->where('status', 'berjalan')
                 ->whereJsonContains('disposisi_data->target_roles', $userRole);
         }
-        // Ketua: lihat semua surat (tidak ada filter)
         
-        // Recent Documents dengan sorting prioritas status
-        $recentDocuments = (clone $statsQuery)
+        // OPTIMIZED: 1 query untuk semua stats via selectRaw
+        $stats = (clone $baseQuery)
+            ->selectRaw(
+                "COUNT(*) as total, " .
+                "SUM(CASE WHEN status = 'berjalan' THEN 1 ELSE 0 END) as berjalan, " .
+                "SUM(CASE WHEN status IN ('menunggu_disposisi','menunggu_verifikasi') THEN 1 ELSE 0 END) as menunggu, " .
+                "SUM(CASE WHEN status = 'selesai' THEN 1 ELSE 0 END) as selesai, " .
+                "SUM(CASE WHEN status = 'diarsipkan' THEN 1 ELSE 0 END) as diarsipkan"
+            )
+            ->first();
+        
+        // Recent Documents
+        $recentDocuments = (clone $baseQuery)
             ->with(['creator', 'activityReports' => function($q) {
                 $q->with('creator')->latest();
             }])
@@ -67,26 +72,56 @@ class AdminDocumentController extends Controller
             ->take(5)
             ->get();
 
-        // Notifications
+        // Notifications (1 query gabungan)
         $notifications = Notification::where('user_id', $user->id)
             ->whereNull('read_at')
             ->latest()
             ->take(5)
             ->get();
 
-        $unreadCount = Notification::where('user_id', $user->id)
-            ->whereNull('read_at')
-            ->count();
+        $unreadCount = $notifications->count();
+
+        // Activity log: surat + laporan terbaru
+        $recentActivity = collect();
+        $recentDocs = Document::with('creator')
+            ->latest('created_at')
+            ->take(5)
+            ->get()
+            ->map(fn($d) => [
+                'type' => 'document',
+                'title' => 'Surat baru: ' . ($d->subject ?? $d->title),
+                'user' => $d->creator->name ?? 'System',
+                'time' => $d->created_at,
+                'icon' => 'fa-envelope',
+                'color' => 'blue',
+            ]);
+        $recentReports = \App\Models\ActivityReport::with('creator')
+            ->latest('created_at')
+            ->take(5)
+            ->get()
+            ->map(fn($r) => [
+                'type' => 'laporan',
+                'title' => 'Laporan: ' . ($r->kegiatan_nama ?? '-'),
+                'user' => $r->creator->name ?? 'System',
+                'time' => $r->created_at,
+                'icon' => 'fa-clipboard-list',
+                'color' => 'green',
+            ]);
+        $recentActivity = $recentDocs->concat($recentReports)
+            ->sortByDesc('time')
+            ->take(10)
+            ->values();
 
         return view('sidongan.dashboard.index', [
-            'totalSurat' => (clone $statsQuery)->count(),
-            'sedangBerjalan' => (clone $statsQuery)->where('status', 'berjalan')->count(),
-            'menungguProses' => (clone $statsQuery)->whereIn('status', ['menunggu_disposisi', 'menunggu_verifikasi'])->count(),
-            'selesai' => (clone $statsQuery)->where('status', 'selesai')->count(),
-            'diarsipkan' => (clone $statsQuery)->where('status', 'diarsipkan')->count(),
+            'totalSurat' => $stats->total ?? 0,
+            'sedangBerjalan' => $stats->berjalan ?? 0,
+            'menungguProses' => $stats->menunggu ?? 0,
+            'selesai' => $stats->selesai ?? 0,
+            'diarsipkan' => $stats->diarsipkan ?? 0,
             'recentDocuments' => $recentDocuments,
             'notifications' => $notifications,
             'unreadCount' => $unreadCount,
+            'recentActivity' => $recentActivity,
         ]);
     }
 
@@ -221,10 +256,12 @@ class AdminDocumentController extends Controller
     {
         // SAFETY CHECK: Pastikan user login via guard sidongan
         $user = auth()->guard('sidongan')->user();
+        // Note: toast via with() already used in success/error redirects below
         
         if (!$user) {
             \Log::error('SIDONGAN Store: User not authenticated');
             return redirect()->route('sidongan.login')
+                ->with('error', 'Session expired. Silakan login ulang.')
                 ->withErrors(['auth' => 'Session expired. Silakan login ulang.']);
         }
         
@@ -278,7 +315,9 @@ class AdminDocumentController extends Controller
             $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('sidongan/documents', $filename, 'public');
         } else {
-            return back()->withErrors(['file' => 'File surat wajib diupload.'])->withInput();
+            return back()->with('error', 'File surat wajib diupload.')
+                ->withErrors(['file' => 'File surat wajib diupload.'])
+                ->withInput();
         }
 
         // Tentukan tanggal dasar untuk nomor agenda
@@ -321,6 +360,12 @@ class AdminDocumentController extends Controller
             ]);
         }
 
+        // Activity Log
+        \App\Models\AdminActivityLog::log('created', 'surat', $document->id, [
+            'agenda_number' => $document->agenda_number,
+            'subject' => $document->subject,
+        ], $user->id);
+
         return redirect()->route('sidongan.documents.index')
             ->with('success', 'Surat masuk berhasil disimpan dan dikirim ke Ketua untuk disposisi!');
     }
@@ -348,7 +393,10 @@ class AdminDocumentController extends Controller
                 'file_size' => 0,
             ]);
 
-            return back()->with('success', 'File berhasil dihapus!');
+            \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+            'action' => 'file_deleted',
+        ], auth()->guard('sidongan')->id());
+        return back()->with('success', 'File berhasil dihapus!');
         }
 
         // 2. Handle archive
@@ -362,6 +410,9 @@ class AdminDocumentController extends Controller
                 'updated_by' => $user->id,
             ]);
             
+            \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+                'action' => 'archived_from_update',
+            ], $user->id);
             return redirect()->route('sidongan.documents.show', $document)
                 ->with('success', 'Surat berhasil diarsipkan!');
         }
@@ -405,6 +456,10 @@ class AdminDocumentController extends Controller
             'suggestion' => $validated['suggestion'] ?? $document->suggestion,
         ]);
 
+        \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+            'agenda_number' => $document->agenda_number,
+            'subject' => $document->subject,
+        ], $user->id);
         return redirect()->route('sidongan.documents.index')->with('success', 'Dokumen berhasil diperbarui!');
     }
 
@@ -413,7 +468,12 @@ class AdminDocumentController extends Controller
         if (Storage::disk('public')->exists($document->file_path)) {
             Storage::disk('public')->delete($document->file_path);
         }
+        $agendaNum = $document->agenda_number;
+        $docId = $document->id;
         $document->delete();
+        \App\Models\AdminActivityLog::log('deleted', 'surat', $docId, [
+            'agenda_number' => $agendaNum,
+        ], auth()->guard('sidongan')->id());
         return redirect()->route('sidongan.documents.index')->with('success', 'Dokumen berhasil dihapus!');
     }
 
@@ -613,7 +673,9 @@ class AdminDocumentController extends Controller
         $finalAction = $validated['action'];
         if ($validated['action'] === 'Lainnya') {
             if (empty(trim($validated['custom_action'] ?? ''))) {
-                return back()->withErrors(['custom_action' => 'Tindakan/Instruksi lainnya wajib diisi.'])->withInput();
+                return back()->with('error', 'Tindakan/Instruksi lainnya wajib diisi.')
+                ->withErrors(['custom_action' => 'Tindakan/Instruksi lainnya wajib diisi.'])
+                ->withInput();
             }
             $finalAction = trim($validated['custom_action']);
         }
@@ -699,6 +761,12 @@ class AdminDocumentController extends Controller
         }
         
         \Log::info("Disposisi: Total {$notificationCount} notifikasi dikirim untuk surat {$document->agenda_number}");
+
+        \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+            'action' => 'disposisi',
+            'target_roles' => $validated['target_roles'],
+            'action_type' => $finalAction,
+        ], $user->id);
         
         $message = "Disposisi berhasil! {$notificationCount} notifikasi terkirim.";
         $type = 'success';
@@ -757,6 +825,10 @@ class AdminDocumentController extends Controller
             ]
         ]);
         
+        \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+            'action' => 'verifikasi',
+            'verifikasi_status' => $validated['status'],
+        ], $user->id);
         return redirect()->route('sidongan.verifikasi')
             ->with('success', 'Verifikasi berhasil disimpan!');
     }
@@ -833,8 +905,92 @@ class AdminDocumentController extends Controller
             'related_type' => Document::class,
         ]);
         
+        \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+            'action' => 'archived',
+        ], $user->id);
         return redirect()->route('sidongan.documents.show', $document)
             ->with('success', 'Surat berhasil diarsipkan!');
+    }
+
+    /**
+     * Bulk Archive - Arsipkan beberapa surat sekaligus
+     */
+    public function bulkArchive(Request $request)
+    {
+        $user = auth()->guard('sidongan')->user();
+
+        if (!$user || !$user->hasSidonganRole('sekretaris')) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'exists:sidongan_documents,id',
+        ]);
+
+        $ids = $request->ids;
+        $count = 0;
+
+        Document::whereIn('id', $ids)->each(function($doc) use ($user, &$count) {
+            if ($doc->status !== 'diarsipkan') {
+                $doc->update([
+                    'status' => 'diarsipkan',
+                    'updated_by' => $user->id,
+                ]);
+
+                \App\Models\AdminActivityLog::log('updated', 'surat', $doc->id, [
+                    'action' => 'bulk_archived',
+                ], $user->id);
+
+                $count++;
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$count} surat berhasil diarsipkan.",
+            'count' => $count,
+        ]);
+    }
+
+    /**
+     * Bulk Delete - Hapus beberapa surat sekaligus
+     */
+    public function bulkDelete(Request $request)
+    {
+        $user = auth()->guard('sidongan')->user();
+
+        if (!$user || !$user->hasSidonganRole('sekretaris')) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'exists:sidongan_documents,id',
+        ]);
+
+        $ids = $request->ids;
+        $count = 0;
+
+        Document::whereIn('id', $ids)->each(function($doc) use ($user, &$count) {
+            if (Storage::disk('public')->exists($doc->file_path)) {
+                Storage::disk('public')->delete($doc->file_path);
+            }
+
+            \App\Models\AdminActivityLog::log('deleted', 'surat', $doc->id, [
+                'agenda_number' => $doc->agenda_number,
+                'action' => 'bulk_deleted',
+            ], $user->id);
+
+            $doc->delete();
+            $count++;
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$count} surat berhasil dihapus.",
+            'count' => $count,
+        ]);
     }
 
     /**

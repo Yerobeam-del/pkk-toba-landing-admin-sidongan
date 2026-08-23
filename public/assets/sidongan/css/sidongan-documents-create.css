@@ -1,115 +1,282 @@
 /* ============================================================
  * Dikembangkan oleh Institut Teknologi Del
- * ============================================================
- * CSS halaman: resources/views/sidongan/documents/create.blade.php
- * (diekstrak dari blok <style> di dalam view)
- *
- * Dikembangkan oleh Institut Teknologi Del
+ * CSS halaman: documents/create.blade.php
  * ============================================================ */
 
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-in {
+    animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+}
 
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-slide-in {
-        animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        opacity: 0;
-    }
-    
-    /* Two Column Layout */
-    .form-columns {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-    }
-    
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-    }
-    
-    /* Mobile Responsive */
-    @media (max-width: 968px) {
-        .form-columns {
-            grid-template-columns: 1fr;
-        }
-        
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .form-container {
-            padding: 0 1rem !important;
-        }
-        
-        .form-content {
-            padding: 1rem !important;
-        }
-        
-        .form-header {
-            padding: 1rem !important;
-        }
-        
-        .form-footer {
-            flex-direction: column !important;
-        }
-        
-        .form-footer button,
-        .form-footer a {
-            width: 100%;
-            justify-content: center;
-        }
-        
-        #dropZone {
-            padding: 1.5rem !important;
-            min-height: 150px !important;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .form-container {
-            padding: 0 0.75rem !important;
-        }
-        
-        .form-content {
-            padding: 0.75rem !important;
-        }
-        
-        h1 {
-            font-size: 1.25rem !important;
-        }
-        
-        h2 {
-            font-size: 0.9rem !important;
-        }
-        
-        h3 {
-            font-size: 0.85rem !important;
-        }
-    }
+/* === TWO COLUMN LAYOUT === */
+.form-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
 
+/* === ERROR ALERT === */
+.sd-error-alert {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+}
+.sd-error-alert-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #fee2e2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sd-error-alert-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #991b1b;
+    margin: 0;
+}
+.sd-error-alert-desc {
+    font-size: 0.8rem;
+    color: #b91c1c;
+    margin: 0.25rem 0 0 0;
+}
+.sd-error-alert-list {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: #991b1b;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
 
-/* ============================================================
- * Dikembangkan oleh Institut Teknologi Del
- * Efek hover & fokus (menggantikan onmouseover/onmouseout/onfocus/onblur inline)
- * ============================================================ */
+/* === FORM HEADER (Data Surat) === */
+.sd-form-header {
+    padding: 1.25rem 1.5rem;
+    background: #f0fdf4;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.sd-form-header-icon {
+    color: #059669;
+    font-size: 1.25rem;
+}
+.sd-form-header-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+.sd-form-header-sub {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
+}
 
-/* Fokus ring untuk input tanggal & teks */
-#mainForm input:focus,
-#mainForm textarea:focus {
+/* === SECTION ICONS === */
+.sd-section-icon { font-size: 0.875rem; }
+.sd-section-icon-blue { color: #3b82f6; }
+.sd-section-icon-purple { color: #2563eb; }
+.sd-section-icon-violet { color: #8b5cf6; }
+.sd-section-icon-green { color: #10b981; }
+.sd-section-icon-emerald { color: #059669; }
+
+/* === DATA AGENDA SECTION === */
+.sd-agenda-box {
+    background: #eff6ff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+.sd-agenda-input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background: #f8fafc;
+    color: #1e293b;
+    cursor: not-allowed;
+    font-family: monospace;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.sd-agenda-note {
+    color: #94a3b8;
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.7rem;
+}
+.sd-agenda-error {
+    color: #ef4444;
+    display: none;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+}
+
+/* === RIGHT COLUMN CARD === */
+.sd-right-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.sd-right-card-body {
+    padding: 1.5rem;
+    flex: 1;
+}
+
+/* === SUGGESTION TEXTAREA === */
+.sd-suggestion-textarea {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    resize: vertical;
+}
+
+/* === DROP ZONE === */
+.sd-dropzone {
+    border: 2px dashed #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.sd-dropzone-icon {
+    font-size: 3rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+.sd-dropzone-text {
+    font-size: 0.9rem;
+    color: #475569;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+/* === FILE PREVIEW === */
+.sd-file-preview {
+    display: none;
+    width: 100%;
+}
+.sd-file-preview-card {
+    background: #f0fdf4;
+    border: 2px solid #10b981;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+.sd-file-icon-box {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.sd-file-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 0.25rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sd-file-size {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin: 0;
+}
+.sd-file-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.65rem;
+    background: #10b981;
+    color: white;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.sd-file-progress-bg {
+    background: white;
+    border-radius: 0.25rem;
+    padding: 0.2rem;
+}
+.sd-file-progress-bar {
+    height: 3px;
+    background: #10b981;
+    border-radius: 0.25rem;
+    width: 100%;
+}
+
+/* === FORM FOOTER === */
+.sd-form-footer {
+    padding: 1rem 1.5rem;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 968px) {
+    .form-columns { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-container { padding: 0 1rem !important; }
+    .form-content { padding: 1rem !important; }
+    .form-header { padding: 1rem !important; }
+    .form-footer, .sd-form-footer { flex-direction: column !important; }
+    .form-footer button, .form-footer a, .sd-form-footer button, .sd-form-footer a { width: 100%; justify-content: center; }
+    .sd-dropzone { padding: 1.5rem !important; min-height: 150px !important; }
+}
+@media (max-width: 480px) {
+    .form-container { padding: 0 0.75rem !important; }
+    .form-content { padding: 0.75rem !important; }
+    h1 { font-size: 1.25rem !important; }
+    h2 { font-size: 0.9rem !important; }
+    h3 { font-size: 0.85rem !important; }
+}
+
+/* === FORM FOCUS === */
+#mainForm input:focus, #mainForm textarea:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
-
 #mainForm textarea:focus {
     border-color: #8b5cf6;
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
-/* Tombol "Ganti File" */
+/* === BUTTONS === */
 .btn-change-file {
     margin-top: 0.5rem;
     padding: 0.4rem 0.75rem;
@@ -121,12 +288,7 @@
     cursor: pointer;
     transition: all 0.2s;
 }
-.btn-change-file:hover {
-    background: #f8fafc;
-    color: #334155;
-}
-
-/* Tombol batal */
+.btn-change-file:hover { background: #f8fafc; color: #334155; }
 .btn-cancel {
     padding: 0.625rem 1.25rem;
     background: #f1f5f9;
@@ -138,11 +300,7 @@
     transition: all 0.2s;
     border: 1px solid #e2e8f0;
 }
-.btn-cancel:hover {
-    background: #e2e8f0;
-}
-
-/* Tombol submit utama */
+.btn-cancel:hover { background: #e2e8f0; }
 .btn-submit-primary {
     display: inline-flex;
     align-items: center;
@@ -157,7 +315,13 @@
     cursor: pointer;
     transition: all 0.2s;
 }
-.btn-submit-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
-}
+.btn-submit-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3); }
+
+/* === DARK MODE === */
+html.dark-mode .sd-right-card { background: #1e293b; border-color: rgba(255,255,255,0.08); }
+html.dark-mode .sd-form-header { background: rgba(20,184,166,0.1); border-color: rgba(255,255,255,0.08); }
+html.dark-mode .sd-agenda-box { background: rgba(59,130,246,0.1); }
+html.dark-mode .sd-agenda-input { background: #0f172a; color: #e2e8f0; border-color: rgba(255,255,255,0.08); }
+html.dark-mode .sd-suggestion-textarea { background: #0f172a; color: #e2e8f0; border-color: rgba(255,255,255,0.08); }
+html.dark-mode .sd-dropzone { border-color: rgba(255,255,255,0.15); }
+html.dark-mode .sd-file-preview-card { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.

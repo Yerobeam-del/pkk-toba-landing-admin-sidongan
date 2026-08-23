@@ -176,7 +176,48 @@
     </div>
 </div>
 
-{{-- Recent Activities & Latest Items --}}
+{{-- Chart & Activity Log --}}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem">
+    {{-- Chart --}}
+    <div class="card" style="border:none;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+        <h2 class="card-title" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+            Aktivitas 6 Bulan Terakhir
+        </h2>
+        <div style="position:relative;height:200px">
+            <canvas id="activityChart"></canvas>
+        </div>
+    </div>
+
+    {{-- Activity Log --}}
+    <div class="card" style="border:none;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+        <h2 class="card-title" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Aktivitas Terbaru
+        </h2>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;max-height:220px;overflow-y:auto">
+            @forelse($recentActivities as $activity)
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0.625rem;border-radius:8px;transition:background 0.2s" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                <div style="width:32px;height:32px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;{{ $activity['type'] === 'berita' ? 'background:rgba(59,130,246,0.1);color:#3b82f6' : 'background:rgba(239,68,68,0.1);color:#ef4444' }}">
+                    @if($activity['type'] === 'berita')
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>
+                    @else
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    @endif
+                </div>
+                <div style="flex:1;min-width:0">
+                    <div style="font-size:0.85rem;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ $activity['text'] }}</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted)">{{ $activity['time']->diffForHumans() }}</div>
+                </div>
+            </div>
+            @empty
+            <p style="color:var(--text-muted);text-align:center;padding:1.5rem">Belum ada aktivitas</p>
+            @endforelse
+        </div>
+    </div>
+</div>
+
+{{-- Recent Items --}}
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:2rem">
 
     {{-- Latest News --}}
@@ -238,5 +279,73 @@
         </div>
     </div>
 </div>
+@push('styles')
+<style>
+    @media (max-width: 768px) {
+        .dashboard-grid-2 { grid-template-columns: 1fr !important; }
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('activityChart');
+    if (!ctx) return;
+
+    const chartData = @json($chartData);
+    const labels = chartData.map(d => {
+        const [y, m] = d.month.split('-');
+        const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+        return months[parseInt(m) - 1] + ' ' + y.slice(2);
+    });
+    const data = chartData.map(d => d.count);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Aktivitas',
+                data: data,
+                backgroundColor: 'rgba(20, 184, 166, 0.2)',
+                borderColor: 'rgba(20, 184, 166, 1)',
+                borderWidth: 2,
+                borderRadius: 6,
+                borderSkipped: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    titleFont: { family: 'Plus Jakarta Sans', weight: '600' },
+                    bodyFont: { family: 'Plus Jakarta Sans' },
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: false,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(0,0,0,0.04)' },
+                    ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } }
+                }
+            }
+        }
+    });
+});
+</script>
+@endpush
+
 @endsection
 {{-- Dikembangkan oleh Institut Teknologi Del --}}

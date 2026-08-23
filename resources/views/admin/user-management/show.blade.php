@@ -14,6 +14,12 @@
     </div>
     <div class="u-a64">
         
+        {{-- Tombol Salin Kredensial --}}
+        <button type="button" onclick="copyAccountCredentials()" id="copyCredentialsBtn" class="btn" style="display:inline-flex;align-items:center;gap:0.5rem;background:#f0fdf4;color:#166534;padding:0.5rem 1rem;border-radius:8px;border:1px solid #bbf7d0;cursor:pointer;font-weight:600;font-family:inherit;transition:all 0.2s">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Salin Kredensial</span>
+        </button>
+
         {{-- Hanya tampilkan tombol Edit & Reset Password jika user yang sedang login adalah Super Admin --}}
         @if(auth()->user()->sidongan_role === 'super_admin')
             <a href="{{ route('admin.user-management.edit', $user) }}" class="btn btn-primary u-inline-flex-center-gap-2">
@@ -168,6 +174,48 @@
     </div>
     @endif
 </div>
+
+@push('scripts')
+<script>
+    function copyAccountCredentials() {
+        const name = {{ json_encode($user->name) }};
+        const email = {{ json_encode($user->email) }};
+        const loginUrl = window.location.origin;
+
+        const text = 'Halo ' + name + ',\n\n' +
+            'Akun Anda di Admin Panel PKK Kabupaten Toba sudah dibuat.\n' +
+            'Berikut kredensial login Anda:\n\n' +
+            'Email    : ' + email + '\n' +
+            'Password : (sesuai yang dibuat saat pembuatan akun)\n\n' +
+            'Silakan login di: ' + loginUrl + '\n' +
+            'Ganti password setelah login pertama kali untuk keamanan.\n\n' +
+            'Terima kasih,';
+
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('copyCredentialsBtn');
+            const span = btn.querySelector('span');
+            span.textContent = '✓ Tersalin!';
+            btn.style.background = '#dcfce7';
+            btn.style.borderColor = '#86efac';
+            btn.style.color = '#166534';
+            setTimeout(() => {
+                span.textContent = 'Salin Kredensial';
+                btn.style.background = '#f0fdf4';
+                btn.style.borderColor = '#bbf7d0';
+                btn.style.color = '#166534';
+            }, 2000);
+
+            if (typeof Toast !== 'undefined') {
+                Toast.success('Kredensial berhasil disalin ke clipboard!');
+            }
+        }).catch(() => {
+            if (typeof Toast !== 'undefined') {
+                Toast.error('Gagal menyalin. Silakan copy manual.');
+            }
+        });
+    }
+</script>
+@endpush
 
 @endsection
 {{-- Dikembangkan oleh Institut Teknologi Del --}}

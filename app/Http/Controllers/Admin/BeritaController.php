@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\News;
+use App\Models\AdminActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -97,7 +98,7 @@ class BeritaController extends Controller
         }
 
         News::create($validated);
-
+        AdminActivityLog::log('created', 'berita', null, ['title' => $validated['title'] ?? '']);
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil ditambahkan.');
     }
 
@@ -201,7 +202,7 @@ class BeritaController extends Controller
         }
 
         $beritum->update($validated);
-
+        AdminActivityLog::log('updated', 'berita', $beritum->id, ['title' => $beritum->title ?? '']);
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diperbarui.');
     }
 
@@ -210,8 +211,8 @@ class BeritaController extends Controller
         if ($beritum->image_path) {
             Storage::disk('public')->delete($beritum->image_path);
         }
+        AdminActivityLog::log('deleted', 'berita', $beritum->id, ['title' => $beritum->title ?? '']);
         $beritum->delete();
-
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus.');
     }
 }

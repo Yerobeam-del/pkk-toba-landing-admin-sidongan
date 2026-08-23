@@ -25,17 +25,17 @@ $appList = [
 
 <div class="u-header-row-plain">
     <div>
-        <h1 style="font-size:1.5rem;font-weight:800;color:#1e293b;margin:0 0 0.25rem 0">Edit Profil</h1>
-        <p style="color:#94a3b8;margin:0;font-size:0.9rem">Kelola informasi akun dan akses aplikasi Anda</p>
+        <h1>Edit Profil</h1>
+        <p>Kelola informasi akun dan akses aplikasi Anda</p>
     </div>
     @if (session('sso_from_sieda'))
     {{-- Diakses dari SIEDA: tombol Kembali diganti menjadi Kembali ke SIEDA --}}
-    <a href="{{ $ssoBackUrl }}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:600;transition:all 0.2s">
+    <a href="{{ $ssoBackUrl }}" class="profile-nav-primary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         Kembali ke SIEDA
     </a>
     @else
-    <a href="{{ route('admin.dashboard') }}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#f1f5f9;color:#475569;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:500;transition:all 0.2s">
+    <a href="{{ route('admin.dashboard') }}" class="profile-nav-secondary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Kembali
     </a>
@@ -43,7 +43,7 @@ $appList = [
 </div>
 
 @if(session('success'))
-<div style="background:#f0fdf4;padding:1rem;margin-bottom:1.5rem;border-radius:10px;color:#166534;display:flex;align-items:center;gap:0.75rem" id="successMsg">
+<div class="profile-success-alert" id="successMsg">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
     <span>{{ session('success') }}</span>
 </div>
@@ -51,7 +51,7 @@ $appList = [
 
 @if($errors->any())
 <div class="u-a34">
-    <ul style="margin:0;padding-left:1.25rem">
+    <ul>
         @foreach($errors->all() as $error)
         <li>{{ $error }}</li>
         @endforeach
@@ -63,39 +63,39 @@ $appList = [
 
     {{-- SIDEBAR --}}
     <div class="profile-sidebar-card">
-        <div style="padding:2rem 1.5rem 1.5rem;text-align:center;background:linear-gradient(180deg,rgba(20,184,166,0.06) 0%,transparent 100%)">
-            <div style="position:relative;display:inline-block;margin-bottom:0.75rem">
-                <div style="width:90px;height:90px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.1);margin:0 auto">
+        <div class="profile-header">
+            <div class="profile-avatar-wrap">
+                <div class="profile-avatar-lg">
                     @if($user->avatar)
-                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar" style="width:100%;height:100%;object-fit:cover">
+                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar" class="profile-avatar-img">
                     @else
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;font-size:2rem;font-weight:700">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>
+                    <div class="profile-avatar-fallback profile-avatar-fallback-lg">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>
                     @endif
                 </div>
                 @if($user->hasVerifiedPersonalEmail())
-                <div style="position:absolute;bottom:2px;right:2px;width:22px;height:22px;background:var(--primary);border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center">
+                <div class="profile-avatar-badge">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
                 @endif
             </div>
-            <h3 style="font-size:1.1rem;font-weight:700;color:#1e293b;margin:0 0 0.25rem 0">{{ $user->name }}</h3>
-            <p style="color:#64748b;margin:0;font-size:0.85rem">{{ $user->email }}</p>
-            <div style="display:flex;gap:0.35rem;justify-content:center;margin-top:0.5rem;flex-wrap:wrap">
+            <h3 class="profile-user-name">{{ $user->name }}</h3>
+            <p class="profile-user-email">{{ $user->email }}</p>
+            <div class="profile-user-tags">
                 @if($user->hasSidonganAccess())
-                <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.6rem;background:#f5f3ff;color:#6d28d9;border-radius:999px;font-size:0.75rem;font-weight:500">{{ $user->sidongan_role_name }}</span>
+                <span class="profile-tag profile-tag-role">{{ $user->sidongan_role_name }}</span>
                 @endif
                 @if(!empty($user->sieda_role))
-                <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.6rem;background:#ecfeff;color:#0e7490;border-radius:999px;font-size:0.75rem;font-weight:500">SIEDA</span>
+                <span class="profile-tag profile-tag-sieda">SIEDA</span>
                 @endif
                 @if($user->role)
-                <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.6rem;background:#f0fdf4;color:#15803d;border-radius:999px;font-size:0.75rem;font-weight:500">{{ ucfirst($user->role->name) }}</span>
+                <span class="profile-tag profile-tag-admin">{{ ucfirst($user->role->name) }}</span>
                 @endif
             </div>
         </div>
 
         {{-- Completion Ring --}}
-        <div style="padding:1.25rem 1.5rem;border-top:1px solid #f1f5f9">
-            <p style="font-size:0.85rem;font-weight:600;color:#64748b;margin:0 0 0.75rem 0;text-align:center">Kelengkapan Profil</p>
+        <div class="profile-sidebar-section">
+            <p class="profile-sidebar-label">Kelengkapan Profil</p>
             <div class="completion-ring">
                 <svg width="100" height="100" viewBox="0 0 100 100">
                     <circle class="bg-circle" cx="50" cy="50" r="45"/>
@@ -103,7 +103,7 @@ $appList = [
                 </svg>
                 <span class="center-text">{{ $completionPercentage }}%</span>
             </div>
-            <div style="margin-top:0.75rem">
+            <div class="profile-progress-wrap">
                 @foreach($completionItems as $key => $done)
                 <div class="checklist-item">
                     @if($done)
@@ -118,14 +118,14 @@ $appList = [
         </div>
 
         {{-- Account Info --}}
-        <div style="padding:1.25rem 1.5rem;border-top:1px solid #f1f5f9">
-            <p style="font-size:0.85rem;font-weight:600;color:#64748b;margin:0 0 0.75rem 0;text-align:center">Info Akun</p>
-            <div style="display:flex;flex-direction:column;gap:0.5rem">
-                <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:#475569">
+        <div class="profile-sidebar-section">
+            <p class="profile-sidebar-label">Info Akun</p>
+            <div class="profile-sidebar-list">
+                <div class="profile-sidebar-item">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:#94a3b8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     <span>Bergabung {{ $user->created_at ? $user->created_at->translatedFormat('d F Y') : '-' }}</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:#475569">
+                <div class="profile-sidebar-item">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:#94a3b8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                     <span>Terakhir diperbarui {{ $user->updated_at ? $user->updated_at->diffForHumans() : '-' }}</span>
                 </div>
@@ -158,26 +158,26 @@ $appList = [
         <div class="tab-content active" id="tab-profil">
             <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data" id="profileForm">
                 @csrf @method('PATCH')
-                <div style="display:grid;gap:1.5rem;max-width:600px">
+                <div class="profile-form-grid">
 
                     {{-- Avatar Upload --}}
-                    <div style="display:flex;align-items:center;gap:1.25rem;padding:1rem;background:#f8fafc;border-radius:10px;border:1px dashed #e2e8f0">
+                    <div class="profile-avatar-upload">
                         <div style="position:relative;flex-shrink:0">
-                            <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.08)">
+                            <div class="profile-avatar-md">
                                 @if($user->avatar)
-                                <img id="avatarPreview" src="{{ asset('storage/' . $user->avatar) }}" alt="" style="width:100%;height:100%;object-fit:cover">
+                                <img id="avatarPreview" src="{{ asset('storage/' . $user->avatar) }}" alt="" class="profile-avatar-img">
                                 @else
-                                <div id="avatarPlaceholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;font-size:1.25rem;font-weight:700">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>
-                                <img id="avatarPreviewImg" style="width:100%;height:100%;object-fit:cover;display:none">
+                                <div id="avatarPlaceholder" class="profile-avatar-fallback profile-avatar-fallback-md">{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>
+                                <img id="avatarPreviewImg" class="profile-avatar-img" style="display:none">
                                 @endif
                             </div>
-                            <button type="button" data-action="pick-avatar" style="position:absolute;bottom:-2px;right:-2px;width:26px;height:26px;background:var(--primary);color:#fff;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                            <button type="button" data-action="pick-avatar" class="profile-avatar-badge profile-avatar-badge-lg">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                             </button>
                         </div>
                         <div class="u-flex-1">
-                            <p style="font-weight:600;font-size:0.9rem;color:#1e293b;margin:0 0 0.15rem 0">Foto Profil</p>
-                            <p style="font-size:0.8rem;color:#94a3b8;margin:0">Klik ikon kamera untuk mengganti foto. JPG/PNG/WebP, maks 2MB.</p>
+                            <p class="profile-avatar-upload-info">Foto Profil</p>
+                            <p class="profile-avatar-upload-hint">Klik ikon kamera untuk mengganti foto. JPG/PNG/WebP, maks 2MB.</p>
                         </div>
                         <input class="u-hidden" type="file" name="avatar" id="avatarInput" accept="image/*">
                         <input type="hidden" name="cropped_avatar_base64" id="croppedAvatarBase64">
@@ -215,7 +215,7 @@ $appList = [
                     {{-- Personal Email --}}
                     <div style="padding:1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0">
                         <label style="font-weight:600;font-size:0.85rem;color:#334155;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.5rem">
-                            Email Pribadi <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.15rem 0.45rem;background:#fef3c7;color:#d97706;border-radius:999px;font-size:0.7rem;font-weight:500">Digunakan untuk reset password</span>
+                            Email Pribadi <span class="profile-tag profile-tag-sieda" style="padding:0.15rem 0.45rem;font-size:0.7rem">Digunakan untuk reset password</span>
                         </label>
                         @if($user->hasVerifiedPersonalEmail())
                         <div class="u-flex-center-gap-2">
@@ -236,8 +236,8 @@ $appList = [
 
                 {{-- Submit --}}
                 <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid #e2e8f0;display:flex;gap:0.75rem;justify-content:flex-end">
-                    <button type="reset" style="padding:0.7rem 1.5rem;background:#f1f5f9;color:#475569;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer">Reset</button>
-                    <button type="submit" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer">
+                    <button type="reset" class="profile-submit-btn" style="background:#f1f5f9;color:#475569">Reset</button>
+                    <button type="submit" class="profile-submit-btn">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                         Simpan Perubahan
                     </button>
@@ -285,7 +285,7 @@ $appList = [
                         </div>
                         <small id="matchMsg" style="display:block;margin-top:0.3rem;font-size:0.8rem"></small>
                     </div>
-                    <button type="submit" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer">
+                    <button type="submit" class="profile-submit-btn">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         Update Password
                     </button>
@@ -293,14 +293,14 @@ $appList = [
 
                 <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid #e2e8f0">
                     <h4 style="font-size:0.95rem;font-weight:700;color:#1e293b;margin:0 0 0.75rem 0">Riwayat Keamanan</h4>
-                    <div style="display:flex;flex-direction:column;gap:0.5rem">
+                    <div class="profile-sidebar-list">
                         <div class="u-a56">
-                            <div style="width:36px;height:36px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-                            <div><p style="margin:0;font-weight:600;font-size:0.85rem;color:#1e293b">Akun Dibuat</p><p style="margin:0;font-size:0.8rem;color:#94a3b8">{{ $user->created_at ? $user->created_at->translatedFormat('d F Y, H:i') : '-' }}</p></div>
+                            <div class="profile-perm-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                            <div><p class="profile-app-label">Akun Dibuat</p><p class="profile-app-url">{{ $user->created_at ? $user->created_at->translatedFormat('d F Y, H:i') : '-' }}</p></div>
                         </div>
                         <div class="u-a56">
-                            <div style="width:36px;height:36px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
-                            <div><p style="margin:0;font-weight:600;font-size:0.85rem;color:#1e293b">Terakhir Diperbarui</p><p style="margin:0;font-size:0.8rem;color:#94a3b8">{{ $user->updated_at ? $user->updated_at->translatedFormat('d F Y, H:i') : '-' }} ({{ $user->updated_at ? $user->updated_at->diffForHumans() : '-' }})</p></div>
+                            <div class="profile-perm-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+                            <div><p class="profile-app-label">Terakhir Diperbarui</p><p class="profile-app-url">{{ $user->updated_at ? $user->updated_at->translatedFormat('d F Y, H:i') : '-' }} ({{ $user->updated_at ? $user->updated_at->diffForHumans() : '-' }})</p></div>
                         </div>
                     </div>
                 </div>

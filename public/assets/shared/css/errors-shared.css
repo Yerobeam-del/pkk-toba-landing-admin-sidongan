@@ -1,0 +1,262 @@
+/* ============================================================
+ * Dikembangkan oleh Institut Teknologi Del
+ * ============================================================
+ * CSS bersama untuk semua halaman error (401-503)
+ * Menggunakan CSS variables untuk theme per error code
+ * ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--err-bg-start, #fffbeb) 0%, var(--err-bg-mid, #fef3c7) 50%, var(--err-bg-end, #ffffff) 100%;
+    background: linear-gradient(180deg, var(--err-bg-start) 0%, var(--err-bg-mid) 50%, var(--err-bg-end) 100%);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* ===== CLOUD ANIMATIONS ===== */
+.cloud {
+    position: absolute;
+    background: var(--err-cloud-color, #fff);
+    border-radius: 100px;
+    opacity: 0.9;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    z-index: 1;
+}
+.cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: var(--err-cloud-color, #fff);
+    border-radius: 50%;
+}
+.c1 { width: 120px; height: 40px; top: 15%; left: -150px; animation: drift 28s linear infinite; }
+.c1::before { width: 50px; height: 50px; top: -25px; left: 20px; }
+.c1::after { width: 70px; height: 70px; top: -35px; left: 45px; }
+.c2 { width: 160px; height: 50px; top: 45%; left: -200px; animation: drift 38s linear infinite; animation-delay: -8s; }
+.c2::before { width: 60px; height: 60px; top: -30px; left: 30px; }
+.c2::after { width: 90px; height: 90px; top: -45px; left: 60px; }
+.c3 { width: 100px; height: 35px; top: 70%; left: -130px; animation: drift 22s linear infinite; animation-delay: -15s; }
+.c3::before { width: 40px; height: 40px; top: -20px; left: 15px; }
+.c3::after { width: 55px; height: 55px; top: -28px; left: 35px; }
+.c4 { width: 140px; height: 45px; top: 25%; left: -180px; animation: drift 32s linear infinite; animation-delay: -20s; }
+.c4::before { width: 55px; height: 55px; top: -28px; left: 25px; }
+.c4::after { width: 80px; height: 80px; top: -40px; left: 50px; }
+
+@keyframes drift {
+    from { transform: translateX(-250px); }
+    to { transform: translateX(110vw); }
+}
+
+/* ===== CONTAINER CARD ===== */
+.container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 2.5rem 3.5rem;
+    border-radius: 24px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    max-width: 720px;
+    width: 94%;
+    animation: floatCard 6s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* ===== ERROR ICON ===== */
+.err-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 1.25rem;
+    background: linear-gradient(135deg, var(--err-accent-start, #f59e0b), var(--err-accent-end, #d97706));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulseGlow 2.5s infinite;
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 var(--err-glow, rgba(245, 158, 11, 0.4)); }
+    70% { box-shadow: 0 0 0 18px var(--err-glow-fade, rgba(245, 158, 11, 0)); }
+    100% { box-shadow: 0 0 0 0 var(--err-glow-fade, rgba(245, 158, 11, 0)); }
+}
+
+.err-icon svg {
+    width: 36px;
+    height: 36px;
+    color: #ffffff;
+}
+
+/* ===== ERROR CODE ===== */
+.error-code {
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, var(--err-accent-start, #f59e0b), var(--err-accent-end, #d97706));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== MESSAGE ===== */
+.message {
+    color: #475569;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 1.75rem;
+}
+
+.dynamic-msg {
+    font-weight: 700;
+    color: var(--err-text-accent, #b45309);
+    display: block;
+    margin-bottom: 0.6rem;
+    font-size: 1.15rem;
+}
+
+/* ===== BUTTON ===== */
+.err-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: linear-gradient(135deg, var(--err-accent-start, #f59e0b), var(--err-accent-end, #d97706));
+    color: #ffffff;
+    padding: 0.85rem 2rem;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px var(--err-shadow, rgba(245, 158, 11, 0.3));
+    border: none;
+    cursor: pointer;
+}
+
+.err-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--err-shadow-hover, rgba(245, 158, 11, 0.4));
+    filter: brightness(0.9);
+}
+
+/* ===== URL INFO (DEBUG) ===== */
+.url-info {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--err-info-bg, rgba(254, 243, 199, 0.5));
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--err-info-text, #92400e);
+    word-break: break-all;
+}
+
+/* =========================================
+   THEME: WARNING (Amber)
+   401, 404, 419, 429, 503
+   ========================================= */
+[data-error-theme="warning"] {
+    --err-bg-start: #fffbeb;
+    --err-bg-mid: #fef3c7;
+    --err-bg-end: #ffffff;
+    --err-accent-start: #f59e0b;
+    --err-accent-end: #d97706;
+    --err-text-accent: #b45309;
+    --err-glow: rgba(245, 158, 11, 0.4);
+    --err-glow-fade: rgba(245, 158, 11, 0);
+    --err-shadow: rgba(245, 158, 11, 0.3);
+    --err-shadow-hover: rgba(245, 158, 11, 0.4);
+    --err-cloud-color: #fff;
+    --err-info-bg: rgba(254, 243, 199, 0.5);
+    --err-info-text: #92400e;
+}
+
+/* =========================================
+   THEME: DANGER (Red)
+   403, 500, 502
+   ========================================= */
+[data-error-theme="danger"] {
+    --err-bg-start: #fef2f2;
+    --err-bg-mid: #fee2e2;
+    --err-bg-end: #ffffff;
+    --err-accent-start: #ef4444;
+    --err-accent-end: #dc2626;
+    --err-text-accent: #991b1b;
+    --err-glow: rgba(239, 68, 68, 0.4);
+    --err-glow-fade: rgba(239, 68, 68, 0);
+    --err-shadow: rgba(239, 68, 68, 0.3);
+    --err-shadow-hover: rgba(239, 68, 68, 0.4);
+    --err-cloud-color: #fff;
+    --err-info-bg: rgba(254, 226, 226, 0.5);
+    --err-info-text: #991b1b;
+}
+
+/* =========================================
+   THEME: INFO (Blue) — 422 Validation
+   ========================================= */
+[data-error-theme="info"] {
+    --err-bg-start: #eff6ff;
+    --err-bg-mid: #dbeafe;
+    --err-bg-end: #ffffff;
+    --err-accent-start: #3b82f6;
+    --err-accent-end: #2563eb;
+    --err-text-accent: #1e40af;
+    --err-glow: rgba(59, 130, 246, 0.4);
+    --err-glow-fade: rgba(59, 130, 246, 0);
+    --err-shadow: rgba(59, 130, 246, 0.3);
+    --err-shadow-hover: rgba(59, 130, 246, 0.4);
+    --err-cloud-color: #fff;
+    --err-info-bg: rgba(191, 219, 254, 0.5);
+    --err-info-text: #1e40af;
+}
+
+/* =========================================
+   DARK MODE
+   ========================================= */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    }
+
+    .cloud { --err-cloud-color: #334155; opacity: 0.4; }
+
+    .container {
+        background: rgba(30, 41, 59, 0.92);
+        border: 1px solid rgba(71, 85, 105, 0.3);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+    }
+
+    .message { color: #cbd5e1; }
+
+    .url-info {
+        background: rgba(30, 41, 59, 0.8);
+        color: #94a3b8;
+        border: 1px solid #334155;
+    }
+}
+
+body.dark-mode {
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
+}
+
+body.dark-mode .cloud { --err-cloud-color: #334155; opacity: 0.4; }
+
+body.dark-mode .container {
+    background: rgba(30, 41, 59, 0.92) !important;
+    border: 1px solid rgba(71, 85, 105, 0.3) !important;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-mode .message { color: #cbd5e1 !important; }
+
+b

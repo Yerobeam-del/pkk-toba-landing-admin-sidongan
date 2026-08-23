@@ -146,7 +146,7 @@
                 @endphp
 
                 @if($currentUser && $currentUser->hasSidonganRole('sekretaris') && $canArchive)
-                <form id="archiveConfirmForm" action="{{ route('sidongan.documents.archive', $document) }}" method="POST" style="display: inline;">
+                <form id="archiveConfirmForm" action="{{ route('sidongan.documents.archive', $document) }}" method="POST" class="ds-form-inline">
                     @csrf
                     @method('PATCH')
                     <button type="submit" class="ds-btn ds-btn-archive">
@@ -180,7 +180,7 @@
             <div class="ds-info-grid">
                 {{-- Data Surat --}}
                 <div>
-                    <h4 style="font-size: 1.05rem; font-weight: 700; color: #0891b2; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <h4 class="ds-section-title">
                         <i class="fas fa-envelope u-a25"></i>
                         Data Surat
                     </h4>
@@ -206,7 +206,7 @@
 
                 {{-- Data Agenda --}}
                 <div>
-                    <h4 style="font-size: 1.05rem; font-weight: 700; color: #0891b2; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <h4 class="ds-section-title">
                         <i class="fas fa-clipboard-list u-a25"></i>
                         Data Agenda
                     </h4>
@@ -224,7 +224,7 @@
                         <span class="ds-info-label">Dibuat oleh</span>
                         <span class="ds-info-value">{{ $document->creator->name ?? 'Sekretaris PKK' }}</span>
                     </div>
-                    <div style="padding-top: 0.75rem;">
+                    <div class="ds-saran-wrapper">
                         <span class="ds-info-label">Saran Sekretaris:</span>
                         <div class="ds-saran-box">
                             {{ $document->suggestion ?? $document->description ?? '-' }}
@@ -261,9 +261,9 @@
                 </div>
             </a>
             @else
-            <div style="text-align: center; padding: 2rem;">
-                <i class="fas fa-paperclip" style="color: #cbd5e1; font-size: 2.5rem; margin-bottom: 0.75rem;"></i>
-                <p style="color: #64748b; margin: 0; font-size: 1rem;">Tidak ada lampiran file untuk surat ini.</p>
+            <div class="ds-no-attachment">
+                <i class="fas fa-paperclip ds-no-attachment-icon"></i>
+                <p class="ds-no-attachment-text">Tidak ada lampiran file untuk surat ini.</p>
             </div>
             @endif
         </div>
@@ -274,7 +274,7 @@
     <div class="ds-card">
         <div class="ds-card-header ds-card-header-orange">
             <h3>
-                <i class="fas fa-share-square" style="color: #f97316;"></i>
+                <i class="fas fa-share-square ds-dispo-icon-orange"></i>
                 Disposisi Ketua
             </h3>
         </div>
@@ -351,11 +351,11 @@
                 <div class="ds-laporan-card {{ $cardClass }}">
                     <div class="ds-laporan-header">
                         <div class="ds-laporan-creator">
-                            <div class="ds-laporan-avatar" style="{{ $report->creator && $report->creator->avatar ? 'overflow: hidden;' : '' }}">
+                            <div class="ds-laporan-avatar" style="overflow: hidden;">
                                 @if($report->creator && $report->creator->avatar)
                                     <img src="{{ asset('storage/' . $report->creator->avatar) }}" 
                                          alt="{{ $report->creator->name }}"
-                                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block;"
+                                         class="ds-avatar-img"
                                          onerror="this.style.display='none';this.parentElement.innerHTML='{{ strtoupper(substr($report->creator->name ?? 'U', 0, 1)) }}';this.parentElement.style.display='flex';this.parentElement.style.alignItems='center';this.parentElement.style.justifyContent='center';this.parentElement.style.color='white';this.parentElement.style.fontWeight='700';this.parentElement.style.fontSize='1rem';this.parentElement.style.overflow='';">
                                 @else
                                     {{ strtoupper(substr($report->creator->name ?? 'U', 0, 1)) }}
@@ -379,7 +379,7 @@
                                             ];
                                             $roleLabel = $roleLabels[$report->creator->sidongan_role] ?? ucfirst(str_replace('_', ' ', $report->creator->sidongan_role));
                                         @endphp
-                                        <span style="display: inline-block; padding: 0.2rem 0.6rem; background: #dbeafe; color: #1e40af; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">
+                                        <span class="ds-role-badge">
                                             {{ $roleLabel }}
                                         </span>
                                     @endif
@@ -397,7 +397,7 @@
                                 @if($report->kegiatan_tanggal)
                                     {{ \Carbon\Carbon::parse($report->kegiatan_tanggal)->locale('id')->translatedFormat('d F Y') }}
                                 @else
-                                    <span style="color: #94a3b8; font-style: italic;">-</span>
+                                    <span class="ds-text-muted">-</span>
                                 @endif
                             </p>
                         </div>
@@ -407,7 +407,7 @@
                                 @if($report->start_time && $report->end_time)
                                     {{ \Carbon\Carbon::parse($report->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($report->end_time)->format('H:i') }}
                                 @else
-                                    <span style="color: #94a3b8; font-style: italic;">Waktu tidak tersedia</span>
+                                    <span class="ds-text-muted">Waktu tidak tersedia</span>
                                 @endif
                             </p>
                         </div>
@@ -426,7 +426,7 @@
                     <div class="ds-laporan-lokasi-box">
                         @if($lokasiLengkap)
                             <p class="ds-laporan-lokasi-hierarki">
-                                <i class="fas fa-map-marker-alt" style="color: #ef4444; margin-right: 0.5rem;"></i>
+                                <i class="fas fa-map-marker-alt ds-map-icon"></i>
                                 {{ $lokasiLengkap }}
                             </p>
                         @endif
@@ -449,7 +449,7 @@
                     @endphp
                     @if(count($fotosArray) > 0)
                     <div class="u-mb-5">
-                        <span class="ds-laporan-info-label" style="display: block; margin-bottom: 0.75rem;">
+                        <span class="ds-laporan-info-label ds-foto-label">
                             <i class="fas fa-camera u-mr-1"></i>
                             Dokumentasi ({{ count($fotosArray) }} foto):
                         </span>
@@ -467,7 +467,7 @@
                         <i class="fas fa-eye"></i>
                         <span>Lihat Detail</span>
                     </a>
-                    <div style="clear: both;"></div>
+                    <div class="ds-clearfix"></div>
                 </div>
             @endforeach
         </div>
@@ -562,9 +562,9 @@
                                     @if($document->creator && $document->creator->avatar)
                                         <img src="{{ asset('storage/' . $document->creator->avatar) }}" 
                                              alt="{{ $document->creator->name }}" 
-                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+                                             class="ds-timeline-avatar-img"
                                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;font-weight:700;font-size:0.85rem;border-radius:50%;">
+                                        <div class="ds-avatar-fallback ds-avatar-fallback-blue">
                                             {{ strtoupper(substr($document->creator->name ?? 'U', 0, 1)) }}
                                         </div>
                                     @else
@@ -618,9 +618,9 @@
                                     @if($disposedByUser && $disposedByUser->avatar)
                                         <img src="{{ asset('storage/' . $disposedByUser->avatar) }}" 
                                              alt="{{ $disposedByUser->name }}" 
-                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+                                             class="ds-timeline-avatar-img"
                                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:700;font-size:0.85rem;border-radius:50%;">
+                                        <div class="ds-avatar-fallback ds-avatar-fallback-orange">
                                             {{ strtoupper(substr($disposedByUser->name ?? 'K', 0, 1)) }}
                                         </div>
                                     @else
@@ -697,9 +697,9 @@
                                         @if($report->creator && $report->creator->avatar)
                                             <img src="{{ asset('storage/' . $report->creator->avatar) }}" 
                                                  alt="{{ $report->creator->name }}" 
-                                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+                                                 class="ds-timeline-avatar-img"
                                                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;font-size:0.85rem;border-radius:50%;">
+                                            <div class="ds-avatar-fallback ds-avatar-fallback-green">
                                                 {{ strtoupper(substr($report->creator->name ?? 'U', 0, 1)) }}
                                             </div>
                                         @else
@@ -769,9 +769,9 @@
                                     @if($verifier && $verifier->avatar)
                                         <img src="{{ asset('storage/' . $verifier->avatar) }}" 
                                              alt="{{ $verifier->name }}" 
-                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+                                             class="ds-timeline-avatar-img"
                                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:{{ $verifColor }};color:#fff;font-weight:700;font-size:0.85rem;border-radius:50%;">
+                                        <div class="ds-avatar-fallback" style="display:none;background:{{ $verifColor }};">
                                             {{ strtoupper(substr($verifier->name ?? 'K', 0, 1)) }}
                                         </div>
                                     @else
@@ -818,18 +818,18 @@
                                             Menyetujui laporan dari <strong>{{ $report->creator->name ?? 'Unknown' }}</strong>
                                         </span>
                                     </p>
-                                    <div style="background: #f0fdf4; border-left: 3px solid #10b981; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-top: 0.75rem;">
-                                        <p style="font-size: 0.9rem; color: #065f46; margin: 0 0 0.5rem 0;">
+                                    <div class="ds-verif-detail ds-verif-detail-success">
+                                        <p class="ds-verif-detail-title">
                                             <strong>Kegiatan:</strong> {{ $report->kegiatan_nama }}
                                         </p>
                                         @if($report->kegiatan_tanggal)
-                                        <p style="font-size: 0.85rem; color: #065f46; margin: 0 0 0.25rem 0;">
+                                        <p class="ds-verif-detail-meta">
                                             <i class="fas fa-calendar u-mr-1"></i>
                                             {{ \Carbon\Carbon::parse($report->kegiatan_tanggal)->locale('id')->translatedFormat('d F Y') }}
                                         </p>
                                         @endif
                                         @if($report->start_time && $report->end_time)
-                                        <p style="font-size: 0.85rem; color: #065f46; margin: 0;">
+                                        <p class="ds-verif-detail-meta">
                                             <i class="fas fa-clock u-mr-1"></i>
                                             {{ \Carbon\Carbon::parse($report->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($report->end_time)->format('H:i') }}
                                         </p>
@@ -842,18 +842,18 @@
                                             Menolak laporan dari <strong>{{ $report->creator->name ?? 'Unknown' }}</strong>
                                         </span>
                                     </p>
-                                    <div style="background: #fef2f2; border-left: 3px solid #ef4444; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-top: 0.75rem;">
-                                        <p style="font-size: 0.9rem; color: #991b1b; margin: 0 0 0.5rem 0;">
+                                    <div class="ds-verif-detail ds-verif-detail-danger">
+                                        <p class="ds-verif-detail-title">
                                             <strong>Kegiatan:</strong> {{ $report->kegiatan_nama }}
                                         </p>
                                         @if($report->kegiatan_tanggal)
-                                        <p style="font-size: 0.85rem; color: #991b1b; margin: 0 0 0.25rem 0;">
+                                        <p class="ds-verif-detail-meta">
                                             <i class="fas fa-calendar u-mr-1"></i>
                                             {{ \Carbon\Carbon::parse($report->kegiatan_tanggal)->locale('id')->translatedFormat('d F Y') }}
                                         </p>
                                         @endif
                                         @if($report->start_time && $report->end_time)
-                                        <p style="font-size: 0.85rem; color: #991b1b; margin: 0;">
+                                        <p class="ds-verif-detail-meta">
                                             <i class="fas fa-clock u-mr-1"></i>
                                             {{ \Carbon\Carbon::parse($report->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($report->end_time)->format('H:i') }}
                                         </p>
@@ -878,9 +878,9 @@
                                     @if($document->creator && $document->creator->avatar)
                                         <img src="{{ asset('storage/' . $document->creator->avatar) }}" 
                                              alt="{{ $document->creator->name }}" 
-                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+                                             class="ds-timeline-avatar-img"
                                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;font-weight:700;font-size:0.85rem;border-radius:50%;">
+                                        <div class="ds-avatar-fallback ds-avatar-fallback-purple">
                                             {{ strtoupper(substr($document->creator->name ?? 'U', 0, 1)) }}
                                         </div>
                                     @else

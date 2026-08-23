@@ -30,6 +30,12 @@
     </button>
     <div class="header-right u-relative">
         
+        {{-- Dark Mode Toggle --}}
+        <button data-action="toggle-dark-mode" class="toggle-btn" title="Ganti tema">
+            <i class="fas fa-moon sd-dark-icon" style="font-size: 1rem;"></i>
+            <i class="fas fa-sun sd-light-icon" style="font-size: 1rem; display: none;"></i>
+        </button>
+
         <div class="u-relative">
             <button data-action="toggle-notification-popup" class="toggle-btn" style="position: relative; margin-right: 0.5rem;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -145,4 +151,31 @@
         @endif
     </div>
 </header>
+
+{{-- Dark Mode Toggle Script --}}
+<script>
+(function() {
+    var html = document.documentElement;
+    var isDark = html.classList.contains('dark-mode');
+    var sunIcon = document.querySelector('.sd-light-icon');
+    var moonIcon = document.querySelector('.sd-dark-icon');
+    
+    function updateIcons() {
+        var dark = html.classList.contains('dark-mode');
+        if (sunIcon) sunIcon.style.display = dark ? 'inline' : 'none';
+        if (moonIcon) moonIcon.style.display = dark ? 'none' : 'inline';
+    }
+    updateIcons();
+    
+    document.querySelectorAll('[data-action="toggle-dark-mode"]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            html.classList.toggle('dark-mode');
+            var dark = html.classList.contains('dark-mode');
+            localStorage.setItem('sidongan-theme', dark ? 'dark' : 'light');
+            updateIcons();
+        });
+    });
+})();
+</script>
+
 {{-- Dikembangkan oleh Institut Teknologi Del --}}
