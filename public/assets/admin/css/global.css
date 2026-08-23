@@ -392,10 +392,10 @@ tr:hover td { background: #fafbfc; }
 
 /* Dark mode: tint colored stat cards slightly darker */
 .dark-mode .stat-card.u-badge-blue {
-  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
 }
 .dark-mode .stat-card.u-badge-green-solid {
-  background: linear-gradient(135deg, #16a34a, #15803d);
+  background: linear-gradient(135deg, #16a34a, #15803d) !important;
 }
 .dark-mode .stat-card.um-stat-red {
   background: linear-gradient(135deg, #991b1b, #7f1d1d);
@@ -414,6 +414,8 @@ tr:hover td { background: #fafbfc; }
 .stat-card.um-stat-purple {
   color: #fff;
 }
+.stat-card.u-badge-blue { background: linear-gradient(135deg, #3182ce, #2b6cb0) !important; }
+.stat-card.u-badge-green-solid { background: linear-gradient(135deg, #38a169, #2f855a) !important; }
 
 .stat-card.u-badge-blue .u-subtitle,
 .stat-card.u-badge-green-solid .u-subtitle,

@@ -16,7 +16,7 @@
 .tab-btn:hover { color: var(--primary); background: rgba(20,184,166,0.05); }
 .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
-.struktur-card { background: #ffffff !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; padding: 0 !important; overflow: hidden !important; border-radius: 12px !important; }
+.struktur-card { background: #ffffff !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; padding: 0 !important; overflow: visible !important; border-radius: 12px !important; }
 .struktur-card .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .struktur-card .table-container::-webkit-scrollbar { height: 6px; }
 .struktur-card .table-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 6px; }

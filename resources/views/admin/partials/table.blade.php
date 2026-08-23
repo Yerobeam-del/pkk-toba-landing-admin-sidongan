@@ -50,7 +50,7 @@
                                     {!! $column['icon'] !!}
                                 </span>
                             @endif
-                            <span>{{ $column['label'] }}</span>
+                            <span>{!! $column['label'] !!}</span>
                         </th>
                     @endforeach
 
