@@ -14,6 +14,106 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
 }
 
+/* ==================== DARK MODE OVERRIDES ==================== */
+/* Override inline styles yang hardcoded white/light */
+
+.dark-mode .sidongan-header .card,
+.dark-mode .u-a4 .stat-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border) !important;
+}
+
+.dark-mode .cleanup-grid .stat-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border) !important;
+}
+
+/* Filter form inputs & selects */
+.dark-mode .filter-form input[type="text"],
+.dark-mode .filter-form input[type="date"],
+.dark-mode .filter-form select {
+    background: var(--bg-input) !important;
+    border-color: var(--border) !important;
+    color: var(--text-dark) !important;
+}
+
+/* Reset filter button/link */
+.dark-mode .filter-form > div:last-child > div:first-child > a {
+    background: var(--bg-input) !important;
+    color: var(--text-dark) !important;
+}
+
+/* Per-page select */
+.dark-mode .filter-form select[name="per_page"] {
+    background: var(--bg-input) !important;
+    border-color: var(--border) !important;
+    color: var(--text-dark) !important;
+}
+
+/* Tabs container border */
+.dark-mode .tabs-container {
+    border-bottom-color: var(--border) !important;
+}
+
+/* Filter form border-top */
+.dark-mode .filter-form > div:last-child {
+    border-top-color: var(--border) !important;
+}
+
+/* Card in cleanup section */
+.dark-mode .card.u-box-padded {
+    background: var(--bg-card) !important;
+    border-color: var(--border) !important;
+}
+
+/* Table card */
+.dark-mode .card.u-a11 {
+    background: var(--bg-card) !important;
+    border-color: var(--border) !important;
+}
+
+/* Filter card */
+.dark-mode .card:not(.u-a11):not(.u-box-padded) {
+    background: var(--bg-card) !important;
+    border-color: var(--border) !important;
+}
+
+/* Status badge colors in dark mode */
+.dark-mode .sidongan-table .badge,
+.dark-mode span[style*="border-radius:20px"] {
+    filter: brightness(1.4);
+}
+
+/* Table callback colors — override hardcoded #3b82f6 monospace numbers */
+.dark-mode .sidongan-table span[style*="font-family:monospace"] {
+    color: #60a5fa !important;
+}
+
+/* Number inputs in cleanup section */
+.dark-mode .cleanup-grid input[type="number"] {
+    background: rgba(255,255,255,0.15) !important;
+    color: #fff !important;
+}
+
+/* --- Class-based overrides for cleaned-up template classes --- */
+
+.dark-mode .sidongan-info-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border) !important;
+}
+
+.dark-mode .sidongan-input {
+    background: var(--bg-input) !important;
+    border-color: var(--border) !important;
+    color: var(--text-dark) !important;
+}
+
+.dark-mode .sidongan-reset-btn {
+    background: var(--bg-input) !important;
+    color: var(--text-dark) !important;
+}
+
+
 @media (max-width: 768px) {
     .sidongan-header { flex-direction: column !important; align-items: flex-start !important; gap: 1rem !important; }
     .sidongan-header h1 { font-size: 1.25rem !important; }

@@ -42,7 +42,7 @@
 
         <div>
             <p style="margin:0 0 0.25rem 0; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8">ID Record</p>
-            <p style="margin:0; font-size:1.25rem; font-weight:800; font-family:monospace; color:#1e293b">
+            <p class="u-text-dark" style="margin:0; font-size:1.25rem; font-weight:800; font-family:monospace;">
                 {{ $item->{$config['id_field']} }}
             </p>
             <p style="margin:0.25rem 0 0 0; font-size:0.8rem; color:#94a3b8">

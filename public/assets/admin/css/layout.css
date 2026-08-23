@@ -6,33 +6,24 @@
  * Dikembangkan oleh Institut Teknologi Del
  * ============================================================ */
 
-:root {
-    --sidebar-width: 260px;
-    --sidebar-collapsed-width: 80px;
-    --header-height: 64px;
-    --primary: #14b8a6;
-    --sidebar-bg: #0f172a;
-    --sidebar-hover: #1e293b;
-    --sidebar-active: rgba(20,184,166,0.15);
-    --text-light: #f8fafc;
-    --text-muted: #94a3b8;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* RESET & BASE */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: #f1f5f9;
-    color: #334155;
-    overflow-x: hidden;
-}
+/* NOTE: :root variables, * reset, and body base styles are defined in global.css.
+   This file only adds layout-specific styles.
+   Dikembangkan oleh Institut Teknologi Del */
 
 /* ==========================================
    SIDEBAR & LAYOUT
    Semua styling sidebar, header, dan layout
    kini berada di global.css (satu sumber).
    ========================================== */
+
+/* ==========================================
+   HEADER LEFT (toggle buttons group)
+   ========================================== */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
 
 /* User Profile Dropdown Animation */
 @keyframes slideIn {
@@ -470,30 +461,6 @@ ADMIN FOOTER
 }
 .dark-mode .admin-footer-link:hover {
     color: var(--primary);
-}
-
-/* --- Table action buttons --- */
-.dark-mode .action-btn {
-    color: var(--text-muted);
-}
-.dark-mode .action-btn:hover {
-    background: rgba(255,255,255,0.08);
-    color: #60a5fa;
-}
-.dark-mode .action-btn.btn-delete:hover {
-    background: rgba(239,68,68,0.1);
-    color: #f87171;
-}
-
-/* --- Pagination --- */
-.dark-mode .sd-paginate {
-    background: #1e293b;
-    border-color: #334155;
-    color: var(--text-dark);
-}
-.dark-mode .sd-paginate:hover {
-    background: #334155;
-    border-color: var(--primary);
 }
 
 /* Dikembangkan oleh Institut Teknologi Del */

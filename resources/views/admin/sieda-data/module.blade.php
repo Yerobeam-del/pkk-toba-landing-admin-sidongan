@@ -20,7 +20,7 @@
     </div>
     <div style="text-align:right; font-size:0.9rem; color:var(--text-muted)">
         <div><strong style="color:var(--text-dark)">{{ number_format($totalCount) }}</strong> total record</div>
-        <div style="color:#166534"><strong>{{ number_format($totalAktif) }}</strong> aktif</div>
+        <div class="u-badge-green"><strong>{{ number_format($totalAktif) }}</strong> aktif</div>
     </div>
 </div>
 

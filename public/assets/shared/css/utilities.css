@@ -46,9 +46,6 @@
 /* u-relative — position:relative */
 .u-relative { position:relative }
 
-/* u-text-danger — color:#ef4444 */
-.u-text-danger { color:#ef4444 }
-
 /* u-label-simple — font-weight:600;display:block;margin-bottom:0.5rem */
 .u-label-simple { font-weight:600;display:block;margin-bottom:0.5rem }
 
@@ -58,17 +55,12 @@
 /* u-flex-center-gap-2 — display:flex;align-items:center;gap:0.5rem */
 .u-flex-center-gap-2 { display:flex;align-items:center;gap:0.5rem }
 
-/* u-hidden — display: none; */
-.u-hidden { display: none; }
+
 
 /* u-grid-2 — display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem */
 .u-grid-2 { display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem }
 
-/* u-label-slate — display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem; */
-.u-label-slate { display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem; }
 
-/* u-mb-6 — margin-bottom: 1.5rem; */
-.u-mb-6 { margin-bottom: 1.5rem; }
 
 /* u-inline-flex-center-gap-2 — display:inline-flex;align-items:center;gap:0.5rem */
 .u-inline-flex-center-gap-2 { display:inline-flex;align-items:center;gap:0.5rem }
@@ -100,14 +92,12 @@
 /* u-mb-4 — margin-bottom:1rem */
 .u-mb-4 { margin-bottom:1rem }
 
-/* u-relative — position: relative; */
-.u-relative { position: relative; }
+
 
 /* u-page-title-tight — font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0;letter-spacing:-0.5px */
 .u-page-title-tight { font-size:1.5rem;font-weight:800;color:var(--text-dark);margin:0 0 0.25rem 0;letter-spacing:-0.5px }
 
-/* u-flex-1 — flex: 1; */
-.u-flex-1 { flex: 1; }
+
 
 /* u-inline-alert-danger — display: flex; align-items: center; gap: 0.375rem; margin-top: 0.375rem; padding: 0.5rem 0.75rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 0.375rem; */
 .u-inline-alert-danger { display: flex; align-items: center; gap: 0.375rem; margin-top: 0.375rem; padding: 0.5rem 0.75rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 0.375rem; }
@@ -127,8 +117,7 @@
 /* u-muted-plain — color:var(--text-muted) */
 .u-muted-plain { color:var(--text-muted) }
 
-/* u-label-slate — font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem;color:#334155 */
-.u-label-slate { font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem;color:#334155 }
+
 
 /* u-deco-circle-tr — position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(10px); */
 .u-deco-circle-tr { position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; backdrop-filter: blur(10px); }
@@ -223,8 +212,7 @@
 /* u-a8 — font-size: 3rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.05em; */
 .u-a8 { font-size: 3rem; font-weight: 800; margin: 0; line-height: 1; letter-spacing: -0.05em; }
 
-/* u-flex-center-gap-2 — display: flex; align-items: center; gap: 0.5rem; */
-.u-flex-center-gap-2 { display: flex; align-items: center; gap: 0.5rem; }
+
 
 /* u-text-sm-muted — font-size: 0.85rem; color: #64748b; */
 .u-text-sm-muted { font-size: 0.85rem; color: #64748b; }
@@ -283,8 +271,7 @@
 /* u-caption — font-size:0.75rem;opacity:0.7;margin:0.25rem 0 0 0 */
 .u-caption { font-size:0.75rem;opacity:0.7;margin:0.25rem 0 0 0 }
 
-/* u-cover — width:100%;height:100%;object-fit:cover */
-.u-cover { width:100%;height:100%;object-fit:cover }
+
 
 /* u-ellipsis-title — font-weight:600;color:var(--text-dark);font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis */
 .u-ellipsis-title { font-weight:600;color:var(--text-dark);font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis }
@@ -319,8 +306,7 @@
 /* u-label-gray — display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; */
 .u-label-gray { display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; }
 
-/* u-flex-center-gap-3 — display: flex; align-items: center; gap: 0.75rem; */
-.u-flex-center-gap-3 { display: flex; align-items: center; gap: 0.75rem; }
+
 
 /* u-a17 — display:block;font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem */
 .u-a17 { display:block;font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem }
@@ -517,8 +503,7 @@
 /* u-card-white — background: white; border-radius: 0.75rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; overflow: hidden; */
 .u-card-white { background: white; border-radius: 0.75rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; overflow: hidden; }
 
-/* u-flex-1-min — flex: 1; min-width: 0; */
-.u-flex-1-min { flex: 1; min-width: 0; }
+
 
 /* u-text-sm-strong — font-size: 0.85rem; font-weight: 500; color: #0f172a; */
 .u-text-sm-strong { font-size: 0.85rem; font-weight: 500; color: #0f172a; }
@@ -643,14 +628,12 @@
 /* u-a83 — display: flex; justify-content: space-between; */
 .u-a83 { display: flex; justify-content: space-between; }
 
-/* u-p-0 — padding: 0; */
-.u-p-0 { padding: 0; }
+
 
 /* u-a84 — color: #0891b2; margin-right: 0.5rem; */
 .u-a84 { color: #0891b2; margin-right: 0.5rem; }
 
-/* u-mb-8 — margin-bottom: 2rem; */
-.u-mb-8 { margin-bottom: 2rem; }
+
 
 /* u-a85 — display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; */
 .u-a85 { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
@@ -724,11 +707,7 @@
 /* u-a110 — font-size: 0.95rem; color: #475569; margin: 0 0 0.5rem 0; font-weight: 600; (dipulihkan dari HEAD) */
 .u-a110 { font-size: 0.95rem; color: #475569; margin: 0 0 0.5rem 0; font-weight: 600; }
 
-/* u-a102 — font-size: 0.8rem; font-family: monospace; background: white; color: {{ $theme['text'] }}; padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-weight: 700; border: 1px solid {{ $theme['border'] }}; box-shadow: 0 1px 2px rgba(0,0,0,0.05); (dipulihkan dari HEAD) */
-.u-a102 { font-size: 0.8rem; font-family: monospace; background: white; color: {{ $theme['text'] }}; padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-weight: 700; border: 1px solid {{ $theme['border'] }}; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 
-/* u-a107 — color: {{ $theme['btn'] }}; font-size: 0.875rem; (dipulihkan dari HEAD) */
-.u-a107 { color: {{ $theme['btn'] }}; font-size: 0.875rem; }
 
 /* u-a117 — text-align: center; padding: 4rem 2rem; (dipulihkan dari HEAD) */
 .u-a117 { text-align: center; padding: 4rem 2rem; }
@@ -871,7 +850,7 @@
     background: #334155;
   }
 
-  /* --- Text muted overrides --- */
+  /* --- Field note colors --- */
   .u-field-note {
     color: var(--text-muted);
   }
@@ -883,6 +862,46 @@
   }
   .u-text-xs-muted {
     color: var(--text-muted);
+  }
+
+  /* --- Hardcoded #475569 → muted --- */
+  .u-a43, .u-a45, .u-a54, .u-a72 {
+    color: var(--text-muted);
+  }
+
+  /* --- Background #f8fafc → dark --- */
+  .u-a15, .u-a38, .u-a72 {
+    background: #334155;
+  }
+
+  /* --- White backgrounds → dark --- */
+  .u-a1, .u-a10, .u-a28, .u-a42, .u-a49, .u-a50, .u-a63, .u-a77 {
+    background: #1e293b;
+    border-color: #334155;
+    color: var(--text-dark);
+  }
+
+  /* --- Select option dark --- */
+  select option {
+    background: #1e293b;
+    color: var(--text-dark);
+  }
+
+  /* --- File input --- */
+  input[type="file"] {
+    background: #1e293b;
+    border-color: #334155;
+    color: var(--text-dark);
+  }
+
+  /* --- Section titles --- */
+  .u-section-title-dark, .u-section-title-slate {
+    color: var(--text-dark);
+  }
+
+  /* --- Hardcoded #f8fafc backgrounds --- */
+  .u-box-soft {
+    background: #1e293b;
   }
 
   /* --- Form actions border --- */

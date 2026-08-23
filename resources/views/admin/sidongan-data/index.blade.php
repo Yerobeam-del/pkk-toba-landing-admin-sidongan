@@ -104,7 +104,7 @@
 
 {{-- Stats Tambahan --}}
 <div class="u-a4">
-    <div class="stat-card" style="background:#fff;border:1px solid rgba(0,0,0,0.06);padding:1.25rem">
+    <div class="stat-card sidongan-info-card" style="border:1px solid rgba(0,0,0,0.06);padding:1.25rem">
         <div class="u-flex-center-gap-4">
             <div style="width:48px;height:48px;background:rgba(59,130,246,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -115,7 +115,7 @@
             </div>
         </div>
     </div>
-    <div class="stat-card" style="background:#fff;border:1px solid rgba(0,0,0,0.06);padding:1.25rem">
+    <div class="stat-card sidongan-info-card" style="border:1px solid rgba(0,0,0,0.06);padding:1.25rem">
         <div class="u-flex-center-gap-4">
             <div style="width:48px;height:48px;background:rgba(168,85,247,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -236,11 +236,11 @@
         <div class="u-a66">
             <div>
                 <label class="u-a36">Cari</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Judul, nomor, pengirim..." style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;transition:all 0.2s">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Judul, nomor, pengirim..." class="sidongan-input" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;transition:all 0.2s">
             </div>
             <div>
                 <label class="u-a36">Kategori</label>
-                <select name="category_id" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;background:#fff;cursor:pointer">
+                <select name="category_id" class="sidongan-input" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem;cursor:pointer">
                     <option value="">Semua Kategori</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -253,11 +253,11 @@
         <div class="u-a66">
             <div>
                 <label class="u-a36">Dari Tanggal</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
+                <input type="date" name="date_from" value="{{ request('date_from') }}" class="sidongan-input" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
             </div>
             <div>
                 <label class="u-a36">Sampai Tanggal</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
+                <input type="date" name="date_to" value="{{ request('date_to') }}" class="sidongan-input" style="width:100%;padding:0.625rem 1rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.875rem">
             </div>
         </div>
 
@@ -268,14 +268,14 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-right:0.5rem"><polyline points="20 6 9 17 4 12"/></svg>
                     Filter
                 </button>
-                <a href="{{ route('admin.sidongan-data.index') }}" style="padding:0.625rem 1rem;background:#f1f5f9;color:var(--text-dark);border:none;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center">
+                <a href="{{ route('admin.sidongan-data.index') }}" class="sidongan-reset-btn" style="padding:0.625rem 1rem;background:#f1f5f9;color:var(--text-dark);border:none;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
                 </a>
             </div>
 
             <div class="u-flex-center-gap-2">
                 <label class="u-a3">Tampilkan:</label>
-                <select name="per_page" style="padding:0.5rem 2rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.9rem;cursor:pointer;background:white;min-width:80px">
+                <select name="per_page" class="sidongan-input" style="padding:0.5rem 2rem 0.5rem 0.75rem;border:1px solid rgba(0,0,0,0.08);border-radius:8px;font-size:0.9rem;cursor:pointer;min-width:80px">
                     <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
                     <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
                     <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>

@@ -20,3 +20,11 @@
     .data-nilai-null { color: #94a3b8; font-style: italic; }
     .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
 
+/* DARK MODE */
+.dark-mode .detail-table tr{border-bottom-color:#334155}
+.dark-mode .detail-table th{color:#94a3b8}
+.dark-mode .detail-table td{color:#e2e8f0}
+.dark-mode .section-heading{color:#e2e8f0;border-bottom-color:#334155}
+.dark-mode .data-nilai-null{color:#64748b}
+.dark-mode .card{background:#1e293b;border-color:#334155}
+

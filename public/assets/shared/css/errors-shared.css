@@ -245,18 +245,22 @@ body {
     }
 }
 
+html.dark-mode body,
 body.dark-mode {
     background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
 }
 
+html.dark-mode .cloud,
 body.dark-mode .cloud { --err-cloud-color: #334155; opacity: 0.4; }
 
+html.dark-mode .container,
 body.dark-mode .container {
     background: rgba(30, 41, 59, 0.92) !important;
     border: 1px solid rgba(71, 85, 105, 0.3) !important;
     box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4) !important;
 }
 
+html.dark-mode .message,
 body.dark-mode .message { color: #cbd5e1 !important; }
 
 b

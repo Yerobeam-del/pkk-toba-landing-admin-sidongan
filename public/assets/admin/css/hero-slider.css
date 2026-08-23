@@ -144,3 +144,23 @@
   .slider-item:active { cursor: grabbing; }
 }
 /* Dikembangkan oleh Institut Teknologi Del */
+
+/* DARK MODE */
+.dark-mode .hero-card{background:#1e293b;border-color:#334155}
+.dark-mode .hero-item{background:#1e293b;border-color:#334155}
+.dark-mode .hero-item:hover{border-color:#14b8a6}
+.dark-mode .hero-item.active{border-color:#14b8a6;background:rgba(20,184,166,0.05)}
+.dark-mode .checkbox-box{background:#0f172a;border-color:#475569}
+.dark-mode .checkbox-box.checked{background:linear-gradient(135deg,#14b8a6,#0d9488);border-color:#14b8a6}
+.dark-mode .slider-info{color:#e2e8f0}
+.dark-mode .slider-meta span{color:#94a3b8}
+.dark-mode .slider-number{color:#64748b}
+.dark-mode .hero-form{background:#1e293b;border-color:#334155}
+.dark-mode .hero-form label{color:#e2e8f0}
+.dark-mode .hero-form input,.dark-mode .hero-form textarea,.dark-mode .hero-form select{background:#0f172a;border-color:#334155;color:#e2e8f0}
+.dark-mode .error-alert{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:#fca5a5}
+.dark-mode .max-limit-warning{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2)}
+.dark-mode .pagination-wrapper{color:#94a3b8}
+.dark-mode .pagination-btn{background:#1e293b;border-color:#334155;color:#e2e8f0}
+.dark-mode .pagination-btn.active{background:#14b8a6;border-color:#14b8a6;color:#fff}
+.dark-mode .pagination-btn:hover:not(.active):not(:disabled){background:#334155;border-color:#14b8a6}

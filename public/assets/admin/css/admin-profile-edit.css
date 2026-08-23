@@ -113,11 +113,51 @@
 .profile-section-label{margin:0 0 0.5rem 0;font-size:0.85rem;font-weight:600;color:#64748b}
 
 /* === DARK MODE === */
-body.dark-mode .profile-header h1{color:#f1f5f9}
-body.dark-mode .profile-user-name{color:#f1f5f9}
-body.dark-mode .profile-sidebar-item{color:#94a3b8}
-body.dark-mode .profile-avatar-upload{background:#1e293b;border-color:#334155}
-body.dark-mode .profile-avatar-upload-info{color:#e2e8f0}
-body.dark-mode .profile-field-row{color:#94a3b8}
-body.dark-mode .profile-app-label{color:#e2e8f0}
-body.dark-mode .profile-section-title{color:#e2e8f0}
+.dark-mode .profile-sidebar-card{background:#1e293b;border-color:#334155;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.dark-mode .profile-main-card{background:#1e293b;border-color:#334155;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.dark-mode .profile-tabs{background:#0f172a;border-bottom-color:#334155}
+.dark-mode .profile-tab{color:#94a3b8}
+.dark-mode .profile-tab:hover{background:rgba(255,255,255,0.05);color:#e2e8f0}
+.dark-mode .profile-tab.active{color:#14b8a6;background:rgba(20,184,166,0.1);border-bottom-color:#14b8a6}
+.dark-mode .profile-header{background:linear-gradient(180deg,rgba(20,184,166,0.08) 0%,transparent 100%)}
+.dark-mode .profile-header h1{color:#f1f5f9}
+.dark-mode .profile-header p{color:#94a3b8}
+.dark-mode .section-header{color:#e2e8f0}
+.dark-mode .section-desc{color:#94a3b8}
+.dark-mode .completion-ring .bg-circle{stroke:#334155}
+.dark-mode .app-card{background:#1e293b;border-color:#334155}
+.dark-mode .app-card:hover{border-color:#14b8a6;box-shadow:0 2px 8px rgba(20,184,166,0.15)}
+.dark-mode .perm-tag{background:rgba(34,197,94,0.15);color:#4ade80;border-color:rgba(34,197,94,0.25)}
+.dark-mode .form-field label{color:#e2e8f0}
+.dark-mode .form-field .form-control{background:#0f172a;border-color:#334155;color:#e2e8f0}
+.dark-mode .form-field .form-control:focus{border-color:#14b8a6;box-shadow:0 0 0 3px rgba(20,184,166,0.15)}
+.dark-mode .strength-bar{background:#334155}
+.dark-mode .checklist-item{color:#94a3b8}
+.dark-mode .checklist-item .icon.pending{color:#475569}
+.dark-mode .profile-sidebar-section{border-top-color:#334155}
+.dark-mode .profile-sidebar-label{color:#94a3b8}
+.dark-mode .profile-sidebar-item{color:#94a3b8}
+.dark-mode .profile-sidebar-item:hover{background:rgba(255,255,255,0.05);border-radius:6px}
+.dark-mode .profile-sidebar-item svg{color:#64748b}
+.dark-mode .profile-user-name{color:#e2e8f0}
+.dark-mode .profile-user-email{color:#94a3b8}
+.dark-mode .profile-tag-role{background:rgba(139,92,246,0.15);color:#a78bfa}
+.dark-mode .profile-tag-sieda{background:rgba(20,184,166,0.15);color:#5eead4}
+.dark-mode .profile-tag-admin{background:rgba(34,197,94,0.15);color:#4ade80}
+.dark-mode .profile-nav-secondary{background:#334155;color:#e2e8f0}
+.dark-mode .profile-nav-secondary:hover{background:#475569;color:#fff}
+.dark-mode .profile-success-alert{background:rgba(34,197,94,0.1);color:#4ade80}
+.dark-mode .profile-avatar-lg{border-color:#1e293b}
+.dark-mode .profile-avatar-md{border-color:#1e293b}
+.dark-mode .profile-avatar-badge{border-color:#1e293b}
+.dark-mode .profile-avatar-upload{background:#0f172a;border-color:#334155;border-style:dashed}
+.dark-mode .profile-avatar-upload-info{color:#e2e8f0}
+.dark-mode .profile-avatar-upload-hint{color:#64748b}
+.dark-mode .profile-field-row{color:#94a3b8}
+.dark-mode .profile-field-row svg{color:#64748b}
+.dark-mode .profile-app-label{color:#e2e8f0}
+.dark-mode .profile-app-url{color:#64748b}
+.dark-mode .profile-section-title{color:#e2e8f0}
+.dark-mode .profile-section-label{color:#94a3b8}
+.dark-mode .profile-perm-icon{background:rgba(34,197,94,0.1)}
+.dark-mode .profile-avatar-fallback{background:linear-gradient(135deg,#0d9488,#115e59)}

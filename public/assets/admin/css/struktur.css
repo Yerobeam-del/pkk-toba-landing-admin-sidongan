@@ -16,7 +16,7 @@
 .tab-btn:hover { color: var(--primary); background: rgba(20,184,166,0.05); }
 .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
-.struktur-card { background: #ffffff !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; padding: 0 !important; overflow: visible !important; border-radius: 12px !important; }
+.struktur-card { background: var(--card-bg) !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; padding: 0 !important; overflow: visible !important; border-radius: 12px !important; }
 .struktur-card .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .struktur-card .table-container::-webkit-scrollbar { height: 6px; }
 .struktur-card .table-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 6px; }
@@ -39,7 +39,7 @@
    TABLE COMPONENT - STRUKTUR ORGANISASI
    ========================================== */
 .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-.data-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; }
+.data-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card-bg); }
 
 .data-table thead { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
 .data-table thead tr { background: transparent; }
@@ -63,7 +63,7 @@
 .data-table thead th span:last-child { vertical-align: middle; }
 .data-table thead tr:hover { background: transparent; }
 
-.data-table tbody tr { border-bottom: 1px solid rgba(0,0,0,0.06); transition: all 0.2s ease; background: #fff; }
+.data-table tbody tr { border-bottom: 1px solid var(--border); transition: all 0.2s ease; background: var(--card-bg); }
 .data-table tbody tr:last-child { border-bottom: none; }
 .data-table tbody tr:hover { background: linear-gradient(135deg, rgba(20,184,166,0.03) 0%, rgba(20,184,166,0.06) 100%) !important; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
 .data-table tbody td { padding: 1.25rem 1.5rem !important; vertical-align: middle !important; color: var(--text-dark); font-size: 0.9rem; background: transparent !important; }
@@ -124,7 +124,7 @@
   .table-wrapper { border-radius: 8px; margin: 0; overflow: hidden; }
   
   .mobile-card-wrapper { padding: 0.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
-  .member-card { background: #fff; border-radius: 12px; padding: 1rem; border: 1px solid rgba(20,184,166,0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: all 0.3s ease; }
+  .member-card { background: var(--card-bg); border-radius: 12px; padding: 1rem; border: 1px solid rgba(20,184,166,0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: all 0.3s ease; }
   .member-card:hover { box-shadow: 0 4px 16px rgba(20,184,166,0.12); border-color: rgba(20,184,166,0.3); }
   .member-card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
   .member-card-photo, .member-card-photo-placeholder { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 2px solid rgba(20,184,166,0.15); }
@@ -151,4 +151,28 @@
   .desktop-table-view { display: block !important; }
   .actions-container .action-btn span { display: none; }
 }
+/* DARK MODE */
+.dark-mode .struktur-card{background:#1e293b !important;box-shadow:0 2px 8px rgba(0,0,0,0.2) !important}
+.dark-mode .struktur-card .table-row{border-bottom-color:#334155 !important}
+.dark-mode .data-table{background:#1e293b}
+.dark-mode .data-table tbody tr{background:#1e293b;border-bottom-color:#334155}
+.dark-mode .data-table tbody tr:hover{background:rgba(20,184,166,0.06) !important}
+.dark-mode .data-table tbody td{color:#e2e8f0}
+.dark-mode .data-table thead{background:linear-gradient(135deg,#0d9488 0%,#115e59 100%)}
+.dark-mode .tabs-container{border-bottom-color:#334155}
+.dark-mode .tab-btn{color:#94a3b8}
+.dark-mode .tab-btn:hover{color:#14b8a6;background:rgba(20,184,166,0.08)}
+.dark-mode .tab-btn.active{color:#14b8a6}
+.dark-mode .member-photo-placeholder{background:linear-gradient(135deg,#0f2922 0%,#0c332f 100%);border-color:rgba(20,184,166,0.2)}
+.dark-mode .member-photo{border-color:rgba(20,184,166,0.15)}
+.dark-mode .position-badge{background:rgba(20,184,166,0.1);color:#5eead4;border-color:rgba(20,184,166,0.2)}
+.dark-mode .empty-state{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);border-color:rgba(20,184,166,0.15)}
+.dark-mode .empty-state-icon{background:linear-gradient(135deg,#1e293b 0%,#0f2922 100%)}
+.dark-mode .member-card{background:#1e293b;border-color:#334155}
+.dark-mode .member-card-photo-placeholder{background:linear-gradient(135deg,#0f2922 0%,#0c332f 100%)}
+.dark-mode .member-card-actions{border-top-color:#334155}
+.dark-mode .member-card-actions .action-btn.btn-edit{background:rgba(59,130,246,0.1);color:#60a5fa}
+.dark-mode .member-card-actions .action-btn.btn-delete{background:rgba(239,68,68,0.1);color:#f87171}
+.dark-mode .action-btn.btn-edit:hover{background:rgba(59,130,246,0.15) !important;color:#60a5fa !important}
+.dark-mode .action-btn.btn-delete:hover{background:rgba(239,68,68,0.15) !important;color:#f87171 !important}
 /* Dikembangkan oleh Institut Teknologi Del */

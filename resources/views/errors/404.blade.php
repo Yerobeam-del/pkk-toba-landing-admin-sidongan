@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/shared/css/errors-shared.css') }}">
 </head>
 <body data-error-theme="warning">
+    <script>(function(){var t=localStorage.getItem('admin-dark-mode');if(t==='true'||(t===null&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark-mode')})()</script>
     <div class="cloud c1"></div>
     <div class="cloud c2"></div>
     <div class="cloud c3"></div>

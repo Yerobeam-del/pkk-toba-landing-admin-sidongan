@@ -160,3 +160,10 @@
     }
 }
 
+/* DARK MODE */
+.dark-mode .mobile-card-view .desa-card{background:#1e293b;border-color:#334155}
+.dark-mode .mobile-card-view .desa-card-photo{background:#0f172a}
+.dark-mode .mobile-card-view .desa-card-actions{border-top-color:#334155}
+.dark-mode .mobile-card-view .desa-card-actions a:hover{background:rgba(59,130,246,0.1);color:#60a5fa}
+.dark-mode .mobile-card-view .desa-card-actions button:hover{background:rgba(239,68,68,0.1);color:#f87171}
+
