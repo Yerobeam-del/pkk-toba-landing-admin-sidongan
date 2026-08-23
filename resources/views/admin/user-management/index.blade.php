@@ -222,13 +222,15 @@
                                 </div>
                             ';
                         }
-                    ],
-                    [
+                    ];
+
+                    $userColumns[] = [
                         'key' => 'email',
                         'label' => 'Email',
                         'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
-                    ],
-                    [
+                    ];
+
+                    $userColumns[] = [
                         'key' => 'applications',
                         'label' => 'Aplikasi',
                         'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
@@ -240,8 +242,9 @@
                             }
                             return '<span class="u-a31">-</span>';
                         }
-                    ],
-                    [
+                    ];
+
+                    $userColumns[] = [
                         'key' => 'email_verified_at',
                         'label' => 'Status',
                         'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
@@ -252,8 +255,9 @@
                             }
                             return '<span class="u-a67"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Nonaktif</span>';
                         }
-                    ],
-                    [
+                    ];
+
+                    $userColumns[] = [
                         'key' => 'created_at',
                         'label' => 'Dibuat',
                         'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
@@ -261,8 +265,7 @@
                         'callback' => function($item, $value) {
                             return $item->created_at->locale('id')->translatedFormat('d F Y');
                         }
-                    ],
-                ];
+                    ];
             @endphp
 
             {{-- Partial table ini sekarang OTOMATIS merender pagination jika $users adalah instance Paginator --}}
