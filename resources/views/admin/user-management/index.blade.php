@@ -187,18 +187,20 @@
         <div class="table-container u-p-0">
 
             @php
-                $userColumns = [
-                    @if(auth()->user()->hasRole('super_admin'))
-                    [
+                $userColumns = [];
+
+                if (auth()->user()->hasRole('super_admin')) {
+                    $userColumns[] = [
                         'key' => 'id',
                         'label' => '<input type="checkbox" id="selectAll" style="cursor:pointer">',
                         'type' => 'callback',
                         'callback' => function($item) {
                             return '<input type="checkbox" class="bulk-checkbox" value="' . $item->id . '" style="cursor:pointer;width:16px;height:16px;accent-color:var(--primary)">';
                         }
-                    ],
-                    @endif
-                    [
+                    ];
+                }
+
+                $userColumns[] = [
                         'key' => 'name',
                         'label' => 'Pengguna',
                         'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
