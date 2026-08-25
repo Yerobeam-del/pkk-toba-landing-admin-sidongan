@@ -4,7 +4,7 @@
 /* ==========================================
    HERO SLIDER MANAGEMENT PAGE
    ========================================== */
-.capacity-card { background: #ffffff !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; padding: 1.5rem !important; margin-bottom: 1.5rem !important; border-radius: 12px !important; }
+.capacity-card { background: transparent; border: none; padding: 0; margin-bottom: 2rem; }
 .capacity-card-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
 .capacity-card-info { display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 0; }
 .capacity-card-icon { width: 48px; height: 48px; background: rgba(20,184,166,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -23,7 +23,7 @@
 .slider-progress-fill.medium { background: linear-gradient(90deg, #f59e0b, #d97706); }
 .slider-progress-fill.high { background: linear-gradient(90deg, #ef4444, #dc2626); }
 
-.add-slide-card { background: #ffffff !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; padding: 1.5rem !important; margin-bottom: 1.5rem !important; border-radius: 12px !important; }
+.add-slide-card { background: transparent; border: none; padding: 0; margin-bottom: 2rem; }
 .add-slide-header { display: flex; align-items: center; gap: 0.75rem; padding: 0 0 1rem 0; }
 .add-slide-header svg { flex-shrink: 0; }
 .add-slide-title { font-size: 1.1rem; font-weight: 700; color: #8b5cf6; margin: 0; }
@@ -45,7 +45,7 @@
 .checkbox-label { font-weight: 600; color: #334155; font-size: 0.9rem; user-select: none; }
 .form-actions { display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.06); }
 
-.slider-list-card { background: #ffffff !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; padding: 1.5rem !important; border-radius: 12px !important; }
+.slider-list-card { background: transparent; border: none; padding: 0; }
 .slider-list-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding: 0 0 1.5rem 0; }
 .slider-list-title { display: flex; align-items: center; gap: 0.75rem; }
 .slider-list-title svg { flex-shrink: 0; stroke: #14b8a6; }
@@ -145,22 +145,231 @@
 }
 /* Dikembangkan oleh Institut Teknologi Del */
 
-/* DARK MODE */
-.dark-mode .hero-card{background:#1e293b;border-color:#334155}
-.dark-mode .hero-item{background:#1e293b;border-color:#334155}
-.dark-mode .hero-item:hover{border-color:#14b8a6}
-.dark-mode .hero-item.active{border-color:#14b8a6;background:rgba(20,184,166,0.05)}
-.dark-mode .checkbox-box{background:#0f172a;border-color:#475569}
-.dark-mode .checkbox-box.checked{background:linear-gradient(135deg,#14b8a6,#0d9488);border-color:#14b8a6}
-.dark-mode .slider-info{color:#e2e8f0}
-.dark-mode .slider-meta span{color:#94a3b8}
-.dark-mode .slider-number{color:#64748b}
-.dark-mode .hero-form{background:#1e293b;border-color:#334155}
-.dark-mode .hero-form label{color:#e2e8f0}
-.dark-mode .hero-form input,.dark-mode .hero-form textarea,.dark-mode .hero-form select{background:#0f172a;border-color:#334155;color:#e2e8f0}
-.dark-mode .error-alert{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);color:#fca5a5}
-.dark-mode .max-limit-warning{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2)}
-.dark-mode .pagination-wrapper{color:#94a3b8}
-.dark-mode .pagination-btn{background:#1e293b;border-color:#334155;color:#e2e8f0}
-.dark-mode .pagination-btn.active{background:#14b8a6;border-color:#14b8a6;color:#fff}
-.dark-mode .pagination-btn:hover:not(.active):not(:disabled){background:#334155;border-color:#14b8a6}
+/* ==========================================
+   DARK MODE — Hero Slider Page
+   ========================================== */
+
+/* --- Cards (transparent bg, menyatu dengan halaman) --- */
+.dark-mode .capacity-card,
+.dark-mode .add-slide-card,
+.dark-mode .slider-list-card,
+.dark-mode .hero-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* --- Capacity counter --- */
+.dark-mode .capacity-counter {
+  background: rgba(20,184,166,0.08);
+  border-color: rgba(20,184,166,0.2);
+}
+.dark-mode .capacity-counter .counter-number.text-primary {
+  background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Progress bar --- */
+.dark-mode .slider-progress-bar {
+  background: #334155;
+}
+
+/* --- Form labels & helpers --- */
+.dark-mode .form-label,
+.dark-mode .add-slide-title {
+  color: var(--text-dark);
+}
+.dark-mode .add-slide-description {
+  color: var(--text-muted);
+}
+.dark-mode .form-helper {
+  color: var(--text-muted);
+}
+.dark-mode .form-actions {
+  border-top-color: var(--border);
+}
+
+/* --- File input --- */
+.dark-mode .form-control[type="file"] {
+  background: #0f172a;
+  border-color: #334155;
+  color: var(--text-dark);
+}
+.dark-mode .form-control[type="file"]:hover {
+  border-color: var(--primary);
+  background: #1e293b;
+}
+
+/* --- Checkbox wrapper & box --- */
+.dark-mode .checkbox-wrapper {
+  background: #0f172a;
+}
+.dark-mode .checkbox-wrapper:hover {
+  background: #1e293b;
+}
+.dark-mode .checkbox-box {
+  background: #0f172a;
+  border-color: #475569;
+}
+.dark-mode .checkbox-box.checked {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  border-color: #14b8a6;
+}
+.dark-mode .checkbox-label {
+  color: var(--text-dark);
+}
+
+/* --- Slider list header & hints --- */
+.dark-mode .slider-list-title h3 {
+  color: #2dd4bf;
+}
+.dark-mode .slider-list-title svg {
+  stroke: #2dd4bf;
+}
+.dark-mode .slider-list-hints small {
+  color: var(--text-muted);
+}
+.dark-mode .slider-list-hints .text-primary {
+  color: #2dd4bf;
+}
+
+/* --- Slider items --- */
+.dark-mode .slider-item {
+  background: #0f172a;
+  border-color: var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.dark-mode .slider-item:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  border-color: rgba(20,184,166,0.3);
+}
+.dark-mode .slider-info { color: var(--text-dark); }
+.dark-mode .slider-path { color: var(--text-muted); }
+.dark-mode .slider-meta span { color: var(--text-muted); }
+.dark-mode .slider-meta .status-active { color: #4ade80; }
+.dark-mode .slider-meta .status-inactive { color: #f87171; }
+.dark-mode .slider-number { color: #64748b; }
+
+/* --- Drag handle --- */
+.dark-mode .drag-handle { color: var(--text-muted); }
+.dark-mode .drag-handle:hover { color: var(--primary); }
+
+/* --- Slider action buttons --- */
+.dark-mode .slider-actions button,
+.dark-mode .slider-actions a {
+  color: #94a3b8;
+}
+.dark-mode .slider-actions button:hover,
+.dark-mode .slider-actions a:hover {
+  background: rgba(59,130,246,0.15);
+  color: #60a5fa;
+}
+.dark-mode .slider-actions button.btn-delete:hover {
+  background: rgba(239,68,68,0.15);
+  color: #f87171;
+}
+
+/* --- Hero form (legacy classes) --- */
+.dark-mode .hero-card { background: var(--card-bg); border-color: var(--border); }
+.dark-mode .hero-item { background: #0f172a; border-color: var(--border); }
+.dark-mode .hero-item:hover { border-color: #14b8a6; }
+.dark-mode .hero-item.active { border-color: #14b8a6; background: rgba(20,184,166,0.05); }
+.dark-mode .hero-form { background: var(--card-bg); border-color: var(--border); }
+.dark-mode .hero-form label { color: var(--text-dark); }
+.dark-mode .hero-form input,
+.dark-mode .hero-form textarea,
+.dark-mode .hero-form select {
+  background: #0f172a;
+  border-color: #334155;
+  color: var(--text-dark);
+}
+
+/* --- Error alert --- */
+.dark-mode .error-alert {
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.25);
+}
+.dark-mode .error-alert strong { color: #fca5a5; }
+.dark-mode .error-alert p { color: #fca5a5; }
+
+/* --- Max limit warning --- */
+.dark-mode .max-limit-warning {
+  background: rgba(239,68,68,0.08);
+  border-color: rgba(239,68,68,0.2);
+}
+.dark-mode .max-limit-warning h3 { color: #fca5a5; }
+.dark-mode .max-limit-warning p { color: #fca5a5; }
+
+/* --- Empty state --- */
+.dark-mode .empty-state { color: var(--text-muted); }
+
+/* --- Pagination --- */
+.dark-mode .pagination-wrapper {
+  border-top-color: var(--border);
+  color: var(--text-muted);
+}
+.dark-mode .pagination-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: var(--text-dark);
+}
+.dark-mode .pagination-btn.active {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  border-color: #14b8a6;
+  color: #fff;
+}
+.dark-mode .pagination-btn:hover:not(.active):not(:disabled) {
+  background: #334155;
+  border-color: #14b8a6;
+  color: #2dd4bf;
+}
+.dark-mode .pagination-btn:disabled {
+  background: #1e293b;
+  color: #475569;
+  border-color: #334155;
+}
+.dark-mode .pagination-info { color: var(--text-muted); }
+.dark-mode .pagination-info strong { color: var(--text-dark); }
+
+/* --- Select dropdown (Tampilkan) --- */
+.dark-mode .u-relative select {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: var(--text-dark);
+}
+.dark-mode .u-select-chevron { color: var(--text-muted); }
+
+/* --- Mobile reorder buttons --- */
+.dark-mode .mobile-reorder {
+  border-top-color: #334155;
+}
+.dark-mode .mobile-reorder button {
+  background: #1e293b;
+  border-color: #334155;
+  color: var(--text-dark);
+}
+.dark-mode .mobile-reorder button:hover:not(:disabled) {
+  background: #334155;
+  border-color: var(--primary);
+}
+
+/* --- Edit modal (inline styles override) --- */
+.dark-mode #editModal > div {
+  background: #1e293b !important;
+}
+.dark-mode #editModal > div > div {
+  border-bottom-color: #334155 !important;
+}
+.dark-mode #editModal h3 {
+  color: var(--text-dark) !important;
+}
+.dark-mode #editForm > div:last-child {
+  border-top-color: #334155 !important;
+}
+
+/* --- u-a3 label (Tampilkan:) --- */
+.dark-mode .u-a3 {
+  color: var(--text-muted);
+}

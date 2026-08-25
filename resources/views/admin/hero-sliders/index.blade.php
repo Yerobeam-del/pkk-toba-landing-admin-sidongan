@@ -164,7 +164,7 @@
                 <form class="u-flex-center-gap-2" method="GET" action="{{ route('admin.hero-sliders.index') }}">
                     <label class="u-a3">Tampilkan:</label>
                     <div class="u-relative">
-                        <select name="per_page" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border:1px solid var(--border);border-radius:8px;font-size:0.9rem;min-width:80px;cursor:pointer;background:white;appearance:none;-webkit-appearance:none;-moz-appearance:none;transition:all 0.2s">
+                        <select name="per_page" class="form-control" style="padding:0.5rem 2.5rem 0.5rem 0.75rem;border-radius:8px;font-size:0.9rem;min-width:80px;cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;transition:all 0.2s">
                             @for($i = 5; $i <= 10; $i++)
                                 <option value="{{ $i }}" {{ $perPage == $i ? 'selected' : '' }}>{{ $i }}</option>
                             @endfor
@@ -301,11 +301,11 @@
 </div>
 
 {{-- Edit Modal --}}
-<div id="editModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:1rem">
-    <div style="background:#fff;border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.2);animation:modalSlideUp 0.3s ease">
-        <div style="padding:1.5rem 1.5rem 1rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f1f5f9">
-            <h3 style="margin:0;font-size:1.25rem;font-weight:700;color:#1e293b">Edit Slide</h3>
-            <button data-action="close-edit-modal" style="background:none;border:none;cursor:pointer;color:#94a3b8;padding:0.5rem;border-radius:8px;transition:all 0.2s;display:flex;align-items:center;justify-content:center">
+<div id="editModal" class="modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:1rem">
+    <div class="modal" style="border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.2);animation:modalSlideUp 0.3s ease">
+        <div class="modal-header" style="padding:1.5rem 1.5rem 1rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)">
+            <h3 class="page-title" style="margin:0;font-size:1.25rem;font-weight:700">Edit Slide</h3>
+            <button data-action="close-edit-modal" class="toggle-btn" style="cursor:pointer;padding:0.5rem;border-radius:8px;transition:all 0.2s;display:flex;align-items:center;justify-content:center">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"/>
                     <line x1="6" y1="6" x2="18" y2="18"/>
@@ -340,7 +340,7 @@
                 </label>
             </div>
 
-            <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem;padding-top:1rem;border-top:1px solid #f1f5f9">
+            <div class="form-actions" style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:0.5rem;padding-top:1rem;border-top:1px solid var(--border)">
                 <button type="button" data-action="close-edit-modal" class="btn btn-cancel">Batal</button>
                 <button type="submit" class="btn btn-primary">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
