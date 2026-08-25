@@ -69,7 +69,6 @@
 /* Table card */
 .dark-mode .card.u-a11 {
     background: var(--bg-card) !important;
-    border-color: var(--border) !important;
 }
 
 /* Filter card */
