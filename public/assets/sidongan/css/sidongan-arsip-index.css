@@ -73,6 +73,19 @@
 html.dark-mode .arsip-row:hover {
     background: rgba(139,92,246,0.08) !important;
 }
+html.dark-mode .arsip-row {
+    border-left-color: transparent;
+}
+
+/* --- Filter Card --- */
+html.dark-mode [style*="background: white"] {
+    background: #1e293b !important;
+}
+html.dark-mode [style*="background:white"] {
+    background: #1e293b !important;
+}
+
+/* --- Pagination --- */
 html.dark-mode .sd-page-btn-white {
     background: #1e293b;
     border-color: #334155;
@@ -80,5 +93,21 @@ html.dark-mode .sd-page-btn-white {
 }
 html.dark-mode .sd-page-btn-white:hover {
     background: #334155;
+}
+
+/* --- Filter Button --- */
+html.dark-mode .filter-btn {
+    background: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+}
+html.dark-mode .filter-btn:hover {
+    background: rgba(255,255,255,0.05);
+    color: #e2e8f0;
+}
+html.dark-mode .filter-btn.active {
+    background: rgba(139,92,246,0.15);
+    color: #a78bfa;
+    border-color: rgba(139,92,246,0.3);
 }
 

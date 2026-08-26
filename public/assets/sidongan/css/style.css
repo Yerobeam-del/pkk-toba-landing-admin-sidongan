@@ -1147,7 +1147,6 @@ html.dark-mode #notificationPopup,
 html.dark-mode .user-menu,
 html.dark-mode .laporan-item,
 html.dark-mode .notif-item,
-html.dark-mode .stats-card,
 html.dark-mode .filter-btn,
 html.dark-mode .card-box,
 html.dark-mode .sd-table-wrap tr,
@@ -1160,7 +1159,7 @@ html.dark-mode .lapor-container {
 }
 
 html.dark-mode .top-header {
-    background: #0f172a;
+    background: #0f172a;
     border-color: rgba(255,255,255,0.08);
 }
 
@@ -1747,11 +1746,111 @@ html.dark-mode .sidebar-section-separator {
 html.dark-mode table {
     background: transparent;
 }
-html.dark-mode thead {
-    background: rgba(20,184,166,0.1) !important;
+/* thead gradient dijaga — JANGAN override background */
+html.dark-mode .sd-doc-table thead {
+    background: linear-gradient(135deg, #0891b2, #14b8a6) !important;
 }
 
 /* stat cards gradient dijaga tetap cerah di dark mode */
+/* (stats-card plural sudah di-exclude dari generic dark mode rule di atas) */
+
+/* --- Avatar borders --- */
+html.dark-mode .sd-action-avatar {
+    border-color: #334155;
+}
+html.dark-mode .sd-action-avatar-placeholder {
+    border-color: #334155;}
+
+/* --- User profile avatar in header --- */
+html.dark-mode .user-profile-btn > div:last-child {
+    border-color: #334155;
+}
+
+/* --- Notification badge border --- */
+html.dark-mode [style*="border: 2px solid white"],
+html.dark-mode [style*="border:2px solid white"] {
+    border-color: #1e293b !important;}
+
+/* --- Quick filter buttons base state --- */
+html.dark-mode .sd-filter-btn {
+    background: #0f172a;
+    color: #94a3b8;
+    border-color: rgba(255,255,255,0.08);
+}
+html.dark-mode .sd-filter-btn:hover {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+/* --- Notification popup inner elements --- */
+html.dark-mode #notificationPopup [style*="background: #eff6ff"] {
+    background: rgba(59,130,246,0.08) !important;
+}
+html.dark-mode #notificationPopup [style*="background:#eff6ff"] {
+    background: rgba(59,130,246,0.08) !important;
+}
+html.dark-mode #notificationPopup [style*="background: #dbeafe"] {
+    background: rgba(59,130,246,0.15) !important;
+}
+html.dark-mode #notificationPopup [style*="background:#dbeafe"] {
+    background: rgba(59,130,246,0.15) !important;
+}
+html.dark-mode #notificationPopup [style*="background: #f0fdf4"] {
+    background: rgba(34,197,94,0.1) !important;
+}
+html.dark-mode #notificationPopup [style*="background:#f0fdf4"] {
+    background: rgba(34,197,94,0.1) !important;
+}
+html.dark-mode #notificationPopup [style*="color: #1e293b"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode #notificationPopup [style*="color:#1e293b"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode #notificationPopup [style*="color: #0f172a"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode #notificationPopup [style*="color:#0f172a"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode #notificationPopup [style*="border-bottom: 1px solid #e2e8f0"] {
+    border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+html.dark-mode #notificationPopup [style*="border-bottom:1px solid #e2e8f0"] {
+    border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+html.dark-mode #notificationPopup [style*="border-bottom: 1px solid #f1f5f9"] {
+    border-bottom-color: rgba(255,255,255,0.05) !important;
+}
+html.dark-mode #notificationPopup [style*="border-bottom:1px solid #f1f5f9"] {
+    border-bottom-color: rgba(255,255,255,0.05) !important;
+}
+html.dark-mode #notificationPopup [style*="color: #2563eb"] {
+    color: #60a5fa !important;
+}
+html.dark-mode #notificationPopup [style*="color:#2563eb"] {
+    color: #60a5fa !important;
+}
+html.dark-mode #notificationPopup [style*="color: #3b82f6"] {
+    color: #60a5fa !important;
+}
+html.dark-mode #notificationPopup [style*="color:#3b82f6"] {
+    color: #60a5fa !important;
+}
+
+/* --- User menu inner elements --- */
+html.dark-mode .user-menu [style*="border-bottom: 1px solid #f1f5f9"] {
+    border-bottom-color: rgba(255,255,255,0.05) !important;
+}
+html.dark-mode .user-menu [style*="border-bottom:1px solid #f1f5f9"] {
+    border-bottom-color: rgba(255,255,255,0.05) !important;
+}
+html.dark-mode .user-menu [style*="color: #334155"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode .user-menu [style*="color:#334155"] {
+    color: #e2e8f0 !important;
+}
 
 /* --- Additional inline style overrides --- */
 html.dark-mode [style*="background: #f8fafc"],

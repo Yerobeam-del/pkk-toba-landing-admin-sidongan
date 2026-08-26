@@ -160,3 +160,17 @@ html.dark-mode .sd-page-btn-white {
 html.dark-mode .sd-page-btn-white:hover {
     background: #334155;
 }
+html.dark-mode .filter-btn {
+    background: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+}
+html.dark-mode .filter-btn:hover {
+    background: rgba(255,255,255,0.05);
+    color: #e2e8f0;
+}
+html.dark-mode .filter-btn.active {
+    background: rgba(249,115,22,0.15);
+    color: #fb923c;
+    border-color: rgba(249,115,22,0.3);
+}
