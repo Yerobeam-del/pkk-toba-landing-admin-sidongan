@@ -58,3 +58,43 @@
         color: #64748b;
     }
 
+    /* ===== DARK MODE ===== */
+    html.dark-mode .quick-action-item {
+        background: #1e293b;
+        border-color: rgba(255,255,255,0.08);
+    }
+    html.dark-mode .quick-action-item:hover {
+        background: #283548;
+        border-color: rgba(255,255,255,0.15);
+    }
+    html.dark-mode .quick-action-title {
+        color: #e2e8f0;
+    }
+    html.dark-mode .quick-action-desc {
+        color: #94a3b8;
+    }
+    /* Icon backgrounds — dark mode */
+    html.dark-mode .quick-action-icon[style*="background: #dbeafe"],
+    html.dark-mode .quick-action-icon[style*="background:#dbeafe"] {
+        background: rgba(59,130,246,0.15) !important;
+    }
+    html.dark-mode .quick-action-icon[style*="background: #ffedd5"],
+    html.dark-mode .quick-action-icon[style*="background:#ffedd5"] {
+        background: rgba(249,115,22,0.15) !important;
+    }
+    html.dark-mode .quick-action-icon[style*="background: #d1fae5"],
+    html.dark-mode .quick-action-icon[style*="background:#d1fae5"] {
+        background: rgba(34,197,94,0.15) !important;
+    }
+    html.dark-mode .quick-action-icon[style*="background: #dcfce7"],
+    html.dark-mode .quick-action-icon[style*="background:#dcfce7"] {
+        background: rgba(34,197,94,0.15) !important;
+    }
+    html.dark-mode .quick-action-icon[style*="background: #f3e8ff"],
+    html.dark-mode .quick-action-icon[style*="background:#f3e8ff"] {
+        background: rgba(139,92,246,0.15) !important;
+    }
+    html.dark-mode .quick-action-icon[style*="background: #fef3c7"],
+    html.dark-mode .quick-action-icon[style*="background:#fef3c7"] {
+        background: rgba(245,158,11,0.15) !important;
+    }

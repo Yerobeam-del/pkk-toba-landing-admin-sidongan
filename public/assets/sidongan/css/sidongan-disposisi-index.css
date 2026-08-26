@@ -137,3 +137,26 @@
 .sd-page-btn-orange:hover {
     background: #ea580c;
 }
+
+/* ============================================================
+   DARK MODE — Disposisi Index
+   ============================================================ */
+html.dark-mode .disposisi-item:hover {
+    background: rgba(249,115,22,0.08);
+}
+html.dark-mode .sd-btn-detail {
+    background: #0f172a;
+    color: #fb923c;
+    border-color: rgba(249,115,22,0.3);
+}
+html.dark-mode .sd-btn-detail:hover {
+    background: rgba(249,115,22,0.1);
+}
+html.dark-mode .sd-page-btn-white {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+html.dark-mode .sd-page-btn-white:hover {
+    background: #334155;
+}

@@ -94,3 +94,17 @@
         }
     }
 
+
+/* ============================================================
+   DARK MODE — Workflow
+   ============================================================ */
+html.dark-mode .workflow-step,
+html.dark-mode .workflow-item {
+    background: #1e293b;
+    border-color: rgba(255,255,255,0.08);
+    color: #e2e8f0;
+}
+html.dark-mode .workflow-step:hover,
+html.dark-mode .workflow-item:hover {
+    background: #283548;
+}

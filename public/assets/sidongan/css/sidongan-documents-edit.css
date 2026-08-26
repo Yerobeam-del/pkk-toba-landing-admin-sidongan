@@ -345,3 +345,25 @@
     outline: none;
     border-color: #3b82f6 !important;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0
+
+/* ============================================================
+   DARK MODE — Documents Edit
+   ============================================================ */
+html.dark-mode .form-content,
+html.dark-mode .form-header,
+html.dark-mode .form-footer {
+    background: #1e293b;
+    border-color: rgba(255,255,255,0.08);
+    color: #e2e8f0;
+}
+html.dark-mode .form-section,
+html.dark-mode .form-card,
+html.dark-mode .form-box {
+    background: #1e293b;
+    border-color: rgba(255,255,255,0.08);
+}
+html.dark-mode label,
+html.dark-mode .form-label,
+html.dark-mode .field-label {
+    color: #e2e8f0;
+}

@@ -67,3 +67,18 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
+/* ============================================================
+   DARK MODE — Arsip Index
+   ============================================================ */
+html.dark-mode .arsip-row:hover {
+    background: rgba(139,92,246,0.08) !important;
+}
+html.dark-mode .sd-page-btn-white {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+html.dark-mode .sd-page-btn-white:hover {
+    background: #334155;
+}
+

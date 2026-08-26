@@ -9,8 +9,8 @@
     <title>Verifikasi Email Pribadi - PKK Kabupaten Toba</title>
 
     {{-- Favicon untuk Tab Browser --}}
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
-    <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
+    <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 

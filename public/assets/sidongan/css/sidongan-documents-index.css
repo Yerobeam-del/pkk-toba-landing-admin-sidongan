@@ -458,3 +458,206 @@ html.dark-mode .sd-bulk-btn-archive { background: rgba(34,197,94,0.1); color: #8
 html.dark-mode .sd-bulk-btn-delete { background: rgba(239,68,68,0.1); color: #fca5a5; border-color: rgba(239,68,68,0.2); }
 html.dark-mode .sd-bulk-btn-cancel { background: rgba(255,255,255,0.05); color: #94a3b8; border-color: rgba(255,255,255,0.08); }
 html.dark-mode .sd-checkbox-box { background: #0f172a; border-color: #475569; }
+
+/* ============================================================
+   DARK MODE — Comprehensive Documents Index Overrides
+   ============================================================ */
+
+/* --- Filter Card --- */
+html.dark-mode .sd-filter-card {
+    background: #1e293b;
+    border-color: rgba(255,255,255,0.08);
+}
+html.dark-mode .sd-filter-input,
+html.dark-mode .sd-filter-select,
+html.dark-mode .sd-filter-date {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-color: rgba(255,255,255,0.1);
+}
+html.dark-mode .sd-filter-row-2 {
+    border-top-color: rgba(255,255,255,0.08);
+}
+
+/* --- Quick Filter Buttons --- */
+html.dark-mode .sd-filter-inactive {
+    background: #0f172a;
+    color: #94a3b8;
+    border-color: rgba(255,255,255,0.08);
+}
+html.dark-mode .sd-filter-active-menunggu {
+    background: rgba(245,158,11,0.15);
+    color: #fbbf24;
+    border-color: rgba(245,158,11,0.3);
+}
+html.dark-mode .sd-filter-active-berjalan {
+    background: rgba(249,115,22,0.15);
+    color: #fb923c;
+    border-color: rgba(249,115,22,0.3);
+}
+html.dark-mode .sd-filter-active-selesai {
+    background: rgba(34,197,94,0.15);
+    color: #4ade80;
+    border-color: rgba(34,197,94,0.3);
+}
+
+/* --- Reset Button --- */
+html.dark-mode .sd-btn-reset-filter {
+    background: #0f172a;
+    color: #94a3b8;
+    border-color: rgba(255,255,255,0.08);
+}
+html.dark-mode .sd-btn-reset-filter:hover {
+    background: #1e293b;
+}
+
+/* --- Sort Indicator --- */
+html.dark-mode .sd-sort-indicator {
+    background: rgba(59,130,246,0.1);
+    border-color: rgba(59,130,246,0.2);
+}
+html.dark-mode .sd-sort-info {
+    color: #93c5fd;
+}
+
+/* --- Table --- */
+html.dark-mode .sd-doc-table td {
+    color: #cbd5e1;
+}
+html.dark-mode .sd-cell-no {
+    color: #94a3b8;
+}
+html.dark-mode .sd-cell-agenda {
+    color: #60a5fa;
+}
+html.dark-mode .sd-cell-subject {
+    color: #e2e8f0;
+}
+html.dark-mode .sd-cell-sender {
+    color: #94a3b8;
+}
+html.dark-mode .sd-cell-text {
+    color: #cbd5e1;
+}
+
+/* --- Status Badges --- */
+html.dark-mode .sd-badge-menunggu {
+    background: rgba(245,158,11,0.15);
+    color: #fbbf24;
+}
+html.dark-mode .sd-badge-berjalan {
+    background: rgba(249,115,22,0.15);
+    color: #fb923c;
+}
+html.dark-mode .sd-badge-verifikasi {
+    background: rgba(59,130,246,0.15);
+    color: #60a5fa;
+}
+html.dark-mode .sd-badge-selesai {
+    background: rgba(34,197,94,0.15);
+    color: #4ade80;
+}
+html.dark-mode .sd-badge-arsip {
+    background: rgba(139,92,246,0.15);
+    color: #a78bfa;
+}
+html.dark-mode .sd-badge-default {
+    background: rgba(255,255,255,0.05);
+    color: #94a3b8;
+}
+
+/* --- Disposisi Chips --- */
+html.dark-mode .sd-dispo-chip {
+    background: rgba(59,130,246,0.15);
+    color: #93c5fd;
+}
+html.dark-mode .sd-dispo-none {
+    color: #64748b;
+}
+
+/* --- Report Cards --- */
+html.dark-mode .sd-report-rejected {
+    background: rgba(239,68,68,0.08);
+    border-color: rgba(239,68,68,0.3);
+}
+html.dark-mode .sd-report-approved {
+    background: rgba(34,197,94,0.08);
+    border-color: rgba(34,197,94,0.3);
+}
+html.dark-mode .sd-report-pending {
+    background: rgba(59,130,246,0.08);
+    border-color: rgba(59,130,246,0.3);
+}
+html.dark-mode .sd-report-none {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.08);
+}
+html.dark-mode .sd-report-tag-red {
+    background: rgba(239,68,68,0.15);
+    color: #fca5a5;
+}
+html.dark-mode .sd-report-tag-green {
+    background: rgba(34,197,94,0.15);
+    color: #4ade80;
+}
+html.dark-mode .sd-report-tag-blue {
+    background: rgba(59,130,246,0.15);
+    color: #60a5fa;
+}
+html.dark-mode .sd-report-user-red { color: #fca5a5; }
+html.dark-mode .sd-report-user-green { color: #4ade80; }
+html.dark-mode .sd-report-user-blue { color: #60a5fa; }
+html.dark-mode .sd-report-note-red { color: #fca5a5; }
+html.dark-mode .sd-no-report { color: #64748b; }
+
+/* --- Verify / Done Notes --- */
+html.dark-mode .sd-verify-note {
+    background: rgba(59,130,246,0.08);
+    border-left-color: #3b82f6;
+}
+html.dark-mode .sd-verify-note-text { color: #60a5fa; }
+html.dark-mode .sd-done-note {
+    background: rgba(34,197,94,0.08);
+    border-left-color: #22c55e;
+}
+html.dark-mode .sd-done-note-text { color: #4ade80; }
+
+/* --- Action Cell --- */
+html.dark-mode .sd-action-user { color: #e2e8f0; }
+html.dark-mode .sd-action-badge {
+    color: inherit;
+}
+html.dark-mode .sd-action-avatar-placeholder {
+    border-color: #1e293b;
+}
+
+/* --- Pagination Footer --- */
+html.dark-mode .sd-pagination-footer {
+    border-top-color: rgba(255,255,255,0.08);
+}
+html.dark-mode .sd-pagination-footer-alt {
+    background: #0f172a;
+    border-top-color: rgba(255,255,255,0.08);
+}
+
+/* --- Empty State --- */
+html.dark-mode .sd-empty-icon-box {
+    background: linear-gradient(135deg, rgba(8,145,178,0.1), rgba(6,182,212,0.05));
+}
+html.dark-mode .sd-empty-title { color: #e2e8f0; }
+html.dark-mode .sd-empty-desc { color: #94a3b8; }
+
+/* --- Page Buttons --- */
+html.dark-mode .sd-page-btn-white {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+html.dark-mode .sd-page-btn-white:hover {
+    background: #334155;
+}
+
+/* --- Create Button --- */
+html.dark-mode .sd-btn-create {
+    box-shadow: 0 4px 12px rgba(8, 145, 178, 0.35);
+}

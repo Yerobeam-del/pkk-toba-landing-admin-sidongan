@@ -62,3 +62,20 @@
         color: #94a3b8;
     }
 
+
+/* ============================================================
+   DARK MODE — Notification Item
+   ============================================================ */
+html.dark-mode .notification-item {
+    background: rgba(59,130,246,0.05);
+    border-bottom-color: rgba(255,255,255,0.05);
+}
+html.dark-mode .notification-item:hover {
+    background: rgba(59,130,246,0.1);
+}
+html.dark-mode .notification-icon {
+    background: rgba(59,130,246,0.15);
+}
+html.dark-mode .notification-message {
+    color: #e2e8f0;
+}

@@ -1755,6 +1755,156 @@ html.dark-mode .stats-card {
     filter: brightness(0.85);
 }
 
+/* --- Additional inline style overrides --- */
+html.dark-mode [style*="background: #f8fafc"],
+html.dark-mode [style*="background:#f8fafc"] {
+    background: #1e293b !important;
+}
+html.dark-mode [style*="background: white"],
+html.dark-mode [style*="background:white"] {
+    background: #1e293b !important;
+}
+html.dark-mode [style*="background: #fff"] {
+    background: #1e293b !important;
+}
+html.dark-mode [style*="background:#fff"] {
+    background: #1e293b !important;
+}
+html.dark-mode [style*="border-bottom: 1px solid #f3f4f6"],
+html.dark-mode [style*="border-bottom:1px solid #f3f4f6"] {
+    border-bottom-color: rgba(255,255,255,0.05) !important;
+}
+html.dark-mode [style*="border-bottom: 1px solid #f1f5f9"],
+html.dark-mode [style*="border-bottom:1px solid #f1f5f9"] {
+    border-bottom-color: rgba(255,255,255,0.05) !important;
+}
+html.dark-mode [style*="border-top: 1px solid #e2e8f0"],
+html.dark-mode [style*="border-top:1px solid #e2e8f0"] {
+    border-top-color: rgba(255,255,255,0.08) !important;
+}
+html.dark-mode [style*="color: #ea580c"] {
+    color: #fb923c !important;
+}
+html.dark-mode [style*="color:#ea580c"] {
+    color: #fb923c !important;
+}
+html.dark-mode [style*="color: #f97316"] {
+    color: #fb923c !important;
+}
+html.dark-mode [style*="color:#f97316"] {
+    color: #fb923c !important;
+}
+html.dark-mode [style*="color: #1e40af"] {
+    color: #93c5fd !important;
+}
+html.dark-mode [style*="color:#1e40af"] {
+    color: #93c5fd !important;
+}
+html.dark-mode [style*="color: #16a34a"] {
+    color: #4ade80 !important;
+}
+html.dark-mode [style*="color:#16a34a"] {
+    color: #4ade80 !important;
+}
+html.dark-mode [style*="color: #065f46"] {
+    color: #4ade80 !important;
+}
+html.dark-mode [style*="color:#065f46"] {
+    color: #4ade80 !important;
+}
+html.dark-mode [style*="color: #92400e"] {
+    color: #fbbf24 !important;
+}
+html.dark-mode [style*="color:#92400e"] {
+    color: #fbbf24 !important;
+}
+html.dark-mode [style*="color: #78350f"] {
+    color: #fde68a !important;
+}
+html.dark-mode [style*="color:#78350f"] {
+    color: #fde68a !important;
+}
+html.dark-mode [style*="color: #991b1b"] {
+    color: #fca5a5 !important;
+}
+html.dark-mode [style*="color:#991b1b"] {
+    color: #fca5a5 !important;
+}
+html.dark-mode [style*="color: #7f1d1d"] {
+    color: #fecaca !important;
+}
+html.dark-mode [style*="color:#7f1d1d"] {
+    color: #fecaca !important;
+}
+html.dark-mode [style*="color: #075985"] {
+    color: #7dd3fc !important;
+}
+html.dark-mode [style*="color:#075985"] {
+    color: #7dd3fc !important;
+}
+html.dark-mode [style*="color: #166534"] {
+    color: #4ade80 !important;
+}
+html.dark-mode [style*="color:#166534"] {
+    color: #4ade80 !important;
+}
+html.dark-mode [style*="color: #6b21a8"] {
+    color: #c4b5fd !important;
+}
+html.dark-mode [style*="color:#6b21a8"] {
+    color: #c4b5fd !important;
+}
+
+/* --- Background gradient overrides for disposisi items --- */
+html.dark-mode [style*="background: linear-gradient(135deg, #fff7ed"] {
+    background: rgba(249,115,22,0.05) !important;
+}
+html.dark-mode [style*="background: linear-gradient(135deg, #f5f3ff"] {
+    background: rgba(139,92,246,0.05) !important;
+}
+html.dark-mode [style*="background: linear-gradient(135deg, #ecfdf5"] {
+    background: rgba(34,197,94,0.05) !important;
+}
+html.dark-mode [style*="background: linear-gradient(135deg, #f0f9ff"] {
+    background: rgba(14,165,233,0.05) !important;
+}
+
+/* --- Background #f0fdf4, #fef3c7, #ffedd5, #dbeafe, #f3e8ff overrides --- */
+html.dark-mode [style*="background: #f0fdf4"],
+html.dark-mode [style*="background:#f0fdf4"] {
+    background: rgba(34,197,94,0.1) !important;
+}
+html.dark-mode [style*="background: #fef3c7"],
+html.dark-mode [style*="background:#fef3c7"] {
+    background: rgba(245,158,11,0.1) !important;
+}
+html.dark-mode [style*="background: #ffedd5"],
+html.dark-mode [style*="background:#ffedd5"] {
+    background: rgba(249,115,22,0.1) !important;
+}
+html.dark-mode [style*="background: #fff7ed"],
+html.dark-mode [style*="background:#fff7ed"] {
+    background: rgba(249,115,22,0.05) !important;
+}
+html.dark-mode [style*="background: #d1fae5"],
+html.dark-mode [style*="background:#d1fae5"] {
+    background: rgba(34,197,94,0.12) !important;
+}
+
+/* --- Box shadow overrides for disposisi items --- */
+html.dark-mode [style*="border-left: 3px solid #f97316"] {
+    border-left-color: #fb923c !important;
+}
+html.dark-mode [style*="border-left:3px solid #f97316"] {
+    border-left-color: #fb923c !important;
+}
+
+/* --- Section separator lines --- */
+html.dark-mode [style*="padding: 1.25rem 1.5rem; border-top: 1px solid #e2e8f0; background: #f8fafc"] {
+    background: #0f172a !important;
+    border-top-color: rgba(255,255,255,0.08) !important;
+}
+
 /* ============================================================
    LOADING STATE
    ============================================================ */

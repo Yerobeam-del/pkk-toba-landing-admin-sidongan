@@ -411,3 +411,26 @@
     justify-content: center;
     width: 2.5rem;
  
+
+/* ============================================================
+   DARK MODE — Lapor Kegiatan Create
+   ============================================================ */
+html.dark-mode .lapor-container,
+html.dark-mode .form-content,
+html.dark-mode .form-header,
+html.dark-mode .form-footer {
+    background: #1e293b;
+    border-color: rgba(255,255,255,0.08);
+    color: #e2e8f0;
+}
+html.dark-mode .form-section,
+html.dark-mode .form-card,
+html.dark-mode .form-box {
+    background: #1e293b;
+    border-color: rgba(255,255,255,0.08);
+}
+html.dark-mode label,
+html.dark-mode .form-label,
+html.dark-mode .field-label {
+    color: #e2e8f0;
+}

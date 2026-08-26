@@ -11,8 +11,8 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         {{-- Favicon untuk Tab Browser --}}
-        <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
-        <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
+        <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

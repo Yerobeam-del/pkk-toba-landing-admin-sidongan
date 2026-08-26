@@ -381,4 +381,66 @@ html.dark-mode .lk-list-container {
 }
 
 html.dark-mode .lk-search-input {
-    background: #0f172
+    background: #0f172a;
+    color: #e2e8f0;
+    border-color: rgba(255,255,255,0.1);
+}
+
+html.dark-mode .lk-item {
+    border-bottom-color: rgba(255,255,255,0.05);
+}
+
+html.dark-mode .lk-item:hover {
+    background: rgba(14,165,233,0.08);
+}
+
+html.dark-mode .lk-doc-title {
+    color: #e2e8f0;
+}
+
+html.dark-mode .lk-meta-row {
+    color: #94a3b8;
+}
+
+html.dark-mode .lk-agenda-badge {
+    background: #0f172a;
+    color: #38bdf8;
+    border: 1px solid rgba(56,189,248,0.2);
+}
+
+html.dark-mode .lk-btn-outline {
+    background: #0f172a;
+    color: #fb923c;
+    border-color: rgba(249,115,22,0.3);
+}
+
+html.dark-mode .lk-btn-outline:hover {
+    background: rgba(249,115,22,0.1);
+}
+
+html.dark-mode .lk-dispo-box {
+    background: rgba(255,255,255,0.03);
+}
+
+html.dark-mode .lk-dispo-icon-box {
+    background: #0f172a;
+    border-color: rgba(255,255,255,0.08);
+}
+
+html.dark-mode .lk-dispo-text {
+    color: #94a3b8;
+}
+
+html.dark-mode .lk-empty-icon-box {
+    background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(2,132,199,0.05));
+}
+
+html.dark-mode .sd-page-btn-white {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+html.dark-mode .sd-page-btn-white:hover {
+    background: #334155;
+}
+
