@@ -1349,7 +1349,8 @@ html.dark-mode .quick-action-card {
 html.dark-mode .quick-action-btn:hover {
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }
-html.dark-mode .stat-card {
+/* stat-card colored gradient bg dijaga, hanya override border */
+html.dark-mode .stat-card:not(.stat-card-blue):not(.stat-card-orange):not(.stat-card-yellow):not(.stat-card-green):not(.stat-card-purple) {
     background: #1e293b;
     border-color: rgba(255,255,255,0.08);
 }
@@ -1750,10 +1751,7 @@ html.dark-mode thead {
     background: rgba(20,184,166,0.1) !important;
 }
 
-/* --- SIDONGAN dark mode stats cards with gradient --- */
-html.dark-mode .stats-card {
-    filter: brightness(0.85);
-}
+/* stat cards gradient dijaga tetap cerah di dark mode */
 
 /* --- Additional inline style overrides --- */
 html.dark-mode [style*="background: #f8fafc"],
