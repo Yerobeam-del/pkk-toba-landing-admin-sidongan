@@ -10,6 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password - Admin Panel PKK Kabupaten Toba</title>
     
+    {{-- Favicon untuk Tab Browser --}}
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
+    <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     

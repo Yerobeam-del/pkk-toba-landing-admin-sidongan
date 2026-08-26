@@ -14,6 +14,14 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg') }}">
     <title>@yield('title', 'SIDONGAN - PKK Kabupaten Toba')</title>
 
+    {{-- Dark Mode: apply class SEBELUM CSS render agar tidak flicker --}}
+    <script>
+    (function(){
+        var k='sidongan-theme',s=localStorage.getItem(k);
+        if(s==='dark'||(s===null&&window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark-mode');}
+    })();
+    </script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -108,20 +116,7 @@
     <!-- SIDONGAN JS -->
     <script src="{{ asset('assets/sidongan/js/app.js') }}"></script>
 
-    {{-- Dark Mode Toggle --}}
-    <script>
-    (function() {
-        var saved = localStorage.getItem('sidongan-theme');
-        if (saved === 'dark') {
-            document.documentElement.classList.add('dark-mode');
-        } else if (!saved) {
-            // Auto-detect prefers-color-scheme
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.classList.add('dark-mode');
-            }
-        }
-    })();
-    </script>
+
 
     @stack('scripts')
 </body>

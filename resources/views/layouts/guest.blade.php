@@ -10,6 +10,10 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        {{-- Favicon untuk Tab Browser --}}
+        <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
+        <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

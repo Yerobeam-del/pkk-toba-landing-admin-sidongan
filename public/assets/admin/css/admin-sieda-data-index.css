@@ -22,4 +22,7 @@
 .dark-mode th{background:#0f172a;color:#94a3b8;border-bottom-color:#334155}
 .dark-mode td{color:#e2e8f0;border-bottom-color:#334155}
 .dark-mode tr:hover td{background:rgba(255,255,255,0.03)}
+.dark-mode .card{background:#1e293b;border-color:#334155;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.dark-mode .btn-outline-primary{border-color:#334155;color:var(--text-muted)}
+.dark-mode .btn-outline-primary:hover{background:rgba(59,130,246,0.1);border-color:#3b82f6;color:#60a5fa}
 

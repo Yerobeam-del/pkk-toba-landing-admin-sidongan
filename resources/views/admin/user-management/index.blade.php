@@ -345,8 +345,9 @@
     {{-- ==========================================
          MODAL: KREDENSIAL AKUN BARU
          ========================================== --}}
-    // ========== BULK ACTIONS ==========
     @if(auth()->user()->hasRole('super_admin'))
+    <script>
+    // ========== BULK ACTIONS ==========
     function initBulkSelection() {
         const selectAll = document.getElementById('selectAll');
         const checkboxes = document.querySelectorAll('.bulk-checkbox');
@@ -415,6 +416,7 @@
         }
     }
     document.addEventListener('DOMContentLoaded', initBulkSelection);
+    </script>
     @endif
 
     @if(session('new_account'))

@@ -1206,163 +1206,163 @@
 /* =========================================
    DARK MODE
    ========================================= */
-body.dark-mode .ds-status-section,
-body.dark-mode .ds-card,
-body.dark-mode .ds-saran-box,
-body.dark-mode .ds-lampiran-box,
-body.dark-mode .ds-lampiran-name,
-body.dark-mode .ds-timeline-title,
-body.dark-mode .ds-timeline-quote,
-body.dark-mode .ds-timeline-note,
-body.dark-mode .ds-disposisi-comment-text {
+html.dark-mode .ds-status-section,
+html.dark-mode .ds-card,
+html.dark-mode .ds-saran-box,
+html.dark-mode .ds-lampiran-box,
+html.dark-mode .ds-lampiran-name,
+html.dark-mode .ds-timeline-title,
+html.dark-mode .ds-timeline-quote,
+html.dark-mode .ds-timeline-note,
+html.dark-mode .ds-disposisi-comment-text {
     background: #1e293b;
     border-color: #334155;
     color: #e2e8f0;
 }
 
-body.dark-mode .ds-subject-title,
-body.dark-mode .ds-card-header h3,
-body.dark-mode .ds-timeline-title,
-body.dark-mode .ds-laporan-name {
+html.dark-mode .ds-subject-title,
+html.dark-mode .ds-card-header h3,
+html.dark-mode .ds-timeline-title,
+html.dark-mode .ds-laporan-name {
     color: #f1f5f9;
 }
 
-body.dark-mode .ds-info-label,
-body.dark-mode .ds-disposisi-label,
-body.dark-mode .ds-disposisi-comment-label,
-body.dark-mode .ds-laporan-date,
-body.dark-mode .ds-laporan-info-label,
-body.dark-mode .ds-disposisi-footer,
-body.dark-mode .ds-timeline-date,
-body.dark-mode .ds-timeline-desc,
-body.dark-mode .ds-timeline-meta,
-body.dark-mode .ds-timeline-note {
+html.dark-mode .ds-info-label,
+html.dark-mode .ds-disposisi-label,
+html.dark-mode .ds-disposisi-comment-label,
+html.dark-mode .ds-laporan-date,
+html.dark-mode .ds-laporan-info-label,
+html.dark-mode .ds-disposisi-footer,
+html.dark-mode .ds-timeline-date,
+html.dark-mode .ds-timeline-desc,
+html.dark-mode .ds-timeline-meta,
+html.dark-mode .ds-timeline-note {
     color: #94a3b8;
 }
 
-body.dark-mode .ds-info-value,
-body.dark-mode .ds-laporan-info-value,
-body.dark-mode .ds-laporan-deskripsi,
-body.dark-mode .ds-timeline-desc strong {
+html.dark-mode .ds-info-value,
+html.dark-mode .ds-laporan-info-value,
+html.dark-mode .ds-laporan-deskripsi,
+html.dark-mode .ds-timeline-desc strong {
     color: #e2e8f0;
 }
 
-body.dark-mode .ds-info-row {
+html.dark-mode .ds-info-row {
     border-bottom-color: #334155;
 }
 
-body.dark-mode .ds-section-title {
+html.dark-mode .ds-section-title {
     color: #22d3ee;
 }
 
-body.dark-mode .ds-role-badge,
-body.dark-mode .ds-disposisi-badge {
+html.dark-mode .ds-role-badge,
+html.dark-mode .ds-disposisi-badge {
     background: #1e3a5f;
     color: #60a5fa;
 }
 
-body.dark-mode .ds-disposisi-action {
+html.dark-mode .ds-disposisi-action {
     background: #2e1065;
     color: #c4b5fd;
 }
 
-body.dark-mode .ds-timeline-line {
+html.dark-mode .ds-timeline-line {
     background: #334155;
 }
 
-body.dark-mode .ds-badge-agenda {
+html.dark-mode .ds-badge-agenda {
     background: #1e3a5f;
     color: #60a5fa;
 }
 
-body.dark-mode .ds-card-header-blue {
+html.dark-mode .ds-card-header-blue {
     background: linear-gradient(135deg, #0c1f3f, #0f2744);
     border-bottom-color: #1e3a5f;
 }
 
-body.dark-mode .ds-card-header-green {
+html.dark-mode .ds-card-header-green {
     background: linear-gradient(135deg, #052e16, #0a3d1a);
     border-bottom-color: #14532d;
 }
 
-body.dark-mode .ds-card-header-orange {
+html.dark-mode .ds-card-header-orange {
     background: linear-gradient(135deg, #3b1a00, #431407);
     border-bottom-color: #7c2d12;
 }
 
-body.dark-mode .ds-verif-detail-success {
+html.dark-mode .ds-verif-detail-success {
     background: #052e16;
     border-left-color: #22c55e;
 }
 
-body.dark-mode .ds-verif-detail-danger {
+html.dark-mode .ds-verif-detail-danger {
     background: #3b0f0f;
     border-left-color: #ef4444;
 }
 
-body.dark-mode .ds-verif-detail-title,
-body.dark-mode .ds-verif-detail-meta {
+html.dark-mode .ds-verif-detail-title,
+html.dark-mode .ds-verif-detail-meta {
     color: #d1fae5;
 }
 
-body.dark-mode .ds-verif-detail-danger .ds-verif-detail-title,
-body.dark-mode .ds-verif-detail-danger .ds-verif-detail-meta {
+html.dark-mode .ds-verif-detail-danger .ds-verif-detail-title,
+html.dark-mode .ds-verif-detail-danger .ds-verif-detail-meta {
     color: #fecaca;
 }
 
-body.dark-mode .ds-laporan-card-menunggu_verifikasi,
-body.dark-mode .ds-laporan-card-disetujui,
-body.dark-mode .ds-laporan-card-ditolak,
-body.dark-mode .ds-laporan-card-draft {
+html.dark-mode .ds-laporan-card-menunggu_verifikasi,
+html.dark-mode .ds-laporan-card-disetujui,
+html.dark-mode .ds-laporan-card-ditolak,
+html.dark-mode .ds-laporan-card-draft {
     background: #1e293b;
 }
 
-body.dark-mode .ds-laporan-card-menunggu_verifikasi { border-color: #7c2d12; }
-body.dark-mode .ds-laporan-card-disetujui { border-color: #14532d; }
-body.dark-mode .ds-laporan-card-ditolak { border-color: #3b0f0f; }
-body.dark-mode .ds-laporan-card-draft { border-color: #1e3a5f; }
+html.dark-mode .ds-laporan-card-menunggu_verifikasi { border-color: #7c2d12; }
+html.dark-mode .ds-laporan-card-disetujui { border-color: #14532d; }
+html.dark-mode .ds-laporan-card-ditolak { border-color: #3b0f0f; }
+html.dark-mode .ds-laporan-card-draft { border-color: #1e3a5f; }
 
-body.dark-mode .ds-laporan-foto-item {
+html.dark-mode .ds-laporan-foto-item {
     border-color: #334155;
 }
 
-body.dark-mode .ds-disposisi-comment {
+html.dark-mode .ds-disposisi-comment {
     background: #0f172a;
     border-left-color: #475569;
 }
 
-body.dark-mode .ds-no-attachment-text {
+html.dark-mode .ds-no-attachment-text {
     color: #94a3b8;
 }
 
-body.dark-mode .ds-no-attachment-icon {
+html.dark-mode .ds-no-attachment-icon {
     color: #475569;
 }
 
-body.dark-mode .ds-text-muted {
+html.dark-mode .ds-text-muted {
     color: #64748b;
 }
 
-body.dark-mode .ds-laporan-lokasi-box {
+html.dark-mode .ds-laporan-lokasi-box {
     background: #1e293b;
 }
 
-body.dark-mode .ds-laporan-deskripsi {
+html.dark-mode .ds-laporan-deskripsi {
     background: #0f172a;
     color: #cbd5e1;
 }
 
-body.dark-mode .ds-timeline-note-success,
-body.dark-mode .ds-timeline-note-danger {
+html.dark-mode .ds-timeline-note-success,
+html.dark-mode .ds-timeline-note-danger {
     background: #0f172a;
 }
 
-body.dark-mode .ds-timeline-note-success {
+html.dark-mode .ds-timeline-note-success {
     border-left-color: #22c55e;
     color: #86efac;
 }
 
-body.dark-mode .ds-timeline-note-danger {
+html.dark-mode .ds-timeline-note-danger {
     border-left-color: #ef4444;
     color: #fca5a5;
 }

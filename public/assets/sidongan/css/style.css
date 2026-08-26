@@ -1567,6 +1567,195 @@ html.dark-mode .loading-spinner-overlay {
 }
 
 /* ============================================================
+   INLINE STYLE OVERRIDES — Dark Mode
+   Memaksa hardcoded colors di inline styles jadi gelap
+   ============================================================ */
+
+/* --- White/light backgrounds --- */
+html.dark-mode [style*="background: white"],
+html.dark-mode [style*="background:white"] {
+    background: #1e293b !important;
+}
+html.dark-mode [style*="background: #fff"],
+html.dark-mode [style*="background:#fff"] {
+    background: #1e293b !important;
+}
+html.dark-mode [style*="background:#f1f5f9"] {
+    background: #334155 !important;
+}
+html.dark-mode [style*="background: #f1f5f9"] {
+    background: #334155 !important;
+}
+html.dark-mode [style*="background:#fef2f2"] {
+    background: rgba(239,68,68,0.12) !important;
+}
+html.dark-mode [style*="background:#fef3c7"] {
+    background: rgba(245,158,11,0.1) !important;
+}
+html.dark-mode [style*="background:#dbeafe"] {
+    background: rgba(59,130,246,0.12) !important;
+}
+html.dark-mode [style*="background: #dbeafe"] {
+    background: rgba(59,130,246,0.12) !important;
+}
+html.dark-mode [style*="background:#f3e8ff"] {
+    background: rgba(139,92,246,0.12) !important;
+}
+html.dark-mode [style*="background: #f3e8ff"] {
+    background: rgba(139,92,246,0.12) !important;
+}
+html.dark-mode [style*="background:#eff6ff"] {
+    background: rgba(59,130,246,0.1) !important;
+}
+html.dark-mode [style*="background: #eff6ff"] {
+    background: rgba(59,130,246,0.1) !important;
+}
+html.dark-mode [style*="background:#fecaca"] {
+    background: rgba(239,68,68,0.15) !important;
+}
+
+/* --- Dark text colors → light --- */
+html.dark-mode [style*="color: #0f172a"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode [style*="color:#0f172a"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode [style*="color: #1e293b"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode [style*="color:#1e293b"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode [style*="color: #334155"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode [style*="color:#334155"] {
+    color: #e2e8f0 !important;
+}
+html.dark-mode [style*="color: #475569"] {
+    color: #94a3b8 !important;
+}
+html.dark-mode [style*="color:#475569"] {
+    color: #94a3b8 !important;
+}
+html.dark-mode [style*="color: #64748b"] {
+    color: #94a3b8 !important;
+}
+html.dark-mode [style*="color:#64748b"] {
+    color: #94a3b8 !important;
+}
+html.dark-mode [style*="color: #94a3b8"] {
+    color: #94a3b8 !important;
+}
+
+/* --- Red/danger text --- */
+html.dark-mode [style*="color: #991b1b"] {
+    color: #fca5a5 !important;
+}
+html.dark-mode [style*="color:#991b1b"] {
+    color: #fca5a5 !important;
+}
+html.dark-mode [style*="color: #7f1d1d"] {
+    color: #fecaca !important;
+}
+html.dark-mode [style*="color:#7f1d1d"] {
+    color: #fecaca !important;
+}
+html.dark-mode [style*="color: #92400e"] {
+    color: #fbbf24 !important;
+}
+html.dark-mode [style*="color:#92400e"] {
+    color: #fbbf24 !important;
+}
+html.dark-mode [style*="color: #78350f"] {
+    color: #fde68a !important;
+}
+html.dark-mode [style*="color:#78350f"] {
+    color: #fde68a !important;
+}
+
+/* --- Green/success text --- */
+html.dark-mode [style*="color: #166534"] {
+    color: #4ade80 !important;
+}
+html.dark-mode [style*="color:#166534"] {
+    color: #4ade80 !important;
+}
+html.dark-mode [style*="color: #059669"] {
+    color: #34d399 !important;
+}
+
+/* --- Blue/info text --- */
+html.dark-mode [style*="color: #1e40af"] {
+    color: #93c5fd !important;
+}
+html.dark-mode [style*="color:#1e40af"] {
+    color: #93c5fd !important;
+}
+html.dark-mode [style*="color: #0c4a6e"] {
+    color: #7dd3fc !important;
+}
+html.dark-mode [style*="color:#0c4a6e"] {
+    color: #7dd3fc !important;
+}
+
+/* --- Purple text --- */
+html.dark-mode [style*="color: #7c3aed"] {
+    color: #c4b5fd !important;
+}
+html.dark-mode [style*="color:#7c3aed"] {
+    color: #c4b5fd !important;
+}
+html.dark-mode [style*="color: #6d28d9"] {
+    color: #a78bfa !important;
+}
+
+/* --- Border colors --- */
+html.dark-mode [style*="border: 1px solid #e2e8f0"] {
+    border-color: #334155 !important;
+}
+html.dark-mode [style*="border:1px solid #e2e8f0"] {
+    border-color: #334155 !important;
+}
+html.dark-mode [style*="border: 1px solid #fecaca"] {
+    border-color: rgba(239,68,68,0.3) !important;
+}
+html.dark-mode [style*="border: 1px solid #fed7aa"] {
+    border-color: rgba(249,115,22,0.3) !important;
+}
+html.dark-mode [style*="border: 1px solid #bfdbfe"] {
+    border-color: rgba(59,130,246,0.3) !important;
+}
+html.dark-mode [style*="border: 1px solid #bbf7d0"] {
+    border-color: rgba(34,197,94,0.3) !important;
+}
+
+/* --- Notification popup --- */
+html.dark-mode #notificationPopup {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+/* --- Sidebar section separator --- */
+html.dark-mode .sidebar-section-separator {
+    border-top-color: #334155;
+}
+
+/* --- Table wrap for all sidongan tables --- */
+html.dark-mode table {
+    background: transparent;
+}
+html.dark-mode thead {
+    background: rgba(20,184,166,0.1) !important;
+}
+
+/* --- SIDONGAN dark mode stats cards with gradient --- */
+html.dark-mode .stats-card {
+    filter: brightness(0.85);
+}
+
+/* ============================================================
    LOADING STATE
    ============================================================ */
 button:disabled {

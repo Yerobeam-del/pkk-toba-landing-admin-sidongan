@@ -374,11 +374,11 @@
 /* =========================================
    DARK MODE
    ========================================= */
-body.dark-mode .lk-filter-card,
-body.dark-mode .lk-list-container {
+html.dark-mode .lk-filter-card,
+html.dark-mode .lk-list-container {
     background: #1e293b;
     border-color: #334155;
 }
 
-body.dark-mode .lk-search-input {
+html.dark-mode .lk-search-input {
     background: #0f172

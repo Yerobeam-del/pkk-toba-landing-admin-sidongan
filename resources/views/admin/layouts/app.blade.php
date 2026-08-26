@@ -11,11 +11,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Panel - PKK Kabupaten Toba')</title>
 
-    {{-- Favicon untuk Tab Browser (Format SVG) - Theme Aware --}}
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel-ThemeAware.svg') }}">
+    {{-- Favicon untuk Tab Browser --}}
+    <link rel="icon" type="image/svg+xml" id="favicon" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
+    <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
 
-    {{-- Fallback untuk browser lama yang tidak mendukung SVG --}}
-    <link rel="alternate icon" type="image/png" href="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}">
+    {{-- Dark Mode: apply class SEBELUM CSS render agar tidak flicker --}}
+    <script>
+    (function(){
+        var k='admin-dark-mode',s=localStorage.getItem(k);
+        if(s==='true'||(s===null&&window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark-mode');}
+    })();
+    </script>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -316,41 +322,43 @@
     {{-- Shared functions: checkbox, password, email check, form loading --}}
     <script src="{{ asset('assets/admin/js/admin-shared.js') }}"></script>
 
-    {{-- Dark Mode Toggle — respects saved choice, then prefers-color-scheme, defaults to light --}}
+    {{-- Dark Mode Toggle — toggle button + icon + favicon (class sudah diaplikasikan di <head>) --}}
     <script>
     (function() {
         var STORAGE_KEY = 'admin-dark-mode';
         var html = document.documentElement;
         var toggle = document.getElementById('darkModeToggle');
         var icon = document.getElementById('darkModeIcon');
+        var favicon = document.getElementById('favicon');
 
         var SUN_SVG = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
         var MOON_SVG = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+        var FAVICON_LIGHT = '{{ asset("assets/admin/images/favicon-admin.svg") }}';
+        var FAVICON_DARK = '{{ asset("assets/admin/images/favicon-admin-dark.svg") }}';
+
+        var isDark = html.classList.contains('dark-mode');
+
+        // Sync icon & favicon (class sudah ada dari <head> script)
+        if (icon) icon.innerHTML = isDark ? SUN_SVG : MOON_SVG;
+        if (favicon) favicon.href = isDark ? FAVICON_DARK : FAVICON_LIGHT;
 
         function setTheme(dark) {
+            isDark = dark;
             if (dark) {
                 html.classList.add('dark-mode');
                 if (icon) icon.innerHTML = SUN_SVG;
+                if (favicon) favicon.href = FAVICON_DARK;
             } else {
                 html.classList.remove('dark-mode');
                 if (icon) icon.innerHTML = MOON_SVG;
+                if (favicon) favicon.href = FAVICON_LIGHT;
             }
-        }
-
-        // 1. If user has saved a preference, use it.
-        // 2. Otherwise, follow the OS preference.
-        var saved = localStorage.getItem(STORAGE_KEY);
-        if (saved !== null) {
-            setTheme(saved === 'true');
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setTheme(true);
         }
 
         // Toggle button
         if (toggle) {
             toggle.addEventListener('click', function() {
-                var isDark = !html.classList.contains('dark-mode');
-                setTheme(isDark);
+                setTheme(!html.classList.contains('dark-mode'));
                 localStorage.setItem(STORAGE_KEY, isDark);
             });
         }

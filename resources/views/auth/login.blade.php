@@ -10,11 +10,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Admin Panel</title>
 
-    {{-- Favicon untuk Tab Browser (Format SVG) - Theme Aware --}}
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel-ThemeAware.svg') }}">
-
-    {{-- Fallback untuk browser lama yang tidak mendukung SVG --}}
-    <link rel="alternate icon" type="image/png" href="{{ asset('assets/admin/images/Logo-PKK-Transparent.png') }}">
+    {{-- Favicon untuk Tab Browser --}}
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
+    <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/favicon-admin.svg') }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 

@@ -383,27 +383,35 @@ tr:hover td { background: #fafbfc; }
 }
 
 /* stat-card default bg only when no colored class present */
-.dark-mode .stat-card:not(.u-badge-blue):not(.u-badge-green-solid):not(.um-stat-red):not(.um-stat-purple):not(.u-a29) {
+.dark-mode .stat-card:not(.u-badge-blue):not(.u-badge-green-solid):not(.um-stat-red):not(.um-stat-purple):not(.u-a29):not(.dash-stat-blue):not(.dash-stat-green):not(.dash-stat-orange):not(.dash-stat-red):not(.dash-stat-purple):not(.dash-stat-teal) {
   background: var(--card-bg);
   border-color: var(--border);
   color: var(--text-dark);
 }
 
 /* Dark mode: tint colored stat cards slightly darker */
-.dark-mode .stat-card.u-badge-blue {
+.dark-mode .stat-card.u-badge-blue,
+.dark-mode .stat-card.dash-stat-blue {
   background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
 }
-.dark-mode .stat-card.u-badge-green-solid {
+.dark-mode .stat-card.u-badge-green-solid,
+.dark-mode .stat-card.dash-stat-green {
   background: linear-gradient(135deg, #16a34a, #15803d) !important;
 }
-.dark-mode .stat-card.u-a29 {
-  background: linear-gradient(135deg, #b45309, #92400e) !important;
+.dark-mode .stat-card.u-a29,
+.dark-mode .stat-card.dash-stat-orange {
+  background: linear-gradient(135deg, #c2410c, #9a3412) !important;
 }
-.dark-mode .stat-card.um-stat-red {
-  background: linear-gradient(135deg, #991b1b, #7f1d1d);
+.dark-mode .stat-card.um-stat-red,
+.dark-mode .stat-card.dash-stat-red {
+  background: linear-gradient(135deg, #991b1b, #7f1d1d) !important;
 }
-.dark-mode .stat-card.um-stat-purple {
-  background: linear-gradient(135deg, #6b21a8, #581c87);
+.dark-mode .stat-card.um-stat-purple,
+.dark-mode .stat-card.dash-stat-purple {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+}
+.dark-mode .stat-card.dash-stat-teal {
+  background: linear-gradient(135deg, #0d9488, #115e59) !important;
 }
 .dark-mode .stat-card[style*="linear-gradient"] {
   filter: brightness(0.85);
@@ -426,11 +434,23 @@ tr:hover td { background: #fafbfc; }
 .stat-card.um-stat-red .u-subtitle,
 .stat-card.um-stat-purple .u-subtitle,
 .stat-card.u-a29 .u-subtitle,
+.stat-card.dash-stat-blue .u-subtitle,
+.stat-card.dash-stat-green .u-subtitle,
+.stat-card.dash-stat-orange .u-subtitle,
+.stat-card.dash-stat-red .u-subtitle,
+.stat-card.dash-stat-purple .u-subtitle,
+.stat-card.dash-stat-teal .u-subtitle,
 .stat-card.u-badge-blue .u-caption,
 .stat-card.u-badge-green-solid .u-caption,
 .stat-card.um-stat-red .u-caption,
 .stat-card.um-stat-purple .u-caption,
-.stat-card.u-a29 .u-caption {
+.stat-card.u-a29 .u-caption,
+.stat-card.dash-stat-blue .u-caption,
+.stat-card.dash-stat-green .u-caption,
+.stat-card.dash-stat-orange .u-caption,
+.stat-card.dash-stat-red .u-caption,
+.stat-card.dash-stat-purple .u-caption,
+.stat-card.dash-stat-teal .u-caption {
   color: rgba(255,255,255,0.85);
 }
 
@@ -793,9 +813,14 @@ tr:hover td { background: #fafbfc; }
   background: rgba(15,23,42,0.8);
 }
 
-/* --- Struktur specific --- */
-.dark-mode .struktur-header {
-  background: var(--card-bg);
+/* --- Struktur / page header specific --- */
+.dark-mode .struktur-header,
+.dark-mode .berita-header,
+.dark-mode .aplikasi-header,
+.dark-mode .template-header,
+.dark-mode .sk-header,
+.dark-mode .sidongan-header {
+  background: transparent;
 }
 
 /* ==========================================
@@ -1233,6 +1258,211 @@ tr:hover td { background: #fafbfc; }
 }
 .dark-mode .ck-editor__top {
   border-bottom-color: #334155 !important;
+}
+
+/* =============================================
+   SIEDA DATA — Danger zone dark mode
+   ============================================= */
+.dark-mode .sieda-danger-zone {
+  background: rgba(127,29,29,0.15) !important;
+  border-color: rgba(239,68,68,0.3) !important;
+  border-left-color: #dc2626 !important;
+}
+.dark-mode .sieda-danger-zone strong {
+  color: #fca5a5 !important;
+}
+.dark-mode .sieda-danger-zone p {
+  color: #fca5a5 !important;
+}
+.dark-mode .sieda-danger-btn {
+  background: linear-gradient(135deg, #dc2626, #991b1b) !important;
+}
+
+/* =============================================
+   TABLE — Remove card border wrapper
+   ============================================= */
+.dark-mode .struktur-card .table-container,
+.dark-mode [class*="card"] .u-p-0 {
+  background: transparent !important;
+}
+
+/* =============================================
+   MODAL CONFIRM DELETE — dark mode text visibility
+   ============================================= */
+.dark-mode .confirm-modal-body,
+.dark-mode .confirm-modal-body * {
+  color: var(--text-dark) !important;
+}
+
+/* =============================================
+   WARNING/INFO BOXES — dark mode
+   ============================================= */
+.dark-mode [style*="background:#fffbeb"] {
+  background: rgba(245,158,11,0.1) !important;
+  border-color: rgba(245,158,11,0.3) !important;
+}
+.dark-mode [style*="background:#fef2f2"] {
+  background: rgba(239,68,68,0.1) !important;
+  border-color: rgba(239,68,68,0.3) !important;
+}
+.dark-mode [style*="background:#f0fdf4"] {
+  background: rgba(34,197,94,0.1) !important;
+  border-color: rgba(34,197,94,0.3) !important;
+}
+.dark-mode [style*="background:#ecfdf5"] {
+  background: rgba(34,197,94,0.1) !important;
+}
+.dark-mode [style*="background:#f8fafc"] {
+  background: #0f172a !important;
+}
+.dark-mode [style*="background:#f1f5f9"] {
+  background: #334155 !important;
+}
+.dark-mode [style*="background:#eff6ff"] {
+  background: rgba(59,130,246,0.1) !important;
+}
+.dark-mode [style*="background:#e0f2fe"] {
+  background: rgba(59,130,246,0.15) !important;
+}
+.dark-mode [style*="background:#fef3c7"] {
+  background: rgba(245,158,11,0.1) !important;
+}
+.dark-mode [style*="background:#fee2e2"] {
+  background: rgba(239,68,68,0.15) !important;
+}
+.dark-mode [style*="background:white"] {
+  background: var(--card-bg) !important;
+}
+.dark-mode [style*="background: white"] {
+  background: var(--card-bg) !important;
+}
+.dark-mode [style*="background:#fff"] {
+  background: var(--card-bg) !important;
+}
+.dark-mode [style*="background: #fff"] {
+  background: var(--card-bg) !important;
+}
+
+/* =============================================
+   DARK TEXT COLORS → light for dark mode
+   ============================================= */
+.dark-mode [style*="color:#991b1b"] {
+  color: #fca5a5 !important;
+}
+.dark-mode [style*="color:#7f1d1d"] {
+  color: #fecaca !important;
+}
+.dark-mode [style*="color:#dc2626"] {
+  color: #f87171 !important;
+}
+.dark-mode [style*="color:#b91c1c"] {
+  color: #fca5a5 !important;
+}
+.dark-mode [style*="color:#92400e"] {
+  color: #fbbf24 !important;
+}
+.dark-mode [style*="color:#78350f"] {
+  color: #fde68a !important;
+}
+.dark-mode [style*="color:#065f46"] {
+  color: #6ee7b7 !important;
+}
+.dark-mode [style*="color:#064e3b"] {
+  color: #a7f3d0 !important;
+}
+.dark-mode [style*="color:#1e40af"] {
+  color: #93c5fd !important;
+}
+.dark-mode [style*="color:#334155"] {
+  color: var(--text-dark) !important;
+}
+.dark-mode [style*="color:#1e293b"] {
+  color: var(--text-dark) !important;
+}
+.dark-mode [style*="color:#64748b"] {
+  color: var(--text-muted) !important;
+}
+.dark-mode [style*="color:#166534"] {
+  color: #4ade80 !important;
+}
+.dark-mode [style*="color:#16a34a"] {
+  color: #4ade80 !important;
+}
+.dark-mode [style*="color:#22c55e"] {
+  color: #4ade80 !important;
+}
+.dark-mode [style*="color:#0369a1"] {
+  color: #7dd3fc !important;
+}
+.dark-mode [style*="color:#6b21a8"] {
+  color: #c4b5fd !important;
+}
+.dark-mode [style*="color:#d97706"] {
+  color: #fbbf24 !important;
+}
+
+/* =============================================
+   BORDER COLORS — dark mode
+   ============================================= */
+.dark-mode [style*="border:1px solid #e2e8f0"] {
+  border-color: #334155 !important;
+}
+.dark-mode [style*="border:1px solid #bbf7d0"] {
+  border-color: rgba(34,197,94,0.3) !important;
+}
+.dark-mode [style*="border:2px solid #e2e8f0"] {
+  border-color: #334155 !important;
+}
+.dark-mode [style*="border:2px dashed #e2e8f0"] {
+  border-color: #334155 !important;
+}
+
+/* =============================================
+   GRAY BUTTON BACKGROUNDS — dark mode
+   ============================================= */
+.dark-mode [style*="background:#f1f5f9;color:#475569"] {
+  background: #334155 !important;
+  color: var(--text-muted) !important;
+}
+.dark-mode [style*="background:#f0fdf4;color:#166534"] {
+  background: rgba(34,197,94,0.15) !important;
+  color: #4ade80 !important;
+}
+.dark-mode [style*="background:#f0fdf4;color:#16a34a"] {
+  background: rgba(34,197,94,0.15) !important;
+  color: #4ade80 !important;
+}
+
+/* =============================================
+   TABLE — card internal backgrounds
+   ============================================= */
+.dark-mode .card table,
+.dark-mode .card th,
+.dark-mode .card td {
+  background: transparent !important;
+  color: var(--text-dark) !important;
+}
+.dark-mode .card th {
+  color: var(--text-muted) !important;
+}
+.dark-mode .card table tr {
+  border-bottom-color: #334155 !important;
+}
+
+/* =============================================
+   FORM INPUTS — hardcoded white bg
+   ============================================= */
+.dark-mode input[style*="background:#f8fafc"],
+.dark-mode select[style*="background:#fff"],
+.dark-mode select[style*="background:white"] {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: var(--text-dark) !important;
+}
+.dark-mode textarea[style*="background:#fff"] {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: var(--text-dark) !important;
 }
 
 /* Dikembangkan oleh Institut Teknologi Del */
