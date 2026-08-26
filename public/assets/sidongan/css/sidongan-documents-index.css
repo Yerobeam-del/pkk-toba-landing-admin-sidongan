@@ -26,24 +26,13 @@
     font-size: 0.95rem;
 }
 
-/* === STATS GRID === */
-.sd-stats-grid {
+/* === STATS GRID — uses dashboard stat-card component === */
+.stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
-.sd-stats-grid .stats-card {
-    border-radius: 1rem;
-    padding: 1.5rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-}
-.sd-stats-total { background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); }
-.sd-stats-selesai { background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2); }
-.sd-stats-berjalan { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2); }
-.sd-stats-menunggu { background: linear-gradient(135deg, #eab308, #ca8a04); box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2); }
 
 /* === FILTER CARD === */
 .sd-filter-card {

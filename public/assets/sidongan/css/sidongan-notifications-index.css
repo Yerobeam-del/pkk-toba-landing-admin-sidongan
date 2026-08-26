@@ -9,30 +9,12 @@
     margin: 0 auto;
 }
 
-/* === STATS CARD === */
-.sd-notif-stats {
-    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.sd-notif-stats:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(249, 115, 22, 0.2); }
-.sd-notif-stats-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    z-index: 1;
-}
-.sd-notif-stats-icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    stroke: white;
+/* === STATS GRID — uses dashboard stat-card component === */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 /* === MARK ALL READ BUTTON === */
@@ -212,4 +194,4 @@ html.dark-mode .sd-notif-time { color: #64748b; }
 html.dark-mode .sd-notif-mark-all { background: rgba(255,255,255,0.05); border-color: rgba(249,115,22,0.3); }
 html.dark-mode .sd-notif-empty-title { color: #e2e8f0; }
 html.dark-mode .sd-notif-empty-desc { color: #94a3b8; }
-html.dark-mode .sd-notif-stats { background: linear-gradient(135deg, #c2410c, #9a3412); }
+/* Old .sd-notif-stats dark mode removed — now using dashboard stat-card component */

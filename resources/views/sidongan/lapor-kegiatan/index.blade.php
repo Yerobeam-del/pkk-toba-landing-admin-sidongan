@@ -20,82 +20,34 @@
     </div>
 
     {{-- Stats Cards --}}
-    <div class="lk-stats-grid">
-        {{-- Perlu Dilaporkan - BIRU --}}
-        <div class="stats-card animate-slide-in lk-stat-card lk-stat-blue">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-tasks u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1"><p class="u-a7">
-                         Perlu Dilaporkan
-                     </p>
-                    <p class="u-a8">
-                        {{ $perluDilaporkan ?? 0 }}
-                    </p>
-                </div>
-            </div>
-        </div>
+    <div class="stats-grid">
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Perlu Dilaporkan',
+            'value' => $perluDilaporkan ?? 0,
+            'icon' => 'fa-tasks',
+            'color' => 'blue'
+        ])
         
-        {{-- Menunggu Verifikasi - ORANGE --}}
-        <div class="stats-card animate-slide-in lk-stat-card lk-stat-orange">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-clock u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1"><p class="u-a7">
-                         Menunggu Verifikasi
-                     </p>
-                    <p class="u-a8">
-                        {{ $menungguVerifikasi ?? 0 }}
-                    </p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Menunggu Verifikasi',
+            'value' => $menungguVerifikasi ?? 0,
+            'icon' => 'fa-clock',
+            'color' => 'orange'
+        ])
         
-        {{-- Disetujui - HIJAU --}}
-        <div class="stats-card animate-slide-in lk-stat-card lk-stat-green">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-check-circle u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1"><p class="u-a7">
-                         Disetujui
-                     </p>
-                    <p class="u-a8">
-                        {{ $disetujui ?? 0 }}
-                    </p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Disetujui',
+            'value' => $disetujui ?? 0,
+            'icon' => 'fa-check-circle',
+            'color' => 'green'
+        ])
         
-        {{-- Ditolak - MERAH --}}
-        <div class="stats-card animate-slide-in lk-stat-card lk-stat-red">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-times-circle u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1"><p class="u-a7">
-                         Ditolak
-                     </p>
-                    <p class="u-a8">
-                        {{ $ditolak ?? 0 }}
-                    </p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Ditolak',
+            'value' => $ditolak ?? 0,
+            'icon' => 'fa-times-circle',
+            'color' => 'red'
+        ])
     </div>
 
     {{-- Filter Section --}}

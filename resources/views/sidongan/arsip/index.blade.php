@@ -129,53 +129,27 @@
         $arsipTahunIni = $arsipTahunIniQuery->count();
     @endphp
 
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
-        {{-- Total Arsip - UNGU --}}
-        <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-md">
-                    <i class="fas fa-archive u-text-1xl"></i>
-                </div>
-                <div>
-                    <p class="u-subtitle-sm">Total Arsip</p>
-                    <p class="u-a76">{{ $totalArsip ?? 0 }}</p>
-                </div>
-            </div>
-        </div>
+    <div class="stats-grid">
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Total Arsip',
+            'value' => $totalArsip ?? 0,
+            'icon' => 'fa-archive',
+            'color' => 'purple'
+        ])
         
-        {{-- Arsip Bulan Ini - HIJAU --}}
-        <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-md">
-                    <i class="fas fa-calendar-check u-text-1xl"></i>
-                </div>
-                <div>
-                    <p class="u-subtitle-sm">Arsip Bulan Ini</p>
-                    <p class="u-a76">{{ $arsipBulanIni ?? 0 }}</p>
-                    <p style="font-size: 0.75rem; opacity: 0.9; margin: 0.25rem 0 0 0;">{{ $statsPeriodText }}</p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Arsip Bulan Ini',
+            'value' => $arsipBulanIni ?? 0,
+            'icon' => 'fa-calendar-check',
+            'color' => 'green'
+        ])
         
-        {{-- Arsip Tahun Ini - ORANGE --}}
-        <div class="stats-card animate-slide-in" style="background: linear-gradient(135deg, #f97316, #ea580c); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-md">
-                    <i class="fas fa-calendar-alt u-text-1xl"></i>
-                </div>
-                <div>
-                    <p class="u-subtitle-sm">Arsip Tahun Ini</p>
-                    <p class="u-a76">{{ $arsipTahunIni ?? 0 }}</p>
-                    <p style="font-size: 0.75rem; opacity: 0.9; margin: 0.25rem 0 0 0;">{{ $filterYear ?? now()->format('Y') }}</p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Arsip Tahun Ini',
+            'value' => $arsipTahunIni ?? 0,
+            'icon' => 'fa-calendar-alt',
+            'color' => 'orange'
+        ])
     </div>
 
     {{-- Filter Section --}}

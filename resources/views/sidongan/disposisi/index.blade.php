@@ -20,72 +20,27 @@
     </div>
 
     {{-- Stats Cards --}}
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
-        {{-- Menunggu Disposisi - WARNA ORANGE --}}
-        <div class="stats-card animate-slide-in" 
-             style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-hourglass-half u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1">
-                    <p class="u-a7">
-                        Menunggu Disposisi
-                    </p>
-                    <p class="u-a8">
-                        {{ $documents->total() ?? 0 }}
-                    </p>
-                </div>
-            </div>
-        </div>
+    <div class="stats-grid">
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Menunggu Disposisi',
+            'value' => $documents->total() ?? 0,
+            'icon' => 'fa-hourglass-half',
+            'color' => 'orange'
+        ])
         
-        {{-- Sudah Didisposisi - WARNA HIJAU --}}
-        <div class="stats-card animate-slide-in" 
-             style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-check-circle u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1">
-                    <p class="u-a7">
-                        Sudah Didisposisi
-                    </p>
-                    <p class="u-a8">
-                        {{ \App\Models\Document::where('status', 'berjalan')->count() }}
-                    </p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Sudah Didisposisi',
+            'value' => \App\Models\Document::where('status', 'berjalan')->count(),
+            'icon' => 'fa-check-circle',
+            'color' => 'green'
+        ])
         
-        {{-- Total Surat Bulan Ini - WARNA BIRU --}}
-        <div class="stats-card animate-slide-in" 
-             style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-calendar-check u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1">
-                    <p class="u-a7">
-                        Surat Bulan Ini
-                    </p>
-                    <p class="u-a8">
-                        {{ \App\Models\Document::whereMonth('created_at', now()->month)->count() }}
-                    </p>
-                    <p style="font-size: 0.8rem; opacity: 0.9; margin: 0.25rem 0 0 0; font-weight: 500;">
-                        {{ now()->locale('id')->translatedFormat('F Y') }}
-                    </p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Surat Bulan Ini',
+            'value' => \App\Models\Document::whereMonth('created_at', now()->month)->count(),
+            'icon' => 'fa-calendar-check',
+            'color' => 'blue'
+        ])
     </div>
 
     {{-- Filter Section --}}

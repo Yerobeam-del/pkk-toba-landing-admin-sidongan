@@ -20,69 +20,27 @@
     </div>
 
     {{-- Stats Cards --}}
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
-        {{-- Menunggu Verifikasi - UNGU --}}
-        <div class="stats-card animate-slide-in" 
-            style="background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-clock u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1">
-                    <p class="u-a7">
-                        Menunggu Verifikasi
-                    </p>
-                    <p class="u-a8">
-                        {{ $documents->where('status', 'menunggu_verifikasi')->count() }}
-                    </p>
-                </div>
-            </div>
-        </div>
+    <div class="stats-grid">
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Menunggu Verifikasi',
+            'value' => $documents->where('status', 'menunggu_verifikasi')->count(),
+            'icon' => 'fa-clock',
+            'color' => 'purple'
+        ])
         
-        {{-- Disetujui - HIJAU --}}
-        <div class="stats-card animate-slide-in" 
-            style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-check-circle u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1">
-                    <p class="u-a7">
-                        Disetujui
-                    </p>
-                    <p class="u-a8">
-                        {{ $documents->where('status', 'disetujui')->count() }}
-                    </p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Disetujui',
+            'value' => $documents->where('status', 'disetujui')->count(),
+            'icon' => 'fa-check-circle',
+            'color' => 'green'
+        ])
         
-        {{-- Ditolak - MERAH --}}
-        <div class="stats-card animate-slide-in" 
-            style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-lg">
-                    <i class="fas fa-times-circle u-text-2xl"></i>
-                </div>
-                <div class="u-flex-1">
-                    <p class="u-a7">
-                        Ditolak / Revisi
-                    </p>
-                    <p class="u-a8">
-                        {{ $documents->where('status', 'ditolak')->count() }}
-                    </p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Ditolak / Revisi',
+            'value' => $documents->where('status', 'ditolak')->count(),
+            'icon' => 'fa-times-circle',
+            'color' => 'red'
+        ])
     </div>
 
     {{-- Filter Section --}}

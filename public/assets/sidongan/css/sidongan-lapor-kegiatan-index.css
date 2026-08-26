@@ -4,47 +4,15 @@
  * ============================================================ */
 
 /* ===== STATS GRID ===== */
-.lk-stats-grid {
+.stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1rem;
     margin-bottom: 2rem;
 }
 
 /* ===== STATS CARDS ===== */
-.lk-stat-card {
-    border-radius: 1rem;
-    padding: 1.5rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.lk-stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-}
-
-.lk-stat-blue {
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
-}
-
-.lk-stat-orange {
-    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
-}
-
-.lk-stat-green {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
-}
-
-.lk-stat-red {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
-}
+/* Old lk-stat-card styles removed — now using dashboard stat-card component */
 
 /* ===== FILTER CARD ===== */
 .lk-filter-card {

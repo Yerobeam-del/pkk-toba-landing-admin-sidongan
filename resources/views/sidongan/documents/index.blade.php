@@ -55,66 +55,34 @@
         $statMenunggu = (clone $statsQuery)->whereIn('status', ['menunggu_disposisi', 'menunggu_verifikasi'])->count();
     @endphp
     
-    <div class="sd-stats-grid">
-        {{-- Total Surat --}}
-        <div class="stats-card animate-slide-in sd-stats-total">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-md">
-                    <i class="fas fa-envelope u-text-1xl"></i>
-                </div>
-                <div>
-                    <p class="u-subtitle-sm">Total Surat</p>
-                    <p class="u-subtitle-sm">{{ $totalDocuments ?? 0 }}</p>
-                </div>
-            </div>
-        </div>
+    <div class="stats-grid">
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Total Surat',
+            'value' => $totalDocuments ?? 0,
+            'icon' => 'fa-envelope',
+            'color' => 'blue'
+        ])
         
-        {{-- Selesai --}}
-        <div class="stats-card animate-slide-in sd-stats-selesai">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-md">
-                    <i class="fas fa-check-circle u-text-1xl"></i>
-                </div>
-                <div>
-                    <p class="u-subtitle-sm">Selesai</p>
-                    <p class="u-subtitle-sm">{{ $statSelesai ?? 0 }}</p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Selesai',
+            'value' => $statSelesai ?? 0,
+            'icon' => 'fa-check-circle',
+            'color' => 'green'
+        ])
         
-        {{-- Berjalan --}}
-        <div class="stats-card animate-slide-in sd-stats-berjalan">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-md">
-                    <i class="fas fa-spinner fa-spin u-text-1xl"></i>
-                </div>
-                <div>
-                    <p class="u-subtitle-sm">Berjalan</p>
-                    <p class="u-subtitle-sm">{{ $statBerjalan ?? 0 }}</p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Berjalan',
+            'value' => $statBerjalan ?? 0,
+            'icon' => 'fa-spinner fa-spin',
+            'color' => 'orange'
+        ])
         
-        {{-- Menunggu Disposisi --}}
-        <div class="stats-card animate-slide-in sd-stats-menunggu">
-            <div class="u-deco-circle-tr"></div>
-            <div class="u-deco-circle-bl"></div>
-            <div class="u-flex-center-gap-4-rel">
-                <div class="u-icon-badge-md">
-                    <i class="fas fa-clock u-text-1xl"></i>
-                </div>
-                <div>
-                    <p class="u-subtitle-sm">Menunggu Disposisi</p>
-                    <p class="u-subtitle-sm">{{ $statMenungguDisposisi ?? 0 }}</p>
-                </div>
-            </div>
-        </div>
+        @include('sidongan.dashboard.components.stat-card', [
+            'title' => 'Menunggu Disposisi',
+            'value' => $statMenungguDisposisi ?? 0,
+            'icon' => 'fa-clock',
+            'color' => 'yellow'
+        ])
     </div>
 
     {{-- Filter Section --}}
