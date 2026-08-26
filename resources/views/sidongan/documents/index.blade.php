@@ -226,7 +226,7 @@
     </div>
 
     {{-- Bulk Action Bar --}}
-    <div id="bulkActionBar" class="sd-bulk-bar" class="sd-bulk-bar sd-bulk-hidden">
+    <div id="bulkActionBar" class="sd-bulk-bar sd-bulk-hidden">
         <div class="sd-bulk-bar-inner">
             <div class="sd-bulk-bar-info">
                 <i class="fas fa-check-circle"></i>
@@ -234,16 +234,16 @@
             </div>
             <div class="sd-bulk-bar-actions">
                 @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
-                <button type="button" data-action="bulk-archive" class="sd-bulk-btn sd-bulk-btn-archive">
+                <button type="button" data-action="bulk-archive" class="sd-bulk-btn sd-bulk-btn-archive" title="Pindahkan surat yang dipilih ke Arsip">
                     <i class="fas fa-archive"></i>
                     Arsipkan
                 </button>
-                <button type="button" data-action="bulk-delete" class="sd-bulk-btn sd-bulk-btn-delete">
+                <button type="button" data-action="bulk-delete" class="sd-bulk-btn sd-bulk-btn-delete" title="Hapus surat yang dipilih secara permanen">
                     <i class="fas fa-trash-alt"></i>
                     Hapus
                 </button>
                 @endif
-                <button type="button" data-action="bulk-cancel" class="sd-bulk-btn sd-bulk-btn-cancel">
+                <button type="button" data-action="bulk-cancel" class="sd-bulk-btn sd-bulk-btn-cancel" title="Batalkan pemilihan">
                     <i class="fas fa-times"></i>
                     Batal
                 </button>
@@ -630,17 +630,27 @@
                         
                         <td data-label="Aksi" class="sd-cell-stack sd-action-cell">
                             <div class="sd-actions sd-actions-row">
+                                {{-- Lihat Detail (semua role) --}}
                                 <a href="{{ route('sidongan.documents.show', $doc) }}"
                                 class="sd-icon-btn sd-icon-view"
-                                
                                 title="Lihat Detail">
                                     <i class="fas fa-eye u-text-sm"></i>
                                 </a>
-                                
+
+                                {{-- Disposisi (Ketua PKK, surat menunggu disposisi) --}}
+                                @if($currentUser && $currentUser->hasSidonganRole('ketua') && $doc->status === 'menunggu_disposisi')
+                                    <a href="{{ route('sidongan.disposisi') }}?doc_id={{ $doc->id }}"
+                                    class="sd-icon-btn sd-icon-disposisi"
+                                    title="Disposisi Surat"
+                                    style="background: #fff7ed; color: #ea580c;">
+                                        <i class="fas fa-share-alt u-text-sm"></i>
+                                    </a>
+                                @endif
+
+                                {{-- Edit & Hapus (Sekretaris, surat menunggu disposisi) --}}
                                 @if($currentUser && $currentUser->hasSidonganRole('sekretaris') && $doc->status === 'menunggu_disposisi')
                                     <a href="{{ route('sidongan.documents.edit', $doc) }}"
                                     class="sd-icon-btn sd-icon-view sd-icon-edit"
-                                    
                                     title="Edit Surat">
                                         <i class="fas fa-edit u-text-sm"></i>
                                     </a>
@@ -648,19 +658,18 @@
                                     <button type="button"
                                             class="sd-icon-btn sd-icon-view sd-icon-delete"
                                             data-delete-id="{{ $doc->id }}" data-delete-title="{{ addslashes($doc->subject ?? $doc->title) }}"
-                                            
                                             title="Hapus Surat">
                                         <i class="fas fa-trash u-text-sm"></i>
                                     </button>
                                 @endif
 
-                    			@php
+                                {{-- Arsipkan (Sekretaris, jika memenuhi syarat) --}}
+                                @php
                                     $canArchive = false;
                                     $dispoData = is_string($doc->disposisi_data) 
                                         ? json_decode($doc->disposisi_data, true) 
                                         : $doc->disposisi_data;
 
-                                    // Jika tindak lanjut disposisi adalah "Di Arsipkan"
                                     $isArsipDisposition = false;
                                     if (isset($dispoData['action'])) {
                                         $actionLower = strtolower($dispoData['action']);
@@ -670,11 +679,8 @@
                                     }
 
                                     if ($isArsipDisposition && $doc->status === 'berjalan') {
-                                        // Langsung bisa arsip jika disposisi "Di Arsipkan" dan status berjalan
                                         $canArchive = true;
                                     } elseif ($doc->status === 'selesai') {
-                                        // Status selesai berarti laporan terakhir sudah
-                                        // disetujui ketua (satu surat = satu laporan).
                                         $latestReport = $doc->activityReports()
                                             ->orderBy('created_at', 'desc')
                                             ->first();
@@ -686,7 +692,6 @@
                                     <button type="button"
                                             class="sd-icon-btn sd-icon-view sd-icon-archive"
                                             data-archive-id="{{ $doc->id }}" data-archive-title="{{ addslashes($doc->subject ?? $doc->title) }}"
-                                            
                                             title="Arsipkan Surat">
                                         <i class="fas fa-archive u-text-sm"></i>
                                     </button>
