@@ -910,26 +910,69 @@ class AdminDocumentController extends Controller
 
         $ids = $request->ids;
         $count = 0;
+        $skipped = 0;
 
-        Document::whereIn('id', $ids)->each(function($doc) use ($user, &$count) {
-            if ($doc->status !== 'diarsipkan') {
-                $doc->update([
-                    'status' => 'diarsipkan',
-                    'updated_by' => $user->id,
-                ]);
+        Document::whereIn('id', $ids)->each(function($doc) use ($user, &$count, &$skipped) {
+            // Validasi state: hanya bisa arsipkan jika:
+            // 1. Status berjalan + disposisi arsip, ATAU
+            // 2. Status selesai + laporan terakhir disetujui
+            $canArchive = false;
 
-                \App\Models\AdminActivityLog::log('updated', 'surat', $doc->id, [
-                    'action' => 'bulk_archived',
-                ], $user->id);
-
-                $count++;
+            if ($doc->status === 'diarsipkan') {
+                $skipped++;
+                return; // sudah diarsipkan
             }
+
+            if ($doc->status === 'berjalan') {
+                $dispoData = is_string($doc->disposisi_data)
+                    ? json_decode($doc->disposisi_data, true)
+                    : $doc->disposisi_data;
+                if (isset($dispoData['action']) && stripos($dispoData['action'], 'arsip') !== false) {
+                    $canArchive = true;
+                }
+            } elseif ($doc->status === 'selesai') {
+                $latestReport = $doc->activityReports()
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                $canArchive = $latestReport && $latestReport->status === 'disetujui';
+            }
+
+            if (!$canArchive) {
+                $skipped++;
+                return;
+            }
+
+            $doc->update([
+                'status' => 'diarsipkan',
+                'updated_by' => $user->id,
+            ]);
+
+            \App\Models\Notification::create([
+                'user_id' => $user->id,
+                'type' => 'document.archived',
+                'title' => 'Surat Diarsipkan',
+                'message' => "Surat {$doc->agenda_number} berhasil diarsipkan.",
+                'related_id' => $doc->id,
+                'related_type' => Document::class,
+            ]);
+
+            \App\Models\AdminActivityLog::log('updated', $doc, 'Bulk arsipkan oleh Sekretaris', [
+                'action' => 'bulk_archived',
+            ]);
+
+            $count++;
         });
 
+        $message = "{$count} surat berhasil diarsipkan.";
+        if ($skipped > 0) {
+            $message .= " ({$skipped} surat dilewati karena tidak memenuhi syarat)";
+        }
+
         return response()->json([
-            'success' => true,
-            'message' => "{$count} surat berhasil diarsipkan.",
+            'success' => $count > 0,
+            'message' => $message,
             'count' => $count,
+            'skipped' => $skipped,
         ]);
     }
 
@@ -951,25 +994,38 @@ class AdminDocumentController extends Controller
 
         $ids = $request->ids;
         $count = 0;
+        $skipped = 0;
 
-        Document::whereIn('id', $ids)->each(function($doc) use ($user, &$count) {
+        Document::whereIn('id', $ids)->each(function($doc) use ($user, &$count, &$skipped) {
+            // Hanya bisa hapus surat dengan status menunggu_disposisi
+            if ($doc->status !== 'menunggu_disposisi') {
+                $skipped++;
+                return;
+            }
+
             if (Storage::disk('public')->exists($doc->file_path)) {
                 Storage::disk('public')->delete($doc->file_path);
             }
 
-            \App\Models\AdminActivityLog::log('deleted', 'surat', $doc->id, [
+            \App\Models\AdminActivityLog::log('deleted', $doc, 'Bulk hapus oleh Sekretaris', [
                 'agenda_number' => $doc->agenda_number,
                 'action' => 'bulk_deleted',
-            ], $user->id);
+            ]);
 
             $doc->delete();
             $count++;
         });
 
+        $message = "{$count} surat berhasil dihapus.";
+        if ($skipped > 0) {
+            $message .= " ({$skipped} surat dilewati karena bukan status menunggu disposisi)";
+        }
+
         return response()->json([
-            'success' => true,
-            'message' => "{$count} surat berhasil dihapus.",
+            'success' => $count > 0,
+            'message' => $message,
             'count' => $count,
+            'skipped' => $skipped,
         ]);
     }
 
