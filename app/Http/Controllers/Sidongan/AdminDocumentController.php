@@ -502,6 +502,7 @@ class AdminDocumentController extends Controller
             'agenda_date' => $validated['agenda_date'] ?? $document->agenda_date,
             'subject' => $validated['subject'],
             'suggestion' => $validated['suggestion'] ?? $document->suggestion,
+            'category_id' => $validated['category_id'] ?? null,
         ]);
 
         \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
@@ -748,8 +749,6 @@ class AdminDocumentController extends Controller
         foreach ($validated['target_roles'] as $role) {
             $targetUsers = \App\Models\User::where('sidongan_role', $role)->get();
             
-            \Log::info("Disposisi: Mencari user dengan role '{$role}', ditemukan {$targetUsers->count()} user");
-            
             if ($targetUsers->isEmpty()) {
                 $errors[] = "Tidak ada user dengan role '{$rolesMap[$role]}'";
                 continue;
@@ -757,8 +756,6 @@ class AdminDocumentController extends Controller
             
             foreach ($targetUsers as $targetUser) {
                 try {
-                    \Log::info("Disposisi: Membuat notifikasi untuk user ID {$targetUser->id} ({$targetUser->name})");
-                    
                     $notification = \App\Models\Notification::create([
                         'user_id' => $targetUser->id,
                         'type' => 'disposisi.received',
@@ -769,11 +766,9 @@ class AdminDocumentController extends Controller
                         'read_at' => null,
                     ]);
                     
-                    \Log::info("Disposisi: Notifikasi berhasil dibuat dengan ID {$notification->id}");
                     $notificationCount++;
                     
                 } catch (\Exception $e) {
-                    \Log::error("Disposisi: Gagal membuat notifikasi untuk user {$targetUser->name}: " . $e->getMessage());
                     $errors[] = "Gagal mengirim notifikasi ke {$targetUser->name}";
                 }
             }
@@ -794,12 +789,10 @@ class AdminDocumentController extends Controller
                 ]);
                 $notificationCount++;
             } catch (\Exception $e) {
-                \Log::error("Disposisi: Gagal membuat notifikasi ke sekretaris: " . $e->getMessage());
+                // Notification to sekretaris failed, continue
             }
         }
         
-        \Log::info("Disposisi: Total {$notificationCount} notifikasi dikirim untuk surat {$document->agenda_number}");
-
         \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
             'action' => 'disposisi',
             'target_roles' => $validated['target_roles'],

@@ -10,6 +10,9 @@
 /* u-label — font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem */
 .u-label { font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem }
 
+/* u-label-slate — label styling with slate color */
+.u-label-slate { font-weight:600;display:block;margin-bottom:0.5rem;font-size:0.9rem;color:#334155 }
+
 /* u-flex-1 — flex:1 */
 .u-flex-1 { flex:1 }
 
