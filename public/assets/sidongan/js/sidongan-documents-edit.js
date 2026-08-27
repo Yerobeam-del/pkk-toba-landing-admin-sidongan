@@ -93,7 +93,6 @@
     // ==========================================
     function validateDates() {
         const documentDate = document.getElementById('document_date').value;
-        const dateError = document.getElementById('dateError');
         const dateInput = document.getElementById('document_date');
         
         if (documentDate) {

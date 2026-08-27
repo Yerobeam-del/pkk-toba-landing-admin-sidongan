@@ -155,7 +155,6 @@
                                              membuat laporan baru (data lama otomatis dimuat di form).
                                              Revisi di tempat tetap tersedia sebagai opsi kedua. --}}
                                         <a href="{{ route('sidongan.lapor_kegiatan.create', ['document_id' => $doc->id]) }}" 
-                                        class="btn-action"
                                         class="btn-action lk-btn-primary">
                                             <i class="fas fa-plus"></i>
                                             <span>Buat Laporan</span>
@@ -168,7 +167,6 @@
                                     @else
                                         {{-- Tombol Lihat untuk status lainnya --}}
                                         <a href="{{ route('sidongan.lapor_kegiatan.show', $existingReport->id) }}" 
-                                        class="btn-action"
                                         class="btn-action lk-btn-outline" style="color: {{ $theme['text'] }}; border-color: {{ $theme['border'] }};">
                                             <i class="fas fa-eye"></i>
                                             <span>Lihat</span>
@@ -176,7 +174,6 @@
                                     @endif
                                 @else
                                     <a href="{{ route('sidongan.lapor_kegiatan.create', ['document_id' => $doc->id]) }}" 
-                                    class="btn-action"
                                     class="btn-action lk-btn-primary">
                                         <i class="fas fa-plus"></i>
                                         <span>Buat Laporan</span>

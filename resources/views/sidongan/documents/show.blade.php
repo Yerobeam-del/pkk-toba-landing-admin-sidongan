@@ -217,7 +217,7 @@
                     <div class="ds-info-row">
                         <span class="ds-info-label">Tanggal Agenda</span>
                         <span class="ds-info-value">
-                            {{ $document->created_at ? \Carbon\Carbon::parse($document->created_at)->locale('id')->translatedFormat('d F Y') : '-' }}
+                            {{ $document->agenda_date ? \Carbon\Carbon::parse($document->agenda_date)->locale('id')->translatedFormat('d F Y') : '-' }}
                         </span>
                     </div>
                     <div class="ds-info-row">

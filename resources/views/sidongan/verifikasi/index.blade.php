@@ -23,21 +23,21 @@
     <div class="stats-grid">
         @include('sidongan.dashboard.components.stat-card', [
             'title' => 'Menunggu Verifikasi',
-            'value' => $documents->where('status', 'menunggu_verifikasi')->count(),
+            'value' => $statMenunggu ?? 0,
             'icon' => 'fa-clock',
             'color' => 'purple'
         ])
         
         @include('sidongan.dashboard.components.stat-card', [
             'title' => 'Disetujui',
-            'value' => $documents->where('status', 'disetujui')->count(),
+            'value' => $statDisetujui ?? 0,
             'icon' => 'fa-check-circle',
             'color' => 'green'
         ])
         
         @include('sidongan.dashboard.components.stat-card', [
             'title' => 'Ditolak / Revisi',
-            'value' => $documents->where('status', 'ditolak')->count(),
+            'value' => $statDitolak ?? 0,
             'icon' => 'fa-times-circle',
             'color' => 'red'
         ])
@@ -88,10 +88,9 @@
     <div style="background: white; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; overflow: hidden;" class="animate-slide-in">
         @if($documents->count() > 0)
             <div class="u-p-0">
-                @foreach($documents as $report)
-                    @php
-                        $statusConfig = [
-                            'menunggu_verifikasi' => ['bg' => '#f5f3ff', 'border' => '#ddd6fe', 'text' => '#6d28d9', 'btn' => '#7c3aed', 'label' => 'Menunggu Verifikasi', 'icon' => 'fa-clock', 'hover' => '#f5f3ff'],
+                @foreach($documents as $report)    @php
+        $statusConfig = [
+            'menunggu_verifikasi' => ['bg' => '#f5f3ff', 'border' => '#ddd6fe', 'text' => '#6d28d9', 'btn' => '#7c3aed', 'label' => 'Menunggu Verifikasi', 'icon' => 'fa-clock', 'hover' => '#f5f3ff'],
                             'disetujui' => ['bg' => '#f0fdf4', 'border' => '#bbf7d0', 'text' => '#166534', 'btn' => '#22c55e', 'label' => 'Disetujui', 'icon' => 'fa-check-circle', 'hover' => '#f0fdf4'],
                             'ditolak' => ['bg' => '#fef2f2', 'border' => '#fecaca', 'text' => '#991b1b', 'btn' => '#ef4444', 'label' => 'Ditolak', 'icon' => 'fa-times-circle', 'hover' => '#fef2f2'],
                         ];

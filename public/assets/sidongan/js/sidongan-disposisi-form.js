@@ -30,7 +30,8 @@ function toggleCustomAction() {
     }
 }
 
-document.querySelector('form').addEventListener('submit', function(e) {
+var disposisiForm = document.querySelector('form[action*="disposisi"]') || document.querySelector('form');
+if (disposisiForm) disposisiForm.addEventListener('submit', function(e) {
     if (document.querySelectorAll('input[name="target_roles[]"]:checked').length === 0) {
         e.preventDefault();
         Toast.warning('Pilih minimal satu tujuan disposisi!');

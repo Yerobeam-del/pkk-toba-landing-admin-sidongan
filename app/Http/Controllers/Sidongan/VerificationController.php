@@ -39,14 +39,20 @@ class VerificationController extends Controller
         }
         // Jika status tidak ada atau kosong (Semua Status), jangan filter
         
-        // 4. Eksekusi Query
+        // 4. Hitung Stats (sebelum paginate)
+        $statQuery = clone $query;
+        $statMenunggu = (clone $statQuery)->where('status', 'menunggu_verifikasi')->count();
+        $statDisetujui = (clone $statQuery)->where('status', 'disetujui')->count();
+        $statDitolak = (clone $statQuery)->where('status', 'ditolak')->count();
+        
+        // 5. Eksekusi Query
         $documents = $query->latest()->paginate($request->get('per_page', 10));
         
-        // 5. Append query parameters ke pagination links
+        // 6. Append query parameters ke pagination links
         $documents->appends($request->except('page'));
         
-        // 6. Kirim ke View
-        return view('sidongan.verifikasi.index', compact('documents'));
+        // 7. Kirim ke View
+        return view('sidongan.verifikasi.index', compact('documents', 'statMenunggu', 'statDisetujui', 'statDitolak'));
     }
         
     /**

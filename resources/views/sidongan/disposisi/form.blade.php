@@ -110,8 +110,7 @@
                     </label>
                     <div class="role-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
                         @php
-                            $roles = [
-                                'sekretaris' => 'Sekretaris PKK',
+                            $roles = $roles ?? [
                                 'bendahara' => 'Bendahara PKK',
                                 'staf_ahli_1' => 'Staf Ahli I',
                                 'staf_ahli_2' => 'Staf Ahli II',

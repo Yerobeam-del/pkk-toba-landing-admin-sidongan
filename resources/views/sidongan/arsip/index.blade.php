@@ -8,20 +8,20 @@
 @php
     $currentUser = auth()->guard('sidongan')->user();
     
-    function sortIcon($field, $currentSort, $currentDirection) {
+    $arsipSortIconFn = function($field, $currentSort, $currentDirection) {
         if ($currentSort !== $field) {
             return '<i class="fas fa-sort" style="color: rgba(255,255,255,0.6); margin-left: 0.5rem;"></i>';
         }
         return $currentDirection === 'asc' 
             ? '<i class="fas fa-sort-up" style="color: white; margin-left: 0.5rem;"></i>'
             : '<i class="fas fa-sort-down" style="color: white; margin-left: 0.5rem;"></i>';
-    }
+    };
     
-    function sortUrl($field, $currentSort, $currentDirection) {
+    $arsipSortUrlFn = function($field, $currentSort, $currentDirection) {
         $newDirection = ($currentSort === $field && $currentDirection === 'asc') ? 'desc' : 'asc';
         $params = array_merge(request()->all(), ['sort' => $field, 'direction' => $newDirection]);
         return route('sidongan.arsip', $params);
-    }
+    };
     
     $currentSort = request('sort');
     $currentDirection = request('direction', 'desc');
@@ -265,39 +265,39 @@
     <thead style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">
         <tr>
             <th style="padding: 1rem; text-align: center; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; width: 60px; cursor: pointer; white-space: nowrap;"
-                data-sort-url="{{ sortUrl('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                data-sort-url="{{ $arsipSortUrlFn('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                 <span class="u-a14">
-                    NO {!! sortIcon('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                    NO {!! $arsipSortIconFn('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
             <th class="u-th-plain" 
-                data-sort-url="{{ sortUrl('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                data-sort-url="{{ $arsipSortUrlFn('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                 <span class="u-a14">
-                    NO. AGENDA {!! sortIcon('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                    NO. AGENDA {!! $arsipSortIconFn('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
             <th class="u-th-plain"
-                data-sort-url="{{ sortUrl('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                data-sort-url="{{ $arsipSortUrlFn('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                 <span class="u-a14">
-                    PERIHAL {!! sortIcon('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                    PERIHAL {!! $arsipSortIconFn('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
             <th class="u-th-plain"
-                data-sort-url="{{ sortUrl('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                data-sort-url="{{ $arsipSortUrlFn('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                 <span class="u-a14">
-                    NO. SURAT {!! sortIcon('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                    NO. SURAT {!! $arsipSortIconFn('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
             <th class="u-th-plain"
-                data-sort-url="{{ sortUrl('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                data-sort-url="{{ $arsipSortUrlFn('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                 <span class="u-a14">
-                    TANGGAL {!! sortIcon('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                    TANGGAL {!! $arsipSortIconFn('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
             <th class="u-th-plain"
-                data-sort-url="{{ sortUrl('disposisi_count', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                data-sort-url="{{ $arsipSortUrlFn('disposisi_count', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                 <span class="u-a14">
-                    DISPOSISI {!! sortIcon('disposisi_count', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                    DISPOSISI {!! $arsipSortIconFn('disposisi_count', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                 </span>
             </th>
             <th style="padding: 1rem; text-align: center; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; white-space: nowrap;">AKSI</th>

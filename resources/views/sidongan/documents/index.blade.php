@@ -4,27 +4,26 @@
 @extends('sidongan.layouts.app')
 @section('title', 'Daftar Surat - SIDONGAN')
 
-@section('content')
-@php
-    $currentUser = auth()->guard('sidongan')->user();
-    
-    // Helper function untuk sort icon
-    function sortIcon($field, $currentSort, $currentDirection) {
-        if ($currentSort !== $field) {
-            return '<i class="fas fa-sort sd-sort-icon sd-sort-icon-inactive"></i>';
-        }
-        return $currentDirection === 'asc' 
-            ? '<i class="fas fa-sort-up sd-sort-icon sd-sort-icon-active"></i>'
-            : '<i class="fas fa-sort-down sd-sort-icon sd-sort-icon-active"></i>';
-    }
-    
-    // Helper function untuk sort URL
-    function sortUrl($field, $currentSort, $currentDirection) {
-        $newDirection = ($currentSort === $field && $currentDirection === 'asc') ? 'desc' : 'asc';
-        $params = array_merge(request()->all(), ['sort' => $field, 'direction' => $newDirection]);
-        return route('sidongan.documents.index', $params);
-    }
-@endphp
+@section('content')    @php
+        $currentUser = auth()->guard('sidongan')->user();
+        
+        // Helper function untuk sort icon
+        $sortIconFn = function($field, $currentSort, $currentDirection) {
+            if ($currentSort !== $field) {
+                return '<i class="fas fa-sort sd-sort-icon sd-sort-icon-inactive"></i>';
+            }
+            return $currentDirection === 'asc' 
+                ? '<i class="fas fa-sort-up sd-sort-icon sd-sort-icon-active"></i>'
+                : '<i class="fas fa-sort-down sd-sort-icon sd-sort-icon-active"></i>';
+        };
+        
+        // Helper function untuk sort URL
+        $sortUrlFn = function($field, $currentSort, $currentDirection) {
+            $newDirection = ($currentSort === $field && $currentDirection === 'asc') ? 'desc' : 'asc';
+            $params = array_merge(request()->all(), ['sort' => $field, 'direction' => $newDirection]);
+            return route('sidongan.documents.index', $params);
+        };
+    @endphp
 
     <link rel="stylesheet" href="{{ asset('assets/sidongan/css/sidongan-documents-index.css') }}">
 
@@ -45,15 +44,7 @@
     </div>
 
     {{-- Stats Cards --}}
-    @php
-        $statsQuery = \App\Models\Document::query();
-        if ($currentUser && $currentUser->hasSidonganRole('sekretaris')) {
-            $statsQuery->where('created_by', $currentUser->id);
-        }
-        $statSelesai = (clone $statsQuery)->where('status', 'selesai')->count();
-        $statBerjalan = (clone $statsQuery)->where('status', 'berjalan')->count();
-        $statMenunggu = (clone $statsQuery)->whereIn('status', ['menunggu_disposisi', 'menunggu_verifikasi'])->count();
-    @endphp
+
     
     <div class="stats-grid">
         @include('sidongan.dashboard.components.stat-card', [
@@ -265,40 +256,40 @@
                             </label>
                         </th>
                         <th
-                            data-sort-url="{{ sortUrl('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                            data-sort-url="{{ $sortUrlFn('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                             <span class="u-a14">
-                                NO {!! sortIcon('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                                NO {!! $sortIconFn('id', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                             </span>
                         </th>
                         <th class="u-th-plain" 
-                            data-sort-url="{{ sortUrl('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                            data-sort-url="{{ $sortUrlFn('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                             <span class="u-a14">
-                                NO. AGENDA {!! sortIcon('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                                NO. AGENDA {!! $sortIconFn('agenda_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                             </span>
                         </th>
                         <th class="u-th-plain"
-                            data-sort-url="{{ sortUrl('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                            data-sort-url="{{ $sortUrlFn('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                             <span class="u-a14">
-                                PERIHAL {!! sortIcon('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                                PERIHAL {!! $sortIconFn('subject', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                             </span>
                         </th>
                         <th class="u-th-plain"
-                            data-sort-url="{{ sortUrl('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                            data-sort-url="{{ $sortUrlFn('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                             <span class="u-a14">
-                                NO. SURAT {!! sortIcon('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                                NO. SURAT {!! $sortIconFn('document_number', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                             </span>
                         </th>
                         <th class="u-th-plain"
-                            data-sort-url="{{ sortUrl('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                            data-sort-url="{{ $sortUrlFn('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                             <span class="u-a14">
-                                TANGGAL {!! sortIcon('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                                TANGGAL {!! $sortIconFn('document_date', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                             </span>
                         </th>
                         <th class="sd-th-static">DISPOSISI</th>
                         <th class="u-th-plain"
-                            data-sort-url="{{ sortUrl('status', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
+                            data-sort-url="{{ $sortUrlFn('status', $currentSort ?? 'created_at', $currentDirection ?? 'desc') }}">
                             <span class="u-a14">
-                                STATUS {!! sortIcon('status', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
+                                STATUS {!! $sortIconFn('status', $currentSort ?? 'created_at', $currentDirection ?? 'desc') !!}
                             </span>
                         </th>
                         <th class="sd-th-static" style="min-width: 220px;">AKSI TERAKHIR</th>

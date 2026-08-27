@@ -256,7 +256,7 @@
                             Nama Kegiatan <span class="u-text-danger">*</span>
                         </label>
                         <input type="text" name="kegiatan_nama" placeholder="Contoh: Rapat Koordinasi Bulanan" required 
-                            value="{{ old('kegiatan_nama', $document->subject ?? '') }}"
+                            value="{{ old('kegiatan_nama', $report->kegiatan_nama ?? '') }}"
                             style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s; box-sizing: border-box;">
                         @error('kegiatan_nama') <p class="u-error-text">{{ $message }}</p> @enderror
                     </div>

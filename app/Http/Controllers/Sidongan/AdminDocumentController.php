@@ -22,6 +22,41 @@ use Illuminate\Validation\Rule;
 class AdminDocumentController extends Controller
 {
     /**
+     * Cek apakah user boleh mengakses dokumen ini.
+     * - Ketua: boleh akses semua
+     * - Sekretaris: hanya dokumen yang dibuatnya
+     * - Role lain: hanya dokumen berjalan yang didisposisi ke role mereka
+     */
+    private function authorizeDocumentAccess(Document $document): void
+    {
+        $user = auth()->guard('sidongan')->user();
+        if (!$user) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        if ($user->hasSidonganRole('ketua')) {
+            return; // Ketua boleh akses semua
+        }
+
+        if ($user->hasSidonganRole('sekretaris')) {
+            if ($document->created_by === $user->id) return;
+            abort(403, 'Anda tidak berhak mengakses surat ini.');
+        }
+
+        // Role lain: cek apakah dokumen didisposisi ke role mereka
+        $dispo = is_string($document->disposisi_data)
+            ? json_decode($document->disposisi_data, true)
+            : $document->disposisi_data;
+        $targetRoles = $dispo['target_roles'] ?? [];
+
+        if (in_array($user->sidongan_role, $targetRoles)) {
+            return;
+        }
+
+        abort(403, 'Anda tidak berhak mengakses surat ini.');
+    }
+
+    /**
      * Dashboard SIDONGAN (Stats + Recent Documents + Notifications)
      */
     public function dashboard()
@@ -132,10 +167,20 @@ class AdminDocumentController extends Controller
     {
         $user = auth()->guard('sidongan')->user();
         
-        // 1. Buat Query Dasar
+        // 1. Buat Query Dasar dengan role-based filtering
         $query = Document::with(['category', 'creator', 'activityReports' => function($q) {
             $q->with('creator')->latest();
         }]);
+        
+        // Sekretaris hanya lihat surat yang dibuatnya
+        if ($user && $user->hasSidonganRole('sekretaris')) {
+            $query->where('created_by', $user->id);
+        } elseif ($user && !$user->hasSidonganRole('ketua')) {
+            // Role lain hanya lihat surat berjalan yang didisposisi ke mereka
+            $userRole = $user->sidongan_role;
+            $query->where('status', 'berjalan')
+                ->whereJsonContains('disposisi_data->target_roles', $userRole);
+        }
         
         // Hitung Total Dokumen
         $totalDocuments = (clone $query)->count();
@@ -372,12 +417,14 @@ class AdminDocumentController extends Controller
 
     public function edit(Document $document)
     {
+        $this->authorizeDocumentAccess($document);
         $categories = DocumentCategory::where('is_active', true)->orderBy('name')->get();
         return view('sidongan.documents.edit', compact('document', 'categories'));
     }
 
     public function update(Request $request, Document $document)
     {
+        $this->authorizeDocumentAccess($document);
         $user = auth()->guard('sidongan')->user();
 
         // 1. HANDLE HAPUS FILE
@@ -426,6 +473,7 @@ class AdminDocumentController extends Controller
             'subject' => 'required|string|max:255',
             'suggestion' => 'nullable|string',
             'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
+            'category_id' => 'nullable|exists:sidongan_categories,id',
         ]);
 
         // 4. HANDLE UPLOAD FILE BARU
@@ -465,7 +513,12 @@ class AdminDocumentController extends Controller
 
     public function destroy(Document $document)
     {
-        if (Storage::disk('public')->exists($document->file_path)) {
+        $user = auth()->guard('sidongan')->user();
+        if (!$user || !$user->hasSidonganRole('sekretaris')) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
             Storage::disk('public')->delete($document->file_path);
         }
         $agendaNum = $document->agenda_number;
@@ -479,26 +532,23 @@ class AdminDocumentController extends Controller
 
     public function download(Document $document)
     {
+        $this->authorizeDocumentAccess($document);
+        if (!$document->file_path) {
+            abort(404, 'File tidak ditemukan.');
+        }
         return Storage::disk('public')->download($document->file_path, $document->file_name);
     }
 
     public function show(Request $request, Document $document)
     {
-        \Log::info('=== SHOW METHOD CALLED ===', [
-            'document_id' => $document->id,
-            'from_param' => $request->get('from'),
-            'session_before' => session('document_back_url'),
-            'previous_url' => url()->previous(),
-        ]);
+        $this->authorizeDocumentAccess($document);
 
-        // ✅ Helper function untuk cek apakah URL adalah Form Disposisi
+        // Helper function untuk cek apakah URL adalah Form Disposisi
         $isDisposisiForm = function($url) {
-            // Match pattern: /disposisi/{angka} (Form Disposisi)
-            // TIDAK match: /disposisi (List Disposisi)
             return preg_match('#/disposisi/\d+#', $url) === 1;
         };
 
-        // ✅ PRIORITAS 1: URL parameter 'from'
+        // PRIORITAS 1: URL parameter 'from'
         if ($request->has('from')) {
             $fromUrl = $request->get('from');
             if (!$isDisposisiForm($fromUrl) && 
@@ -506,34 +556,22 @@ class AdminDocumentController extends Controller
                 !str_contains($fromUrl, '/create') &&
                 !str_contains($fromUrl, '/edit')) {
                 session(['document_back_url' => $fromUrl]);
-                \Log::info('Session SET from URL parameter', ['url' => $fromUrl]);
             }
         } 
-        // ✅ PRIORITAS 2: previousUrl
+        // PRIORITAS 2: previousUrl
         else {
             $previousUrl = url()->previous();
             $currentUrl = url()->current();
             
-            // ✅ JANGAN update session jika datang dari Form Disposisi
             if ($previousUrl && 
                 $previousUrl !== $currentUrl && 
-                !$isDisposisiForm($previousUrl) &&  // ← KUNCI: Cek pattern /disposisi/{angka}
+                !$isDisposisiForm($previousUrl) &&
                 !str_contains($previousUrl, '/disposisi-print') &&
                 !str_contains($previousUrl, '/create') &&
                 !str_contains($previousUrl, '/edit')) {
                 session(['document_back_url' => $previousUrl]);
-                \Log::info('Session SET from previous URL', ['url' => $previousUrl]);
-            } else {
-                \Log::info('Session NOT updated (from Form Disposisi or invalid)', [
-                    'previous' => $previousUrl,
-                    'is_form' => $isDisposisiForm($previousUrl) ? 'yes' : 'no'
-                ]);
             }
         }
-
-        \Log::info('=== SHOW METHOD END ===', [
-            'session_final' => session('document_back_url'),
-        ]);
         
         $document->load(['creator', 'category', 'tags']);
         
@@ -781,59 +819,6 @@ class AdminDocumentController extends Controller
     }
 
     /**
-     * Halaman Verifikasi Laporan
-     */
-    public function verifikasi()
-    {
-        $user = auth()->guard('sidongan')->user();
-        
-        if (!$user->hasSidonganRole('ketua')) {
-            abort(403, 'Akses ditolak');
-        }
-        
-        $documents = Document::with(['category', 'creator'])
-            ->where('status', 'menunggu_verifikasi')
-            ->latest()
-            ->paginate(15);
-        
-        return view('sidongan.verifikasi.index', compact('documents'));
-    }
-
-    /**
-     * Verifikasi Laporan
-     */
-    public function storeVerifikasi(Request $request, Document $document)
-    {
-        $user = auth()->guard('sidongan')->user();
-        
-        if (!$user->hasSidonganRole('ketua')) {
-            abort(403, 'Akses ditolak');
-        }
-        
-        $validated = $request->validate([
-            'status' => 'required|in:disetujui,ditolak',
-            'comment' => 'nullable|string',
-        ]);
-        
-        $document->update([
-            'status' => $validated['status'] === 'disetujui' ? 'selesai' : 'draft',
-            'verifikasi_data' => [
-                'status' => $validated['status'],
-                'comment' => $validated['comment'] ?? null,
-                'verified_by' => $user->id,
-                'verified_at' => now(),
-            ]
-        ]);
-        
-        \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
-            'action' => 'verifikasi',
-            'verifikasi_status' => $validated['status'],
-        ], $user->id);
-        return redirect()->route('sidongan.verifikasi')
-            ->with('success', 'Verifikasi berhasil disimpan!');
-    }
-
-    /**
      * Halaman Arsip Surat
      */
     public function arsip()
@@ -895,16 +880,18 @@ class AdminDocumentController extends Controller
             'updated_by' => $user->id,
         ]);
         
-        // Buat notifikasi
-        \App\Models\Notification::create([
-            'user_id' => $user->id,
-            'type' => 'document.archived',
-            'title' => 'Surat Diarsipkan',
-            'message' => "Surat {$document->agenda_number} berhasil diarsipkan.",
-            'related_id' => $document->id,
-            'related_type' => Document::class,
-        ]);
-        
+        // Buat notifikasi ke Ketua
+        $ketuaUsers = User::where('sidongan_role', 'ketua')->get();
+        foreach ($ketuaUsers as $ketua) {
+            \App\Models\Notification::create([
+                'user_id' => $ketua->id,
+                'type' => 'document.archived',
+                'title' => 'Surat Diarsipkan',
+                'message' => "Surat {$document->agenda_number} berhasil diarsipkan oleh Sekretaris.",
+                'related_id' => $document->id,                'related_type' => Document::class,
+            ]);
+        }
+
         \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
             'action' => 'archived',
         ], $user->id);
@@ -998,6 +985,7 @@ class AdminDocumentController extends Controller
      */
     public function printDisposisi(Document $document)
     {
+        $this->authorizeDocumentAccess($document);
         return view('sidongan.documents.disposisi-print', compact('document'));
     }
 

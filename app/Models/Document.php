@@ -280,7 +280,6 @@ class Document extends Model
 
     public function updateCorrectStatus()
     {
-        \Log::info("=== UPDATE STATUS DOCUMENT {$this->id} ===");
         
         // Ambil data disposisi
         $disposisiData = $this->disposisi_data;
@@ -294,7 +293,7 @@ class Document extends Model
         }
 
         if (!is_array($disposisiData) || !isset($disposisiData['target_roles'])) {
-            \Log::info("No target_roles found, status unchanged");
+
             return $this->status;
         }
 
@@ -303,7 +302,7 @@ class Document extends Model
         $rolesDenganAnggota = $this->rolesDenganAnggota($disposisiData['target_roles']);
 
         if (empty($rolesDenganAnggota)) {
-            \Log::info("No users in target roles, setting selesai");
+
             $this->update(['status' => 'selesai']);
             return 'selesai';
         }
@@ -318,26 +317,25 @@ class Document extends Model
             ->first();
 
         if (!$latestReport) {
-            \Log::info("No report yet, setting berjalan");
+
             $this->update(['status' => 'berjalan']);
             return 'berjalan';
         }
 
         if ($latestReport->status === 'disetujui') {
-            \Log::info("Latest report approved, setting selesai");
+
             $this->update(['status' => 'selesai']);
             return 'selesai';
         }
 
         if ($latestReport->status === 'ditolak') {
-            \Log::info("Latest report rejected, setting berjalan");
+
             $this->update(['status' => 'berjalan']);
             return 'berjalan';
         }
 
         // menunggu_verifikasi (atau status laporan lain yang belum disetujui)
         $this->update(['status' => 'menunggu_verifikasi']);
-        \Log::info("Status updated to: menunggu_verifikasi");
         return 'menunggu_verifikasi';
     }
 

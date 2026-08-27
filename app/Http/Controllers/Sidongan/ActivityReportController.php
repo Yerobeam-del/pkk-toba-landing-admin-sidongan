@@ -19,13 +19,14 @@ class ActivityReportController extends Controller
         $role = $user->sidongan_role;
         
         // AUTO-UPDATE: Cek dokumen yang perlu update status
-        $documentsToCheck = \App\Models\Document::whereIn('sidongan_documents.status', ['berjalan', 'menunggu_verifikasi', 'selesai'])
+        // Gunakan chunk untuk hindari memory issue pada dataset besar
+        \App\Models\Document::whereIn('sidongan_documents.status', ['berjalan', 'menunggu_verifikasi', 'selesai'])
             ->whereNotNull('disposisi_data')
-            ->get();
-        
-        foreach ($documentsToCheck as $doc) {
-            $doc->updateCorrectStatus();
-        }
+            ->chunk(50, function ($documentsToCheck) {
+                foreach ($documentsToCheck as $doc) {
+                    $doc->updateCorrectStatus();
+                }
+            });
         
         // QUERY DASAR: Cari dokumen yang didisposisi ke role user ini
         // EXCLUDE: Surat yang sudah diarsipkan atau menunggu disposisi
@@ -126,6 +127,18 @@ class ActivityReportController extends Controller
                     ->with('error', 'Surat ini belum didisposisi oleh Ketua PKK.');
             }
 
+            // VALIDASI: Surat yang sudah selesai tidak bisa dilaporkan lagi
+            // (kecuali laporan sebelumnya ditolak — itu sudah di-handle di store())
+            if ($document->status === 'selesai') {
+                $hasRejectedReport = \App\Models\ActivityReport::where('document_id', $document_id)
+                    ->where('status', 'ditolak')
+                    ->exists();
+                if (!$hasRejectedReport) {
+                    return redirect()->route('sidongan.lapor_kegiatan.index')
+                        ->with('error', 'Surat ini sudah selesai diproses.');
+                }
+            }
+
             $dispo = is_string($document->disposisi_data)
                 ? json_decode($document->disposisi_data, true)
                 : $document->disposisi_data;
@@ -170,7 +183,7 @@ class ActivityReportController extends Controller
             'fotos.*.max' => 'Ukuran foto maksimal 5MB.',
         ]);
         
-        $document = \App\Models\Document::find($validated['document_id']);
+        $document = \App\Models\Document::findOrFail($validated['document_id']);
         $user = auth()->guard('sidongan')->user();
         
         $dispo = is_string($document->disposisi_data)
@@ -203,6 +216,12 @@ class ActivityReportController extends Controller
             ->first();
 
         if ($laporanAda) {
+            // Bersihkan foto yang sudah ter-upload tapi tidak jadi dipakai
+            foreach ($fotoPaths as $fotoPath) {
+                if (Storage::disk('public')->exists($fotoPath)) {
+                    Storage::disk('public')->delete($fotoPath);
+                }
+            }
             return redirect()
                 ->route('sidongan.lapor_kegiatan.show', $laporanAda->id)
                 ->with('warning', 'Surat ini sudah dilaporkan. Silakan periksa atau perbarui laporan tersebut.');

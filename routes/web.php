@@ -439,7 +439,9 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
             return view('sidongan-auth.login');
         })->name('sidongan.login');
 
-        Route::post('/sidongan-login', [App\Http\Controllers\Sidongan\AuthController::class, 'login'])->name('sidongan.login.post');
+        Route::post('/sidongan-login', [App\Http\Controllers\Sidongan\AuthController::class, 'login'])
+            ->middleware('throttle:5,1') // Max 5 attempts per minute
+            ->name('sidongan.login.post');
 
         // ================= SIDONGAN FORGOT PASSWORD =================
         Route::get('/sidongan-forgot-password', [App\Http\Controllers\Sidongan\ForgotPasswordController::class, 'create'])
