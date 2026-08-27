@@ -56,7 +56,7 @@
                     <i class="fas fa-list" style="color: #9333ea;"></i>
                 </div>
                 <div class="quick-action-text">
-                    <div class="quick-action-title">Daftar Surat</div>
+                    <div class="quick-action-title">Daftar Surat Masuk</div>
                     <div class="quick-action-desc">Lihat semua surat</div>
                 </div>
             </a>

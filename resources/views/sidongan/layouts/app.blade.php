@@ -63,7 +63,7 @@
                     $breadcrumbMap = [
                         'sidongan' => 'Dashboard',
                         'dashboard' => 'Dashboard',
-                        'documents' => 'Daftar Surat',
+                        'documents' => 'Daftar Surat Masuk',
                         'create' => 'Buat Surat Baru',
                         'edit' => 'Edit Surat',
                         'disposisi' => 'Disposisi',

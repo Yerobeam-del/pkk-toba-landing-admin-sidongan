@@ -49,7 +49,7 @@
             </a>
             <div id="suratSubmenu" class="surat-submenu" style="display: {{ $isSuratActive ? 'block' : 'none' }}; padding-left: 1.25rem; margin-top: 0.25rem;">
                 <a href="{{ route('sidongan.documents.index') }}" class="nav-item {{ request()->routeIs('sidongan.documents.*') && !request()->routeIs('sidongan.documents.create') ? 'active' : '' }}" style="font-size: 0.85rem; padding: 0.5rem 0.75rem; margin-bottom: 0.125rem;">
-                    <span class="nav-text">Daftar Surat</span>
+                    <span class="nav-text">Daftar Surat Masuk</span>
                 </a>
                 <a href="{{ route('sidongan.documents.create') }}" class="nav-item {{ request()->routeIs('sidongan.documents.create') ? 'active' : '' }}" style="font-size: 0.85rem; padding: 0.5rem 0.75rem; margin-bottom: 0.125rem;">
                     <span class="nav-text">Buat Surat Baru</span>
@@ -103,7 +103,7 @@
                         <polyline points="22,6 12,13 2,6"/>
                     </svg>
                 </div>
-                <span class="nav-text">Daftar Surat</span>
+                <span class="nav-text">Daftar Surat Masuk</span>
             </a>
             
             <a href="{{ route('sidongan.lapor_kegiatan.index') }}" class="nav-item {{ request()->routeIs('sidongan.lapor_kegiatan*') ? 'active' : '' }}">

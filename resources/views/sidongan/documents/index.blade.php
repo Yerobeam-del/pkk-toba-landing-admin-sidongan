@@ -2,7 +2,7 @@
      Dikembangkan oleh Institut Teknologi Del
      ============================================================ --}}
 @extends('sidongan.layouts.app')
-@section('title', 'Daftar Surat - SIDONGAN')
+@section('title', 'Daftar Surat Masuk - SIDONGAN')
 
 @section('content')    @php
         $currentUser = auth()->guard('sidongan')->user();
@@ -32,8 +32,8 @@
     {{-- Header Section --}}
     <div class="sd-index-header animate-slide-in">
         <div>
-            <h1 class="u-h2-slate">Daftar Surat</h1>
-            <p class="u-text-muted-lead">Kelola semua dokumen surat masuk dan keluar</p>
+            <h1 class="u-h2-slate">Daftar Surat Masuk</h1>
+            <p class="u-text-muted-lead">Kelola semua dokumen surat masuk</p>
         </div>
         @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
         <a href="{{ route('sidongan.documents.create') }}" class="sd-btn-create btn-action">

@@ -280,7 +280,10 @@
 
 /* === ACTION CELL === */
 .sd-action-cell { padding: 1rem; white-space: nowrap; }
-.sd-actions-row { display: flex; gap: 0.5rem; justify-content: center; }
+.sd-actions-row { display: flex; gap: 0.625rem; justify-content: center; align-items: center; }
+.sd-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; min-width: 36px; border-radius: 0.5rem; transition: all 0.2s; }
+.sd-icon-btn i { font-size: 0.9rem; }
+.sd-icon-btn:hover { transform: scale(1.1); }
 .sd-no-action { color: #94a3b8; font-size: 0.85rem; }
 
 /* === PAGINATION FOOTER === */
