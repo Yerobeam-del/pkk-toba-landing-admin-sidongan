@@ -68,11 +68,15 @@
 }
 .sd-filter-select {
     width: 100%;
-    padding: 0.625rem 1rem;
+    padding: 0.625rem 2.5rem 0.625rem 1rem;
     border: 1px solid #e2e8f0;
     border-radius: 0.5rem;
     font-size: 0.875rem;
     background: white;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 .sd-filter-date {
     width: 100%;

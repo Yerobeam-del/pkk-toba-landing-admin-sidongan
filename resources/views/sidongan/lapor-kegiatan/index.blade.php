@@ -65,7 +65,7 @@
                 <div>
                     <label class="u-label-gray">Status</label>
                     <div class="u-relative">
-                        <select class="u-label-gray" name="status">
+                        <select class="u-a50" name="status">
                             <option value="">Semua Status</option>
                             <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Perlu Dilaporkan</option>
                             <option value="menunggu_verifikasi" {{ request('status') == 'menunggu_verifikasi' ? 'selected' : '' }}>Menunggu Verifikasi</option>
@@ -78,7 +78,7 @@
                 <div>
                     <label class="u-label-gray">Tampilkan</label>
                     <div class="u-relative">
-                        <select class="u-label-gray" name="per_page">
+                        <select class="u-a50" name="per_page">
                             @foreach([5, 10, 15, 25, 50] as $value)
                                 <option value="{{ $value }}" {{ (request('per_page', 10) == $value) ? 'selected' : '' }}>
                                     {{ $value }} laporan

@@ -93,7 +93,7 @@
                 <div>
                     <label class="u-label-slate">Tampilkan</label>
                     <div class="u-relative">
-                        <select class="u-label-slate" name="per_page" id="perPageSelect">
+                        <select class="sd-filter-select" name="per_page" id="perPageSelect">
                             @foreach($allowedPerPages as $value)
                                 <option value="{{ $value }}" {{ ($currentPerPage ?? 10) == $value ? 'selected' : '' }}>
                                     {{ $value }} surat
@@ -107,7 +107,7 @@
                 <div>
                     <label class="u-label-slate">Status</label>
                     <div class="u-relative">
-                        <select class="u-label-slate" name="status" id="statusSelect">
+                        <select class="sd-filter-select" name="status" id="statusSelect">
                             <option value="">Semua Status</option>
                             <option value="menunggu_disposisi" {{ request('status') == 'menunggu_disposisi' ? 'selected' : '' }}>Menunggu Disposisi</option>
                             <option value="berjalan" {{ request('status') == 'berjalan' ? 'selected' : '' }}>Berjalan</option>
@@ -144,7 +144,7 @@
                 <div>
                     <label class="u-label-slate">Bulan</label>
                     <div class="u-relative">
-                        <select class="u-label-slate" name="filter_month">
+                        <select class="sd-filter-select" name="filter_month">
                             <option value="">Semua Bulan</option>
                             @foreach(['01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April', '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'] as $num => $name)
                                 <option value="{{ $num }}" {{ request('filter_month') == $num ? 'selected' : '' }}>{{ $name }}</option>
@@ -157,7 +157,7 @@
                 <div>
                     <label class="u-label-slate">Tahun</label>
                     <div class="u-relative">
-                        <select class="u-label-slate" name="filter_year">
+                        <select class="sd-filter-select" name="filter_year">
                             <option value="">Semua Tahun</option>
                             @foreach($availableYears as $year)
                                 <option value="{{ $year }}" {{ request('filter_year') == $year ? 'selected' : '' }}>{{ $year }}</option>
