@@ -48,6 +48,13 @@
             $canLaporKegiatan = true;
         }
     }
+
+    // Collect all report fotos for gallery
+    $allReportFotos = [];
+    foreach ($activityReports as $report) {
+        $fotos = json_decode($report->fotos, true) ?? [];
+        $allReportFotos = array_merge($allReportFotos, $fotos);
+    }
 @endphp
 
 <link rel="stylesheet" href="{{ asset('assets/sidongan/css/detail-surat.css') }}">
