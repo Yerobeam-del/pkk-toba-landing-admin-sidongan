@@ -100,7 +100,6 @@
                                 </option>
                             @endforeach
                         </select>
-                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
 
@@ -115,7 +114,6 @@
                             <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
                             <option value="diarsipkan" {{ request('status') == 'diarsipkan' ? 'selected' : '' }}>Diarsipkan</option>
                         </select>
-                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
             </div>
@@ -150,7 +148,6 @@
                                 <option value="{{ $num }}" {{ request('filter_month') == $num ? 'selected' : '' }}>{{ $name }}</option>
                             @endforeach
                         </select>
-                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
 
@@ -163,7 +160,6 @@
                                 <option value="{{ $year }}" {{ request('filter_year') == $year ? 'selected' : '' }}>{{ $year }}</option>
                             @endforeach
                         </select>
-                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
 

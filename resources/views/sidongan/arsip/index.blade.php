@@ -176,7 +176,6 @@
                                 </option>
                             @endforeach
                         </select>
-                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
 
@@ -189,7 +188,6 @@
                                 <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
                             @endfor
                         </select>
-                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
             </div>
@@ -205,7 +203,6 @@
                                 <option value="{{ $num }}" {{ request('filter_month') == $num ? 'selected' : '' }}>{{ $name }}</option>
                             @endforeach
                         </select>
-                        <i class="fas fa-chevron-down u-select-chevron-right"></i>
                     </div>
                 </div>
 
