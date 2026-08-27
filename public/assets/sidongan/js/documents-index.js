@@ -4,8 +4,6 @@
  * Daftar Surat Masuk — pencarian otomatis, filter cepat,
  * konfirmasi hapus/arsipkan, reset filter & sorting.
  * URL dasar dibaca dari atribut data-* pada #filterForm.
- *
- * Dikembangkan oleh Institut Teknologi Del
  * ============================================================ */
 (function () {
     'use strict';
@@ -27,7 +25,7 @@
     }
 
     // ===============================
-    // Konfirmasi Hapus / Arsipkan
+    // Konfirmasi Hapus / Arsipkan (single row)
     // ===============================
     function deleteBaseUrl() {
         const form = document.getElementById('deleteForm');
@@ -104,60 +102,6 @@
     }
 
     // ===============================
-    // Event Delegation (menggantikan onclick inline)
-    // ===============================
-    document.addEventListener('click', function (event) {
-        // Filter cepat status
-        const qf = event.target.closest('[data-filter-status]');
-        if (qf) {
-            applyQuickFilter(qf.getAttribute('data-filter-status'));
-            return;
-        }
-
-        // Tombol reset filter / sorting
-        const actionBtn = event.target.closest('[data-action]');
-        if (actionBtn) {
-            const action = actionBtn.getAttribute('data-action');
-            if (action === 'reset-filters') resetFilters();
-            else if (action === 'reset-sorting') resetSorting();
-            return;
-        }
-
-        // Kolom sortir tabel
-        const th = event.target.closest('th[data-sort-url]');
-        if (th) {
-            window.location.href = th.getAttribute('data-sort-url');
-            return;
-        }
-
-        // Tombol hapus
-        const del = event.target.closest('[data-delete-id]');
-        if (del) {
-            confirmDelete(del.getAttribute('data-delete-id'), del.getAttribute('data-delete-title'));
-            return;
-        }
-
-        // Tombol arsipkan
-        const arch = event.target.closest('[data-archive-id]');
-        if (arch) {
-            confirmArchive(arch.getAttribute('data-archive-id'), arch.getAttribute('data-archive-title'));
-        }
-    });
-
-    // ===============================
-    // Auto-submit saat filter berubah
-    // ===============================
-    if (filterForm) {
-        filterForm.addEventListener('change', function (event) {
-            const name = event.target && event.target.name;
-            const auto = ['per_page', 'status', 'filter_month', 'filter_year', 'date_from', 'date_to'];
-            if (name && auto.indexOf(name) !== -1) {
-                filterForm.submit();
-            }
-        });
-    }
-
-    // ===============================
     // Bulk Actions
     // ===============================
     const selectAll = document.getElementById('selectAll');
@@ -192,71 +136,123 @@
         cb.addEventListener('change', updateBulkBar);
     });
 
-    // Bulk action buttons
-    document.addEventListener('click', function (e) {
-        const btn = e.target.closest('[data-action]');
-        if (!btn) return;
-        const action = btn.getAttribute('data-action');
+    // ===============================
+    // Auto-submit saat filter berubah
+    // ===============================
+    if (filterForm) {
+        filterForm.addEventListener('change', function (event) {
+            const name = event.target && event.target.name;
+            const auto = ['per_page', 'status', 'filter_month', 'filter_year', 'date_from', 'date_to'];
+            if (name && auto.indexOf(name) !== -1) {
+                filterForm.submit();
+            }
+        });
+    }
 
-        if (action === 'bulk-cancel') {
-            docCheckboxes.forEach(cb => { cb.checked = false; });
-            if (selectAll) selectAll.checked = false;
-            updateBulkBar();
+    // ===============================
+    // Unified Event Delegation — satu handler untuk semua klik
+    // ===============================
+    document.addEventListener('click', function (event) {
+        // Filter cepat status
+        const qf = event.target.closest('[data-filter-status]');
+        if (qf) {
+            applyQuickFilter(qf.getAttribute('data-filter-status'));
             return;
         }
 
-        if (action === 'bulk-archive' || action === 'bulk-delete') {
-            const ids = getSelectedIds();
-            if (ids.length === 0) return;
+        // Tombol reset filter / sorting
+        const actionBtn = event.target.closest('[data-action]');
+        if (actionBtn) {
+            const action = actionBtn.getAttribute('data-action');
 
-            const isDelete = action === 'bulk-delete';
-            const url = isDelete
-                ? '/sidongan/documents/bulk-delete'
-                : '/sidongan/documents/bulk-archive';
-            const label = isDelete ? 'menghapus' : 'mengarsipkan';
-            const countLabel = ids.length + ' surat';
+            if (action === 'reset-filters') { resetFilters(); return; }
+            if (action === 'reset-sorting') { resetSorting(); return; }
 
-            Toast.confirm('Apakah Anda yakin ingin ' + label + ' <strong>' + countLabel + '</strong>?<br><small style="color:#64748b;">' + (isDelete ? 'Tindakan ini tidak dapat dibatalkan.' : 'Surat akan dipindahkan ke Arsip.') + '</small>', {
-                title: 'Konfirmasi ' + (isDelete ? 'Hapus' : 'Arsipkan') + ' Massal',
-                confirmText: 'Ya, ' + (isDelete ? 'Hapus' : 'Arsipkan'),
-                cancelText: 'Batal',
-                type: isDelete ? 'danger' : 'warning'
-            }).then((confirmed) => {
-                if (!confirmed) return;
+            // Bulk cancel
+            if (action === 'bulk-cancel') {
+                docCheckboxes.forEach(cb => { cb.checked = false; });
+                if (selectAll) selectAll.checked = false;
+                updateBulkBar();
+                return;
+            }
 
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            // Bulk archive / delete
+            if (action === 'bulk-archive' || action === 'bulk-delete') {
+                var ids = getSelectedIds();
+                if (ids.length === 0) return;
 
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({ ids: ids })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        Toast.success(data.message || 'Berhasil!');
-                        setTimeout(() => { window.location.reload(); }, 1000);
-                    } else {
-                        Toast.error(data.message || 'Gagal memproses.');
-                        btn.disabled = false;
-                        btn.innerHTML = isDelete
+                var isDelete = action === 'bulk-delete';
+                var url = isDelete
+                    ? '/sidongan/documents/bulk-delete'
+                    : '/sidongan/documents/bulk-archive';
+                var label = isDelete ? 'menghapus' : 'mengarsipkan';
+                var countLabel = ids.length + ' surat';
+
+                Toast.confirm('Apakah Anda yakin ingin ' + label + ' <strong>' + countLabel + '</strong>?<br><small style="color:#64748b;">' + (isDelete ? 'Tindakan ini tidak dapat dibatalkan.' : 'Surat akan dipindahkan ke Arsip.') + '</small>', {
+                    title: 'Konfirmasi ' + (isDelete ? 'Hapus' : 'Arsipkan') + ' Massal',
+                    confirmText: 'Ya, ' + (isDelete ? 'Hapus' : 'Arsipkan'),
+                    cancelText: 'Batal',
+                    type: isDelete ? 'danger' : 'warning'
+                }).then(function (confirmed) {
+                    if (!confirmed) return;
+
+                    actionBtn.disabled = true;
+                    actionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ ids: ids })
+                    })
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        if (data.success) {
+                            Toast.success(data.message || 'Berhasil!');
+                            setTimeout(function () { window.location.reload(); }, 1000);
+                        } else {
+                            Toast.error(data.message || 'Gagal memproses.');
+                            actionBtn.disabled = false;
+                            actionBtn.innerHTML = isDelete
+                                ? '<i class="fas fa-trash-alt"></i> Hapus'
+                                : '<i class="fas fa-archive"></i> Arsipkan';
+                        }
+                    })
+                    .catch(function () {
+                        Toast.error('Terjadi kesalahan jaringan.');
+                        actionBtn.disabled = false;
+                        actionBtn.innerHTML = isDelete
                             ? '<i class="fas fa-trash-alt"></i> Hapus'
                             : '<i class="fas fa-archive"></i> Arsipkan';
-                    }
-                })
-                .catch(() => {
-                    Toast.error('Terjadi kesalahan jaringan.');
-                    btn.disabled = false;
-                    btn.innerHTML = isDelete
-                        ? '<i class="fas fa-trash-alt"></i> Hapus'
-                        : '<i class="fas fa-archive"></i> Arsipkan';
+                    });
                 });
-            });
+                return;
+            }
+
+            return;
+        }
+
+        // Kolom sortir tabel
+        var th = event.target.closest('th[data-sort-url]');
+        if (th) {
+            window.location.href = th.getAttribute('data-sort-url');
+            return;
+        }
+
+        // Tombol hapus (single)
+        var del = event.target.closest('[data-delete-id]');
+        if (del) {
+            confirmDelete(del.getAttribute('data-delete-id'), del.getAttribute('data-delete-title'));
+            return;
+        }
+
+        // Tombol arsipkan (single)
+        var arch = event.target.closest('[data-archive-id]');
+        if (arch) {
+            confirmArchive(arch.getAttribute('data-archive-id'), arch.getAttribute('data-archive-title'));
         }
     });
 })();
