@@ -425,10 +425,10 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
 
     // ================= WEB: SIDONGAN AUTH =================
     Route::middleware(['sidongan.guest'])->group(function () {
-        // Redirect root subdomain langsung ke halaman login
+        // Landing page untuk SIDONGAN
         Route::get('/', function () {
-            return redirect()->route('sidongan.login');
-        });
+            return view('sidongan.landing');
+        })->name('sidongan.landing');
 
         Route::get('/sidongan-login', function () {
             \Illuminate\Support\Facades\Auth::guard('web')->logout();
@@ -499,6 +499,13 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
         Route::post('/notifications/mark-all-read', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'markAllNotificationsAsRead'])->name('notifications.mark-all-read');
     });
 });
+
+// ================= DEV: SIDONGAN LANDING PREVIEW (hanya environment local) =================
+if (app()->environment('local')) {
+    Route::get('/dev/sidongan-preview', function () {
+        return view('sidongan.landing');
+    })->name('dev.sidongan.preview');
+}
 
 // ================= AUTH ROUTES (Wajib di paling bawah) =================
 require __DIR__.'/auth.php';
