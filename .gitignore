@@ -1,4 +1,4 @@
-﻿/vendor/
+/vendor/
 /node_modules/
 /.env
 /.env.backup
@@ -43,3 +43,4 @@ server.php
 .gitignore
 .freebuff/desktop-v2.db-shm
 .freebuff/desktop-v2.db
+.freebuff/preview-f71bd126-3082-4217-9031-8fd6fe12bac9.log
