@@ -43,6 +43,28 @@
             </div>
         </div>
 
+        {{-- Penulis --}}
+        <div class="u-mb-6">
+            <label class="u-label">Penulis *</label>
+            <div style="display:flex; gap:1.5rem; margin-bottom:0.75rem;">
+                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.9rem;">
+                    <input type="radio" name="author_type" value="account" {{ old('author_type', 'account') === 'account' ? 'checked' : '' }}
+                           onchange="toggleAuthorInput(this.value)" style="accent-color:var(--primary)">
+                    <span>Sesuai Akun ({{ auth()->user()->name }})</span>
+                </label>
+                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.9rem;">
+                    <input type="radio" name="author_type" value="manual" {{ old('author_type') === 'manual' ? 'checked' : '' }}
+                           onchange="toggleAuthorInput(this.value)" style="accent-color:var(--primary)">
+                    <span>Ketik Manual</span>
+                </label>
+            </div>
+            <input type="text" name="author" id="authorInput" class="form-control"
+                   value="{{ old('author') }}"
+                   placeholder="Ketik nama penulis..."
+                   style="{{ old('author_type', 'account') === 'account' ? 'display:none' : '' }}">
+            <small class="u-hint" id="authorHint">Penulis akan otomatis diambil dari akun yang login</small>
+        </div>
+
         {{-- Excerpt dengan Character Counter --}}
         <div class="u-mb-6">
             <label class="u-label">Ringkasan (Excerpt) *</label>
@@ -133,6 +155,23 @@
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 
     <script src="{{ asset('assets/admin/js/admin-berita-create.js') }}"></script>
+
+    <script>
+    function toggleAuthorInput(type) {
+        var input = document.getElementById('authorInput');
+        var hint = document.getElementById('authorHint');
+        if (type === 'manual') {
+            input.style.display = '';
+            input.required = true;
+            hint.textContent = 'Masukkan nama penulis secara manual';
+        } else {
+            input.style.display = 'none';
+            input.required = false;
+            input.value = '';
+            hint.textContent = 'Penulis akan otomatis diambil dari akun yang login';
+        }
+    }
+    </script>
 
 @endpush
 

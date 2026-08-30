@@ -20,8 +20,10 @@ class News extends Model
     protected $fillable = [
         'title', 
         'slug', 
-        'category',      // ← TAMBAHKAN INI (string dari form)
-        'category_id',   // ← Biarkan juga untuk migrasi nanti
+        'category',
+        'category_id',
+        'author',
+        'author_type',
         'excerpt', 
         'content', 
         'image_path', 

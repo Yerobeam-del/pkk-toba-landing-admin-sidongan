@@ -1350,19 +1350,27 @@ body:has(.news-detail-wrapper) #newsModal,
 .news-breadcrumb a:hover { color: #fff; background: rgba(255,255,255,0.1); }
 .news-breadcrumb span { color: rgba(255,255,255,0.4); }
 .news-breadcrumb .current { color: var(--gold); font-weight: 600; }
-.news-detail-container { max-width: 820px; margin: 0 auto; padding: 4rem 2rem 5rem; }
+.news-detail-container { max-width: 1100px; margin: 0 auto; padding: 4rem 2rem 5rem; }
 .news-detail-article { background: transparent; padding: 0; }
-.news-detail-title { font-size: 2.5rem; font-weight: 800; color: var(--text-dark); line-height: 1.25; margin: 0 0 2rem 0; text-align: left; letter-spacing: -0.5px; }
+.news-detail-title { font-size: 2.75rem; font-weight: 800; color: var(--text-dark); line-height: 1.2; margin: 0 0 2rem 0; text-align: left; letter-spacing: -0.5px; max-width: 800px; }
+.news-back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--news-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-bottom: 2rem; padding: 8px 16px; border-radius: 8px; transition: all 0.3s ease; border: 1px solid rgba(19, 140, 127, 0.2); }
+.news-back-link:hover { background: rgba(19, 140, 127, 0.08); border-color: var(--news-color); transform: translateX(-4px); }
+.news-back-link svg { transition: transform 0.3s ease; }
+.news-back-link:hover svg { transform: translateX(-4px); }
 .news-detail-meta { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.news-detail-reading-time { display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
+.news-detail-reading-time svg { width: 18px; height: 18px; color: var(--news-color); }
+.news-detail-author { display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--text-muted); font-weight: 600; }
+.news-detail-author svg { width: 18px; height: 18px; color: var(--news-color); }
 .news-detail-category { display: inline-flex; align-items: center; background: var(--news-color); color: #fff; font-size: 0.8rem; font-weight: 600; padding: 6px 16px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 .news-detail-date { display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
 .news-detail-date svg { width: 18px; height: 18px; color: var(--news-color); }
-.news-detail-image { width: 100%; border-radius: 12px; overflow: hidden; margin: 0 0 3rem 0; background: var(--bg-light); box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
-.news-detail-image img { width: 100%; height: auto; max-height: 550px; object-fit: cover; display: block; transition: transform 0.5s ease; }
-.news-detail-image:hover img { transform: scale(1.03); }
-.news-detail-excerpt { font-size: 1.3rem; color: #2d3748; line-height: 1.7; margin: 0 0 3rem 0; font-weight: 500; position: relative; padding-left: 2rem; }
+.news-detail-image { width: 100%; border-radius: 16px; overflow: hidden; margin: 0 0 3rem 0; background: var(--bg-light); box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+.news-detail-image img { width: 100%; height: auto; max-height: 580px; object-fit: cover; display: block; transition: transform 0.5s ease; }
+.news-detail-image:hover img { transform: scale(1.02); }
+.news-detail-excerpt { font-size: 1.35rem; color: #2d3748; line-height: 1.7; margin: 0 0 3rem 0; font-weight: 500; position: relative; padding-left: 2rem; max-width: 850px; }
 .news-detail-excerpt::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--news-color), var(--primary)); border-radius: 2px; }
-.news-detail-content { line-height: 1.9; color: #2d3748; font-size: 1.125rem; margin: 0; }
+.news-detail-content { line-height: 1.9; color: #2d3748; font-size: 1.125rem; margin: 0; max-width: 800px; }
 .news-detail-content p { margin-bottom: 1.75rem; text-align: justify; }
 .news-detail-content p:first-child::first-letter { font-size: 3.5rem; font-weight: 800; color: var(--primary); float: left; line-height: 0.8; margin: 0.1em 0.2em 0 0; text-transform: uppercase; }
 .news-detail-content img { max-width: 100%; height: auto; border-radius: 12px; margin: 2.5rem 0; display: block; box-shadow: 0 10px 40px rgba(0,0,0,0.12); }
@@ -1395,7 +1403,7 @@ body:has(.news-detail-wrapper) #newsModal,
 .news-detail-related { margin-top: 5rem; padding: 4rem 0 0; border-top: 1px solid rgba(0,0,0,0.08); }
 .news-detail-related-title { font-size: 2rem; font-weight: 800; color: var(--text-dark); margin: 0 0 3rem 0; text-align: center; }
 .news-detail-related-title::after { content: ''; display: block; width: 80px; height: 4px; background: linear-gradient(90deg, var(--news-color), var(--primary)); margin: 1rem auto 0; border-radius: 2px; }
-.news-related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1100px; margin: 0 auto; }
+.news-related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
 .news-related-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: all 0.4s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.04); }
 .news-related-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
 .news-related-image { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform 0.4s ease; }
@@ -1434,7 +1442,7 @@ body:has(.news-detail-wrapper) #newsModal,
     .footer-quick-access { padding: 1.5rem 0; }
     .news-full-grid { grid-template-columns: repeat(2, 1fr); }
     .news-related-grid { grid-template-columns: repeat(2, 1fr); }
-    .news-detail-image { max-height: 450px; }
+    .news-detail-image img { max-height: 450px; }
     .news-page-header h1 { font-size: 2.25rem; }
     .news-detail-title { font-size: 2.25rem; }
 }
@@ -1989,5 +1997,102 @@ APLIKASI CAROUSEL - FEATURES & COLORS
 /* Aksesibilitas: hormati preferensi pengguna yang mengurangi animasi */
 @media (prefers-reduced-motion: reduce) {
     .app-card-slide.is-development:hover { transform: none; }
+}
+
+/* ==========================================
+   23. NEWS DETAIL - PRINT BUTTON (screen only)
+   ========================================== */
+.news-detail-actions { display: flex; flex-direction: column; align-items: center; gap: 2rem; margin: 4rem 0 0; padding: 3rem 0 0; border-top: 1px solid rgba(0,0,0,0.08); }
+.news-detail-actions .news-detail-share { margin: 0; padding: 0; border: none; }
+.news-print-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 28px; font-size: 0.9rem; font-weight: 600;
+    border-radius: 50px; border: 2px solid var(--news-color);
+    background: #fff; color: var(--news-color); cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.news-print-btn:hover { background: var(--news-color); color: #fff; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+.news-print-btn svg { width: 18px; height: 18px; }
+
+@media (max-width: 768px) {
+    .news-detail-actions { margin: 2rem 0 0; padding: 2rem 0 0; }
+    .news-detail-actions .news-detail-share { padding: 0; }
+}
+
+/* ==========================================
+   24. NEWS DETAIL - PRINT STYLES (printer)
+   ========================================== */
+@media print {
+    /* ── Hide everything non-essential ── */
+    .navbar, .footer, .floating-app-btn, .mobile-menu,
+    .news-page-header, .news-back-link, .news-detail-related,
+    .news-detail-actions, .news-detail-share,
+    .news-detail-meta .news-detail-reading-time,
+    body > script, body > noscript { display: none !important; }
+
+    /* ── Reset page ── */
+    *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; }
+    html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; }
+    body { font-size: 12pt; line-height: 1.6; color: #000 !important; }
+
+    /* ── Print header (appears only on paper) ── */
+    .news-detail-wrapper::before {
+        content: 'PKK Kabupaten Toba — tp-pkk.tobakab.go.id';
+        display: block !important;
+        font-size: 10pt; color: #555; text-align: center;
+        padding-bottom: 8pt; margin-bottom: 12pt;
+        border-bottom: 1px solid #ccc;
+    }
+
+    /* ── Container ── */
+    .news-detail-wrapper { min-height: auto !important; background: none !important; }
+    .news-detail-container { max-width: 100%; padding: 0 !important; margin: 0 !important; }
+    .news-detail-article { padding: 0 !important; }
+
+    /* ── Title & Meta ── */
+    .news-detail-title { font-size: 20pt; margin: 0 0 8pt 0; color: #000 !important; }
+    .news-detail-meta {
+        flex-direction: row; flex-wrap: wrap; gap: 1rem;
+        margin-bottom: 16pt; padding-bottom: 8pt;
+        border-bottom: 1px solid #ccc !important;
+        font-size: 10pt; color: #333 !important;
+    }
+    .news-detail-category {
+        background: #eee !important; color: #333 !important;
+        font-size: 8pt; padding: 3px 10px;
+    }
+
+    /* ── Images ── */
+    .news-detail-image { box-shadow: none !important; margin: 0 0 16pt 0; border-radius: 0 !important; }
+    .news-detail-image img { max-height: none !important; width: 100%; }
+    .news-detail-content img { max-width: 100%; margin: 8pt 0 !important; box-shadow: none !important; border-radius: 0 !important; }
+
+    /* ── Content ── */
+    .news-detail-excerpt { padding-left: 1rem; font-style: italic; border-left: 3px solid #999; }
+    .news-detail-content { font-size: 11pt; line-height: 1.8; color: #000 !important; }
+    .news-detail-content p { margin-bottom: 10pt; }
+    .news-detail-content p:first-child::first-letter { font-size: 1.6rem; }
+    .news-detail-content h2, .news-detail-content h3, .news-detail-content h4 { color: #000 !important; page-break-after: avoid; }
+    .news-detail-content a { color: #000 !important; text-decoration: underline !important; border: none !important; }
+    .news-detail-content a::after { content: ' (' attr(href) ')'; font-size: 8pt; color: #666; }
+    .news-detail-content blockquote { border-left-color: #999 !important; background: none !important; }
+
+    /* ── Page breaks ── */
+    .news-detail-title, .news-detail-image, .news-detail-content h2, .news-detail-content h3 {
+        page-break-after: avoid;
+    }
+    .news-detail-content p, .news-detail-content img, .news-detail-content blockquote {
+        page-break-inside: avoid;
+    }
+
+    /* ── Footer at bottom of printout ── */
+    .news-detail-wrapper::after {
+        content: 'Dicetak pada ' attr(data-print-date) ' — © PKK Kabupaten Toba';
+        display: block !important;
+        font-size: 8pt; color: #999; text-align: center;
+        margin-top: 24pt; padding-top: 8pt;
+        border-top: 1px solid #ccc;
+    }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

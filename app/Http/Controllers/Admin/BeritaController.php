@@ -73,12 +73,19 @@ class BeritaController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category' => 'required|string|max:50',
+            'author_type' => 'required|in:account,manual',
+            'author' => 'required_if:author_type,manual|nullable|string|max:255',
             'excerpt' => 'required|string|max:500',
             'content' => 'required|string',
             'image' => 'nullable|image|max:2048',
             'published_at' => 'nullable|date',
             'is_published' => 'nullable|boolean',
         ]);
+
+        // Handle author: jika tipe 'account', ambil nama dari user yang login
+        if ($validated['author_type'] === 'account') {
+            $validated['author'] = $request->user()->name;
+        }
 
         // Menambahkan timestamp untuk menjamin unik
         $slug = Str::slug($validated['title']) . '-' . time() . '-' . rand(1000, 9999);
@@ -160,12 +167,19 @@ class BeritaController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category' => 'required|string|max:50',
+            'author_type' => 'required|in:account,manual',
+            'author' => 'required_if:author_type,manual|nullable|string|max:255',
             'excerpt' => 'required|string|max:500',
             'content' => 'required|string',
             'published_at' => 'nullable|date',
             'image' => 'nullable|image|max:2048',
             'is_published' => 'nullable|boolean',
         ]);
+
+        // Handle author: jika tipe 'account', ambil nama dari user yang login
+        if ($validated['author_type'] === 'account') {
+            $validated['author'] = $request->user()->name;
+        }
 
         // ✅ GENERATE SLUG UNIK UNTUK UPDATE
         $slug = Str::slug($validated['title']);

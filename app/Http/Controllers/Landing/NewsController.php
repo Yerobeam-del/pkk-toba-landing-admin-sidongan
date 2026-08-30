@@ -30,6 +30,15 @@ class NewsController extends Controller
             ->limit(3)
             ->get();
 
+        // Fallback: jika tidak ada berita satu kategori, tampilkan berita terbaru
+        if ($relatedNews->isEmpty()) {
+            $relatedNews = News::published()
+                ->where('id', '!=', $news->id)
+                ->latest('published_at')
+                ->limit(3)
+                ->get();
+        }
+
         return view('modules.landing.news-detail', compact('news', 'relatedNews'));
     }
 }

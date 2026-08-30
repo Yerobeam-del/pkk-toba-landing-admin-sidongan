@@ -19,10 +19,11 @@
         document.body.style.overflow = '';
         document.body.style.paddingRight = '';
 
-        // Lazy load images
-        var images = document.querySelectorAll('.news-detail-content img');
-        images.forEach(function(img) {
-            img.setAttribute('loading', 'lazy');
+        // Lazy load images inside article content (from WYSIWYG editor)
+        document.querySelectorAll('.news-detail-content img').forEach(function(img) {
+            if (!img.hasAttribute('loading')) {
+                img.setAttribute('loading', 'lazy');
+            }
         });
 
         // Set active navbar
@@ -34,6 +35,21 @@
                 link.classList.add('active-link');
             }
         });
+
+        // Print button handler
+        var printBtn = document.getElementById('newsPrintBtn');
+        if (printBtn) {
+            printBtn.addEventListener('click', function() {
+                // Set print date for footer
+                var wrapper = document.querySelector('.news-detail-wrapper');
+                if (wrapper) {
+                    var now = new Date();
+                    var options = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+                    wrapper.setAttribute('data-print-date', now.toLocaleDateString('id-ID', options));
+                }
+                window.print();
+            });
+        }
     });
 
 

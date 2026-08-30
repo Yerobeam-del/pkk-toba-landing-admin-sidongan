@@ -30,8 +30,14 @@
                  style="width: 100%; height: 200px; object-fit: cover; display: block;">
 
             <div class="u-p-6">
-                <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.75rem;">
-                    {{ $news->published_at?->locale('id')->translatedFormat('d F Y') ?? '-' }}
+                <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                    <span>{{ $news->published_at?->locale('id')->translatedFormat('d F Y') ?? '-' }}</span>
+                    @if($news->author)
+                        <span style="display: inline-flex; align-items: center; gap: 0.3rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            {{ $news->author }}
+                        </span>
+                    @endif
                 </div>
 
                 <span style="display: inline-block; padding: 0.25rem 0.75rem; background: rgba(39,103,73,0.1); color: #276749; border-radius: 50px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem;">
