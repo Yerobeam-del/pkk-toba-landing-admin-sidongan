@@ -1,46 +1,71 @@
 /vendor/
 /node_modules/
+/public/build/
+/public/hot
+/public/storage
+
+# Environment
 /.env
 /.env.backup
 /.env.production
-/public/hot
-/public/storage
+/.env.local
+/.env.staging
+
+# Database
+/database/*.sqlite
+/database/*.sqlite-journal
+/database/*.sqlite-shm
+/database/*.sqlite-wal
+
+# Storage (user uploads — managed per-deployment)
 /storage/*.key
+/storage/app/public/
+
+# Laravel / PHP
 /.phpunit.result.cache
 Homestead.json
 Homestead.yaml
+phpunit.xml
+
+# Logs
+*.log
 npm-debug.log
 yarn-error.log
+
+# IDE & Editor
 .idea/
 .vscode/
 *.swp
+*.swo
+*~
+.vscode/settings.json
+
+# OS
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Build
 **/build/
 **/.gradle/
 **/local.properties
-.freebuff/desktop.db
-.freebuff/desktop.db-shm
-.freebuff/desktop.db-wal
-.freebuff/preview-thms42afwy3on9.log
-.freebuff/run.md
+public/mix-manifest.json
+
+# Codebuff / Preview (internal)
+.freebuff/
+.zcode/
+
+# Documentation (local-only)
 docs/Pseudocode_Arsitektur_PKK_Toba.pdf
 docs/pseudocode-arsitektur-awam.html
 docs/pseudocode-arsitektur-awam.md
-.freebuff/run-dev.bat
-.freebuff/run-server.bat
-.freebuff/server-pid.txt
-.freebuff/start-dev.vbs
-.freebuff/start-server.bat
-.freebuff/start-server.ps1
-.freebuff/start-server.vbs
-.freebuff/preview-thms42afwy3on9.log.err
-.freebuff/preview-thms42afwy3on9.log.bak
-.freebuff/preview-out.log
-.freebuff/preview-err.log
+docs/_shot/node_modules/
+
+# Standalone preview files
+preview-*.html
+
+# Root-level log files (Windows path logs)
+D:SIDANG*
+
+# Server
 server.php
-.freebuff/desktop-v2.db-wal
-.gitignore
-.freebuff/desktop-v2.db-shm
-.freebuff/desktop-v2.db
-.freebuff/preview-f71bd126-3082-4217-9031-8fd6fe12bac9.log
