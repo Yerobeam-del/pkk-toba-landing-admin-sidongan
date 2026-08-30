@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\News;
+use App\Models\NewsImage;
 use App\Models\AdminActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -104,7 +105,18 @@ class BeritaController extends Controller
             $validated['image_path'] = $request->file('image')->store('news', 'public');
         }
 
-        News::create($validated);
+        $news = News::create($validated);
+
+        // Handle multiple images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $file) {
+                $path = $file->store('news', 'public');
+                $news->images()->create([
+                    'image_path' => $path,
+                    'sort_order' => $index,
+                ]);
+            }
+        }
         AdminActivityLog::log('created', 'berita', null, ['title' => $validated['title'] ?? '']);
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil ditambahkan.');
     }
@@ -216,12 +228,42 @@ class BeritaController extends Controller
         }
 
         $beritum->update($validated);
+
+        // Handle new multiple images
+        if ($request->hasFile('images')) {
+            $maxOrder = $beritum->images()->max('sort_order') ?? 0;
+            foreach ($request->file('images') as $index => $file) {
+                $path = $file->store('news', 'public');
+                $beritum->images()->create([
+                    'image_path' => $path,
+                    'sort_order' => $maxOrder + $index + 1,
+                ]);
+            }
+        }
         AdminActivityLog::log('updated', 'berita', $beritum->id, ['title' => $beritum->title ?? '']);
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diperbarui.');
     }
 
+    public function deleteImage(News $beritum, NewsImage $image)
+    {
+        if ($image->news_id !== $beritum->id) {
+            abort(404);
+        }
+
+        Storage::disk('public')->delete($image->image_path);
+        $image->delete();
+
+        return redirect()->route('admin.berita.edit', $beritum)->with('success', 'Gambar berhasil dihapus.');
+    }
+
     public function destroy(News $beritum)
     {
+        // Delete all related images
+        foreach ($beritum->images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+        $beritum->images()->delete();
+
         if ($beritum->image_path) {
             Storage::disk('public')->delete($beritum->image_path);
         }

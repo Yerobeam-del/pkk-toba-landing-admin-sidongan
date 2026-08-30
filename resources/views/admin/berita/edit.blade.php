@@ -93,30 +93,38 @@
             <small class="u-hint">Gunakan editor di atas untuk format teks yang lebih baik</small>
         </div>
 
-        {{-- Image Upload --}}
+        {{-- Image Upload (Multiple) --}}
         <div class="u-mb-6">
             <label class="u-label">Gambar Berita</label>
-            <input type="file" name="image" class="form-control" accept="image/*" id="imageInput">
             
-            {{-- Existing Image Preview --}}
-            @if($berita->image_path)
-            <div class="u-a53" id="existingImage">
-                <img src="{{ asset('storage/' . $berita->image_path) }}" alt="{{ $berita->title }}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;background:#f8fafc">
-                <div>
-                    <div style="font-weight:600;font-size:0.9rem">Gambar saat ini</div>
-                    <div class="u-text-muted-sm">Upload gambar baru untuk mengganti</div>
+            {{-- Existing Images --}}
+            @if($berita->image_path || $berita->images->count() > 0)
+            <div style="margin-bottom:1rem;">
+                <div style="font-size:0.85rem;font-weight:600;color:#64748b;margin-bottom:0.5rem;">Gambar Saat Ini:</div>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:0.75rem;">
+                    @if($berita->image_path)
+                    <div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:#f8fafc;">
+                        <img src="{{ asset('storage/' . $berita->image_path) }}" alt="Gambar utama" style="width:100%;height:100%;object-fit:cover;">
+                        <span style="position:absolute;top:4px;right:4px;background:#276749;color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:4px;">UTAMA</span>
+                    </div>
+                    @endif
+                    @foreach($berita->images as $img)
+                    <div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:#f8fafc;">
+                        <img src="{{ asset('storage/' . $img->image_path) }}" alt="{{ $img->caption ?? 'Gambar' }}" style="width:100%;height:100%;object-fit:cover;">
+                        <a href="{{ route('admin.berita.delete-image', [$berita, $img->id]) }}" 
+                           onclick="return confirm('Hapus gambar ini?')" 
+                           style="position:absolute;top:4px;right:4px;background:#e53e3e;color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:4px;text-decoration:none;">HAPUS</a>
+                    </div>
+                    @endforeach
                 </div>
             </div>
             @endif
-            
-            {{-- New Image Preview (hidden by default) --}}
-            <div class="u-a2" id="newImagePreview">
-                <img id="previewImg" src="" style="width:100%;max-width:400px;height:auto;border-radius:12px;object-fit:cover;background:#f8fafc">
-                <span class="u-a17">Preview Gambar Baru</span>
-            </div>
+
+            <input type="file" name="images[]" class="form-control" accept="image/*" id="imagesInput" multiple>
+            <div id="imagesPreviewGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:1rem; margin-top:1rem;"></div>
             
             <small class="u-hint">
-                Format: JPG/PNG/WebP, maksimal 2MB. Ukuran direkomendasikan: 1200x630px
+                Bisa pilih beberapa gambar sekaligus (Ctrl+Klik). Format: JPG/PNG/WebP, maksimal 2MB per gambar.
             </small>
         </div>
 
@@ -182,6 +190,24 @@
             hint.textContent = 'Penulis akan otomatis diambil dari akun yang login';
         }
     }
+
+    // Multiple image preview
+    document.getElementById('imagesInput').addEventListener('change', function(e) {
+        var grid = document.getElementById('imagesPreviewGrid');
+        grid.innerHTML = '';
+        Array.from(e.target.files).forEach(function(file, i) {
+            if (!file.type.startsWith('image/')) return;
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                var div = document.createElement('div');
+                div.style.cssText = 'position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:#f8fafc;';
+                div.innerHTML = '<img src="' + ev.target.result + '" style="width:100%;height:100%;object-fit:cover;">' +
+                    '<span style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:0.7rem;padding:2px 6px;border-radius:4px;">BARU ' + (i+1) + '</span>';
+                grid.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
     </script>
 
 @endpush

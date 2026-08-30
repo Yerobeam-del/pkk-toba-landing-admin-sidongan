@@ -94,18 +94,15 @@
             </small>
         </div>
 
-        {{-- Image Upload --}}
+        {{-- Image Upload (Multiple) --}}
         <div class="u-mb-6">
             <label class="u-label">Gambar Berita</label>
-            <input type="file" name="image" class="form-control" accept="image/*" id="imageInput">
+            <input type="file" name="images[]" class="form-control" accept="image/*" id="imagesInput" multiple>
 
-            <div class="u-a2" id="imagePreview">
-                <img id="previewImg" src="" style="width:100%;max-width:400px;height:auto;border-radius:12px;object-fit:cover;background:#f8fafc">
-                <span class="u-a17">Preview Gambar</span>
-            </div>
+            <div id="imagesPreviewGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:1rem; margin-top:1rem;"></div>
 
             <small class="u-hint">
-                Format: JPG/PNG/WebP, maksimal 2MB. Ukuran direkomendasikan: 1200x630px
+                Bisa pilih beberapa gambar sekaligus (Ctrl+Klik). Format: JPG/PNG/WebP, maksimal 2MB per gambar.
             </small>
         </div>
 
@@ -171,6 +168,24 @@
             hint.textContent = 'Penulis akan otomatis diambil dari akun yang login';
         }
     }
+
+    // Multiple image preview
+    document.getElementById('imagesInput').addEventListener('change', function(e) {
+        var grid = document.getElementById('imagesPreviewGrid');
+        grid.innerHTML = '';
+        Array.from(e.target.files).forEach(function(file, i) {
+            if (!file.type.startsWith('image/')) return;
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                var div = document.createElement('div');
+                div.style.cssText = 'position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:#f8fafc;';
+                div.innerHTML = '<img src="' + ev.target.result + '" style="width:100%;height:100%;object-fit:cover;">' +
+                    '<span style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:0.7rem;padding:2px 6px;border-radius:4px;">' + (i+1) + '</span>';
+                grid.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
     </script>
 
 @endpush

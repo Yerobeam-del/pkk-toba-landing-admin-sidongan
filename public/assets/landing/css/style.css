@@ -1351,8 +1351,12 @@ body:has(.news-detail-wrapper) #newsModal,
 .news-breadcrumb span { color: rgba(255,255,255,0.4); }
 .news-breadcrumb .current { color: var(--gold); font-weight: 600; }
 .news-detail-container { max-width: 1100px; margin: 0 auto; padding: 4rem 2rem 5rem; }
-.news-detail-article { background: transparent; padding: 0; }
-.news-detail-title { font-size: 2.75rem; font-weight: 800; color: var(--text-dark); line-height: 1.2; margin: 0 0 2rem 0; text-align: left; letter-spacing: -0.5px; max-width: 800px; }
+.news-detail-article { background: transparent; padding: 0; display: grid; grid-template-columns: 1fr min(800px, 100%) 1fr; }
+.news-detail-article > * { grid-column: 2; }
+.news-detail-article > .news-detail-image { grid-column: 1 / -1; }
+.news-detail-article > .news-detail-actions { grid-column: 1 / -1; }
+.news-detail-article > .news-detail-related { grid-column: 1 / -1; }
+.news-detail-title { font-size: 2.75rem; font-weight: 800; color: var(--text-dark); line-height: 1.2; margin: 0 0 2rem 0; text-align: left; letter-spacing: -0.5px; }
 .news-back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--news-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-bottom: 2rem; padding: 8px 16px; border-radius: 8px; transition: all 0.3s ease; border: 1px solid rgba(19, 140, 127, 0.2); }
 .news-back-link:hover { background: rgba(19, 140, 127, 0.08); border-color: var(--news-color); transform: translateX(-4px); }
 .news-back-link svg { transition: transform 0.3s ease; }
@@ -1368,9 +1372,17 @@ body:has(.news-detail-wrapper) #newsModal,
 .news-detail-image { width: 100%; border-radius: 16px; overflow: hidden; margin: 0 0 3rem 0; background: var(--bg-light); box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
 .news-detail-image img { width: 100%; height: auto; max-height: 580px; object-fit: cover; display: block; transition: transform 0.5s ease; }
 .news-detail-image:hover img { transform: scale(1.02); }
-.news-detail-excerpt { font-size: 1.35rem; color: #2d3748; line-height: 1.7; margin: 0 0 3rem 0; font-weight: 500; position: relative; padding-left: 2rem; max-width: 850px; }
+.news-detail-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin: 0 0 3rem 0; }
+.news-gallery-item { margin: 0; border-radius: 12px; overflow: hidden; background: var(--bg-light); box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; }
+.news-gallery-item:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+.news-gallery-item img { width: 100%; height: 220px; object-fit: cover; display: block; transition: transform 0.4s ease; }
+.news-gallery-item:hover img { transform: scale(1.05); }
+.news-gallery-item figcaption { padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--text-muted); text-align: center; }
+@media (max-width: 768px) { .news-detail-gallery { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; } .news-gallery-item img { height: 160px; } }
+@media (max-width: 480px) { .news-detail-gallery { grid-template-columns: 1fr; } }
+.news-detail-excerpt { font-size: 1.35rem; color: #2d3748; line-height: 1.7; margin: 0 0 3rem 0; font-weight: 500; position: relative; padding-left: 2rem; }
 .news-detail-excerpt::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--news-color), var(--primary)); border-radius: 2px; }
-.news-detail-content { line-height: 1.9; color: #2d3748; font-size: 1.125rem; margin: 0; max-width: 800px; }
+.news-detail-content { line-height: 1.9; color: #2d3748; font-size: 1.125rem; margin: 0; }
 .news-detail-content p { margin-bottom: 1.75rem; text-align: justify; }
 .news-detail-content p:first-child::first-letter { font-size: 3.5rem; font-weight: 800; color: var(--primary); float: left; line-height: 0.8; margin: 0.1em 0.2em 0 0; text-transform: uppercase; }
 .news-detail-content img { max-width: 100%; height: auto; border-radius: 12px; margin: 2.5rem 0; display: block; box-shadow: 0 10px 40px rgba(0,0,0,0.12); }
@@ -1388,7 +1400,7 @@ body:has(.news-detail-wrapper) #newsModal,
 .news-detail-content [style*="text-align: center"], .news-detail-content .text-center { text-align: center !important; }
 .news-detail-content [style*="text-align: right"], .news-detail-content .text-right { text-align: right !important; }
 .news-detail-content [style*="text-align: justify"], .news-detail-content .text-justify { text-align: justify !important; }
-.news-detail-share { margin: 4rem 0 0; padding: 3rem 0; border-top: 1px solid rgba(0,0,0,0.08); text-align: center; }
+.news-detail-share { padding: 3rem 0; border-top: 1px solid rgba(0,0,0,0.08); text-align: center; }
 .news-detail-share-title { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin: 0 0 1.5rem 0; text-transform: uppercase; letter-spacing: 2px; }
 .news-share-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
 .news-share-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; font-size: 0.9rem; font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s ease; border: 2px solid; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
@@ -1609,6 +1621,8 @@ body:has(.news-detail-wrapper) #newsModal,
     .news-page-header h1 { font-size: 1.8rem; }
     .news-page-header p { font-size: 1rem; }
     .news-detail-container { padding: 2.5rem 1.5rem 3rem; }
+    .news-detail-article { grid-template-columns: 1fr; }
+    .news-detail-article > * { grid-column: 1; }
     .news-detail-title { font-size: 1.75rem; }
     .news-detail-excerpt { font-size: 1.1rem; padding-left: 1.5rem; }
     .news-detail-content { font-size: 1.05rem; line-height: 1.85; }
@@ -2021,7 +2035,21 @@ APLIKASI CAROUSEL - FEATURES & COLORS
 }
 
 /* ==========================================
-   24. NEWS DETAIL - PRINT STYLES (printer)
+   24. NEWS DETAIL - READING PROGRESS BAR
+   ========================================== */
+.news-progress-bar { position: fixed; top: 0; left: 0; width: 0%; height: 3px; background: linear-gradient(90deg, var(--news-color), var(--primary)); z-index: 1000; transition: width 0.1s linear; }
+
+/* ==========================================
+   25. NEWS DETAIL - BACK TO TOP BUTTON
+   ========================================== */
+.news-back-to-top { position: fixed; bottom: 2rem; right: 2rem; width: 48px; height: 48px; border-radius: 50%; background: var(--news-color); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2); opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; z-index: 999; }
+.news-back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.news-back-to-top:hover { background: var(--primary); transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+.news-back-to-top svg { width: 20px; height: 20px; }
+@media (max-width: 768px) { .news-back-to-top { bottom: 1.5rem; right: 1.5rem; width: 44px; height: 44px; } }
+
+/* ==========================================
+   26. NEWS DETAIL - PRINT STYLES (printer)
    ========================================== */
 @media print {
     /* ── Hide everything non-essential ── */
@@ -2029,6 +2057,7 @@ APLIKASI CAROUSEL - FEATURES & COLORS
     .news-page-header, .news-back-link, .news-detail-related,
     .news-detail-actions, .news-detail-share,
     .news-detail-meta .news-detail-reading-time,
+    .news-progress-bar, .news-back-to-top,
     body > script, body > noscript { display: none !important; }
 
     /* ── Reset page ── */
@@ -2048,7 +2077,7 @@ APLIKASI CAROUSEL - FEATURES & COLORS
     /* ── Container ── */
     .news-detail-wrapper { min-height: auto !important; background: none !important; }
     .news-detail-container { max-width: 100%; padding: 0 !important; margin: 0 !important; }
-    .news-detail-article { padding: 0 !important; }
+    .news-detail-article { padding: 0 !important; display: block !important; }
 
     /* ── Title & Meta ── */
     .news-detail-title { font-size: 20pt; margin: 0 0 8pt 0; color: #000 !important; }

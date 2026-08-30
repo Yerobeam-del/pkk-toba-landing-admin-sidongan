@@ -307,6 +307,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
         Route::get('/admin/struktur/tab/{tab}', [App\Http\Controllers\Admin\StrukturController::class, 'getTabData'])->name('admin.struktur.tab');
         Route::resource('aplikasi', App\Http\Controllers\Admin\ApplicationController::class)->middleware('permission:manage-aplikasi');
         Route::resource('berita', App\Http\Controllers\Admin\BeritaController::class)->middleware('permission:manage-berita');
+        Route::delete('/berita/{beritum}/image/{image}', [App\Http\Controllers\Admin\BeritaController::class, 'deleteImage'])->name('berita.delete-image');
 
         Route::prefix('desa')->name('desa.')->middleware('permission:manage-desa')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\DesaController::class, 'index'])->name('index');

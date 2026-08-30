@@ -57,6 +57,12 @@
 @endpush
 
 @section('content')
+<div class="news-progress-bar" id="newsProgressBar"></div>
+<button type="button" class="news-back-to-top" id="newsBackToTop" aria-label="Kembali ke atas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="18 15 12 9 6 15"/>
+    </svg>
+</button>
 <div class="news-detail-wrapper">
     <header class="news-page-header">
         <div class="news-page-header-content">
@@ -127,6 +133,23 @@
                          loading="lazy"
                          onerror="this.src='{{ asset('assets/landing/images/berita/default.jpg') }}'">
                 </figure>
+            @endif
+
+            @if($news->images->count() > 0)
+            <div class="news-detail-gallery">
+                @foreach($news->images as $img)
+                <figure class="news-gallery-item">
+                    <img src="{{ asset('storage/' . $img->image_path) }}"
+                         alt="{{ $img->caption ?? $news->title }}"
+                         loading="lazy"
+                         onclick="window.open(this.src, '_blank')"
+                         style="cursor:pointer;">
+                    @if($img->caption)
+                        <figcaption>{{ $img->caption }}</figcaption>
+                    @endif
+                </figure>
+                @endforeach
+            </div>
             @endif
 
             @if($news->excerpt)
