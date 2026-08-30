@@ -286,6 +286,9 @@
 
                         $html .= $statusAction;
 
+                        // Tombol Salin Kredensial
+                        $html .= '<button type="button" class="action-btn" onclick="copyUserCredentials('.$item->id.', \'' . addslashes($item->name) . '\', \'' . addslashes($item->email) . '\')" title="Salin Kredensial"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>';
+
                         // Tombol Reset Password
                         $html .= '<button type="button" class="action-btn" data-reset-password-id="'.$item->id.'" data-reset-password-name="'.addslashes($item->name).'" title="Reset Password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>';
                     }
@@ -416,6 +419,55 @@
         }
     }
     document.addEventListener('DOMContentLoaded', initBulkSelection);
+
+    // ========== COPY USER CREDENTIALS ==========
+    function copyUserCredentials(userId, name, email) {
+        const text = 'Halo ' + name + ',\n\n' +
+            'Akun Anda di Admin Panel PKK Kabupaten Toba sudah dibuat.\n' +
+            'Berikut kredensial login Anda:\n\n' +
+            'Email    : ' + email + '\n' +
+            'Password : (sesuai yang dibuat saat pembuatan akun)\n\n' +
+            'Silakan login di: ' + window.location.origin + '\n' +
+            'Ganti password setelah login pertama kali untuk keamanan.\n\n' +
+            'Terima kasih,';
+
+        // Fallback untuk browser yang tidak support navigator.clipboard
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showCopySuccess(userId);
+            }).catch(() => {
+                fallbackCopy(text, userId);
+            });
+        } else {
+            fallbackCopy(text, userId);
+        }
+    }
+
+    function fallbackCopy(text, userId) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        textarea.style.top = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showCopySuccess(userId);
+        } catch (err) {
+            if (typeof Toast !== 'undefined') {
+                Toast.error('Gagal menyalin. Silakan copy manual.');
+            }
+        }
+        document.body.removeChild(textarea);
+    }
+
+    function showCopySuccess(userId) {
+        if (typeof Toast !== 'undefined') {
+            Toast.success('Kredensial berhasil disalin ke clipboard!');
+        }
+    }
     </script>
     @endif
 
@@ -486,27 +538,54 @@
                 text = email;
             }
 
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = type === 'full' ? document.getElementById('copyFullBtn') : document.getElementById('copyEmailBtn');
-                const span = btn.querySelector('span');
-                const originalText = span.textContent;
-                span.textContent = '✓ Tersalin!';
-                btn.style.background = type === 'full' ? 'linear-gradient(135deg,#22c55e,#16a34a)' : '#dcfce7';
-                btn.style.color = type === 'full' ? '#fff' : '#166534';
-                setTimeout(() => {
-                    span.textContent = originalText;
-                    btn.style.background = type === 'full' ? 'linear-gradient(135deg,var(--primary),#0d9488)' : '#f1f5f9';
-                    btn.style.color = type === 'full' ? '#fff' : '#475569';
-                }, 2000);
+            // Fallback untuk browser yang tidak support navigator.clipboard
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopyBtnSuccess(type);
+                }).catch(() => {
+                    fallbackCopyModal(text, type);
+                });
+            } else {
+                fallbackCopyModal(text, type);
+            }
+        }
 
-                if (typeof Toast !== 'undefined') {
-                    Toast.success('Berhasil disalin ke clipboard!');
-                }
-            }).catch(() => {
+        function fallbackCopyModal(text, type) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showCopyBtnSuccess(type);
+            } catch (err) {
                 if (typeof Toast !== 'undefined') {
                     Toast.error('Gagal menyalin. Silakan copy manual.');
                 }
-            });
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showCopyBtnSuccess(type) {
+            const btn = type === 'full' ? document.getElementById('copyFullBtn') : document.getElementById('copyEmailBtn');
+            const span = btn.querySelector('span');
+            const originalText = span.textContent;
+            span.textContent = '✓ Tersalin!';
+            btn.style.background = type === 'full' ? 'linear-gradient(135deg,#22c55e,#16a34a)' : '#dcfce7';
+            btn.style.color = type === 'full' ? '#fff' : '#166534';
+            setTimeout(() => {
+                span.textContent = originalText;
+                btn.style.background = type === 'full' ? 'linear-gradient(135deg,var(--primary),#0d9488)' : '#f1f5f9';
+                btn.style.color = type === 'full' ? '#fff' : '#475569';
+            }, 2000);
+
+            if (typeof Toast !== 'undefined') {
+                Toast.success('Berhasil disalin ke clipboard!');
+            }
         }
     </script>
     @endif

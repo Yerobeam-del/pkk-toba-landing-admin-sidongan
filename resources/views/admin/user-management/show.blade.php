@@ -191,28 +191,55 @@
             'Ganti password setelah login pertama kali untuk keamanan.\n\n' +
             'Terima kasih,';
 
-        navigator.clipboard.writeText(text).then(() => {
-            const btn = document.getElementById('copyCredentialsBtn');
-            const span = btn.querySelector('span');
-            span.textContent = '✓ Tersalin!';
-            btn.style.background = '#dcfce7';
-            btn.style.borderColor = '#86efac';
-            btn.style.color = '#166534';
-            setTimeout(() => {
-                span.textContent = 'Salin Kredensial';
-                btn.style.background = '#f0fdf4';
-                btn.style.borderColor = '#bbf7d0';
-                btn.style.color = '#166534';
-            }, 2000);
+        // Fallback untuk browser yang tidak support navigator.clipboard
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showCopySuccess();
+            }).catch(() => {
+                fallbackCopy(text);
+            });
+        } else {
+            fallbackCopy(text);
+        }
+    }
 
-            if (typeof Toast !== 'undefined') {
-                Toast.success('Kredensial berhasil disalin ke clipboard!');
-            }
-        }).catch(() => {
+    function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        textarea.style.top = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showCopySuccess();
+        } catch (err) {
             if (typeof Toast !== 'undefined') {
                 Toast.error('Gagal menyalin. Silakan copy manual.');
             }
-        });
+        }
+        document.body.removeChild(textarea);
+    }
+
+    function showCopySuccess() {
+        const btn = document.getElementById('copyCredentialsBtn');
+        const span = btn.querySelector('span');
+        span.textContent = '✓ Tersalin!';
+        btn.style.background = '#dcfce7';
+        btn.style.borderColor = '#86efac';
+        btn.style.color = '#166534';
+        setTimeout(() => {
+            span.textContent = 'Salin Kredensial';
+            btn.style.background = '#f0fdf4';
+            btn.style.borderColor = '#bbf7d0';
+            btn.style.color = '#166534';
+        }, 2000);
+
+        if (typeof Toast !== 'undefined') {
+            Toast.success('Kredensial berhasil disalin ke clipboard!');
+        }
     }
 </script>
 @endpush

@@ -1,6 +1,3 @@
-{{-- ============================================================
-     Dikembangkan oleh Institut Teknologi Del
-     ============================================================ --}}
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,77 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi Email Pribadi - PKK Kabupaten Toba</title>
 
-    {{-- Favicon untuk Tab Browser --}}
+    {{-- Favicon --}}
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
     <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-        <link rel="stylesheet" href="{{ asset('assets/shared/css/auth-personal-email-notice.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('assets/shared/css/auth-personal-email-notice.css') }}">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="mail-icon">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </svg>
-            </div>
-            <h1>Cek Email Anda</h1>
-            <p>Kami telah mengirimkan link verifikasi ke email pribadi Anda</p>
-        </div>
+    <div class="page-wrapper">
+        {{-- Background Pattern --}}
+        <div class="bg-pattern"></div>
 
-        <div class="body">
+        {{-- Main Content --}}
+        <div class="content">
+            {{-- Logo --}}
+            <div class="logo">
+                <img src="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}" alt="PKK Logo" width="72" height="72">
+            </div>
+
+            {{-- Header --}}
+            <div class="header">
+                <div class="icon-circle">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                </div>
+                <h1>Cek Email Anda</h1>
+                <p>Kami telah mengirimkan link verifikasi ke email pribadi Anda</p>
+            </div>
+
+            {{-- Alert Messages --}}
             @if(session('success'))
-                <div class="success-message">
-                    {!! session('success') !!}
+                <div class="alert alert-success">
+                    <div class="alert-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <div class="alert-content">
+                        {!! session('success') !!}
+                    </div>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="error-message" style="background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:1rem;border-radius:10px;margin-bottom:1.5rem;font-size:0.9rem;line-height:1.6;">
-                    {{ session('error') }}
+                <div class="alert alert-error">
+                    <div class="alert-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="15" y1="9" x2="9" y2="15"/>
+                            <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                    </div>
+                    <div class="alert-content">
+                        {{ session('error') }}
+                    </div>
                 </div>
             @endif
 
+            {{-- Email Info Card --}}
             <div class="info-card">
-                <strong style="font-size:0.9rem; color:var(--text-dark);">Dikirim ke:</strong>
-                <div class="email-display">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="info-card-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                         <polyline points="22,6 12,13 2,6"/>
                     </svg>
-                    <span>{{ $personal_email }}</span>
+                    <span>Dikirim ke:</span>
+                </div>
+                <div class="email-display">
+                    {{ $personal_email }}
                 </div>
             </div>
 
-            <div class="info-card">
-                <strong style="font-size:0.9rem; color:var(--text-dark);">Langkah selanjutnya:</strong>
-                <ol class="steps">
+            {{-- Steps Card --}}
+            <div class="steps-card">
+                <div class="steps-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <span>Langkah Selanjutnya:</span>
+                </div>
+                <ol class="steps-list">
                     <li>
-                        <span class="step-number">1</span>
-                        <span>Buka kotak masuk email <strong>{{ $personal_email }}</strong> Anda (Gmail, Yahoo, dll)</span>
+                        <div class="step-num">1</div>
+                        <div class="step-text">
+                            <strong>Buka kotak masuk email</strong>
+                            <span>Gmail, Yahoo, atau penyedia email lainnya</span>
+                        </div>
                     </li>
                     <li>
-                        <span class="step-number">2</span>
-                        <span>Cari email dari <strong>PKK Kabupaten Toba</strong> dengan subjek <strong>"Verifikasi Email Pribadi"</strong></span>
+                        <div class="step-num">2</div>
+                        <div class="step-text">
+                            <strong>Cari email dari PKK</strong>
+                            <span>Subjek: "Verifikasi Email Pribadi"</span>
+                        </div>
                     </li>
                     <li>
-                        <span class="step-number">3</span>
-                        <span>Klik tombol <strong>"Verifikasi Email"</strong> di dalam email tersebut</span>
+                        <div class="step-num">3</div>
+                        <div class="step-text">
+                            <strong>Klik tombol verifikasi</strong>
+                            <span>Tombol "Verifikasi Email" di dalam email</span>
+                        </div>
                     </li>
                     <li>
-                        <span class="step-number">4</span>
-                        <span>Setelah diverifikasi, Anda akan otomatis diarahkan ke Dashboard!</span>
+                        <div class="step-num">4</div>
+                        <div class="step-text">
+                            <strong>Selesai!</strong>
+                            <span>Otomatis diarahkan ke Dashboard</span>
+                        </div>
                     </li>
                 </ol>
             </div>
 
+            {{-- Action Buttons --}}
             <div class="btn-group">
-                <form method="POST" action="{{ route('personal-email.resend') }}" style="width:100%;">
+                <form method="POST" action="{{ route('personal-email.resend') }}">
                     @csrf
                     <button type="submit" class="btn-primary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -96,17 +142,18 @@
                     </svg>
                     Ganti Email Pribadi
                 </a>
-
-                <a href="{{ route('personal-email.skip') }}" class="btn-outline" style="border-color:transparent; background:transparent;">
-                    Lewati — nanti saja
-                </a>
             </div>
-        </div>
 
-        <div class="footer">
-            &copy; {{ date('Y') }} IT Del x PKK Toba. All rights reserved.
+            {{-- Skip --}}
+            <a href="{{ route('personal-email.skip') }}" class="btn-skip">
+                Lewati — nanti saja
+            </a>
+
+            {{-- Footer --}}
+            <div class="footer">
+                <span>&copy; {{ date('Y') }} TP-PKK Kabupaten Toba</span>
+            </div>
         </div>
     </div>
 </body>
 </html>
-{{-- Dikembangkan oleh Institut Teknologi Del --}}

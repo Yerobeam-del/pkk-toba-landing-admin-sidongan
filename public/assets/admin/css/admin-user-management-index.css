@@ -401,7 +401,7 @@
 }
 
 /* =========================================
-   CHECKBOX STYLES
+   CHECKBOX STYLES (Custom)
    ========================================= */
 .bulk-checkbox,
 #selectAll {
@@ -412,11 +412,43 @@
     border-radius: 4px;
     border: 2px solid #cbd5e1;
     transition: all 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #fff;
+    position: relative;
 }
+
+.bulk-checkbox::before,
+#selectAll::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform 0.2s ease;
+}
+
 .bulk-checkbox:checked,
 #selectAll:checked {
-    accent-color: var(--primary);
+    background-color: var(--primary);
+    border-color: var(--primary);
 }
+
+.bulk-checkbox:checked::before,
+#selectAll:checked::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.bulk-checkbox:hover,
+#selectAll:hover {
+    border-color: var(--primary);
+}
+
 .dark-mode .bulk-checkbox,
 .dark-mode #selectAll {
     border-color: #475569;
@@ -424,7 +456,6 @@
 }
 .dark-mode .bulk-checkbox:checked,
 .dark-mode #selectAll:checked {
-    accent-color: var(--primary);
     background: var(--primary);
     border-color: var(--primary);
 }
