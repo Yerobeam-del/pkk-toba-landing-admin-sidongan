@@ -110,6 +110,7 @@ html.dark-mode .ck .ck-dropdown {
 html.dark-mode .ck .ck-dropdown__button {
     color: #e2e8f0 !important;
     background-color: #1e293b !important;
+    border-color: #334155 !important;
 }
 
 html.dark-mode .ck .ck-dropdown__button:hover {
@@ -118,10 +119,20 @@ html.dark-mode .ck .ck-dropdown__button:hover {
 
 html.dark-mode .ck .ck-dropdown__button .ck-dropdown__button-label {
     color: #e2e8f0 !important;
+    font-weight: 400 !important;
 }
 
 html.dark-mode .ck .ck-dropdown__button .ck-icon {
     color: #94a3b8 !important;
+}
+
+/* Force override all CKEditor inline styles */
+html.dark-mode .ck-editor .ck-toolbar .ck-dropdown__button[aria-label] {
+    color: #e2e8f0 !important;
+}
+
+html.dark-mode .ck-editor .ck-toolbar .ck-dropdown__button span {
+    color: #e2e8f0 !important;
 }
 
 /* Dropdown panel */

@@ -352,23 +352,33 @@
     <script>
     // ========== BULK ACTIONS ==========
     function initBulkSelection() {
-        const selectAll = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.bulk-checkbox');
-        const bar = document.getElementById('bulkActionBar');
-        const countEl = document.getElementById('bulkCount');
-
-        if (selectAll) {
-            selectAll.addEventListener('change', function() {
-                checkboxes.forEach(cb => { cb.checked = this.checked; });
+        // Use event delegation for selectAll checkbox
+        document.addEventListener('change', function(e) {
+            // Select All checkbox
+            if (e.target && e.target.id === 'selectAll') {
+                const checkboxes = document.querySelectorAll('.bulk-checkbox');
+                checkboxes.forEach(function(cb) {
+                    cb.checked = e.target.checked;
+                });
                 updateBulkBar();
-            });
-        }
-
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', updateBulkBar);
+            }
+            // Individual checkbox
+            if (e.target && e.target.classList.contains('bulk-checkbox')) {
+                updateBulkBar();
+                // Sync selectAll state
+                const allCbs = document.querySelectorAll('.bulk-checkbox');
+                const checkedCbs = document.querySelectorAll('.bulk-checkbox:checked');
+                const selectAll = document.getElementById('selectAll');
+                if (selectAll) {
+                    selectAll.checked = allCbs.length > 0 && allCbs.length === checkedCbs.length;
+                }
+            }
         });
 
         function updateBulkBar() {
+            const bar = document.getElementById('bulkActionBar');
+            const countEl = document.getElementById('bulkCount');
+            if (!bar) return;
             const checked = document.querySelectorAll('.bulk-checkbox:checked');
             if (checked.length > 0) {
                 bar.style.display = 'flex';
