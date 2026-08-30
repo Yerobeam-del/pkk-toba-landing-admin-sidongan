@@ -178,11 +178,11 @@
 @push('scripts')
 <script>
     function copyAccountCredentials() {
-        const name = {{ json_encode($user->name) }};
-        const email = {{ json_encode($user->email) }};
-        const loginUrl = window.location.origin;
+        var name = {{ json_encode($user->name) }};
+        var email = {{ json_encode($user->email) }};
+        var loginUrl = window.location.origin;
 
-        const text = 'Halo ' + name + ',\n\n' +
+        var text = 'Halo ' + name + ',\n\n' +
             'Akun Anda di Admin Panel PKK Kabupaten Toba sudah dibuat.\n' +
             'Berikut kredensial login Anda:\n\n' +
             'Email    : ' + email + '\n' +
@@ -191,76 +191,100 @@
             'Ganti password setelah login pertama kali untuk keamanan.\n\n' +
             'Terima kasih,';
 
-        // Selalu gunakan fallback yang works di HTTP
-        fallbackCopy(text);
+        robustCopy(text);
     }
 
-    function fallbackCopy(text) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.left = '0';
-        textarea.style.top = '0';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.focus();
-        textarea.select();
-        textarea.setSelectionRange(0, 99999); // Untuk mobile
-        
-        let success = false;
-        try {
-            success = document.execCommand('copy');
-        } catch (err) {
-            console.error('Copy failed:', err);
-        }
-        
-        document.body.removeChild(textarea);
-        
-        if (success) {
-            showCopySuccess();
+    function robustCopy(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function() {
+                showCopySuccess();
+            }).catch(function() {
+                textareaCopy(text);
+            });
         } else {
-            // Fallback: tampilkan modal dengan teks untuk copy manual
+            textareaCopy(text);
+        }
+    }
+
+    function textareaCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        ta.style.top = '0';
+        ta.style.width = '1px';
+        ta.style.height = '1px';
+        ta.style.opacity = '0.01';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+            var ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            if (ok) {
+                showCopySuccess();
+            } else {
+                showCopyManualModal(text);
+            }
+        } catch(e) {
+            document.body.removeChild(ta);
             showCopyManualModal(text);
         }
     }
 
     function showCopySuccess() {
-        const btn = document.getElementById('copyCredentialsBtn');
-        const span = btn.querySelector('span');
-        span.textContent = '✓ Tersalin!';
-        btn.style.background = '#dcfce7';
-        btn.style.borderColor = '#86efac';
-        btn.style.color = '#166534';
-        setTimeout(() => {
-            span.textContent = 'Salin Kredensial';
-            btn.style.background = '#f0fdf4';
-            btn.style.borderColor = '#bbf7d0';
+        var btn = document.getElementById('copyCredentialsBtn');
+        if (btn) {
+            var span = btn.querySelector('span');
+            if (span) span.textContent = '✓ Tersalin!';
+            btn.style.background = '#dcfce7';
+            btn.style.borderColor = '#86efac';
             btn.style.color = '#166534';
-        }, 2000);
-
+            setTimeout(function() {
+                if (span) span.textContent = 'Salin Kredensial';
+                btn.style.background = '#f0fdf4';
+                btn.style.borderColor = '#bbf7d0';
+                btn.style.color = '#166534';
+            }, 2000);
+        }
         if (typeof Toast !== 'undefined' && Toast.success) {
             Toast.success('Kredensial berhasil disalin ke clipboard!');
         } else {
-            alert('Kredensial berhasil disalin ke clipboard!');
+            var t = document.createElement('div');
+            t.textContent = 'Kredensial berhasil disalin ke clipboard!';
+            t.style.cssText = 'position:fixed;top:20px;right:20px;z-index:999999;background:#166534;color:#fff;padding:1rem 1.5rem;border-radius:10px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.2);';
+            document.body.appendChild(t);
+            setTimeout(function(){ t.remove(); }, 2500);
         }
     }
 
     function showCopyManualModal(text) {
-        const modal = document.createElement('div');
-        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
-        modal.innerHTML = '
-            <div style="background:#fff;border-radius:12px;padding:1.5rem;max-width:500px;width:90%;max-height:80vh;overflow:auto;">
-                <h3 style="margin:0 0 1rem;font-size:1.1rem;">Salin Kredensial</h3>
-                <p style="color:#64748b;font-size:0.9rem;margin-bottom:1rem;">Copy teks di bawah ini secara manual:</p>
-                <textarea readonly style="width:100%;height:200px;padding:0.75rem;border:1px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:0.85rem;resize:none;">' + text.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</textarea>
-                <div style="display:flex;gap:0.5rem;margin-top:1rem;">
-                    <button onclick="this.closest('div[style]').parentElement.remove()" style="flex:1;padding:0.75rem;background:#f1f5f9;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Tutup</button>
-                    <button onclick="navigator.clipboard.writeText(this.closest('div').querySelector('textarea').value).then(()=>alert('Tersalin!')).catch(()=>{})" style="flex:1;padding:0.75rem;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">Copy</button>
-                </div>
-            </div>';
-        document.body.appendChild(modal);
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) modal.remove();
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+        var escapedText = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        overlay.innerHTML = '<div style="background:#fff;border-radius:12px;padding:1.5rem;max-width:500px;width:90%;max-height:80vh;overflow:auto;">' +
+            '<h3 style="margin:0 0 1rem;font-size:1.1rem;">Salin Kredensial</h3>' +
+            '<p style="color:#64748b;font-size:0.9rem;margin-bottom:1rem;">Copy teks di bawah ini secara manual:</p>' +
+            '<textarea readonly style="width:100%;height:200px;padding:0.75rem;border:1px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:0.85rem;resize:none;">' + escapedText + '</textarea>' +
+            '<div style="display:flex;gap:0.5rem;margin-top:1rem;">' +
+            '<button onclick="this.closest(\'div[style]\').parentElement.remove()" style="flex:1;padding:0.75rem;background:#f1f5f9;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Tutup</button>' +
+            '<button id="modalCopyBtn" style="flex:1;padding:0.75rem;background:linear-gradient(135deg,var(--primary),#0d9488);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">Copy</button>' +
+            '</div></div>';
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+        overlay.querySelector('#modalCopyBtn').addEventListener('click', function() {
+            var ta = overlay.querySelector('textarea');
+            ta.select();
+            try {
+                document.execCommand('copy');
+                overlay.remove();
+                var t = document.createElement('div');
+                t.textContent = 'Berhasil disalin!';
+                t.style.cssText = 'position:fixed;top:20px;right:20px;z-index:999999;background:#166534;color:#fff;padding:1rem 1.5rem;border-radius:10px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.2);';
+                document.body.appendChild(t);
+                setTimeout(function(){ t.remove(); }, 2500);
+            } catch(e) { alert('Gagal copy, silakan select & copy manual (Ctrl+C)'); }
         });
     }
 </script>
