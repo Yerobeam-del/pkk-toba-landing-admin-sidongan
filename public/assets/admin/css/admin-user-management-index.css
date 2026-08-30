@@ -335,6 +335,17 @@
     color: var(--primary);
     font-family: monospace;
 }
+.um-cred-value--password {
+    color: #dc2626;
+    font-family: monospace;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: #fef2f2;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px dashed #fca5a5;
+    margin-top: 0.25rem;
+}
 .um-cred-value--note {
     color: #64748b;
     font-style: italic;

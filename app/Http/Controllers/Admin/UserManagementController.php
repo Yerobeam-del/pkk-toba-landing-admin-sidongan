@@ -193,6 +193,7 @@ class UserManagementController extends Controller
             ->with('new_account', [
                 'name' => $user->name,
                 'email' => $user->email,
+                'password' => $request->password, // Password plain text untuk ditampilkan sekali
             ]);
     }
 

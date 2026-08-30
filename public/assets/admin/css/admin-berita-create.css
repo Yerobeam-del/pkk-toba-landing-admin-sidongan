@@ -8,6 +8,125 @@
  * ============================================================ */
 
 
+/* ============================================================
+   CKEditor 5 Dark Mode Support
+   ============================================================ */
+html.dark-mode .ck-editor {
+    --ck-color-base-background: #1e293b;
+    --ck-color-base-foreground: #0f172a;
+    --ck-color-base-border: #334155;
+    --ck-color-base-text: #e2e8f0;
+    --ck-color-button-default-background: #1e293b;
+    --ck-color-button-default-hover-background: #334155;
+    --ck-color-button-on-background: #334155;
+    --ck-color-button-on-hover-background: #475569;
+    --ck-color-button-active-background: #0d9488;
+    --ck-color-button-active-hover-background: #14b8a6;
+    --ck-color-toolbar-background: #1e293b;
+    --ck-color-toolbar-border: #334155;
+    --ck-color-dropdown-panel-background: #1e293b;
+    --ck-color-dropdown-panel-border: #334155;
+    --ck-color-input-background: #0f172a;
+    --ck-color-input-border: #475569;
+    --ck-color-input-text: #e2e8f0;
+    --ck-color-input-placeholder-text: #64748b;
+    --ck-color-list-background: #1e293b;
+    --ck-color-list-button-hover-background: #334155;
+    --ck-color-list-button-on-background: #0d9488;
+    --ck-color-shadow-drop: rgba(0, 0, 0, 0.3);
+    --ck-color-shadow-inner: rgba(0, 0, 0, 0.2);
+    --ck-color-focus-border: #14b8a6;
+    --ck-color-link: #5eead4;
+}
+
+/* Toolbar background */
+html.dark-mode .ck-editor__top {
+    background-color: #1e293b !important;
+    border-bottom-color: #334155 !important;
+}
+
+/* Toolbar buttons */
+html.dark-mode .ck .ck-toolbar {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+/* Toolbar buttons icons */
+html.dark-mode .ck .ck-toolbar .ck-toolbar__separator {
+    background-color: #334155 !important;
+}
+
+/* Button icons color */
+html.dark-mode .ck .ck-icon {
+    color: #cbd5e1 !important;
+}
+
+/* Button hover */
+html.dark-mode .ck .ck-button:hover,
+html.dark-mode .ck .ck-button:focus {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+/* Active button */
+html.dark-mode .ck .ck-button.ck-on {
+    background-color: #0d9488 !important;
+    color: #fff !important;
+}
+
+/* Editor content area */
+html.dark-mode .ck-editor__main {
+    background-color: #0f172a !important;
+}
+
+html.dark-mode .ck-editor__editable {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+/* Editor focus border */
+html.dark-mode .ck-editor__editable:focus {
+    border-color: #14b8a6 !important;
+}
+
+/* Dropdown menus */
+html.dark-mode .ck .ck-list {
+    background-color: #1e293b !important;
+}
+
+html.dark-mode .ck .ck-list__item .ck-button {
+    color: #e2e8f0 !important;
+}
+
+html.dark-mode .ck .ck-list__item .ck-button:hover {
+    background-color: #334155 !important;
+}
+
+/* Input fields in dialogs */
+html.dark-mode .ck .ck-input {
+    background-color: #0f172a !important;
+    border-color: #475569 !important;
+    color: #e2e8f0 !important;
+}
+
+/* Placeholder text */
+html.dark-mode .ck .ck-placeholder {
+    color: #64748b !important;
+}
+
+/* Tooltip */
+html.dark-mode .ck .ck-tooltip {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+/* Status bar */
+html.dark-mode .ck-editor__bottom {
+    background-color: #1e293b !important;
+    border-top-color: #334155 !important;
+    color: #94a3b8 !important;
+}
+
 /* Responsive untuk Mobile */
 @media (max-width: 768px) {
     .berita-header {
