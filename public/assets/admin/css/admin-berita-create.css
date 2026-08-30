@@ -102,6 +102,55 @@ html.dark-mode .ck .ck-list__item .ck-button:hover {
     background-color: #334155 !important;
 }
 
+/* Paragraph/Heading dropdown selector */
+html.dark-mode .ck .ck-dropdown {
+    background-color: #1e293b !important;
+}
+
+html.dark-mode .ck .ck-dropdown__button {
+    color: #e2e8f0 !important;
+    background-color: #1e293b !important;
+}
+
+html.dark-mode .ck .ck-dropdown__button:hover {
+    background-color: #334155 !important;
+}
+
+html.dark-mode .ck .ck-dropdown__button .ck-dropdown__button-label {
+    color: #e2e8f0 !important;
+}
+
+html.dark-mode .ck .ck-dropdown__button .ck-icon {
+    color: #94a3b8 !important;
+}
+
+/* Dropdown panel */
+html.dark-mode .ck .ck-dropdown__panel {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+html.dark-mode .ck .ck-dropdown__panel .ck-list__item .ck-button {
+    color: #e2e8f0 !important;
+}
+
+html.dark-mode .ck .ck-dropdown__panel .ck-list__item .ck-button:hover {
+    background-color: #334155 !important;
+}
+
+/* Combobox input */
+html.dark-mode .ck .ck-combobox {
+    background-color: #1e293b !important;
+}
+
+html.dark-mode .ck .ck-combobox input {
+    color: #e2e8f0 !important;
+}
+
+html.dark-mode .ck .ck-combobox input::placeholder {
+    color: #94a3b8 !important;
+}
+
 /* Input fields in dialogs */
 html.dark-mode .ck .ck-input {
     background-color: #0f172a !important;
