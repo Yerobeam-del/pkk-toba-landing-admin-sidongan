@@ -218,10 +218,6 @@
     if (!archiveForm) return;
     archiveForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        if (typeof Toast === 'undefined') {
-            archiveForm.submit();
-            return;
-        }
         Toast.confirm(
             'Surat yang diarsipkan akan dipindahkan ke arsip dan tidak lagi muncul di daftar surat aktif.',
             { title: 'Arsipkan Surat?', confirmText: 'Ya, Arsipkan', cancelText: 'Batal', type: 'warning' }

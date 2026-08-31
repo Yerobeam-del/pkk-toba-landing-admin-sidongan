@@ -13,8 +13,8 @@ let cropper = null;
 document.getElementById('avatarInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { alert('Ukuran file maksimal 2MB.'); e.target.value = ''; return; }
-    if (!file.type.match('image.*')) { alert('File harus berupa gambar.'); e.target.value = ''; return; }
+    if (file.size > 2 * 1024 * 1024) { Toast.warning('Ukuran file maksimal 2MB.'); e.target.value = ''; return; }
+    if (!file.type.match('image.*')) { Toast.warning('File harus berupa gambar.'); e.target.value = ''; return; }
     const reader = new FileReader();
     reader.onload = function(ev) {
         const img = document.getElementById('cropperImage');

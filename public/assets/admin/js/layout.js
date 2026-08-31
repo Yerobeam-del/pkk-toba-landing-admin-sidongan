@@ -137,17 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hapus Aplikasi (data-delete-app-id)
     function confirmDeleteApp(id, name) {
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            Toast.confirm(
-                'Data <strong>"' + name + '"</strong> akan dihapus secara permanen.',
-                { title: 'Hapus Data?', confirmText: 'Ya, Hapus', cancelText: 'Batal', type: 'danger' }
-            ).then(function (confirmed) {
-                if (confirmed) {
-                    const form = document.getElementById('delete-app-' + id);
-                    if (form) form.submit();
-                }
-            });
-        }
+        Toast.confirm(
+            'Data <strong>"' + name + '"</strong> akan dihapus secara permanen.',
+            { title: 'Hapus Data?', confirmText: 'Ya, Hapus', cancelText: 'Batal', type: 'danger' }
+        ).then(function (confirmed) {
+            if (confirmed) {
+                const form = document.getElementById('delete-app-' + id);
+                if (form) form.submit();
+            }
+        });
     }
 
     document.addEventListener('click', function (event) {
@@ -173,10 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (deleteReportForm) {
         deleteReportForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            if (typeof Toast === 'undefined' || typeof Toast.confirm !== 'function') {
-                deleteReportForm.submit();
-                return;
-            }
             Toast.confirm(
                 'Laporan kegiatan ini akan dihapus permanen.',
                 { title: 'Hapus Laporan?', confirmText: 'Ya, Hapus', cancelText: 'Batal', type: 'danger' }
@@ -190,9 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const forceDeleteForm = document.getElementById('forceDeleteForm');
     if (forceDeleteForm) {
         forceDeleteForm.addEventListener('submit', function (e) {
-            if (!window.confirm('HAPUS PERMANEN: Data akan hilang dari database SIEDA dan TIDAK bisa dikembalikan. Lanjutkan?')) {
-                e.preventDefault();
-            }
+            e.preventDefault();
+            Toast.confirm(
+                'HAPUS PERMANEN: Data akan hilang dari database SIEDA dan <strong>TIDAK bisa dikembalikan</strong>. Lanjutkan?',
+                { title: 'Hapus Permanen?', confirmText: 'Ya, Hapus', cancelText: 'Batal', type: 'danger' }
+            ).then(function (setuju) {
+                if (setuju) forceDeleteForm.submit();
+            });
         });
     }
 })();

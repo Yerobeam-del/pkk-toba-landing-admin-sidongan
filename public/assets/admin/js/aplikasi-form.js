@@ -146,9 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const currentCount = featuresContainer.querySelectorAll('.feature-item').length;
             if (currentCount <= 2) {
-                if (typeof Toast !== 'undefined') {
-                    Toast.warning('Minimal harus ada 2 poin fitur');
-                }
+                Toast.warning('Minimal harus ada 2 poin fitur');
                 return;
             }
             btn.closest('.feature-item').remove();

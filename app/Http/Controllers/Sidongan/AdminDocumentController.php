@@ -406,10 +406,10 @@ class AdminDocumentController extends Controller
         }
 
         // Activity Log
-        \App\Models\AdminActivityLog::log('created', 'surat', $document->id, [
+        \App\Models\AdminActivityLog::log('created', $document, 'Surat "' . ($document->subject ?? '') . '" berhasil dibuat', [
             'agenda_number' => $document->agenda_number,
             'subject' => $document->subject,
-        ], $user->id);
+        ]);
 
         return redirect()->route('sidongan.documents.index')
             ->with('success', 'Surat masuk berhasil disimpan dan dikirim ke Ketua untuk disposisi!');
@@ -440,9 +440,9 @@ class AdminDocumentController extends Controller
                 'file_size' => 0,
             ]);
 
-            \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+            \App\Models\AdminActivityLog::log('updated', $document, 'File surat berhasil dihapus', [
             'action' => 'file_deleted',
-        ], auth()->guard('sidongan')->id());
+        ]);
         return back()->with('success', 'File berhasil dihapus!');
         }
 
@@ -457,9 +457,9 @@ class AdminDocumentController extends Controller
                 'updated_by' => $user->id,
             ]);
             
-            \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+            \App\Models\AdminActivityLog::log('updated', $document, 'Surat berhasil diarsipkan dari update', [
                 'action' => 'archived_from_update',
-            ], $user->id);
+            ]);
             return redirect()->route('sidongan.documents.show', $document)
                 ->with('success', 'Surat berhasil diarsipkan!');
         }
@@ -505,10 +505,10 @@ class AdminDocumentController extends Controller
             'category_id' => $validated['category_id'] ?? null,
         ]);
 
-        \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+        \App\Models\AdminActivityLog::log('updated', $document, 'Surat "' . ($document->subject ?? '') . '" berhasil diperbarui', [
             'agenda_number' => $document->agenda_number,
             'subject' => $document->subject,
-        ], $user->id);
+        ]);
         return redirect()->route('sidongan.documents.index')->with('success', 'Dokumen berhasil diperbarui!');
     }
 
@@ -524,10 +524,10 @@ class AdminDocumentController extends Controller
         }
         $agendaNum = $document->agenda_number;
         $docId = $document->id;
-        $document->delete();
-        \App\Models\AdminActivityLog::log('deleted', 'surat', $docId, [
+        \App\Models\AdminActivityLog::log('deleted', $document, 'Surat berhasil dihapus', [
             'agenda_number' => $agendaNum,
-        ], auth()->guard('sidongan')->id());
+        ]);
+        $document->delete();
         return redirect()->route('sidongan.documents.index')->with('success', 'Dokumen berhasil dihapus!');
     }
 
@@ -793,11 +793,11 @@ class AdminDocumentController extends Controller
             }
         }
         
-        \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+        \App\Models\AdminActivityLog::log('updated', $document, 'Surat berhasil didisposisi', [
             'action' => 'disposisi',
             'target_roles' => $validated['target_roles'],
             'action_type' => $finalAction,
-        ], $user->id);
+        ]);
         
         $message = "Disposisi berhasil! {$notificationCount} notifikasi terkirim.";
         $type = 'success';
@@ -885,9 +885,9 @@ class AdminDocumentController extends Controller
             ]);
         }
 
-        \App\Models\AdminActivityLog::log('updated', 'surat', $document->id, [
+        \App\Models\AdminActivityLog::log('updated', $document, 'Surat berhasil diarsipkan', [
             'action' => 'archived',
-        ], $user->id);
+        ]);
         return redirect()->route('sidongan.documents.show', $document)
             ->with('success', 'Surat berhasil diarsipkan!');
     }

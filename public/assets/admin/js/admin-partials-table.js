@@ -10,22 +10,20 @@
 
 if (typeof window.confirmDeleteItem === 'undefined') {
     window.confirmDeleteItem = function(id, name) {
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            Toast.confirm(
-                `Data <strong>"${name}"</strong> akan dihapus secara permanen.`,
-                {
-                    title: 'Hapus Data?',
-                    confirmText: 'Ya, Hapus',
-                    cancelText: 'Batal',
-                    type: 'danger'
-                }
-            ).then(function(confirmed) {
-                if (confirmed) {
-                    const form = document.getElementById('delete-form-' + id);
-                    if (form) form.submit();
-                }
-            });
-        }
+        Toast.confirm(
+            `Data <strong>"${name}"</strong> akan dihapus secara permanen.`,
+            {
+                title: 'Hapus Data?',
+                confirmText: 'Ya, Hapus',
+                cancelText: 'Batal',
+                type: 'danger'
+            }
+        ).then(function(confirmed) {
+            if (confirmed) {
+                const form = document.getElementById('delete-form-' + id);
+                if (form) form.submit();
+            }
+        });
     };
 }
 

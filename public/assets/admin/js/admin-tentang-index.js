@@ -35,11 +35,7 @@ function removeProgram(btn) {
     const items = container.querySelectorAll('.program-item');
     
     if (items.length <= 1) {
-        if (typeof Toast !== 'undefined') {
-            Toast.warning('Minimal harus ada 1 program');
-        } else {
-            Toast.warning('Minimal harus ada 1 program');
-        }
+        Toast.warning('Minimal harus ada 1 program');
         return;
     }
     

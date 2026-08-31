@@ -14,36 +14,32 @@ document.querySelectorAll('.cleanup-form').forEach(form => {
         e.preventDefault();
         const title = this.dataset.title;
         const message = this.dataset.message;
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            Toast.confirm(message, {
-                title: title,
-                confirmText: 'Ya, Hapus Sekarang',
-                cancelText: 'Batal',
-                type: 'danger'
-            }).then((confirmed) => {
-                if (confirmed) this.submit();
-            });
-        }
+        Toast.confirm(message, {
+            title: title,
+            confirmText: 'Ya, Hapus Sekarang',
+            cancelText: 'Batal',
+            type: 'danger'
+        }).then((confirmed) => {
+            if (confirmed) this.submit();
+        });
     });
 });
 
 // Konfirmasi Delete Single
 function confirmDeleteItem(id, name) {
     const message = `Apakah Anda yakin ingin menghapus surat "<strong>${name}</strong>" secara permanen?<br><small style="color:#64748b">File, laporan, dan notifikasi terkait juga akan dihapus.</small>`;
-    if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-        Toast.confirm(message, {
-            title: 'Hapus Permanen',
-            confirmText: 'Ya, Hapus',
-            cancelText: 'Batal',
-            type: 'danger'
-        }).then((confirmed) => {
-            if (confirmed) {
-                const form = document.getElementById('deleteForm');
-                form.action = `/admin/sidongan-data/${id}`;
-                form.submit();
-            }
-        });
-    }
+    Toast.confirm(message, {
+        title: 'Hapus Permanen',
+        confirmText: 'Ya, Hapus',
+        cancelText: 'Batal',
+        type: 'danger'
+    }).then((confirmed) => {
+        if (confirmed) {
+            const form = document.getElementById('deleteForm');
+            form.action = `/admin/sidongan-data/${id}`;
+            form.submit();
+        }
+    });
 }
 
 

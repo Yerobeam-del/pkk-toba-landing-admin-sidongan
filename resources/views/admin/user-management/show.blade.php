@@ -15,7 +15,7 @@
     <div class="u-a64">
         
         {{-- Tombol Salin Kredensial --}}
-        <button type="button" onclick="copyAccountCredentials()" id="copyCredentialsBtn" class="btn" style="display:inline-flex;align-items:center;gap:0.5rem;background:#f0fdf4;color:#166534;padding:0.5rem 1rem;border-radius:8px;border:1px solid #bbf7d0;cursor:pointer;font-weight:600;font-family:inherit;transition:all 0.2s">
+        <button type="button" onclick="copyAccountCredentials()" id="copyCredentialsBtn" class="btn um-export-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span>Salin Kredensial</span>
         </button>
@@ -26,7 +26,7 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 Edit Akun
             </a>
-            <button type="button" data-reset-password-id="{{ $user->id }}" data-reset-password-name="{{ addslashes($user->name) }}" class="btn btn-secondary" style="display:inline-flex;align-items:center;gap:0.5rem;background:#f1f5f9;color:#475569;padding:0.5rem 1rem;border-radius:8px;border:1px solid #e2e8f0;cursor:pointer;font-weight:600;font-family:inherit;transition:all 0.2s">
+            <button type="button" data-reset-password-id="{{ $user->id }}" data-reset-password-name="{{ addslashes($user->name) }}" class="btn btn-back">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 Reset Password
             </button>
@@ -248,15 +248,7 @@
                 btn.style.color = '#166534';
             }, 2000);
         }
-        if (typeof Toast !== 'undefined' && Toast.success) {
-            Toast.success('Kredensial berhasil disalin ke clipboard!');
-        } else {
-            var t = document.createElement('div');
-            t.textContent = 'Kredensial berhasil disalin ke clipboard!';
-            t.style.cssText = 'position:fixed;top:20px;right:20px;z-index:999999;background:#166534;color:#fff;padding:1rem 1.5rem;border-radius:10px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.2);';
-            document.body.appendChild(t);
-            setTimeout(function(){ t.remove(); }, 2500);
-        }
+        Toast.success('Kredensial berhasil disalin ke clipboard!');
     }
 
     function showCopyManualModal(text) {
@@ -279,12 +271,8 @@
             try {
                 document.execCommand('copy');
                 overlay.remove();
-                var t = document.createElement('div');
-                t.textContent = 'Berhasil disalin!';
-                t.style.cssText = 'position:fixed;top:20px;right:20px;z-index:999999;background:#166534;color:#fff;padding:1rem 1.5rem;border-radius:10px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.2);';
-                document.body.appendChild(t);
-                setTimeout(function(){ t.remove(); }, 2500);
-            } catch(e) { alert('Gagal copy, silakan select & copy manual (Ctrl+C)'); }
+                Toast.success('Berhasil disalin!');
+            } catch(e) { Toast.error('Gagal copy, silakan select & copy manual (Ctrl+C)'); }
         });
     }
 </script>

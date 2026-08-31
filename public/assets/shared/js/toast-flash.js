@@ -9,7 +9,7 @@
  * ============================================================ */
 document.addEventListener('DOMContentLoaded', function () {
     const el = document.getElementById('toast-flash');
-    if (!el || typeof Toast === 'undefined') return;
+    if (!el) return;
 
     const types = [
         ['data-success', 'success'],

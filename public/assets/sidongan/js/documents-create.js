@@ -130,11 +130,7 @@
         const suggestion = document.getElementById('suggestion').value.trim();
 
         if (!suggestion) {
-            if (typeof Toast !== 'undefined') {
-                Toast.error('Saran Sekretaris harus diisi!');
-            } else {
-                Toast.warning('Saran Sekretaris harus diisi!');
-            }
+            Toast.error('Saran Sekretaris harus diisi!');
             document.getElementById('suggestion').focus();
             document.getElementById('suggestion').style.borderColor = '#ef4444';
             return false;
@@ -148,11 +144,7 @@
             const agdDate = new Date(agendaDate);
 
             if (agdDate > today) {
-                if (typeof Toast !== 'undefined') {
-                    Toast.error('Tanggal diterima tidak boleh lebih dari hari ini!');
-                } else {
-                    Toast.warning('Tanggal diterima tidak boleh lebih dari hari ini!');
-                }
+                Toast.error('Tanggal diterima tidak boleh lebih dari hari ini!');
                 document.getElementById('agenda_date').focus();
                 document.getElementById('agenda_date').style.borderColor = '#ef4444';
                 return false;
@@ -296,11 +288,7 @@
                 const validation = validateFile(file);
 
                 if (!validation.valid) {
-                    if (typeof Toast !== 'undefined') {
-                        Toast.error(validation.message);
-                    } else {
-                        Toast.warning(validation.message);
-                    }
+                    Toast.error(validation.message);
                     fileInput.value = '';
                     return;
                 }
@@ -317,11 +305,7 @@
                 const validation = validateFile(file);
 
                 if (!validation.valid) {
-                    if (typeof Toast !== 'undefined') {
-                        Toast.error(validation.message);
-                    } else {
-                        Toast.warning(validation.message);
-                    }
+                    Toast.error(validation.message);
                     e.target.value = '';
                     return;
                 }

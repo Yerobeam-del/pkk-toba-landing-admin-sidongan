@@ -29,16 +29,14 @@ async function toggleStatus(userId, userName, currentStatus) {
 
         const data = await response.json();
         if (data.success) {
-            if (typeof Toast !== 'undefined') Toast.success(data.message);
+            Toast.success(data.message);
             setTimeout(() => location.reload(), 1000);
         } else {
-            if (typeof Toast !== 'undefined') Toast.error(data.message);
-            else Toast.warning(data.message);
+            Toast.error(data.message);
         }
     } catch (error) {
         console.error('Error:', error);
-        if (typeof Toast !== 'undefined') Toast.error('Terjadi kesalahan saat mengubah status akun');
-        else Toast.error('Terjadi kesalahan saat mengubah status akun');
+        Toast.error('Terjadi kesalahan saat mengubah status akun');
     }
 }
 
@@ -72,14 +70,12 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async fu
     const submitBtn = document.getElementById('resetPasswordSubmitBtn');
 
     if (password.length < 8) {
-        if (typeof Toast !== 'undefined') Toast.warning('Password minimal 8 karakter!');
-        else alert('Password minimal 8 karakter!');
+        Toast.warning('Password minimal 8 karakter!');
         return;
     }
 
     if (password !== passwordConfirm) {
-        if (typeof Toast !== 'undefined') Toast.warning('Konfirmasi password tidak cocok!');
-        else alert('Konfirmasi password tidak cocok!');
+        Toast.warning('Konfirmasi password tidak cocok!');
         return;
     }
 
@@ -103,16 +99,14 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async fu
         const data = await response.json();
         
         if (data.success) {
-            if (typeof Toast !== 'undefined') Toast.success(data.message);
+            Toast.success(data.message);
             closeResetPasswordModal();
         } else {
-            if (typeof Toast !== 'undefined') Toast.error(data.message);
-            else alert(data.message);
+            Toast.error(data.message);
         }
     } catch (error) {
         console.error('Error:', error);
-        if (typeof Toast !== 'undefined') Toast.error('Terjadi kesalahan saat mereset password');
-        else alert('Terjadi kesalahan saat mereset password');
+        Toast.error('Terjadi kesalahan saat mereset password');
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Reset Password';

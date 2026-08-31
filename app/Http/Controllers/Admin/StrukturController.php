@@ -242,7 +242,7 @@ class StrukturController extends Controller
         }
 
         // Create dengan photo_path yang sudah diproses
-        StrukturMember::create([
+        $member = StrukturMember::create([
             'pokja_id' => $pokjaId,
             'position' => $position,
             'name' => $validated['name'],
@@ -251,7 +251,7 @@ class StrukturController extends Controller
             'photo_path' => $photoPath, // <-- INI YANG SEBELUMNYA HILANG
         ]);
 
-        AdminActivityLog::log('created', 'struktur', null, ['name' => $validated['name'] ?? '', 'position' => $validated['position'] ?? '']);
+        AdminActivityLog::log('created', $member, 'Struktur "' . ($member->name ?? '') . '" berhasil dibuat', ['name' => $validated['name'] ?? '', 'position' => $validated['position'] ?? '']);
         return redirect()->route('admin.struktur.index')->with('success', 'Data berhasil ditambahkan.');
     }
 
@@ -305,14 +305,14 @@ class StrukturController extends Controller
             'photo_path' => $photoPath, // <-- INI YANG SEBELUMNYA HILANG
         ]);
 
-        AdminActivityLog::log('updated', 'struktur', $struktur->id, ['name' => $struktur->name ?? '']);
+        AdminActivityLog::log('updated', $struktur, 'Struktur "' . ($struktur->name ?? '') . '" berhasil diperbarui', ['name' => $struktur->name ?? '']);
         return redirect()->route('admin.struktur.index')->with('success', 'Data berhasil diperbarui.');
     }
 
     public function destroy(StrukturMember $struktur)
     {
         if ($struktur->photo_path) Storage::disk('public')->delete($struktur->photo_path);
-        AdminActivityLog::log('deleted', 'struktur', $struktur->id, ['name' => $struktur->name ?? '']);
+        AdminActivityLog::log('deleted', $struktur, 'Struktur "' . ($struktur->name ?? '') . '" berhasil dihapus', ['name' => $struktur->name ?? '']);
         $struktur->delete();
         return redirect()->route('admin.struktur.index')->with('success', 'Data berhasil dihapus.');
     }

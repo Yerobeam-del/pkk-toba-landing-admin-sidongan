@@ -305,11 +305,11 @@ class ActivityReportController extends Controller
             ? 'Laporan revisi berhasil dikirim untuk verifikasi ulang!'
             : 'Laporan kegiatan berhasil dikirim untuk verifikasi!';
 
-        \App\Models\AdminActivityLog::log('created', 'laporan', $report->id, [
+        \App\Models\AdminActivityLog::log('created', $report, 'Laporan "' . ($validated['kegiatan_nama'] ?? '') . '" berhasil dibuat', [
             'kegiatan_nama' => $validated['kegiatan_nama'],
             'document_id' => $validated['document_id'],
             'action' => $action,
-        ], $user->id);
+        ]);
         
         return redirect()->route('sidongan.lapor_kegiatan.index')
             ->with('success', $successMessage);
@@ -411,10 +411,10 @@ class ActivityReportController extends Controller
             $fotoPaths = json_decode($report->fotos, true) ?? [];
         }
         
-        \App\Models\AdminActivityLog::log('updated', 'laporan', $report->id, [
+        \App\Models\AdminActivityLog::log('updated', $report, 'Laporan "' . ($validated['kegiatan_nama'] ?? '') . '" berhasil diperbarui', [
             'kegiatan_nama' => $validated['kegiatan_nama'],
             'action' => 'revisi',
-        ], auth()->guard('sidongan')->id());
+        ]);
 
         $report->update([
             'kegiatan_nama' => $validated['kegiatan_nama'],
@@ -467,12 +467,10 @@ class ActivityReportController extends Controller
         
         // Hapus laporan
         $documentId = $report->document_id;
-        $reportId = $report->id;
-        $report->delete();
-
-        \App\Models\AdminActivityLog::log('deleted', 'laporan', $reportId, [
+        \App\Models\AdminActivityLog::log('deleted', $report, 'Laporan kegiatan berhasil dihapus', [
             'document_id' => $documentId,
-        ], $user->id);
+        ]);
+        $report->delete();
         
         // UPDATE STATUS DOKUMEN SETELAH HAPUS LAPORAN
         $document = \App\Models\Document::find($documentId);

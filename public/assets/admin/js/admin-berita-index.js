@@ -11,22 +11,20 @@
 // Konfirmasi Hapus (menggunakan ID form dari partial table)
 if (typeof window.confirmDeleteItem === 'undefined') {
     window.confirmDeleteItem = function(id, name) {
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            Toast.confirm(
-                `Berita <strong>"${name}"</strong> akan dihapus secara permanen.`,
-                {
-                    title: 'Hapus Berita?',
-                    confirmText: 'Ya, Hapus',
-                    cancelText: 'Batal',
-                    type: 'danger'
-                }
-            ).then(function(confirmed) {
-                if (confirmed) {
-                    const form = document.getElementById('delete-form-' + id);
-                    if (form) form.submit();
-                }
-            });
-        }
+        Toast.confirm(
+            `Berita <strong>\"${name}\"</strong> akan dihapus secara permanen.`,
+            {
+                title: 'Hapus Berita?',
+                confirmText: 'Ya, Hapus',
+                cancelText: 'Batal',
+                type: 'danger'
+            }
+        ).then(function(confirmed) {
+            if (confirmed) {
+                const form = document.getElementById('delete-form-' + id);
+                if (form) form.submit();
+            }
+        });
     };
 }
 

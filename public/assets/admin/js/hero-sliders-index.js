@@ -12,18 +12,16 @@
 // ==========================================
 async function confirmDeleteWithToast(id, name) {
     try {
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            const confirmed = await Toast.confirm(
-                `Slide <strong>"${name}"</strong> akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.`,
-                {
-                    title: 'Hapus Slide?',
-                    confirmText: 'Ya, Hapus',
-                    cancelText: 'Batal',
-                    type: 'danger'
-                }
-            );
-            if (confirmed) submitDelete(id);
-        }
+        const confirmed = await Toast.confirm(
+            `Slide <strong>"${name}"</strong> akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.`,
+            {
+                title: 'Hapus Slide?',
+                confirmText: 'Ya, Hapus',
+                cancelText: 'Batal',
+                type: 'danger'
+            }
+        );
+        if (confirmed) submitDelete(id);
     } catch (error) {
         // Jangan jatuh ke confirm() bawaan: penghapusan dibatalkan dan
         // pengguna diberi tahu lewat Toast agar tampilannya seragam.

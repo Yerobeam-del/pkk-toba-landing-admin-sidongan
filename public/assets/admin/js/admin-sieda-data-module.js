@@ -14,18 +14,14 @@ document.querySelectorAll('.delete-all-form').forEach(form => {
         e.preventDefault();
         const title = this.dataset.title;
         const message = this.dataset.message;
-        if (typeof Toast !== 'undefined' && typeof Toast.confirm === 'function') {
-            Toast.confirm(message, {
-                title: title,
-                confirmText: 'Ya, Hapus Semua',
-                cancelText: 'Batal',
-                type: 'danger'
-            }).then((confirmed) => {
-                if (confirmed) this.submit();
-            });
-        } else {
-            if (confirm(message.replace(/<[^>]*>/g, ''))) this.submit();
-        }
+        Toast.confirm(message, {
+            title: title,
+            confirmText: 'Ya, Hapus Semua',
+            cancelText: 'Batal',
+            type: 'danger'
+        }).then((confirmed) => {
+            if (confirmed) this.submit();
+        });
     });
 });
 

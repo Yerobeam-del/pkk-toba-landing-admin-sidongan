@@ -405,7 +405,13 @@
         if (ids.length === 0) return;
 
         const labels = { activate: 'mengaktifkan', deactivate: 'menonaktifkan', delete: 'menghapus' };
-        if (action === 'delete' && !confirm('Yakin ingin menghapus ' + ids.length + ' pengguna?')) return;
+        if (action === 'delete') {
+            const confirmed = await Toast.confirm(
+                'Yakin ingin menghapus <strong>' + ids.length + ' pengguna</strong> secara permanen?',
+                { title: 'Hapus Pengguna?', confirmText: 'Ya, Hapus', cancelText: 'Batal', type: 'danger' }
+            );
+            if (!confirmed) return;
+        }
 
         try {
             const response = await fetch('{{ route("admin.user-management.bulk-action") }}', {
@@ -419,13 +425,13 @@
             });
             const result = await response.json();
             if (result.success) {
-                if (typeof Toast !== 'undefined') Toast.success(result.message);
+                Toast.success(result.message);
                 setTimeout(() => location.reload(), 1000);
             } else {
-                if (typeof Toast !== 'undefined') Toast.error(result.message || 'Gagal melakukan aksi');
+                Toast.error(result.message || 'Gagal melakukan aksi');
             }
         } catch (e) {
-            if (typeof Toast !== 'undefined') Toast.error('Terjadi kesalahan jaringan');
+            Toast.error('Terjadi kesalahan jaringan');
         }
     }
     document.addEventListener('DOMContentLoaded', initBulkSelection);
@@ -448,7 +454,7 @@
         // Method 1: Try Clipboard API first (works on HTTPS + localhost)
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(function() {
-                showToast('Kredensial berhasil disalin ke clipboard!');
+                Toast.success('Kredensial berhasil disalin ke clipboard!');
             }).catch(function() {
                 // Method 2: Fallback to textarea
                 textareaCopy(text);
@@ -476,26 +482,13 @@
             var ok = document.execCommand('copy');
             document.body.removeChild(ta);
             if (ok) {
-                showToast('Kredensial berhasil disalin ke clipboard!');
+                Toast.success('Kredensial berhasil disalin ke clipboard!');
             } else {
                 showCopyManualModal(text);
             }
         } catch(e) {
             document.body.removeChild(ta);
             showCopyManualModal(text);
-        }
-    }
-
-    function showToast(msg) {
-        if (typeof Toast !== 'undefined' && Toast.success) {
-            Toast.success(msg);
-        } else {
-            // Simple toast without alert
-            var t = document.createElement('div');
-            t.textContent = msg;
-            t.style.cssText = 'position:fixed;top:20px;right:20px;z-index:999999;background:#166534;color:#fff;padding:1rem 1.5rem;border-radius:10px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.2);animation:fadeIn 0.3s';
-            document.body.appendChild(t);
-            setTimeout(function(){ t.remove(); }, 2500);
         }
     }
 
@@ -520,8 +513,8 @@
             try {
                 document.execCommand('copy');
                 overlay.remove();
-                showToast('Berhasil disalin!');
-            } catch(e) { alert('Gagal copy, silakan select & copy manual (Ctrl+C)'); }
+                Toast.success('Berhasil disalin!');
+            } catch(e) { Toast.error('Gagal copy, silakan select & copy manual (Ctrl+C)'); }
         });
     }
     </script>
@@ -622,9 +615,7 @@
                 document.execCommand('copy');
                 showCopyBtnSuccess(type);
             } catch (err) {
-                if (typeof Toast !== 'undefined') {
-                    Toast.error('Gagal menyalin. Silakan copy manual.');
-                }
+                Toast.error('Gagal menyalin. Silakan copy manual.');
             }
             document.body.removeChild(textarea);
         }
@@ -642,9 +633,7 @@
                 btn.style.color = type === 'full' ? '#fff' : '#475569';
             }, 2000);
 
-            if (typeof Toast !== 'undefined') {
-                Toast.success('Berhasil disalin ke clipboard!');
-            }
+            Toast.success('Berhasil disalin ke clipboard!');
         }
     </script>
     @endif

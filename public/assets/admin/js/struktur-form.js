@@ -62,11 +62,7 @@ function handlePhotoUpload(event) {
     if (!file) return;
     
     if (file.size > 2 * 1024 * 1024) {
-        if (typeof Toast !== 'undefined') {
-            Toast.error('Ukuran foto terlalu besar. Maksimal 2MB.');
-        } else {
-            Toast.warning('Ukuran foto terlalu besar. Maksimal 2MB.');
-        }
+        Toast.error('Ukuran foto terlalu besar. Maksimal 2MB.');
         event.target.value = '';
         return;
     }
@@ -133,20 +129,12 @@ function openCropModal() {
     const hasNewFile = originalFile !== null;
     
     if (!hasExistingPhoto && !hasNewFile) {
-        if (typeof Toast !== 'undefined') {
-            Toast.warning('Silakan upload foto terlebih dahulu.');
-        } else {
-            Toast.warning('Silakan upload foto terlebih dahulu.');
-        }
+        Toast.warning('Silakan upload foto terlebih dahulu.');
         return;
     }
     
     if (typeof Cropper === 'undefined') {
-        if (typeof Toast !== 'undefined') {
-            Toast.error('Cropper.js belum ter-load. Silakan refresh halaman.');
-        } else {
-            Toast.warning('Cropper.js belum ter-load. Silakan refresh halaman.');
-        }
+        Toast.error('Cropper.js belum ter-load. Silakan refresh halaman.');
         console.error('Cropper.js is not loaded!');
         return;
     }
@@ -200,11 +188,7 @@ function initializeCropper(imageSrc) {
             console.log('Cropper initialized successfully');
         } catch (error) {
             console.error('Error initializing cropper:', error);
-            if (typeof Toast !== 'undefined') {
-                Toast.error('Gagal menginisialisasi crop tool.');
-            } else {
-                Toast.error('Gagal menginisialisasi crop tool.');
-            }
+            Toast.error('Gagal menginisialisasi crop tool.');
         }
     };
 }
@@ -231,11 +215,7 @@ function resetCrop() {
 // Apply crop
 function applyCrop() {
     if (!cropper) {
-        if (typeof Toast !== 'undefined') {
-            Toast.warning('Crop tool belum siap. Silakan coba lagi.');
-        } else {
-            Toast.warning('Crop tool belum siap. Silakan coba lagi.');
-        }
+        Toast.warning('Crop tool belum siap. Silakan coba lagi.');
         return;
     }
     
@@ -259,18 +239,12 @@ function applyCrop() {
         textDiv.querySelector('div:first-child').textContent = 'Foto dipilih (sudah di-crop)';
         textDiv.querySelector('div:last-child').textContent = 'Klik untuk crop ulang';
         
-        if (typeof Toast !== 'undefined') {
-            Toast.success('Foto berhasil di-crop!');
-        }
+        Toast.success('Foto berhasil di-crop!');
         
         closeCropModal();
     } catch (error) {
         console.error('Error applying crop:', error);
-        if (typeof Toast !== 'undefined') {
-            Toast.error('Gagal menerapkan crop. Silakan coba lagi.');
-        } else {
-            Toast.error('Gagal menerapkan crop. Silakan coba lagi.');
-        }
+        Toast.error('Gagal menerapkan crop. Silakan coba lagi.');
     }
 }
 

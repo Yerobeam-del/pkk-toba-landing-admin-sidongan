@@ -158,13 +158,9 @@ function generateRandomPassword() {
                 btn.innerHTML = originalHTML;
             }, 2000);
         }
-        if (typeof Toast !== 'undefined') {
-            Toast.success('Password berhasil dibuat & disalin ke clipboard!');
-        }
+        Toast.success('Password berhasil dibuat & disalin ke clipboard!');
     }).catch(() => {
-        if (typeof Toast !== 'undefined') {
-            Toast.success('Password berhasil dibuat! Silakan copy manual.');
-        }
+        Toast.success('Password berhasil dibuat! Silakan copy manual.');
     });
 }
 

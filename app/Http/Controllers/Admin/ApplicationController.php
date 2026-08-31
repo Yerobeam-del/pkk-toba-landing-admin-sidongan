@@ -152,8 +152,8 @@ class ApplicationController extends Controller
             $validated['is_active'] = 0;
         }
 
-        Application::create($validated);
-        AdminActivityLog::log('created', 'aplikasi', null, ['name' => $validated['name'] ?? '']);
+        $application = Application::create($validated);
+        AdminActivityLog::log('created', $application, 'Aplikasi "' . ($application->name ?? '') . '" berhasil dibuat', ['name' => $application->name ?? '']);
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil ditambahkan!');
     }
 
@@ -225,7 +225,7 @@ class ApplicationController extends Controller
         }
 
         $aplikasi->update($validated);
-        AdminActivityLog::log('updated', 'aplikasi', $aplikasi->id, ['name' => $aplikasi->name ?? '']);
+        AdminActivityLog::log('updated', $aplikasi, 'Aplikasi "' . ($aplikasi->name ?? '') . '" berhasil diperbarui', ['name' => $aplikasi->name ?? '']);
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil diperbarui.');
     }
 
@@ -234,7 +234,7 @@ class ApplicationController extends Controller
         if ($aplikasi->icon) {
             Storage::disk('public')->delete($aplikasi->icon);
         }
-        AdminActivityLog::log('deleted', 'aplikasi', $aplikasi->id, ['name' => $aplikasi->name ?? '']);
+        AdminActivityLog::log('deleted', $aplikasi, 'Aplikasi "' . ($aplikasi->name ?? '') . '" berhasil dihapus', ['name' => $aplikasi->name ?? '']);
         $aplikasi->delete();
         return redirect()->route('admin.aplikasi.index')->with('success', 'Aplikasi berhasil dihapus.');
     }

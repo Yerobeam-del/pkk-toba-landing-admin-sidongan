@@ -61,11 +61,7 @@
         const remainingSlots = MAX_FILES - selectedFiles.length;
         
         if (newFiles.length > remainingSlots) {
-            if (typeof Toast !== 'undefined') {
-                Toast.error(`Maksimal hanya ${MAX_FILES} foto. Anda sudah memilih ${selectedFiles.length} foto.`);
-            } else {
-                Toast.warning(`Maksimal hanya ${MAX_FILES} foto. Anda sudah memilih ${selectedFiles.length} foto.`);
-            }
+            Toast.error(`Maksimal hanya ${MAX_FILES} foto. Anda sudah memilih ${selectedFiles.length} foto.`);
             return;
         }
         
@@ -73,11 +69,7 @@
             // Validate file
             const validation = validateFile(file);
             if (!validation.valid) {
-                if (typeof Toast !== 'undefined') {
-                    Toast.error(validation.message);
-                } else {
-                    Toast.warning(validation.message);
-                }
+                Toast.error(validation.message);
                 return;
             }
             

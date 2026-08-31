@@ -117,7 +117,7 @@ class BeritaController extends Controller
                 ]);
             }
         }
-        AdminActivityLog::log('created', 'berita', null, ['title' => $validated['title'] ?? '']);
+        AdminActivityLog::log('created', $news, 'Berita "' . ($news->title ?? '') . '" berhasil dibuat', ['title' => $validated['title'] ?? '']);
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil ditambahkan.');
     }
 
@@ -240,7 +240,7 @@ class BeritaController extends Controller
                 ]);
             }
         }
-        AdminActivityLog::log('updated', 'berita', $beritum->id, ['title' => $beritum->title ?? '']);
+        AdminActivityLog::log('updated', $beritum, 'Berita "' . ($beritum->title ?? '') . '" berhasil diperbarui', ['title' => $beritum->title ?? '']);
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diperbarui.');
     }
 
@@ -267,7 +267,7 @@ class BeritaController extends Controller
         if ($beritum->image_path) {
             Storage::disk('public')->delete($beritum->image_path);
         }
-        AdminActivityLog::log('deleted', 'berita', $beritum->id, ['title' => $beritum->title ?? '']);
+        AdminActivityLog::log('deleted', $beritum, 'Berita "' . ($beritum->title ?? '') . '" berhasil dihapus', ['title' => $beritum->title ?? '']);
         $beritum->delete();
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus.');
     }

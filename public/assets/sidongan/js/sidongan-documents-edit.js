@@ -102,11 +102,7 @@
             
             // Cek: Tanggal surat tidak boleh lebih dari hari ini
             if (docDate > today) {
-                if (typeof Toast !== 'undefined') {
-                    Toast.error('Tanggal surat tidak boleh lebih dari hari ini!');
-                } else {
-                    Toast.warning('Tanggal surat tidak boleh lebih dari hari ini!');
-                }
+                Toast.error('Tanggal surat tidak boleh lebih dari hari ini!');
                 dateInput.style.borderColor = '#ef4444';
                 return false;
             }
@@ -129,11 +125,7 @@
             const docDate = new Date(documentDate);
             
             if (docDate > today) {
-                if (typeof Toast !== 'undefined') {
-                    Toast.error('Tanggal surat tidak boleh lebih dari hari ini!');
-                } else {
-                    Toast.warning('Tanggal surat tidak boleh lebih dari hari ini!');
-                }
+                Toast.error('Tanggal surat tidak boleh lebih dari hari ini!');
                 document.getElementById('document_date').focus();
                 document.getElementById('document_date').style.borderColor = '#ef4444';
                 return false;
@@ -222,11 +214,7 @@
             const validation = validateFile(file);
             
             if (!validation.valid) {
-                if (typeof Toast !== 'undefined') {
-                    Toast.error(validation.message);
-                } else {
-                    Toast.warning(validation.message);
-                }
+                Toast.error(validation.message);
                 fileInput.value = '';
                 return;
             }
@@ -242,11 +230,7 @@
             const validation = validateFile(file);
             
             if (!validation.valid) {
-                if (typeof Toast !== 'undefined') {
-                    Toast.error(validation.message);
-                } else {
-                    Toast.warning(validation.message);
-                }
+                Toast.error(validation.message);
                 e.target.value = '';
                 return;
             }

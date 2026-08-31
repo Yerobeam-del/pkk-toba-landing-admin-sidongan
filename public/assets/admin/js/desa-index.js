@@ -307,13 +307,7 @@ async function deleteDesa(id, name) {
         
     } catch (err) { 
         console.error('💥 Delete error:', err);
-        const errorMsg = err.message || 'Terjadi kesalahan saat menghapus desa.';
-        
-        if (typeof Toast !== 'undefined') {
-            Toast.error(errorMsg);
-        } else {
-            Toast.error('❌ ' + errorMsg);
-        }
+        Toast.error(err.message || 'Terjadi kesalahan saat menghapus desa.');
     }
 }
 

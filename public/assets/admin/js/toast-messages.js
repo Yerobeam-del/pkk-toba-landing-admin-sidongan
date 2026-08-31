@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     messages.forEach(([attr, type]) => {
         const value = body.getAttribute(attr);
-        if (value && typeof Toast !== 'undefined') {
+        if (value) {
             Toast[type](value);
         }
     });
