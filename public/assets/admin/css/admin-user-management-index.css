@@ -416,15 +416,19 @@
    ========================================= */
 .bulk-checkbox,
 #selectAll {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     width: 18px !important;
     height: 18px !important;
     cursor: pointer;
-    accent-color: var(--primary);
     border-radius: 4px;
     border: 2px solid #cbd5e1;
+    background: #fff;
     transition: all 0.2s;
     position: relative;
     z-index: 2;
+    flex-shrink: 0;
 }
 
 .bulk-checkbox::before,

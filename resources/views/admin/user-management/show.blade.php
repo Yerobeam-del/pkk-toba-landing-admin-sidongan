@@ -7,6 +7,10 @@
 
 @section('content')
 
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-user-management-index.css') }}">
+@endsection
+
 <div class="u-header-row-plain">
     <div>
         <h1 class="u-page-title">Detail Akun</h1>
@@ -176,6 +180,49 @@
 </div>
 
 @push('scripts')
+    {{-- MODAL RESET PASSWORD --}}
+    <div id="resetPasswordModal" class="um-modal-overlay">
+        <div class="um-modal-card" style="max-width:420px">
+            <div style="text-align:center;margin-bottom:1.5rem">
+                <div class="um-modal-icon-box um-modal-icon-box--teal">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <h3 class="um-modal-title">Reset Password</h3>
+                <p class="um-modal-subtitle">Akun: <strong id="resetPasswordUserName"></strong></p>
+            </div>
+
+            <form id="resetPasswordForm">
+                <input type="hidden" id="resetPasswordUserId" value="">
+
+                <div class="form-group u-mb-4">
+                    <label for="resetPasswordInput" class="um-modal-label">Password Baru</label>
+                    <input type="password" id="resetPasswordInput" name="password" required placeholder="Minimal 8 karakter"
+                        class="um-modal-input">
+                </div>
+
+                <div class="form-group u-a62">
+                    <label for="resetPasswordConfirmInput" class="um-modal-label">Konfirmasi Password Baru</label>
+                    <input type="password" id="resetPasswordConfirmInput" name="password_confirmation" required placeholder="Ulangi password baru"
+                        class="um-modal-input">
+                </div>
+
+                <div class="u-a64">
+                    <button type="button" data-action="close-reset-password" class="um-modal-btn-cancel">
+                        Batal
+                    </button>
+                    <button type="submit" id="resetPasswordSubmitBtn" class="um-modal-btn-primary">
+                        Reset Password
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ asset('assets/admin/js/user-management-index.js') }}"></script>
+
 <script>
     function copyAccountCredentials() {
         var name = {{ json_encode($user->name) }};

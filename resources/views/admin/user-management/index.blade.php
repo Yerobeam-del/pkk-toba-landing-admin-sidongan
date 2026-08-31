@@ -166,10 +166,10 @@
     <div id="bulkActionBar" class="um-bulk-bar" style="display:none">
         <span class="um-bulk-count"><span id="bulkCount">0</span> dipilih</span>
         <div class="um-bulk-btns">
-            <button type="button" onclick="bulkAction('activate')" class="um-bulk-activate">
+            <button type="button" id="bulkBtnActivate" onclick="bulkAction('activate')" class="um-bulk-activate" style="display:none">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Aktifkan
             </button>
-            <button type="button" onclick="bulkAction('deactivate')" class="um-bulk-deactivate">
+            <button type="button" id="bulkBtnDeactivate" onclick="bulkAction('deactivate')" class="um-bulk-deactivate" style="display:none">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Nonaktifkan
             </button>
             <button type="button" onclick="bulkAction('delete')" class="um-bulk-delete">
@@ -192,10 +192,11 @@
                 if (auth()->user()->hasRole('super_admin')) {
                     $userColumns[] = [
                         'key' => 'id',
-                        'label' => '<input type="checkbox" id="selectAll" style="cursor:pointer">',
+                        'label' => '<input type="checkbox" id="selectAll">',
                         'type' => 'callback',
                         'callback' => function($item) {
-                            return '<input type="checkbox" class="bulk-checkbox" value="' . $item->id . '" style="cursor:pointer;width:16px;height:16px;accent-color:var(--primary)">';
+                            $status = $item->email_verified_at ? 'active' : 'inactive';
+                            return '<input type="checkbox" class="bulk-checkbox" value="' . $item->id . '" data-status="' . $status . '">';
                         }
                     ];
                 }
@@ -378,11 +379,27 @@
         function updateBulkBar() {
             const bar = document.getElementById('bulkActionBar');
             const countEl = document.getElementById('bulkCount');
+            const btnActivate = document.getElementById('bulkBtnActivate');
+            const btnDeactivate = document.getElementById('bulkBtnDeactivate');
             if (!bar) return;
             const checked = document.querySelectorAll('.bulk-checkbox:checked');
             if (checked.length > 0) {
                 bar.style.display = 'flex';
                 countEl.textContent = checked.length;
+
+                // Smart: cek status semua yang dipilih
+                const statuses = new Set();
+                checked.forEach(function(cb) {
+                    statuses.add(cb.dataset.status);
+                });
+
+                const onlyActive = statuses.size === 1 && statuses.has('active');
+                const onlyInactive = statuses.size === 1 && statuses.has('inactive');
+
+                // Aktifkan: tampilkan HANYA jika semua nonaktif
+                if (btnActivate) btnActivate.style.display = onlyInactive ? 'inline-flex' : 'none';
+                // Nonaktifkan: tampilkan HANYA jika semua aktif
+                if (btnDeactivate) btnDeactivate.style.display = onlyActive ? 'inline-flex' : 'none';
             } else {
                 bar.style.display = 'none';
             }
