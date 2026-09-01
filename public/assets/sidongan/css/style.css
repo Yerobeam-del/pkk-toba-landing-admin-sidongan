@@ -781,7 +781,62 @@ body {
     }
 }
 
-/* 4. sd-btn-back (harus SETELAH sd-header-actions) */
+/* 4. sd-btn-back — base styles (universal) */
+.sd-btn-back,
+.ds-header-actions .ds-btn-back,
+.dl-header-actions .dl-btn-back,
+.disposisi-header-actions .btn-back,
+.action-buttons .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    background: var(--surface-bg, #f1f5f9);
+    color: var(--text-muted, #64748b);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid var(--border-light, #e2e8f0);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.sd-btn-back:hover,
+.ds-header-actions .ds-btn-back:hover,
+.dl-header-actions .dl-btn-back:hover,
+.disposisi-header-actions .btn-back:hover,
+.action-buttons .btn-back:hover {
+    background: var(--border-light, #e2e8f0);
+    color: var(--text-dark, #334155);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.sd-btn-back svg,
+.sd-btn-back i {
+    font-size: 0.8rem;
+}
+
+/* Gradient-header override: white-on-glass for pages with gradient bg */
+.sd-page-header-gradient .sd-btn-back,
+.lk-page-header .sd-btn-back,
+.sd-edit-header .sd-btn-back,
+.dl-header .sd-btn-back {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(4px);
+}
+.sd-page-header-gradient .sd-btn-back:hover,
+.lk-page-header .sd-btn-back:hover,
+.sd-edit-header .sd-btn-back:hover,
+.dl-header .sd-btn-back:hover {
+    background: rgba(255,255,255,0.35);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Mobile: back button moves to bottom */
 @media (max-width: 768px) {
     /* Hanya mengubah urutan visual, markup tetap. Desktop tidak terpengaruh. */
     .sd-btn-back,

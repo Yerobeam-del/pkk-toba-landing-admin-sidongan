@@ -214,12 +214,22 @@
 </div>
 @endif
 
-<div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem">
-    <a href="{{ route('sidongan.dashboard') }}" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.45rem 0.85rem;border-radius:8px;background:var(--surface-bg,#f1f5f9);color:var(--text-muted,#64748b);text-decoration:none;font-size:0.8rem;font-weight:500;transition:all 0.2s">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-        Kembali
-    </a>
-    <h1 style="font-size:1.25rem;font-weight:700;color:var(--text-dark,#1e293b);margin:0">Edit Profil</h1>
+<div class="sd-page-header u-a89">
+    <div class="u-flex-center-gap-3">
+        <div class="u-icon-badge-sm">
+            <i class="fas fa-user-edit u-a90"></i>
+        </div>
+        <div>
+            <h1 class="u-h3">Edit Profil</h1>
+            <p class="u-subtitle-flat">Perbarui informasi profil Anda</p>
+        </div>
+    </div>
+    <div class="sd-header-actions">
+        <a href="{{ route('sidongan.dashboard') }}" class="sd-btn-back">
+            <i class="fas fa-arrow-left"></i>
+            <span>Kembali</span>
+        </a>
+    </div>
 </div>
 
 <div class="sp-grid">
