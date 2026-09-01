@@ -1,7 +1,5 @@
 <?php
 
-
-
 /* ============================================================
  * Dikembangkan oleh Institut Teknologi Del
  * ============================================================ */
@@ -27,9 +25,16 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Handle an incoming password reset link request for SIDONGAN.
+     * Smart forgot password handler.
      *
-     * @throws ValidationException
+     * Flow:
+     * 1. User enters email → system checks if account exists
+     * 2. If account exists + has verified personal email → send reset link to personal email
+     * 3. If account exists + personal email not verified → show warning, suggest admin
+     * 4. If account exists + no personal email → show "contact admin" message
+     * 5. If account not found → generic security message (don't reveal existence)
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
@@ -55,16 +60,19 @@ class ForgotPasswordController extends Controller
                 'cooldown_remaining' => $seconds . ' detik',
             ]);
 
-            return back()->with('status', 'Terlalu banyak permintaan. Silakan coba lagi dalam ' . ceil($seconds / 60) . ' menit.');
+            return back()->withErrors([
+                'email' => 'Terlalu banyak permintaan. Silakan coba lagi dalam ' . ceil($seconds / 60) . ' menit.',
+            ])->withInput(['email' => $email]);
         }
 
         // ==========================================
-        // AUDIT LOG & PROSES
+        // CARI AKUN
         // ==========================================
         $user = User::where('email', $email)->first();
 
+        // CASE 1: Akun tidak ditemukan atau tidak punya akses SIDONGAN
+        // → Pesan generik (jangan ungkap apakah email terdaftar)
         if (!$user || !$user->hasSidonganAccess()) {
-            // Jangan ungkap apakah email terdaftar (keamanan)
             Log::channel('audit')->info('Reset password diminta — email tidak valid/tanpa akses SIDONGAN', [
                 'email' => $email,
                 'ip' => $ip,
@@ -74,28 +82,93 @@ class ForgotPasswordController extends Controller
                 'timestamp' => now()->toIso8601String(),
             ]);
 
-            RateLimiter::hit($throttleKey, 1800); // 30 menit cooldown
+            RateLimiter::hit($throttleKey, 1800);
 
-            return back()->with('status', 'Link reset password telah dikirim ke email Anda.');
+            // Pesan generik — jangan ungkap apakah email terdaftar
+            return back()->withErrors([
+                'email' => 'Jika akun dengan email ini terdaftar di SIDONGAN, link reset password akan dikirim.',
+            ])->withInput(['email' => $email]);
         }
 
-        // Generate token dan kirim notifikasi SIDONGAN
-        $token = Password::createToken($user);
-        $user->sendSidonganPasswordResetNotification($token);
+        // CASE 2: Akun ada + punya akses SIDONGAN + personal email TERVERIFIKASI
+        // → Kirim reset password ke personal email
+        if ($user->personal_email && $user->hasVerifiedPersonalEmail()) {
+            $token = Password::createToken($user);
+            $user->sendSidonganPasswordResetNotification($token);
 
-        Log::channel('audit')->info('Reset password berhasil dikirim (SIDONGAN)', [
+            Log::channel('audit')->info('Reset password berhasil dikirim ke personal email (SIDONGAN)', [
+                'email' => $email,
+                'personal_email' => $user->personal_email,
+                'ip' => $ip,
+                'user_agent' => $request->userAgent(),
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'sidongan_role' => $user->sidongan_role,
+                'timestamp' => now()->toIso8601String(),
+            ]);
+
+            RateLimiter::hit($throttleKey, 1800);
+
+            return back()->with('status', 'success')->with('status_message',
+                'Link reset password telah dikirim ke email pribadi Anda (' . $this->maskEmail($user->personal_email) . ').'
+            );
+        }
+
+        // CASE 3: Akun ada + ada personal email tapi BELUM TERVERIFIKASI
+        if ($user->personal_email && !$user->hasVerifiedPersonalEmail()) {
+            Log::channel('audit')->warning('Reset password diminta — personal email belum diverifikasi (SIDONGAN)', [
+                'email' => $email,
+                'personal_email' => $user->personal_email,
+                'ip' => $ip,
+                'user_agent' => $request->userAgent(),
+                'user_id' => $user->id,
+                'timestamp' => now()->toIso8601String(),
+            ]);
+
+            RateLimiter::hit($throttleKey, 1800);
+
+            return back()->with('status', 'need_verification')->with('status_message',
+                'Email pribadi Anda (' . $this->maskEmail($user->personal_email) . ') belum diverifikasi. Silakan hubungi administrator untuk mereset password.'
+            );
+        }
+
+        // CASE 4: Akun ada + TIDAK ADA personal email
+        // → Suruh hubungi admin
+        Log::channel('audit')->warning('Reset password diminta — tidak ada personal email (SIDONGAN)', [
             'email' => $email,
             'ip' => $ip,
             'user_agent' => $request->userAgent(),
             'user_id' => $user->id,
             'user_name' => $user->name,
-            'sidongan_role' => $user->sidongan_role,
             'timestamp' => now()->toIso8601String(),
         ]);
 
-        RateLimiter::hit($throttleKey, 1800); // 30 menit cooldown
+        RateLimiter::hit($throttleKey, 1800);
 
-        return back()->with('status', 'Link reset password telah dikirim ke email Anda.');
+        return back()->with('status', 'no_personal_email')->with('status_message',
+            'Akun Anda belum memiliki email pribadi. Untuk mereset password, silakan hubungi administrator.'
+        );
+    }
+
+    /**
+     * Mask email address for privacy display.
+     * Example: a***@gmail.com
+     */
+    private function maskEmail(string $email): string
+    {
+        $parts = explode('@', $email);
+        if (count($parts) !== 2) return $email;
+
+        $name = $parts[0];
+        $domain = $parts[1];
+
+        if (strlen($name) <= 2) {
+            $masked = $name[0] . '***';
+        } else {
+            $masked = $name[0] . str_repeat('*', min(strlen($name) - 1, 3)) . substr($name, -1);
+        }
+
+        return $masked . '@' . $domain;
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */
