@@ -159,8 +159,6 @@
         </div>
     </div>
     <script src="{{ asset('assets/shared/js/auth-login.js') }}"></script>
-    <script src="{{ asset('assets/shared/js/email-typo-checker.js') }}"></script>
-    <script>EmailTypoChecker.attach('#email');</script>
 
 </body>
 </html>
