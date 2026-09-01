@@ -10,8 +10,12 @@
     --sidebar-hover: #1e293b;
     --sidebar-active: rgba(20,184,166,0.15);
     --text-light: #f8fafc;
+    --text-dark: #1e293b;
     --text-muted: #94a3b8;
     --border: #334155;
+    --border-light: #e2e8f0;
+    --card-bg: #ffffff;
+    --surface-bg: #f8fafc;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -1134,6 +1138,14 @@ body {
 /* ============================================================
    DARK MODE
    ============================================================ */
+html.dark-mode {
+    --text-dark: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border-light: rgba(255,255,255,0.12);
+    --card-bg: #253449;
+    --surface-bg: #0f172a;
+}
+
 html.dark-mode body,
 html.dark-mode .content-area,
 html.dark-mode .top-header,
@@ -1222,6 +1234,72 @@ html.dark-mode input[disabled] {
 html.dark-mode .notif-item:hover,
 html.dark-mode .laporan-item:hover {
     background: rgba(255,255,255,0.03);
+}
+
+/* Profile page dark mode */
+html.dark-mode .sp-card {
+    background: #253449;
+    border-color: rgba(255,255,255,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+html.dark-mode .sp-card-header {
+    border-bottom-color: rgba(255,255,255,0.08);
+}
+html.dark-mode .sp-avatar-edit {
+    border-color: #1e293b;
+}
+html.dark-mode .sp-avatar-upload {
+    background: #1a2738;
+    border-color: rgba(255,255,255,0.1);
+}
+html.dark-mode .sp-personal-email-box {
+    background: #1a2738;
+    border-color: rgba(255,255,255,0.1);
+}
+html.dark-mode .sp-actions {
+    border-top-color: rgba(255,255,255,0.08);
+}
+html.dark-mode .sp-btn-secondary {
+    background: #1a2738;
+    color: #94a3b8;
+    border-color: rgba(255,255,255,0.15);
+}
+html.dark-mode .sp-btn-secondary:hover {
+    background: rgba(255,255,255,0.05);
+}
+html.dark-mode .sp-tab {
+    color: #94a3b8;
+}
+html.dark-mode .sp-tab:hover {
+    color: #e2e8f0;
+}
+html.dark-mode .sp-tab.active {
+    color: #14b8a6;
+    border-bottom-color: #14b8a6;
+}
+html.dark-mode .sp-badge-verified {
+    background: rgba(22,163,74,0.15);
+    color: #4ade80;
+}
+html.dark-mode .sp-badge-pending {
+    background: rgba(217,119,6,0.15);
+    color: #fbbf24;
+}
+html.dark-mode .sp-cropper-box {
+    background: #253449;
+    border-color: rgba(255,255,255,0.1);
+}
+html.dark-mode .sp-field label {
+    color: #e2e8f0;
+}
+html.dark-mode .sp-field .sp-hint {
+    color: #94a3b8;
+}
+html.dark-mode .sp-checklist li {
+    color: #e2e8f0;
+}
+html.dark-mode .sp-ring .bg-circle {
+    stroke: rgba(255,255,255,0.1);
 }
 
 /* ============================================================
