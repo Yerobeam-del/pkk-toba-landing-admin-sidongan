@@ -106,6 +106,9 @@
     width: 64px; height: 64px; border-radius: 50%; object-fit: cover;
     border: 2px solid var(--border-light, #e2e8f0); flex-shrink: 0;
 }
+.sp-avatar-upload .sp-avatar-sm-wrap {
+    position: relative; width: 64px; height: 64px; flex-shrink: 0;
+}
 .sp-avatar-upload .sp-avatar-sm-fallback {
     width: 64px; height: 64px; border-radius: 50%;
     background: linear-gradient(135deg, var(--primary, #14b8a6), #0d9488);
@@ -113,6 +116,15 @@
     color: #fff; font-size: 1.4rem; font-weight: 700; flex-shrink: 0;
     border: 2px solid var(--border-light, #e2e8f0);
 }
+.sp-avatar-upload .sp-avatar-edit {
+    position: absolute; bottom: -2px; right: -2px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--primary, #14b8a6); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--card-bg, #fff); cursor: pointer;
+    transition: transform 0.2s; z-index: 2;
+}
+.sp-avatar-upload .sp-avatar-edit:hover { transform: scale(1.1); }
 .sp-avatar-upload-info { flex: 1; }
 .sp-avatar-upload-info p { margin: 0; }
 .sp-avatar-upload-info .info-title { font-size: 0.85rem; font-weight: 600; color: var(--text-dark, #334155); }
@@ -303,17 +315,15 @@
 
                         {{-- Avatar Upload --}}
                         <div class="sp-avatar-upload">
-                            <div style="position:relative;flex-shrink:0">
-                                <div class="sp-avatar-sm-wrap">
-                                    @if($user->avatar)
-                                    <img id="avatarPreview" src="{{ asset('storage/' . $user->avatar) }}" alt="" class="sp-avatar-sm">
-                                    @else
-                                    <div id="avatarPlaceholder" class="sp-avatar-sm-fallback">{{ $initials }}</div>
-                                    <img id="avatarPreviewImg" class="sp-avatar-sm" style="display:none" alt="">
-                                    @endif
-                                </div>
+                            <div class="sp-avatar-sm-wrap">
+                                @if($user->avatar)
+                                <img id="avatarPreview" src="{{ asset('storage/' . $user->avatar) }}" alt="" class="sp-avatar-sm">
+                                @else
+                                <div id="avatarPlaceholder" class="sp-avatar-sm-fallback">{{ $initials }}</div>
+                                <img id="avatarPreviewImg" class="sp-avatar-sm" style="display:none" alt="">
+                                @endif
                                 <button type="button" data-action="pick-avatar" class="sp-avatar-edit" title="Ganti foto">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                                 </button>
                             </div>
                             <div class="sp-avatar-upload-info">
