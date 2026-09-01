@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'can.access' => \App\Http\Middleware\CanAccessApplication::class,
             'sidongan.auth' => \App\Http\Middleware\SidonganAuthenticate::class,
             'sidongan.guest' => \App\Http\Middleware\RedirectIfAuthenticatedSidongan::class,
+            'sidongan.profile' => \App\Http\Middleware\SidonganEnsureProfileComplete::class,
             'permission' => \App\Http\Middleware\CheckPermission::class,
         ]);
     })

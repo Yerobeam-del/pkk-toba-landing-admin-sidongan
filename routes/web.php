@@ -461,7 +461,12 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
     Route::post('/sidongan-logout', [App\Http\Controllers\Sidongan\AuthController::class, 'logout'])->name('sidongan.logout');
 
     // ================= WEB: SIDONGAN ADMIN =================
-    Route::middleware(['sidongan.auth'])->prefix('sidongan')->name('sidongan.')->group(function () {
+    Route::middleware(['sidongan.auth', 'sidongan.profile'])->prefix('sidongan')->name('sidongan.')->group(function () {
+        // Onboarding routes (exempt from profile check via middleware)
+        Route::get('/onboarding', [App\Http\Controllers\Sidongan\OnboardingController::class, 'show'])->name('onboarding');
+        Route::post('/onboarding', [App\Http\Controllers\Sidongan\OnboardingController::class, 'store'])->name('onboarding.store');
+        Route::get('/onboarding/skip', [App\Http\Controllers\Sidongan\OnboardingController::class, 'skip'])->name('onboarding.skip');
+
         Route::get('/', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'dashboard'])->name('dashboard');
 
         Route::get('/documents', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'index'])->name('documents.index');
