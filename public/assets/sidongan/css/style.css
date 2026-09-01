@@ -1236,6 +1236,120 @@ html.dark-mode .laporan-item:hover {
     background: rgba(255,255,255,0.03);
 }
 
+/* ===== Comprehensive dark mode fixes ===== */
+
+/* Stat cards / numeric badges */
+html.dark-mode div[style*="background: white"],
+html.dark-mode div[style*="background:#fff"],
+html.dark-mode div[style*="background: #fff"],
+html.dark-mode div[style*="background: #f8fafc"],
+html.dark-mode div[style*="background:#f8fafc"],
+html.dark-mode div[style*="background: #f1f5f9"],
+html.dark-mode div[style*="background:#f1f5f9"],
+html.dark-mode div[style*="background: #eff6ff"],
+html.dark-mode div[style*="background:#eff6ff"],
+html.dark-mode div[style*="background: #f0fdf4"],
+html.dark-mode div[style*="background:#f0fdf4"],
+html.dark-mode div[style*="background: #fef3c7"],
+html.dark-mode div[style*="background:#fef3c7"],
+html.dark-mode div[style*="background: #fef2f2"],
+html.dark-mode div[style*="background:#fef2f2"],
+html.dark-mode div[style*="background: #f5f3ff"],
+html.dark-mode div[style*="background:#f5f3ff"],
+html.dark-mode div[style*="background: #ecfeff"],
+html.dark-mode div[style*="background:#ecfeff"] {
+    background: #253449 !important;
+}
+
+/* Status badges with light backgrounds */
+html.dark-mode span[style*="background: #fef3c7"],
+html.dark-mode span[style*="background:#fef3c7"],
+html.dark-mode span[style*="background: #fee2e2"],
+html.dark-mode span[style*="background:#fee2e2"],
+html.dark-mode span[style*="background: #dbeafe"],
+html.dark-mode span[style*="background:#dbeafe"],
+html.dark-mode span[style*="background: #d1fae5"],
+html.dark-mode span[style*="background:#d1fae5"],
+html.dark-mode span[style*="background: #f3e8ff"],
+html.dark-mode span[style*="background:#f3e8ff"],
+html.dark-mode span[style*="background: #e0f2fe"],
+html.dark-mode span[style*="background:#e0f2fe"] {
+    background: rgba(255,255,255,0.1) !important;
+}
+
+/* Instruksi disposisi boxes */
+html.dark-mode div[style*="border-left: 3px solid"] {
+    background: rgba(255,255,255,0.05) !important;
+}
+
+/* Select dropdowns */
+html.dark-mode select,
+html.dark-mode select.form-control,
+html.dark-mode select[style] {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-color: rgba(255,255,255,0.1);
+}
+
+/* Date inputs */
+html.dark-mode input[type="date"],
+html.dark-mode input[type="datetime-local"] {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-color: rgba(255,255,255,0.1);
+}
+
+/* Filter buttons */
+html.dark-mode .filter-btn,
+html.dark-mode button[style*="background: #f1f5f9"],
+html.dark-mode button[style*="background:#f1f5f9"],
+html.dark-mode a[style*="background: #f1f5f9"],
+html.dark-mode a[style*="background:#f1f5f9"] {
+    background: #1a2738 !important;
+    color: #94a3b8 !important;
+    border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Bulk action buttons */
+html.dark-mode button[style*="background: #e2e8f0"],
+html.dark-mode button[style*="background:#e2e8f0"] {
+    background: #1a2738 !important;
+    color: #94a3b8 !important;
+}
+
+/* Table header */
+html.dark-mode thead th,
+html.dark-mode th[style*="background"] {
+    background: #1a2738 !important;
+    color: #94a3b8 !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* Table rows */
+html.dark-mode tbody tr,
+html.dark-mode tr[style*="border-bottom"] {
+    border-color: rgba(255,255,255,0.05) !important;
+}
+
+/* Pagination */
+html.dark-mode .pagination a,
+html.dark-mode .pagination span {
+    background: #1a2738 !important;
+    color: #94a3b8 !important;
+    border-color: rgba(255,255,255,0.1) !important;
+}
+html.dark-mode .pagination .active span,
+html.dark-mode .pagination .active a {
+    background: var(--primary) !important;
+    color: #fff !important;
+}
+
+/* Empty state */
+html.dark-mode .empty-state,
+html.dark-mode div[style*="text-align: center"] svg {
+    color: #475569 !important;
+}
+
 /* Profile page dark mode */
 html.dark-mode .sp-card {
     background: #253449;
