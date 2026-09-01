@@ -126,7 +126,7 @@
                         </span>
                         <span class="check-text">Ingat saya</span>
                     </label>
-                    <a class="forgot-password" href="https://{{ config('app.landing_domain') ?: 'tp-pkk.tobakab.go.id' }}/forgot-password" target="_blank" rel="noopener noreferrer">
+                    <a class="forgot-password" href="{{ route('sidongan.password.request') }}">
                         Lupa password?
                     </a>
                 </div>
