@@ -122,11 +122,11 @@ $appList = [
             <p class="profile-sidebar-label">Info Akun</p>
             <div class="profile-sidebar-list">
                 <div class="profile-sidebar-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:#94a3b8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--text-muted)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     <span>Bergabung {{ $user->created_at ? $user->created_at->translatedFormat('d F Y') : '-' }}</span>
                 </div>
                 <div class="profile-sidebar-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:#94a3b8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--text-muted)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                     <span>Terakhir diperbarui {{ $user->updated_at ? $user->updated_at->diffForHumans() : '-' }}</span>
                 </div>
             </div>
@@ -208,7 +208,7 @@ $appList = [
                     <div class="form-field">
                         <label for="phone_number">Nomor Telepon</label>
                         <input type="tel" id="phone_number" name="phone_number" class="form-control" value="{{ old('phone_number', $user->phone_number) }}" placeholder="Contoh: 0812-3456-7890">
-                        <small style="color:#94a3b8;display:block;margin-top:0.3rem;font-size:0.8rem">Opsional. Nomor yang bisa dihubungi untuk keperluan administrasi.</small>
+                        <small style="color:var(--text-muted);display:block;margin-top:0.3rem;font-size:0.8rem">Opsional. Nomor yang bisa dihubungi untuk keperluan administrasi.</small>
                         @error('phone_number') <small class="u-error-block">{{ $message }}</small> @enderror
                     </div>
 
@@ -227,7 +227,7 @@ $appList = [
                             <span style="color:#d97706;font-weight:600;font-size:0.9rem">{{ $user->personal_email }}</span>
                             <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.5rem;background:#fef3c7;color:#d97706;border-radius:6px;font-size:0.75rem;font-weight:500">Menunggu Verifikasi</span>
                         </div>
-                        <p style="font-size:0.8rem;color:#94a3b8;margin:0.35rem 0 0 0">Cek email {{ $user->personal_email }} untuk link verifikasi.</p>
+                        <p style="font-size:0.8rem;color:var(--text-muted);margin:0.35rem 0 0 0">Cek email {{ $user->personal_email }} untuk link verifikasi.</p>
                         @else
                         <p style="font-size:0.85rem;color:#64748b;margin:0">Belum diatur. <a href="{{ route('personal-email.setup') }}" style="color:var(--primary);font-weight:600;text-decoration:underline">Atur Sekarang</a></p>
                         @endif
@@ -272,7 +272,7 @@ $appList = [
                             </button>
                         </div>
                         <div class="strength-bar"><div class="strength-bar-fill" id="strengthFill"></div></div>
-                        <div class="strength-label" id="strengthLabel" style="color:#94a3b8"></div>
+                        <div class="strength-label" id="strengthLabel" style="color:var(--text-muted)"></div>
                         @error('password') <small class="u-error-block">{{ $message }}</small> @enderror
                     </div>
                     <div class="form-field">
@@ -322,7 +322,7 @@ $appList = [
                         @if($app['accessible'])
                         <span style="font-size:0.8rem;color:var(--primary);font-weight:500">Akses Aktif</span>
                         @else
-                        <span style="font-size:0.8rem;color:#94a3b8">Tidak Ada Akses</span>
+                        <span style="font-size:0.8rem;color:var(--text-muted)">Tidak Ada Akses</span>
                         @endif
                     </div>
                     @if($app['url'] !== '#' && $app['accessible'])
@@ -363,7 +363,7 @@ $appList = [
                 @forelse($effectivePermissions as $perm)
                 <span class="perm-tag">{{ $perm }}</span>
                 @empty
-                <p style="color:#94a3b8;font-size:0.9rem">Tidak ada izin khusus.</p>
+                <p style="color:var(--text-muted);font-size:0.9rem">Tidak ada izin khusus.</p>
                 @endforelse
             </div>
             @if($user->role)
@@ -383,7 +383,7 @@ $appList = [
     <div style="background:#fff;border-radius:12px;padding:1.5rem;max-width:600px;width:90%;max-height:90vh;overflow:auto">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
             <h3 style="font-size:1.1rem;font-weight:700;color:#1e293b;margin:0">Crop Foto Profil</h3>
-            <button type="button" data-action="close-cropper" style="background:none;border:none;cursor:pointer;color:#94a3b8;padding:0.25rem"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <button type="button" data-action="close-cropper" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:0.25rem"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
         <div style="margin-bottom:1rem;background:#000;border-radius:8px;overflow:hidden;max-height:50vh">
             <img id="cropperImage" style="max-width:100%;display:block">

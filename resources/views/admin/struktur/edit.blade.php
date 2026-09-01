@@ -112,7 +112,7 @@
     <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.3);animation:modalSlideUp 0.3s ease">
         <div style="padding:1.25rem 1.5rem;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:#f8fafc">
             <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#1e293b">Atur Foto Profil</h3>
-            <button data-action="close-crop" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:#94a3b8;padding:0.25rem;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all 0.2s">&times;</button>
+            <button data-action="close-crop" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted);padding:0.25rem;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all 0.2s">&times;</button>
         </div>
         <div style="flex:1;overflow:hidden;position:relative;background:#f8fafc;padding:1.5rem;display:flex;align-items:center;justify-content:center">
             <div style="max-height:100%;overflow:auto;display:flex;align-items:center;justify-content:center;width:100%">

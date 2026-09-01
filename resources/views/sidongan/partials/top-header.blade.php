@@ -49,10 +49,10 @@
                 @endif
             </button>
             
-            <div id="notificationPopup" style="display: none; position: absolute; right: 0; top: calc(100% + 0.5rem); width: 400px; background: white; border-radius: 0.75rem; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; z-index: 1000;">
+            <div id="notificationPopup" style="display: none; position: absolute; right: 0; top: calc(100% + 0.5rem); width: 400px; background: var(--card-bg, #fff); border-radius: 0.75rem; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--border-light, #e2e8f0); z-index: 1000;">
                 
-                <div style="padding: 1rem 1.25rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="font-size: 1rem; font-weight: 700; color: #1e293b; margin: 0;">Notifikasi</h3>
+                <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-light, #e2e8f0); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-dark, #1e293b); margin: 0;">Notifikasi</h3>
                     @if($sidonganUnreadCount > 0)
                     <button data-action="mark-all-read" style="font-size: 0.75rem; color: #2563eb; background: none; border: none; cursor: pointer; font-weight: 500;">Tandai semua dibaca</button>
                     @endif
@@ -60,17 +60,17 @@
                 
                 <div style="max-height: 350px; overflow-y: auto;">
                     @forelse($sidonganNotifications as $notif)
-                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid #f1f5f9; background: #eff6ff; cursor: pointer; transition: background 0.2s;"
+                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-light, #f1f5f9); background: #eff6ff; cursor: pointer; transition: background 0.2s;"
                         data-notif-id="{{ $notif->id }}" data-notif-url="{{ route('sidongan.documents.show', $notif->related_id) }}">
                         <div style="display: flex; gap: 0.75rem; align-items: start;">
                             <div style="width: 2rem; height: 2rem; background: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                 <i class="fas fa-bell" style="color: #3b82f6; font-size: 0.85rem;"></i>
                             </div>
                             <div class="u-flex-1-min">
-                                <p style="font-size: 0.85rem; font-weight: 500; color: #0f172a; margin: 0 0 0.25rem 0; line-height: 1.4;">
+                                <p style="font-size: 0.85rem; font-weight: 500; color: var(--text-dark, #0f172a); margin: 0 0 0.25rem 0; line-height: 1.4;">
                                     {{ Str::limit($notif->message, 80) }}
                                 </p>
-                                <span style="font-size: 0.7rem; color: #94a3b8;">
+                                <span style="font-size: 0.7rem; color: var(--text-muted, #94a3b8);">
                                     {{ $notif->created_at->locale('id')->translatedFormat('d F Y, H.i') }}
                                 </span>
                             </div>
@@ -79,18 +79,18 @@
                     </div>
                     @empty
                     <div style="padding: 3rem 1.25rem; text-align: center;">
-                        <div style="width: 64px; height: 64px; background: #f0fdf4; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                        <div style="width: 64px; height: 64px; background: var(--surface-bg, #f0fdf4); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
                             <svg style="width: 2rem; height: 2rem; stroke: #22c55e;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <p style="font-size: 0.9rem; color: #1e293b; margin: 0; font-weight: 600;">Semua Notifikasi Sudah Dibaca</p>
-                        <p style="font-size: 0.8rem; color: #64748b; margin: 0.25rem 0 0 0;">Tidak ada notifikasi baru</p>
+                        <p style="font-size: 0.9rem; color: var(--text-dark, #1e293b); margin: 0; font-weight: 600;">Semua Notifikasi Sudah Dibaca</p>
+                        <p style="font-size: 0.8rem; color: var(--text-muted, #64748b); margin: 0.25rem 0 0 0;">Tidak ada notifikasi baru</p>
                     </div>
                     @endforelse
                 </div>
                 
-                <div style="padding: 0.75rem 1.25rem; border-top: 1px solid #e2e8f0; text-align: center;">
+                <div style="padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-light, #e2e8f0); text-align: center;">
                     <a href="{{ route('sidongan.notifications') }}" style="font-size: 0.875rem; color: #2563eb; text-decoration: none; font-weight: 500;">Lihat Semua Notifikasi →</a>
                 </div>
             </div>
@@ -99,8 +99,8 @@
         @if($currentUser)
         <button data-action="toggle-user-menu" class="user-profile-btn" style="display:flex;align-items:center;gap:0.75rem;background:none;border:none;cursor:pointer;padding:0.5rem 0.75rem;border-radius:8px;transition:background 0.2s">
             <div class="user-text" style="text-align:right;display:flex;flex-direction:column;align-items:flex-end">
-                <span style="font-weight:600;font-size:0.9rem;color:#334155;line-height:1.2">{{ $currentUser->name }}</span>
-                <span style="font-size:0.7rem;color:#94a3b8">{{ $currentUser->sidongan_role_name }}</span>
+                <span style="font-weight:600;font-size:0.9rem;color:var(--text-dark,#334155);line-height:1.2">{{ $currentUser->name }}</span>
+                <span style="font-size:0.7rem;color:var(--text-muted,#94a3b8)">{{ $currentUser->sidongan_role_name }}</span>
             </div>
             @php
                 $nameParts = explode(' ', $currentUser->name);
@@ -108,7 +108,7 @@
                     ? strtoupper(substr($nameParts[0], 0, 1) . substr($nameParts[1], 0, 1))
                     : strtoupper(substr($currentUser->name, 0, 2));
             @endphp
-            <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,{{ $currentUser->sidongan_role === 'ketua' ? '#dc2626' : ($currentUser->sidongan_role === 'sekretaris' ? '#2563eb' : '#4f46e5') }},#14b8a6);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.1)">
+            <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,{{ $currentUser->sidongan_role === 'ketua' ? '#dc2626' : ($currentUser->sidongan_role === 'sekretaris' ? '#2563eb' : '#4f46e5') }},#14b8a6);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid var(--card-bg, #fff);box-shadow:0 2px 4px rgba(0,0,0,0.1)">
                 @if($currentUser->avatar)
                     <img src="{{ asset('storage/' . $currentUser->avatar) }}" 
                         alt="{{ $currentUser->name }}" 
@@ -119,16 +119,25 @@
                     <span style="color:#fff;font-weight:700;font-size:0.85rem;letter-spacing:0.5px;">{{ $initials }}</span>
                 @endif
             </div>
-            <svg id="userMenuArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="transition:transform 0.2s">
+            <svg id="userMenuArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted, #64748b)" stroke-width="2" style="transition:transform 0.2s">
                 <polyline points="6 9 12 15 18 9"/>
             </svg>
         </button>            <div id="userMenu" class="user-menu">
-            <div style="padding:0.75rem 1rem;border-bottom:1px solid #f1f5f9">
-                <div style="font-weight:600;font-size:0.9rem;color:#334155">{{ $currentUser->name }}</div>
-                <div style="font-size:0.75rem;color:#94a3b8">{{ $currentUser->sidongan_role_name }}</div>
+            <div style="padding:0.75rem 1rem;border-bottom:1px solid var(--border-light, #f1f5f9)">
+                <div style="font-weight:600;font-size:0.9rem;color:var(--text-dark,#334155)">{{ $currentUser->name }}</div>
+                <div style="font-size:0.75rem;color:var(--text-muted,#64748b)">{{ $currentUser->sidongan_role_name }}</div>
             </div>
-            <div style="padding:0.5rem 0;border-bottom:1px solid #f1f5f9">
-                <a href="https://{{ config('app.landing_domain', 'tp-pkk.tobakab.go.id') }}/personal-email" target="_blank" rel="noopener noreferrer" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:#334155;transition:background 0.2s;text-align:left;font-size:0.85rem;text-decoration:none;">
+            <div style="padding:0.5rem 0;border-bottom:1px solid var(--border-light, #f1f5f9)">
+                <a href="{{ route('sidongan.profile.edit') }}" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:var(--text-dark,#334155);transition:background 0.2s;text-align:left;font-size:0.85rem;text-decoration:none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>Edit Profil</span>
+                </a>
+            </div>
+            <div style="padding:0.5rem 0;border-bottom:1px solid var(--border-light, #f1f5f9)">
+                <a href="https://{{ config('app.landing_domain', 'tp-pkk.tobakab.go.id') }}/personal-email" target="_blank" rel="noopener noreferrer" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:var(--text-dark,#334155);transition:background 0.2s;text-align:left;font-size:0.85rem;text-decoration:none;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="2" y="4" width="20" height="16" rx="2"/>
                         <path d="M22 7l-10 7L2 7"/>

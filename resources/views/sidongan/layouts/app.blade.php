@@ -72,6 +72,7 @@
                         'lapor-kegiatan' => 'Lapor Kegiatan',
                         'arsip' => 'Arsip Surat',
                         'notifications' => 'Notifikasi',
+                        'profile' => 'Edit Profil',
                         'admin' => 'Admin',
                         'tags' => 'Tag',
                         'categories' => 'Kategori',

@@ -41,11 +41,11 @@
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem">
 
         <div>
-            <p style="margin:0 0 0.25rem 0; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8">ID Record</p>
+            <p style="margin:0 0 0.25rem 0; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted)">ID Record</p>
             <p class="u-text-dark" style="margin:0; font-size:1.25rem; font-weight:800; font-family:monospace;">
                 {{ $item->{$config['id_field']} }}
             </p>
-            <p style="margin:0.25rem 0 0 0; font-size:0.8rem; color:#94a3b8">
+            <p style="margin:0.25rem 0 0 0; font-size:0.8rem; color:var(--text-muted)">
                 Terakhir diubah: {{ $item->updated_at ?? '-' }}
             </p>
         </div>
@@ -88,7 +88,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td style="color: #94a3b8; font-style: italic">Tidak ada data</td>
+                    <td style="color:var(--text-muted); font-style:italic">Tidak ada data</td>
                 </tr>
             @endforelse
         </tbody>

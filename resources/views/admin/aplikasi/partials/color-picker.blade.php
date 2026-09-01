@@ -72,7 +72,7 @@
                 </div>
                 <div style="padding:1rem 1.25rem 1.25rem">
                     <div id="cpName" style="font-weight:800;font-size:1rem;margin-bottom:.15rem">NAMA APP</div>
-                    <div style="font-size:.75rem;color:#94a3b8;margin-bottom:.75rem">Nama panjang aplikasi</div>
+                    <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:.75rem">Nama panjang aplikasi</div>
                     <div id="cpBtn" style="text-align:center;padding:9px 0;border-radius:12px;color:#fff;font-weight:600;font-size:.8rem">
                         Akses Aplikasi
                     </div>

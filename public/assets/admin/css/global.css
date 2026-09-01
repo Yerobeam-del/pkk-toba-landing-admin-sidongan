@@ -1337,6 +1337,12 @@ tr:hover td { background: #fafbfc; }
 .dark-mode [style*="background:#fee2e2"] {
   background: rgba(239,68,68,0.15) !important;
 }
+.dark-mode [style*="background:#fafafa"] {
+  background: #1e293b !important;
+}
+.dark-mode [style*="background:#d1fae5"] {
+  background: rgba(34,197,94,0.15) !important;
+}
 .dark-mode [style*="background:white"] {
   background: var(--card-bg) !important;
 }

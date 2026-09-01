@@ -67,7 +67,7 @@
             </svg>
             <span class="u-a19">Edit</span>
         </a>
-        <button type="button" data-delete-app-id="{{ $app->id }}" data-delete-app-name="{{ addslashes($app->name) }}" class="btn-del" title="Hapus" style="flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:#94a3b8;border-radius:8px;border:none;cursor:pointer;transition:all 0.2s">
+        <button type="button" data-delete-app-id="{{ $app->id }}" data-delete-app-name="{{ addslashes($app->name) }}" class="btn-del" title="Hapus" style="flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--text-muted);border-radius:8px;border:none;cursor:pointer;transition:all 0.2s">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>

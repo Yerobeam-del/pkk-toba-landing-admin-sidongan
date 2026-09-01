@@ -14,6 +14,7 @@ use App\Models\Sieda\Keluarga;
 use App\Models\Sieda\KelompokDasawisma;
 use App\Models\Sieda\Warga;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -97,17 +98,21 @@ class SiedaDataController extends Controller
     {
         $this->authorizeSuperAdmin();
 
-        $stats = collect(self::MODULES)->map(function ($config, $slug) {
-            return [
-                'slug' => $slug,
-                'label' => $config['label'],
-                'total' => $config['model']::count(),
-                'aktif' => $config['model']::where('active', 1)->count(),
-            ];
-        });
+        try {
+            $stats = collect(self::MODULES)->map(function ($config, $slug) {
+                return [
+                    'slug' => $slug,
+                    'label' => $config['label'],
+                    'total' => $config['model']::count(),
+                    'aktif' => $config['model']::where('active', 1)->count(),
+                ];
+            });
 
-        $totalKeseluruhan = $stats->sum('total');
-        $totalAktif = $stats->sum('aktif');
+            $totalKeseluruhan = $stats->sum('total');
+            $totalAktif = $stats->sum('aktif');
+        } catch (QueryException $e) {
+            return $this->handleSiedaConnectionError($e);
+        }
 
         return view('admin.sieda-data.index', compact('stats', 'totalKeseluruhan', 'totalAktif'));
     }
@@ -124,32 +129,36 @@ class SiedaDataController extends Controller
             abort(404, 'Modul tidak ditemukan.');
         }
 
-        $perPage = min((int) $request->input('per_page', 25), 100);
-        $search = $request->input('search', '');
+        try {
+            $perPage = min((int) $request->input('per_page', 25), 100);
+            $search = $request->input('search', '');
 
-        $query = $config['model']::query();
+            $query = $config['model']::query();
 
-        // Eager load relasi agar data_get di partial tabel tersedia
-        if (!empty($config['with'])) {
-            $query->with($config['with']);
+            // Eager load relasi agar data_get di partial tabel tersedia
+            if (!empty($config['with'])) {
+                $query->with($config['with']);
+            }
+
+            // Search
+            if ($search && !empty($config['search_fields'])) {
+                $query->where(function ($q) use ($config, $search) {
+                    foreach ($config['search_fields'] as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            }
+
+            $items = $query->orderBy('updated_at', 'desc')
+                ->paginate($perPage)
+                ->withQueryString();
+
+            // Statistik cepat untuk header
+            $totalCount = $config['model']::count();
+            $totalAktif = $config['model']::where('active', 1)->count();
+        } catch (QueryException $e) {
+            return $this->handleSiedaConnectionError($e, $config['label']);
         }
-
-        // Search
-        if ($search && !empty($config['search_fields'])) {
-            $query->where(function ($q) use ($config, $search) {
-                foreach ($config['search_fields'] as $field) {
-                    $q->orWhere($field, 'like', "%{$search}%");
-                }
-            });
-        }
-
-        $items = $query->orderBy('updated_at', 'desc')
-            ->paginate($perPage)
-            ->withQueryString();
-
-        // Statistik cepat untuk header
-        $totalCount = $config['model']::count();
-        $totalAktif = $config['model']::where('active', 1)->count();
 
         return view('admin.sieda-data.module', compact(
             'module', 'config', 'items', 'search', 'perPage',
@@ -169,9 +178,13 @@ class SiedaDataController extends Controller
             abort(404, 'Modul tidak ditemukan.');
         }
 
-        $model = $config['model'];
-        $primaryKey = $model::primaryKey();
-        $item = $model::where($primaryKey, $id)->firstOrFail();
+        try {
+            $model = $config['model'];
+            $primaryKey = $model::primaryKey();
+            $item = $model::where($primaryKey, $id)->firstOrFail();
+        } catch (QueryException $e) {
+            return $this->handleSiedaConnectionError($e, $config['label']);
+        }
 
         return view('admin.sieda-data.show', compact('module', 'config', 'item'));
     }
@@ -285,6 +298,23 @@ class SiedaDataController extends Controller
     private function resolveModule(string $module): ?array
     {
         return self::MODULES[$module] ?? null;
+    }
+
+    /**
+     * Tampilkan halaman ramah saat database SIEDA tidak dapat dihubungi
+     */
+    private function handleSiedaConnectionError(\Throwable $e, string $context = ''): \Illuminate\View\View
+    {
+        Log::error('[SiedaData] Database SIEDA tidak terhubung', [
+            'error' => $e->getMessage(),
+            'context' => $context,
+        ]);
+
+        $message = $e instanceof QueryException
+            ? 'SQLSTATE: ' . $e->getCode() . ' — ' . class_basename($e)
+            : $e->getMessage();
+
+        return view('admin.sieda-data.connection-error', compact('message'));
     }
 
     /**

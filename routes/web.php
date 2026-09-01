@@ -498,6 +498,12 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
         Route::get('/notifications', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'notifications'])->name('notifications');
         Route::post('/notifications/{id}/read', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'markNotificationAsRead'])->name('notifications.read');
         Route::post('/notifications/mark-all-read', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'markAllNotificationsAsRead'])->name('notifications.mark-all-read');
+
+        // Profile (Edit Profil)
+        Route::get('/profile', [App\Http\Controllers\Sidongan\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [App\Http\Controllers\Sidongan\ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/profile/password', [App\Http\Controllers\Sidongan\ProfileController::class, 'password'])->name('profile.password');
+        Route::put('/profile/password', [App\Http\Controllers\Sidongan\ProfileController::class, 'updatePassword'])->name('profile.password.update');
     });
 });
 

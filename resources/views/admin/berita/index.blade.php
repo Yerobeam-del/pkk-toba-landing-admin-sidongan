@@ -147,7 +147,7 @@
                 'callback' => function($item, $value) {
                     $imgHtml = $item->image_path
                         ? '<img src="' . asset('storage/' . $item->image_path) . '" style="width:60px;height:45px;object-fit:cover;border-radius:6px;background:#f8fafc" onerror="this.style.display=\'none\'">'
-                        : '<div style="width:60px;height:45px;border-radius:6px;background:#f8fafc;display:flex;align-items:center;justify-content:center;color:#94a3b8"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>';
+                        : '<div style="width:60px;height:45px;border-radius:6px;background:#f8fafc;display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>';
 
                     return '
                         <div style="display:flex;gap:1rem;align-items:flex-start">

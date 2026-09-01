@@ -130,7 +130,7 @@
                 @if($aplikasi->icon)
                 <div class="u-a53">
                     <img src="{{ asset('storage/'.$aplikasi->icon) }}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;background:#f8fafc">
-                    <span class="u-text-muted-sm">Icon saat ini <small style="color:#94a3b8">(upload baru untuk mengganti)</small></span>
+                    <span class="u-text-muted-sm">Icon saat ini <small style="color:var(--text-muted)">(upload baru untuk mengganti)</small></span>
                 </div>
                 @endif
             </div>
