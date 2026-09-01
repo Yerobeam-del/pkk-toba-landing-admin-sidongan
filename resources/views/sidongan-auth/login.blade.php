@@ -126,9 +126,9 @@
                         </span>
                         <span class="check-text">Ingat saya</span>
                     </label>
-                    <a class="forgot-password" href="{{ route('sidongan.password.request') }}">
+                    <button type="button" class="forgot-password" onclick="toggleForgotPassword()" style="background:none;border:none;cursor:pointer;font-size:inherit;color:inherit;text-decoration:underline;padding:0">
                         Lupa password?
-                    </a>
+                    </button>
                 </div>
 
                 <button type="submit" class="btn-login">
@@ -139,6 +139,42 @@
                     </svg>
                     <span>MASUK</span>
                 </button>
+
+                {{-- Forgot Password Form (Hidden by Default) --}}
+                <div id="forgotPasswordForm" style="display:none;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid #e2e8f0;">
+                    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <span style="font-weight:600;font-size:0.95rem;color:#1e293b">Reset Password</span>
+                    </div>
+                    <p style="font-size:0.8rem;color:#64748b;margin:0 0 1rem 0;line-height:1.5">
+                        Masukkan email yang terdaftar. Kami akan mengirimkan link untuk reset password.
+                    </p>
+                    <form method="POST" action="{{ route('sidongan.password.email') }}">
+                        @csrf
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <input type="email" name="email" class="form-control" placeholder="nama@email.com" required>
+                                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-login" style="font-size:0.85rem;padding:0.65rem 1rem">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <span>KIRIM LINK RESET</span>
+                        </button>
+                    </form>
+                    <button type="button" onclick="toggleForgotPassword()" style="margin-top:0.75rem;background:none;border:none;color:#64748b;font-size:0.8rem;cursor:pointer;text-decoration:underline;padding:0">
+                        ← Kembali ke login
+                    </button>
+                </div>
 
                 <div class="divider"><span>Secure Login</span></div>
 
@@ -153,6 +189,24 @@
     </div>
 
     <script src="{{ asset('assets/sidongan/js/sidongan-auth-login.js') }}"></script>
+    <script>
+    function toggleForgotPassword() {
+        var loginForm = document.querySelector('form[action*="sidongan-login"]');
+        var forgotForm = document.getElementById('forgotPasswordForm');
+        var formOptions = document.querySelector('.form-options');
+        if (forgotForm.style.display === 'none') {
+            loginForm.style.display = 'none';
+            formOptions.style.display = 'none';
+            forgotForm.style.display = 'block';
+        } else {
+            forgotForm.style.display = 'none';
+            loginForm.style.display = 'block';
+            formOptions.style.display = 'flex';
+        }
+    }
+    // If status message is shown (from forgot password), keep login form visible
+    // so user can see the success message
+    </script>
 
 </body>
 </html>
