@@ -374,7 +374,7 @@
                             </div>
                             <p style="font-size:0.8rem;color:var(--text-muted,#64748b);margin:0.35rem 0 0">Cek email {{ $user->personal_email }} untuk link verifikasi.</p>
                             @else
-                            <p style="font-size:0.85rem;color:var(--text-muted,#64748b);margin:0.4rem 0 0">Belum diatur. <a href="{{ route('personal-email.setup') }}">Atur Sekarang</a></p>
+                            <p style="font-size:0.85rem;color:var(--text-muted,#64748b);margin:0.4rem 0 0">Belum diatur. <a href="https://{{ config('app.landing_domain') ?: 'tp-pkk.tobakab.go.id' }}/personal-email" target="_blank" rel="noopener noreferrer">Atur Sekarang</a></p>
                             @endif
                         </div>
                     </div>
