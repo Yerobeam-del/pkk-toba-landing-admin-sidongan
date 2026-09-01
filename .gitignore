@@ -69,3 +69,11 @@ D:SIDANG*
 
 # Server
 server.php
+
+# Preview & temp files
+sidongan_*.html
+sidongan_dm_*.html
+sidongan_raw_*.html
+build_preview.php
+start_server.bat
+start_server.ps1
