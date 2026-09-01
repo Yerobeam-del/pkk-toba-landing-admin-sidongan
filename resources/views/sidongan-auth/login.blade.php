@@ -126,7 +126,7 @@
                         </span>
                         <span class="check-text">Ingat saya</span>
                     </label>
-                    <a class="forgot-password" href="{{ route('sidongan.password.request') }}">
+                    <a class="forgot-password" href="https://pkktoba.id/forgot-password" target="_blank" rel="noopener noreferrer">
                         Lupa password?
                     </a>
                 </div>
