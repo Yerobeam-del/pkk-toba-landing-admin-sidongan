@@ -215,14 +215,9 @@
 @endif
 
 <div class="sd-page-header u-a89">
-    <div class="u-flex-center-gap-3">
-        <div class="u-icon-badge-sm">
-            <i class="fas fa-user-edit u-a90"></i>
-        </div>
-        <div>
-            <h1 class="u-h3">Edit Profil</h1>
-            <p class="u-subtitle-flat">Perbarui informasi profil Anda</p>
-        </div>
+    <div>
+        <h1 class="u-h3">Edit Profil</h1>
+        <p class="u-subtitle-flat">Perbarui informasi profil Anda</p>
     </div>
     <div class="sd-header-actions">
         <a href="{{ route('sidongan.dashboard') }}" class="sd-btn-back">
