@@ -153,6 +153,10 @@
     </div>
 
     <script src="{{ asset('assets/sidongan/js/sidongan-auth-login.js') }}"></script>
+    <script src="{{ asset('assets/shared/js/email-typo-checker.js') }}"></script>
+    <script>
+    EmailTypoChecker.attach('#email');
+    </script>
 
 </body>
 </html>
