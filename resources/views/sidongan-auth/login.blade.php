@@ -126,7 +126,7 @@
                         </span>
                         <span class="check-text">Ingat saya</span>
                     </label>
-                    <a class="forgot-password" href="https://tp-pkk.tobakab.go.id/forgot-password" target="_blank" rel="noopener noreferrer">
+                    <a class="forgot-password" href="{{ url('/forgot-password') }}">
                         Lupa password?
                     </a>
                 </div>

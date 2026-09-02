@@ -383,9 +383,14 @@ Route::domain(config('app.landing_domain'))->group(function () {
 // 2. ONBOARDING — STANDALONE (works from any login source)
 // ======================================================================
 Route::middleware(['web'])->group(function () {
+    // Onboarding
     Route::get('/onboarding', [App\Http\Controllers\OnboardingController::class, 'show'])->name('onboarding');
     Route::post('/onboarding', [App\Http\Controllers\OnboardingController::class, 'store'])->name('onboarding.store');
     Route::get('/onboarding/skip', [App\Http\Controllers\OnboardingController::class, 'skip'])->name('onboarding.skip');
+
+    // Unified Forgot Password
+    Route::get('/forgot-password', [App\Http\Controllers\UnifiedForgotPasswordController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [App\Http\Controllers\UnifiedForgotPasswordController::class, 'store'])->name('password.email');
 });
 
 // ======================================================================
