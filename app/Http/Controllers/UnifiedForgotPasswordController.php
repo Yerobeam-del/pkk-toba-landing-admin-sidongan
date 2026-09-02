@@ -79,8 +79,9 @@ class UnifiedForgotPasswordController extends Controller
         $hasPersonalEmail = !empty($user->personal_email);
         $hasVerifiedPersonalEmail = $user->hasVerifiedPersonalEmail();
 
-        // CASE 2: SIDONGAN user with verified personal email → send to personal email
-        if ($hasSidonganAccess && $hasPersonalEmail && $hasVerifiedPersonalEmail) {
+        // CASE 2: User with verified personal email → send to personal email
+        // (Works for BOTH SIDONGAN and Admin users)
+        if ($hasPersonalEmail && $hasVerifiedPersonalEmail) {
             $token = Password::createToken($user);
             $user->sendSidonganPasswordResetNotification($token);
 
@@ -95,49 +96,25 @@ class UnifiedForgotPasswordController extends Controller
 
             return back()->with('status', 'success')->with('status_message',
                 'Link reset password telah dikirim ke email pribadi Anda (' . $this->maskEmail($user->personal_email) . ').'
-            )->with('system', 'sidongan');
+            );
         }
 
-        // CASE 3: SIDONGAN user with unverified personal email
-        if ($hasSidonganAccess && $hasPersonalEmail && !$hasVerifiedPersonalEmail) {
+        // CASE 3: User with unverified personal email
+        if ($hasPersonalEmail && !$hasVerifiedPersonalEmail) {
             RateLimiter::hit($throttleKey, 1800);
 
             return back()->with('status', 'need_verification')->with('status_message',
                 'Email pribadi Anda (' . $this->maskEmail($user->personal_email) . ') belum diverifikasi. Silakan hubungi administrator.'
-            )->with('system', 'sidongan');
+            );
         }
 
-        // CASE 4: SIDONGAN user without personal email
-        if ($hasSidonganAccess && !$hasPersonalEmail) {
+        // CASE 4: User without personal email
+        if (!$hasPersonalEmail) {
             RateLimiter::hit($throttleKey, 1800);
 
             return back()->with('status', 'no_personal_email')->with('status_message',
                 'Akun Anda belum memiliki email pribadi. Untuk mereset password, silakan hubungi administrator.'
-            )->with('system', 'sidongan');
-        }
-
-        // CASE 5: Admin user (no SIDONGAN access) → standard Laravel reset
-        if ($hasAdminAccess) {
-            $status = Password::sendResetLink(
-                $request->only('email'),
-                function ($user) {
-                    return $user;
-                }
             );
-
-            RateLimiter::hit($throttleKey, 1800);
-
-            Log::channel('audit')->info('Reset password sent to admin email', [
-                'email' => $email,
-                'ip' => $ip,
-                'user_id' => $user->id,
-            ]);
-
-            return $status === Password::RESET_LINK_SENT
-                ? back()->with('status', 'success')
-                    ->with('status_message', 'Link reset password telah dikirim ke email Anda.')
-                    ->with('system', 'admin')
-                : back()->withErrors(['email' => 'Gagal mengirim link reset. Silakan coba lagi.']);
         }
 
         // CASE 6: User exists but no system access → generic message

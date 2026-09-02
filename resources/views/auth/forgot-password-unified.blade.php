@@ -64,8 +64,8 @@
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
                         Tips
                     </div>
-                    <p><strong>SIDONGAN:</strong> Link reset dikirim ke email pribadi (Gmail, Yahoo, dll).</p>
-                    <p style="margin-top:0.5rem"><strong>Admin Panel:</strong> Link reset dikirim ke email login Anda.</p>
+                    <p>Link reset password akan dikirim ke <strong>email pribadi</strong> Anda (Gmail, Yahoo, dll).</p>
+                    <p style="margin-top:0.5rem">Jika belum punya email pribadi, hubungi administrator.</p>
                 </div>
 
                 <div class="ob-left-footer">
