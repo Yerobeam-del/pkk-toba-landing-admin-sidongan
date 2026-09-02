@@ -158,8 +158,8 @@
                     <span class="footer-brand">SIDONGAN</span>
                 </div>
                 <p class="footer-copy">
-                    &copy; {{ date('Y') }} Sistem Informasi Dokumen Organisasi Agenda dan Naskah — PKK Kabupaten Toba
-                    <span class="footer-dev">Developed by eGov Center IT Del</span>
+                    &copy; 2026 TP-PKK Kabupaten Toba. All rights reserved.
+                    <span class="footer-dev">Developed by IT Del</span>
                 </p>
             </div>
         </div>

@@ -103,7 +103,7 @@
 
             {{-- Footer --}}
             <div class="login-footer">
-                &copy; {{ date('Y') }} IT Del x PKK Toba. All rights reserved.
+                &copy; 2026 TP-PKK Kabupaten Toba. All rights reserved.
             </div>
         </div>
     </div>

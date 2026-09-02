@@ -82,7 +82,7 @@
 
         {{-- Bottom Copyright --}}
         <div class="footer-bottom">
-            <p class="footer-copyright">Copyright © {{ date('Y') }} PKK Kabupaten Toba. All Rights Reserved.</p>
+            <p class="footer-copyright">&copy; 2026 TP-PKK Kabupaten Toba. All rights reserved.</p>
         </div>
 
     </div>
