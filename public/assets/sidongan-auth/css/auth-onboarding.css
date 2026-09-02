@@ -35,7 +35,7 @@ body {
 .ob-left {
     flex: 0 0 42%;
     max-width: 42%;
-    background: linear-gradient(160deg, #0d9486 0%, #14b8a6 40%, #0ea5e9 100%);
+    background: linear-gradient(160deg, var(--gradient-start, #0d9486) 0%, var(--gradient-mid, #14b8a6) 40%, var(--gradient-end, #0ea5e9) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -339,7 +339,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    background: linear-gradient(135deg, var(--gradient-start, var(--primary)), var(--gradient-mid, var(--primary-light)));
     color: #fff;
     font-size: 1.5rem;
 }

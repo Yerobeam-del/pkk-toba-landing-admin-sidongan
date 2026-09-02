@@ -25,6 +25,9 @@ class SidonganEnsureProfileComplete
         'sidongan.onboarding',
         'sidongan.onboarding.store',
         'sidongan.onboarding.skip',
+        'onboarding',
+        'onboarding.store',
+        'onboarding.skip',
     ];
 
     /**
@@ -35,6 +38,7 @@ class SidonganEnsureProfileComplete
         '/sidongan/profile',
         '/sidongan/logout',
         '/sidongan/onboarding',
+        '/onboarding',
     ];
 
     public function handle(Request $request, Closure $next): Response
@@ -64,8 +68,8 @@ class SidonganEnsureProfileComplete
             }
         }
 
-        // Profile incomplete → redirect to onboarding
-        return redirect()->route('sidongan.onboarding');
+        // Profile incomplete → redirect to standalone onboarding
+        return redirect()->route('onboarding');
     }
 
     /**

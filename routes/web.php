@@ -380,7 +380,16 @@ Route::domain(config('app.landing_domain'))->group(function () {
 });
 
 // ======================================================================
-// 2. ROUTES KHUSUS DOMAIN: sidongan.tobakab.go.id (Aplikasi SIDONGAN)
+// 2. ONBOARDING — STANDALONE (works from any login source)
+// ======================================================================
+Route::middleware(['web'])->group(function () {
+    Route::get('/onboarding', [App\Http\Controllers\OnboardingController::class, 'show'])->name('onboarding');
+    Route::post('/onboarding', [App\Http\Controllers\OnboardingController::class, 'store'])->name('onboarding.store');
+    Route::get('/onboarding/skip', [App\Http\Controllers\OnboardingController::class, 'skip'])->name('onboarding.skip');
+});
+
+// ======================================================================
+// 3. ROUTES KHUSUS DOMAIN: sidongan.tobakab.go.id (Aplikasi SIDONGAN)
 // ======================================================================
 Route::domain(config('app.sidongan_domain'))->group(function () {
 
@@ -462,11 +471,6 @@ Route::domain(config('app.sidongan_domain'))->group(function () {
 
     // ================= WEB: SIDONGAN ADMIN =================
     Route::middleware(['sidongan.auth', 'sidongan.profile'])->prefix('sidongan')->name('sidongan.')->group(function () {
-        // Onboarding routes (exempt from profile check via middleware)
-        Route::get('/onboarding', [App\Http\Controllers\Sidongan\OnboardingController::class, 'show'])->name('onboarding');
-        Route::post('/onboarding', [App\Http\Controllers\Sidongan\OnboardingController::class, 'store'])->name('onboarding.store');
-        Route::get('/onboarding/skip', [App\Http\Controllers\Sidongan\OnboardingController::class, 'skip'])->name('onboarding.skip');
-
         Route::get('/', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'dashboard'])->name('dashboard');
 
         Route::get('/documents', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'index'])->name('documents.index');
