@@ -193,6 +193,9 @@ class OnboardingController extends Controller
         $remaining = $this->getMissingFields($user->fresh(), $systemKey);
 
         if (empty($remaining)) {
+            // Profile complete — clear skip flag
+            session()->forget('onboarding_skipped');
+
             return redirect()->route($system['dashboard_route'])
                 ->with('status', 'Profil Anda berhasil dilengkapi! Selamat datang.');
         }
@@ -221,6 +224,9 @@ class OnboardingController extends Controller
             'missing_fields' => $this->getMissingFields($user, $systemKey),
             'timestamp' => now()->toIso8601String(),
         ]);
+
+        // Set session flag so middleware allows access to dashboard
+        session(['onboarding_skipped' => true]);
 
         return redirect()->route($system['dashboard_route'])
             ->with('status', 'Anda bisa melengkapi profil nanti melalui menu Edit Profil.');

@@ -54,6 +54,11 @@ class SidonganEnsureProfileComplete
             return $next($request);
         }
 
+        // Skip if user previously chose to skip onboarding
+        if (session('onboarding_skipped', false)) {
+            return $next($request);
+        }
+
         // Skip if accessing exempt routes/paths
         $routeName = $request->route()?->getName();
         $path = $request->path();

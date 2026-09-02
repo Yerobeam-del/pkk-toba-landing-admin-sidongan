@@ -87,6 +87,15 @@ class ProfileController extends Controller
 
         $user->save();
 
+        // If profile was previously skipped, check if it's now complete
+        if (session('onboarding_skipped')) {
+            $hasPhone = !empty($user->phone_number);
+            $hasEmail = !empty($user->personal_email);
+            if ($hasPhone && $hasEmail) {
+                session()->forget('onboarding_skipped');
+            }
+        }
+
         return Redirect::route('sidongan.profile.edit')->with('success', 'Profil berhasil diperbarui!');
     }
 
