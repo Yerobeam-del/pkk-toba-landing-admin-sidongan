@@ -49,6 +49,7 @@ class ProfileController extends Controller
             'avatar' => ['nullable', 'image', 'max:2048'],
             'cropped_avatar_base64' => ['nullable', 'string'],
             'phone_number' => ['nullable', 'string', 'max:20'],
+            'personal_email' => ['nullable', 'email', 'max:255', 'unique:users,personal_email,' . $user->id],
         ]);
 
         // Handle avatar from base64 (cropper)
@@ -81,8 +82,14 @@ class ProfileController extends Controller
 
         $user->fill($validated);
 
+        // Reset verification if login email changed
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
+        }
+
+        // Reset verification if personal email changed
+        if ($user->isDirty('personal_email')) {
+            $user->personal_email_verified_at = null;
         }
 
         $user->save();

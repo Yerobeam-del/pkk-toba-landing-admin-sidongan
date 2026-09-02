@@ -372,25 +372,22 @@
                         </div>
 
                         {{-- Personal Email --}}
-                        <div class="sp-personal-email-box">
-                            <label>
+                        <div class="sp-field">
+                            <label for="personal_email">
                                 Email Pribadi
-                                <span class="sp-badge-pending" style="padding:0.1rem 0.35rem;font-size:0.65rem">Digunakan untuk reset password</span>
+                                <span class="sp-badge-pending" style="padding:0.1rem 0.35rem;font-size:0.65rem">Untuk reset password</span>
                             </label>
-                            @if($user->hasVerifiedPersonalEmail())
-                            <div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.4rem">
-                                <span style="color:#16a34a;font-weight:600;font-size:0.9rem">{{ $user->personal_email }}</span>
-                                <span class="sp-badge-verified">Terverifikasi</span>
+                            <input type="email" id="personal_email" name="personal_email" value="{{ old('personal_email', $user->personal_email) }}" placeholder="contoh@gmail.com">
+                            <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.3rem">
+                                @if($user->hasVerifiedPersonalEmail())
+                                    <span class="sp-badge-verified" style="padding:0.1rem 0.35rem;font-size:0.65rem">Terverifikasi</span>
+                                @elseif($user->personal_email)
+                                    <span class="sp-badge-pending" style="padding:0.1rem 0.35rem;font-size:0.65rem">Menunggu Verifikasi</span>
+                                    <span style="font-size:0.75rem;color:var(--text-muted,#64748b)">Cek email untuk link verifikasi</span>
+                                @endif
                             </div>
-                            @elseif($user->personal_email)
-                            <div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.4rem">
-                                <span style="color:#d97706;font-weight:600;font-size:0.9rem">{{ $user->personal_email }}</span>
-                                <span class="sp-badge-pending">Menunggu Verifikasi</span>
-                            </div>
-                            <p style="font-size:0.8rem;color:var(--text-muted,#64748b);margin:0.35rem 0 0">Cek email {{ $user->personal_email }} untuk link verifikasi.</p>
-                            @else
-                            <p style="font-size:0.85rem;color:var(--text-muted,#64748b);margin:0.4rem 0 0">Belum diatur. <a href="https://{{ config('app.landing_domain') ?: 'tp-pkk.tobakab.go.id' }}/personal-email" target="_blank" rel="noopener noreferrer">Atur Sekarang</a></p>
-                            @endif
+                            <p class="sp-hint">Email aktif untuk reset password (Gmail, Yahoo, dll). Jika diubah, perlu verifikasi ulang.</p>
+                            @error('personal_email') <p class="sp-error">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
