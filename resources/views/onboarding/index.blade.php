@@ -68,7 +68,7 @@
                         </div>
                         <div class="ob-step-info">
                             <span class="ob-step-title">Nomor Telepon</span>
-                            <span class="ob-step-desc">Untuk notifikasi WhatsApp</span>
+                            <span class="ob-step-desc">Kontak yang bisa dihubungi</span>
                         </div>
                     </div>
 
@@ -191,7 +191,7 @@
                                     required
                                 >
                             </div>
-                            <span class="ob-field-hint">Nomor WhatsApp aktif untuk notifikasi surat masuk/keluar</span>
+                            <span class="ob-field-hint">Nomor telepon aktif yang bisa dihubungi</span>
                         @else
                             <div class="ob-field-filled">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>

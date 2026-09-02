@@ -90,14 +90,12 @@ class SidonganEnsureProfileComplete
      */
     private function isProfileComplete($user): bool
     {
-        // Check phone number
-        $hasPhone = !empty($user->phone_number);
+        $phone = trim($user->phone_number ?? '');
+        $hasPhone = !empty($phone) && !in_array($phone, ['-', '--', '0', 'n/a', '- -', 'Belum diisi', 'Tidak ada']);
 
-        // Check personal email (not required to be verified, just set)
-        $hasPersonalEmail = !empty($user->personal_email);
+        $email = trim($user->personal_email ?? '');
+        $hasPersonalEmail = !empty($email) && !in_array($email, ['-', '--', 'n/a', 'Belum diisi', 'Tidak ada']);
 
-        // Profile is complete if BOTH phone and personal email are set
-        // Avatar is optional (not blocking)
         return $hasPhone && $hasPersonalEmail;
     }
 
@@ -109,11 +107,13 @@ class SidonganEnsureProfileComplete
     {
         $missing = [];
 
-        if (empty($user->phone_number)) {
+        $phone = trim($user->phone_number ?? '');
+        if (empty($phone) || in_array($phone, ['-', '--', '0', 'n/a', '- -', 'Belum diisi', 'Tidak ada'])) {
             $missing[] = 'phone_number';
         }
 
-        if (empty($user->personal_email)) {
+        $email = trim($user->personal_email ?? '');
+        if (empty($email) || in_array($email, ['-', '--', 'n/a', 'Belum diisi', 'Tidak ada'])) {
             $missing[] = 'personal_email';
         }
 

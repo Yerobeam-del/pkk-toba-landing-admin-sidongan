@@ -239,11 +239,15 @@ class OnboardingController extends Controller
     {
         $missing = [];
 
-        if (empty($user->phone_number)) {
+        // Phone: empty or placeholder values like '-', '0', 'n/a'
+        $phone = trim($user->phone_number ?? '');
+        if (empty($phone) || in_array($phone, ['-', '--', '0', 'n/a', '- -', 'Belum diisi', 'Tidak ada'])) {
             $missing[] = 'phone_number';
         }
 
-        if (empty($user->personal_email)) {
+        // Email: empty or placeholder
+        $email = trim($user->personal_email ?? '');
+        if (empty($email) || in_array($email, ['-', '--', 'n/a', 'Belum diisi', 'Tidak ada'])) {
             $missing[] = 'personal_email';
         }
 
