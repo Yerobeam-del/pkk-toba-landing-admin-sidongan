@@ -18,8 +18,9 @@ class NewsController extends Controller
      */
     public function show(string $slug)
     {
-        // Ambil berita berdasarkan slug
+        // Ambil berita berdasarkan slug (eager-load images)
         $news = News::published()
+            ->with('images')
             ->where('slug', $slug)
             ->firstOrFail();
 
