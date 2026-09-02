@@ -295,7 +295,7 @@
             <footer class="admin-footer">
                 <div class="admin-footer-inner">
                     <div class="admin-footer-left">
-                        &copy; 2026 <strong>TP-PKK Kabupaten Toba</strong>. All rights reserved.
+                        &copy; {{ date('Y') }} <strong>TP-PKK Kabupaten Toba</strong>. All rights reserved.
                     </div>
                     <div class="admin-footer-right">
                         <span>Version 1.0.0</span>

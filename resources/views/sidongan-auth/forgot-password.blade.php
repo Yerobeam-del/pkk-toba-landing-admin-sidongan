@@ -188,7 +188,7 @@
         <div class="footer">
             <span>Butuh bantuan? Hubungi administrator</span>
             <span class="footer-divider">•</span>
-            <span>&copy; 2026 TP-PKK Kabupaten Toba</span>
+            <span>&copy; {{ date('Y') }} TP-PKK Kabupaten Toba</span>
         </div>
     </div>
 

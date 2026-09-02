@@ -98,7 +98,7 @@
 
                 {{-- Footer --}}
                 <div class="ob-left-footer">
-                    <span>&copy; 2026 TP-PKK Kabupaten Toba</span>
+                    <span>&copy; {{ date('Y') }} TP-PKK Kabupaten Toba</span>
                 </div>
             </div>
         </div>

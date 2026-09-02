@@ -161,7 +161,7 @@
 
             {{-- Footer --}}
             <div class="reset-footer">
-                &copy; 2026 TP-PKK Kabupaten Toba. All rights reserved.
+                &copy; {{ date('Y') }} TP-PKK Kabupaten Toba. All rights reserved.
             </div>
         </div>
     </div>

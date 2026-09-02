@@ -158,7 +158,7 @@
                     <span class="footer-brand">SIDONGAN</span>
                 </div>
                 <p class="footer-copy">
-                    &copy; 2026 TP-PKK Kabupaten Toba. All rights reserved.
+                    &copy; {{ date('Y') }} TP-PKK Kabupaten Toba. All rights reserved.
                     <span class="footer-dev">Developed by IT Del</span>
                 </p>
             </div>
