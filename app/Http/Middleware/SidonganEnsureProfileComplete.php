@@ -24,6 +24,7 @@ class SidonganEnsureProfileComplete
         'sidongan.logout',
         'sidongan.onboarding',
         'sidongan.onboarding.store',
+        'sidongan.onboarding.skip',
     ];
 
     /**
@@ -75,7 +76,7 @@ class SidonganEnsureProfileComplete
      * - personal_email: needed for reset password functionality
      *
      * Optional (not blocking):
-     * - avatar: cosmetic
+     * - avatar: cosmetic, can be set later
      * - name: always set from admin
      */
     private function isProfileComplete($user): bool
@@ -87,11 +88,13 @@ class SidonganEnsureProfileComplete
         $hasPersonalEmail = !empty($user->personal_email);
 
         // Profile is complete if BOTH phone and personal email are set
+        // Avatar is optional (not blocking)
         return $hasPhone && $hasPersonalEmail;
     }
 
     /**
      * Get list of missing profile fields for smart display.
+     * Includes avatar as an optional field.
      */
     public static function getMissingFields($user): array
     {
@@ -105,21 +108,37 @@ class SidonganEnsureProfileComplete
             $missing[] = 'personal_email';
         }
 
+        // Avatar is optional but tracked for onboarding display
+        if (empty($user->avatar)) {
+            $missing[] = 'avatar';
+        }
+
         return $missing;
     }
 
     /**
      * Get profile completion percentage.
+     * Total fields: 3 (phone, email, avatar)
      */
     public static function getCompletionPercentage($user): int
     {
-        $total = 2; // phone_number, personal_email
+        $total = 3;
         $completed = 0;
 
         if (!empty($user->phone_number)) $completed++;
         if (!empty($user->personal_email)) $completed++;
+        if (!empty($user->avatar)) $completed++;
 
         return (int) round(($completed / $total) * 100);
+    }
+
+    /**
+     * Check if profile is blocking (phone + email missing).
+     * Avatar alone doesn't block.
+     */
+    public static function isProfileBlocking($user): bool
+    {
+        return empty($user->phone_number) || empty($user->personal_email);
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

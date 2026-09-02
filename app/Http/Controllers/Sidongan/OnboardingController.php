@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class OnboardingController extends Controller
@@ -34,6 +35,7 @@ class OnboardingController extends Controller
             'user' => $user,
             'missingFields' => $missingFields,
             'completionPercentage' => $completionPercentage,
+            'hasAvatar' => !empty($user->avatar),
             'hasPhone' => !empty($user->phone_number),
             'hasPersonalEmail' => !empty($user->personal_email),
         ]);
@@ -50,6 +52,9 @@ class OnboardingController extends Controller
 
         // Build dynamic validation rules based on missing fields
         $rules = [];
+
+        // Avatar is always optional (can upload anytime)
+        $rules['avatar'] = ['nullable', 'image', 'max:2048'];
 
         if (in_array('phone_number', $missingFields)) {
             $rules['phone_number'] = [
@@ -79,6 +84,20 @@ class OnboardingController extends Controller
 
         // Update user profile
         $updateData = [];
+
+        // Handle avatar upload
+        if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
+            $file = $request->file('avatar');
+
+            // Delete old avatar
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            $imageName = 'avatar_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('avatars', $imageName, 'public');
+            $updateData['avatar'] = $path;
+        }
 
         if (isset($validated['phone_number'])) {
             $updateData['phone_number'] = $validated['phone_number'];
