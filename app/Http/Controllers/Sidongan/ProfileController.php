@@ -52,7 +52,7 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'avatar' => ['nullable', 'image', 'max:2048'],
+            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:2048'],
             'cropped_avatar_base64' => ['nullable', 'string'],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'personal_email' => ['nullable', 'email', 'max:255', 'unique:users,personal_email,' . $user->id],
@@ -82,8 +82,12 @@ class ProfileController extends Controller
                 Storage::disk('public')->delete($user->avatar);
             }
 
-            $filename = 'avatar_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $validated['avatar'] = $file->storeAs('avatars', $filename, 'public');
+            // Ekstensi dari isi file (bukan nama klien); SVG ditolak (XSS).
+            $path = \App\Support\ImageUploadSanitizer::store($file, 'avatars', 'avatar_' . $user->id . '_');
+            if ($path === false) {
+                return back()->withErrors(['avatar' => 'File avatar bukan gambar yang didukung (JPG/PNG/WEBP/GIF).'])->withInput();
+            }
+            $validated['avatar'] = $path;
         }
 
         $user->fill($validated);
@@ -179,6 +183,10 @@ class ProfileController extends Controller
 
         // Idempoten: aman walau link diklik berulang kali.
         $user->markPersonalEmailAsVerified();
+
+        // Paritas dengan alur verifikasi Admin Panel (Auth\PersonalEmailController
+        // @verify): bersihkan email pending dari session setelah verifikasi sukses.
+        session()->forget('pending_personal_email');
 
         Log::channel('audit')->info('Email pribadi berhasil diverifikasi (SIDONGAN)', [
             'user_id' => $user->id,

@@ -20,11 +20,11 @@ Route::get('/api/test-connection', function () {
         'message' => 'API pkk-toba berhasil terhubung',
         'timestamp' => now()->toDateTimeString()
     ]);
-});
+})->middleware('throttle:60,1');
 
 Route::get('/api/v1/health', function () {
     return response()->json(['status' => 'ok']);
-});
+})->middleware('throttle:60,1');
 
 // ================= API WILAYAH (GLOBAL, LINTAS SUBDOMAIN) =================
 // Sumber datanya tabel `wilayah` di database, BUKAN API wilayah.id, supaya
@@ -40,25 +40,25 @@ Route::get('/api/v1/wilayah/provinces', function () {
         $provinces = \App\Models\Wilayah::where('kode', 'like', '__')->where('kode', 'not like', '%.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($p) => ['code' => $p->kode, 'name' => $p->nama]);
         return response()->json(['success' => true, 'data' => $provinces]);
     } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-});
+})->middleware('throttle:public-api');
 Route::get('/api/v1/wilayah/regencies/{provinceCode}', function ($provinceCode) {
     try {
         $regencies = \App\Models\Wilayah::where('kode', 'like', $provinceCode . '.%')->where('kode', 'not like', '%.__.%')->where('kode', 'not like', '%.__.__.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($r) => ['code' => $r->kode, 'name' => $r->nama]);
         return response()->json(['success' => true, 'data' => $regencies]);
     } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-});
+})->middleware('throttle:public-api');
 Route::get('/api/v1/wilayah/districts/{regencyCode}', function ($regencyCode) {
     try {
         $districts = \App\Models\Wilayah::where('kode', 'like', $regencyCode . '.%')->where('kode', 'not like', '%.__.__.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($d) => ['code' => $d->kode, 'name' => $d->nama]);
         return response()->json(['success' => true, 'data' => $districts]);
     } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-});
+})->middleware('throttle:public-api');
 Route::get('/api/v1/wilayah/villages/{districtCode}', function ($districtCode) {
     try {
         $villages = \App\Models\Wilayah::where('kode', 'like', $districtCode . '.%')->orderBy('nama')->get(['kode', 'nama'])->map(fn($v) => ['code' => $v->kode, 'name' => $v->nama]);
         return response()->json(['success' => true, 'data' => $villages]);
     } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-});
+})->middleware('throttle:public-api');
 
 // ================= SYNC AVATAR DARI SIEDA (server-to-server) =================
 // Dipanggil aplikasi SIEDA dengan shared secret (middleware 'sieda.sync',
@@ -90,6 +90,9 @@ Route::post('/api/sieda/sync-avatar', [App\Http\Controllers\Api\SiedaAvatarSyncC
 $registerSidonganRoutes = function (bool $withLanding): void {
 
     // ================= API: SIDONGAN PUBLIC =================
+    // Endpoint publik tanpa auth — throttled bersama (rate limiter
+    // 'public-api' didefinisikan di AppServiceProvider).
+    Route::middleware('throttle:public-api')->group(function () {
     Route::get('/api/v1/sidongan/documents', function () {
         try {
             $documents = \App\Models\Document::published()->with(['category', 'tags'])->orderBy('document_date', 'desc')->orderBy('created_at', 'desc')->paginate(12)
@@ -128,6 +131,7 @@ $registerSidonganRoutes = function (bool $withLanding): void {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     });
+    }); // end throttle:public-api
 
     // ================= WEB: SIDONGAN AUTH =================
     Route::middleware(['sidongan.guest'])->group(function () use ($withLanding) {
@@ -404,20 +408,27 @@ Route::domain(config('app.landing_domain'))->group(function () {
                 : collect();
             $desasByKecamatan = $desas->groupBy('kode_kecamatan');
 
+            // Foto desa yang diunggah lewat Admin Panel (hanya gambar yang
+            // dikelola admin — angka tetap murni dari database SIEDA).
+            $fotoDesa = \App\Models\Desa::whereNotNull('image')
+                ->where('image', '!=', '')
+                ->pluck('image', 'kode_wilayah');
+
             $kecamatans = $sieda->table('ref_kecamatan')->orderBy('kode')->get()
                 ->filter(fn($kec) => $desasByKecamatan->has($kec->kode))
-                ->map(function ($kec) use ($desasByKecamatan, $kkPerDesa, $pendudukPerDesa) {
+                ->map(function ($kec) use ($desasByKecamatan, $kkPerDesa, $pendudukPerDesa, $fotoDesa) {
                 $desas = $desasByKecamatan->get($kec->kode, collect());
                 return [
                     'id' => $kec->kode,
                     'name' => $kec->nama,
-                    'desas' => $desas->map(function ($desa) use ($kkPerDesa, $pendudukPerDesa) {
+                    'desas' => $desas->map(function ($desa) use ($kkPerDesa, $pendudukPerDesa, $fotoDesa) {
+                        $foto = $fotoDesa[$desa->kode] ?? null;
                         return [
                             'id' => $desa->kode,
                             'name' => $desa->nama,
                             'kode_wilayah' => $desa->kode,
                             'description' => null,
-                            'image' => null,
+                            'image' => $foto ? asset('storage/' . $foto) : null,
                             'population' => (int) ($pendudukPerDesa[$desa->kode] ?? 0),
                             'households' => (int) ($kkPerDesa[$desa->kode] ?? 0),
                             'sort_order' => 0,
@@ -445,31 +456,52 @@ Route::domain(config('app.landing_domain'))->group(function () {
         }
     });
 
-    // Proxy Wilayah.id
+    // Proxy Wilayah.id — cache menahan beban ulangan, throttle menahan abuse.
     Route::get('/api/v1/wilayah/proxy/provinces', function () {
         try {
             $provinces = cache()->remember('wilayah_provinces', 86400, fn() => Http::timeout(30)->get('https://wilayah.id/api/provinces.json')->json()['data'] ?? []);
             return response()->json(['success' => true, 'data' => $provinces]);
         } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-    });
+    })->middleware('throttle:public-api');
     Route::get('/api/v1/wilayah/proxy/regencies/{provinceCode}', function ($provinceCode) {
         try {
             $regencies = cache()->remember('wilayah_regencies_' . $provinceCode, 86400, fn() => Http::timeout(30)->get("https://wilayah.id/api/regencies/{$provinceCode}.json")->json()['data'] ?? []);
             return response()->json(['success' => true, 'data' => $regencies]);
         } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-    });
+    })->middleware('throttle:public-api');
     Route::get('/api/v1/wilayah/proxy/districts/{regencyCode}', function ($regencyCode) {
         try {
             $districts = cache()->remember('wilayah_districts_' . $regencyCode, 86400, fn() => Http::timeout(30)->get("https://wilayah.id/api/districts/{$regencyCode}.json")->json()['data'] ?? []);
             return response()->json(['success' => true, 'data' => $districts]);
         } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-    });
+    })->middleware('throttle:public-api');
     Route::get('/api/v1/wilayah/proxy/villages/{districtCode}', function ($districtCode) {
         try {
             $villages = cache()->remember('wilayah_villages_' . $districtCode, 86400, fn() => Http::timeout(30)->get("https://wilayah.id/api/villages/{$districtCode}.json")->json()['data'] ?? []);
             return response()->json(['success' => true, 'data' => $villages]);
         } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
-    });
+    })->middleware('throttle:public-api');
+
+    // Alias /api/v1/wilayah/proxy/desa/{kode} → villages.
+    // Dipakai form Tambah/Edit Desa (admin-desa-create.js & desa-form.js).
+    // Wajib ADA: tanpa ini dropdown "Desa/Kelurahan" di form desa selalu gagal memuat.
+    Route::get('/api/v1/wilayah/proxy/desa/{districtCode}', function ($districtCode) {
+        try {
+            $villages = cache()->remember('wilayah_villages_' . $districtCode, 86400, fn() => Http::timeout(30)->get("https://wilayah.id/api/villages/{$districtCode}.json")->json()['data'] ?? []);
+            return response()->json(['success' => true, 'data' => $villages]);
+        } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
+    })->middleware('throttle:public-api');
+
+    // Sort order berikutnya untuk form Tambah Desa (admin-desa-create.js).
+    // Endpoint route admin.desa.max-sort-order ada, tetapi JS memanggil URL API publik ini.
+    Route::get('/api/v1/desas/max-sort-order', function () {
+        try {
+            $maxSortOrder = \App\Models\Desa::max('sort_order') ?? 0;
+            return response()->json(['success' => true, 'data' => ['max_sort_order' => $maxSortOrder]]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    })->middleware('throttle:public-api');
 
     Route::get('/api/v1/dokumens', function (Request $request) {
         try {
@@ -511,7 +543,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
 
     Route::get('/api/v1/tentang', function () {
         return response()->json(['success' => true, 'data' => \App\Models\TentangKami::getFirst()]);
-    });
+    })->middleware('throttle:public-api');
 
     Route::get('/api/v1/hero-slider', function () {
         $sliders = \App\Models\HeroSlider::active()->get()->map(fn($s) => ['id' => $s->id, 'image_url' => $s->image_url, 'display_duration' => $s->display_duration ?? 5]);
@@ -534,7 +566,9 @@ Route::domain(config('app.landing_domain'))->group(function () {
     Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-        Route::get('/profile/password', [App\Http\Controllers\ProfileController::class, 'password'])->name('profile.password');
+        // Ubah password: form-nya ada di tab "Keamanan" halaman Edit Profil
+        // (halaman /profile/password terpisah sudah dihapus karena tidak pernah
+        // ditautkan dari mana pun — tombol Ubah Password berakhir di tab itu).
         Route::put('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password.update');
         Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
@@ -547,10 +581,16 @@ Route::domain(config('app.landing_domain'))->group(function () {
             Route::post('/settings', [App\Http\Controllers\Admin\HeroSliderController::class, 'updateSettings'])->name('settings');
         });
 
-        Route::resource('struktur', App\Http\Controllers\Admin\StrukturController::class)->middleware('permission:manage-struktur');
+        // ->except(['show']): method show() tidak diimplementasikan di controller
+        // dan halaman show tidak pernah ditautkan dari UI — route bawaan resource
+        // akan 500 jika diakses langsung. Hapus except() ini bila show() dibuat.
+        Route::resource('struktur', App\Http\Controllers\Admin\StrukturController::class)
+            ->except(['show'])->middleware('permission:manage-struktur');
         Route::get('/admin/struktur/tab/{tab}', [App\Http\Controllers\Admin\StrukturController::class, 'getTabData'])->name('admin.struktur.tab');
-        Route::resource('aplikasi', App\Http\Controllers\Admin\ApplicationController::class)->middleware('permission:manage-aplikasi');
-        Route::resource('berita', App\Http\Controllers\Admin\BeritaController::class)->middleware('permission:manage-berita');
+        Route::resource('aplikasi', App\Http\Controllers\Admin\ApplicationController::class)
+            ->except(['show'])->middleware('permission:manage-aplikasi');
+        Route::resource('berita', App\Http\Controllers\Admin\BeritaController::class)
+            ->except(['show'])->middleware('permission:manage-berita');
         Route::delete('/berita/{beritum}/image/{image}', [App\Http\Controllers\Admin\BeritaController::class, 'deleteImage'])->name('berita.delete-image');
 
         Route::prefix('desa')->name('desa.')->middleware('permission:manage-desa')->group(function () {
@@ -561,13 +601,13 @@ Route::domain(config('app.landing_domain'))->group(function () {
             Route::put('/{desa}', [App\Http\Controllers\Admin\DesaController::class, 'update'])->name('update');
             Route::delete('/{desa}', [App\Http\Controllers\Admin\DesaController::class, 'destroy'])->name('destroy');
             Route::get('/max-sort-order', [App\Http\Controllers\Admin\DesaController::class, 'getMaxSortOrder'])->name('max-sort-order');
-            Route::post('/kecamatan', [App\Http\Controllers\Admin\DesaController::class, 'storeKecamatan'])->name('kecamatan.store');
-            Route::put('/kecamatan/{kecamatan}', [App\Http\Controllers\Admin\DesaController::class, 'updateKecamatan'])->name('kecamatan.update');
-            Route::delete('/kecamatan/{kecamatan}', [App\Http\Controllers\Admin\DesaController::class, 'destroyKecamatan'])->name('kecamatan.destroy');
+            // Catatan: route kecamatan (store/update/destroy) dihapus — metodenya tidak
+            // pernah ada di DesaController dan tidak ada UI yang memanggilnya.
         });
 
         Route::resource('sk', App\Http\Controllers\Admin\DokumenController::class)->parameters(['sk' => 'dokumen'])->middleware('permission:manage-dokumen');
-        Route::resource('template', App\Http\Controllers\Admin\TemplateController::class)->middleware('permission:manage-template');
+        Route::resource('template', App\Http\Controllers\Admin\TemplateController::class)
+            ->except(['show'])->middleware('permission:manage-template');
 
         Route::get('/tentang', [App\Http\Controllers\Admin\TentangKamiController::class, 'index'])->name('tentang.index')->middleware('permission:manage-tentang');
         Route::post('/tentang/update', [App\Http\Controllers\Admin\TentangKamiController::class, 'update'])->name('tentang.update')->middleware('permission:manage-tentang');
@@ -598,7 +638,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
 
         // Manajemen Data SIEDA — hapus permanen (per record & seluruh data per modul).
         // Perhatian: middleware permission bersifat defense-in-depth; controller juga
-        // memverifikasi sidongan_role === 'super_admin' di dalam authorizeSuperAdmin().
+        // memverifikasi User::isSuperAdmin() di dalam authorizeSuperAdmin().
         Route::prefix('sieda-data')->name('sieda-data.')->middleware('permission:manage-users')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\SiedaDataController::class, 'index'])->name('index');
             Route::get('/module/{module}', [App\Http\Controllers\Admin\SiedaDataController::class, 'showModule'])->name('module');

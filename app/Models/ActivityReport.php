@@ -76,10 +76,19 @@ class ActivityReport extends Model
         return $data['target_roles'] ?? [];
     }
 
-    /** Boleh mengubah: semua role tujuan disposisi surat (laporan milik surat). */
+    /** Boleh mengubah: semua role tujuan disposisi surat (laporan milik surat), dan Super Admin. */
     public function bolehDiubahOleh(?User $user): bool
     {
-        if (!$user || empty($user->sidongan_role)) {
+        if (!$user) {
+            return false;
+        }
+
+        // Super Admin: akses penuh (konsisten dengan bolehDilihatOleh)
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+
+        if (empty($user->sidongan_role)) {
             return false;
         }
 
@@ -98,7 +107,7 @@ class ActivityReport extends Model
             return false;
         }
 
-        if (in_array($user->sidongan_role, ['ketua', 'super_admin'], true)) {
+        if ($user->isSuperAdmin() || $user->hasSidonganRole('ketua')) {
             return true;
         }
 

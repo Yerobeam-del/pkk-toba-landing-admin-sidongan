@@ -212,7 +212,7 @@ class StrukturController extends Controller
             'position' => 'required|string|max:50',
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
             'cropped_photo' => 'nullable|string',
         ]);
 
@@ -267,7 +267,7 @@ class StrukturController extends Controller
             'position' => 'required|string|max:50',
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
             'cropped_photo' => 'nullable|string',
         ]);
 

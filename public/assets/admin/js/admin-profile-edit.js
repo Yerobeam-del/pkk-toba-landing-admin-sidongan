@@ -52,12 +52,38 @@ document.getElementById('profileForm').addEventListener('submit', function() {
     }
 });
 
-document.querySelectorAll('.profile-tab').forEach(function(tab) {
-    tab.addEventListener('click', function() {
-        document.querySelectorAll('.profile-tab').forEach(function(t) { t.classList.remove('active'); });
-        document.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
-        this.classList.add('active');
-        document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+// ============================================================
+// TABS — pola WAI-ARIA Tabs (roving tabindex + tombol panah)
+// ============================================================
+var profileTabs = Array.prototype.slice.call(document.querySelectorAll('.profile-tab'));
+
+function activateTab(tab) {
+    profileTabs.forEach(function(t) {
+        var selected = t === tab;
+        t.classList.toggle('active', selected);
+        t.setAttribute('aria-selected', selected ? 'true' : 'false');
+        // Roving tabindex: hanya tab aktif yang ada di urutan Tab;
+        // sisanya dijangkau lewat tombol panah saat fokus di tablist.
+        t.tabIndex = selected ? 0 : -1;
+    });
+    document.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
+    var panel = document.getElementById('tab-' + tab.dataset.tab);
+    if (panel) panel.classList.add('active');
+}
+
+profileTabs.forEach(function(tab) {
+    tab.addEventListener('click', function() { activateTab(tab); });
+    tab.addEventListener('keydown', function(e) {
+        var idx = profileTabs.indexOf(tab);
+        var next = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = profileTabs[(idx + 1) % profileTabs.length];
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = profileTabs[(idx - 1 + profileTabs.length) % profileTabs.length];
+        else if (e.key === 'Home') next = profileTabs[0];
+        else if (e.key === 'End') next = profileTabs[profileTabs.length - 1];
+        else return;
+        e.preventDefault();
+        next.focus();
+        activateTab(next);
     });
 });
 
@@ -94,49 +120,53 @@ document.addEventListener('DOMContentLoaded', function() {
         if (closedIcon) closedIcon.style.display = isPassword ? 'block' : 'none';
     }
 
+    // Elemen halaman: #strengthFill (bar) & #strengthLabel (teks) — lihat
+    // tab "Keamanan" di admin/profile/edit.blade.php.
     function checkPasswordStrength(password) {
-        const bars = document.querySelectorAll('#passwordStrength .bar');
-        const hint = document.getElementById('passwordHint');
-        let strength = 0;
-        if (!bars.length || !hint) return;
-
-        bars.forEach(bar => { bar.className = 'bar'; });
+        const bar = document.getElementById('strengthFill');
+        const label = document.getElementById('strengthLabel');
+        if (!bar || !label) return;
 
         if (password.length === 0) {
-            hint.textContent = '';
+            bar.style.width = '0';
+            label.textContent = '';
+            label.style.color = '';
             return;
         }
-        if (password.length >= 8) strength++;
-        if (password.length >= 12) strength++;
-        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-        if (/\d/.test(password)) strength++;
-        if (/[^a-zA-Z0-9]/.test(password)) strength++;
-        strength = Math.min(strength, 4);
 
-        for (let i = 0; i < bars.length; i++) {
-            if (i < strength) {
-                let level = 'weak';
-                if (strength >= 4) level = 'strong';
-                else if (strength >= 2) level = 'medium';
-                bars[i].className = 'bar active ' + level;
-            }
-        }
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (password.length >= 12) score++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[^a-zA-Z0-9]/.test(password)) score++;
+        score = Math.min(score, 4);
 
-        if (strength <= 1) hint.textContent = 'Password lemah';
-        else if (strength <= 2) hint.textContent = 'Password cukup';
-        else if (strength <= 3) hint.textContent = 'Password baik';
-        else hint.textContent = '\u2713 Password kuat';
+        const levels = {
+            1: ['25%', '#ef4444', 'Password lemah'],
+            2: ['50%', '#f59e0b', 'Password cukup'],
+            3: ['75%', '#eab308', 'Password baik'],
+            4: ['100%', '#16a34a', '\u2713 Password kuat'],
+        };
+        const [width, color, text] = levels[score] || levels[1];
+
+        bar.style.width = width;
+        bar.style.background = color;
+        label.textContent = text;
+        label.style.color = color;
     }
 
     function checkPasswordMatch(value) {
         const password = document.getElementById('password');
-        const hint = document.getElementById('passwordMatchHint');
-        if (!password || !hint) return;
+        const msg = document.getElementById('matchMsg');
+        if (!password || !msg) return;
         if (value === '') {
-            hint.textContent = '';
+            msg.textContent = '';
             return;
         }
-        hint.textContent = value === password.value ? '\u2713 Password cocok' : 'Password tidak cocok';
+        const matched = value === password.value;
+        msg.textContent = matched ? '\u2713 Password cocok' : 'Password tidak cocok';
+        msg.style.color = matched ? '#16a34a' : '#ef4444';
     }
 
     document.addEventListener('click', function (event) {

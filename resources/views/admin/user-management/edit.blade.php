@@ -216,7 +216,7 @@
                         <select name="role_id" id="roleSelect" class="form-control" required>
                             <option value="">-- Pilih Role --</option>
                             @foreach($roles as $role)
-                                @if(auth()->user()->hasRole('super_admin') || $role->name !== 'super_admin')
+                                @if(auth()->user()->isSuperAdmin() || $role->name !== 'super_admin')
                                     <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }}>
                                         {{ $role->display_name }} — {{ $role->description }}
                                     </option>

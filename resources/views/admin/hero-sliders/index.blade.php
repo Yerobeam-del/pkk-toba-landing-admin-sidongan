@@ -199,19 +199,19 @@
                     </div>
                 </div>
                 <div class="slider-actions">
-                    <a href="{{ $slider->image_url }}" target="_blank" title="Preview" class="btn-view">
+                    <a href="{{ $slider->image_url }}" target="_blank" title="Preview" aria-label="Preview slide {{ $slider->id }}" class="btn-view">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                             <circle cx="12" cy="12" r="3"/>
                         </svg>
                     </a>
-                    <button data-edit-slider="{{ $slider->id }}" title="Edit" class="btn-edit">
+                    <button data-edit-slider="{{ $slider->id }}" title="Edit" aria-label="Edit slide {{ $slider->id }}" class="btn-edit">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                         </svg>
                     </button>
-                    <button data-delete-slider="{{ $slider->id }}" data-delete-slider-title="Slide #{{ $slider->id }}" title="Hapus" class="btn-del">
+                    <button data-delete-slider="{{ $slider->id }}" data-delete-slider-title="Slide #{{ $slider->id }}" title="Hapus" aria-label="Hapus slide {{ $slider->id }}" class="btn-del">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="3 6 5 6 21 6"/>
                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>

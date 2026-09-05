@@ -103,7 +103,7 @@
                 </svg>
                 <input type="text" name="search" value="{{ request('search') }}" class="sk-search-input u-input-icon-left" placeholder="Cari nama dokumen...">
                 @if(request('search'))
-                    <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian">
+                    <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);text-decoration:none" title="Hapus pencarian" aria-label="Hapus pencarian">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="18" y1="6" x2="6" y2="18"/>
                             <line x1="6" y1="6" x2="18" y2="18"/>
@@ -205,7 +205,7 @@
             'emptyIcon' => 'file',
             'rowActions' => function($item) {
                 return '
-                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn u-a18" title="Preview">
+                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn u-a18" title="Preview" aria-label="Preview dokumen ' . addslashes($item->name) . '">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </a>
                 ';
@@ -225,7 +225,7 @@
             'emptyIcon' => 'file',
             'rowActions' => function($item) {
                 return '
-                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn u-a18" title="Preview">
+                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn u-a18" title="Preview" aria-label="Preview dokumen ' . addslashes($item->name) . '">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </a>
                 ';
@@ -245,7 +245,7 @@
             'emptyIcon' => 'file',
             'rowActions' => function($item) {
                 return '
-                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn u-a18" title="Preview">
+                    <a href="' . route('admin.sk.show', $item) . '" target="_blank" class="action-btn u-a18" title="Preview" aria-label="Preview dokumen ' . addslashes($item->name) . '">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </a>
                 ';

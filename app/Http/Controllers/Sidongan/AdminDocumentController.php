@@ -34,11 +34,11 @@ class AdminDocumentController extends Controller
             abort(403, 'Akses ditolak.');
         }
 
-        if ($user->hasSidonganRole('ketua')) {
-            return; // Ketua boleh akses semua
+        if ($user->isSidonganKetua()) {
+            return; // Ketua (dan Super Admin) boleh akses semua
         }
 
-        if ($user->hasSidonganRole('sekretaris')) {
+        if ($user->isSidonganSekretaris()) {
             if ($document->created_by === $user->id) return;
             abort(403, 'Anda tidak berhak mengakses surat ini.');
         }
@@ -69,9 +69,11 @@ class AdminDocumentController extends Controller
         
         // Build base query berdasarkan role
         $baseQuery = Document::query();
-        if ($user->hasSidonganRole('sekretaris')) {
+        if ($user->isSidonganKetua()) {
+            // Ketua & Super Admin: lihat semua surat
+        } elseif ($user->isSidonganSekretaris()) {
             $baseQuery->where('created_by', $user->id);
-        } elseif (!$user->hasSidonganRole('ketua')) {
+        } else {
             $userRole = $user->sidongan_role;
             $baseQuery->where('status', 'berjalan')
                 ->whereJsonContains('disposisi_data->target_roles', $userRole);
@@ -172,10 +174,12 @@ class AdminDocumentController extends Controller
             $q->with('creator')->latest();
         }]);
         
-        // Sekretaris hanya lihat surat yang dibuatnya
-        if ($user && $user->hasSidonganRole('sekretaris')) {
+        if ($user && $user->isSidonganKetua()) {
+            // Ketua & Super Admin: lihat semua surat
+        } elseif ($user && $user->isSidonganSekretaris()) {
+            // Sekretaris hanya lihat surat yang dibuatnya
             $query->where('created_by', $user->id);
-        } elseif ($user && !$user->hasSidonganRole('ketua')) {
+        } elseif ($user) {
             // Role lain hanya lihat surat berjalan yang didisposisi ke mereka
             $userRole = $user->sidongan_role;
             $query->where('status', 'berjalan')
@@ -357,7 +361,12 @@ class AdminDocumentController extends Controller
         // Handle upload file
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+            // Nama base disanitasi & ekstensi diambil dari ISI file (magic
+            // bytes) — nama kiriman klien tidak dipercaya sebagai ekstensi
+            // (anti "shell.php.jpg" / path traversal). Lihat ImageUploadSanitizer.
+            $ext = \App\Support\ImageUploadSanitizer::resolveExtension($file)
+                ?? strtolower($file->getClientOriginalExtension());
+            $filename = time() . '_' . \App\Support\ImageUploadSanitizer::safeBaseName($file->getClientOriginalName()) . '.' . $ext;
             $path = $file->storeAs('sidongan/documents', $filename, 'public');
         } else {
             return back()->with('error', 'File surat wajib diupload.')
@@ -448,7 +457,7 @@ class AdminDocumentController extends Controller
 
         // 2. Handle archive
         if ($request->has('archive') && $request->archive === '1') {
-            if (!$user || !$user->hasSidonganRole('sekretaris')) {
+            if (!$user?->isSidonganSekretaris()) {
                 abort(403, 'Akses ditolak.');
             }
             
@@ -483,7 +492,10 @@ class AdminDocumentController extends Controller
             }
             
             $file = $request->file('file');
-            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+            // Nama base disanitasi & ekstensi dari isi file (magic bytes).
+            $ext = \App\Support\ImageUploadSanitizer::resolveExtension($file)
+                ?? strtolower($file->getClientOriginalExtension());
+            $filename = time() . '_' . \App\Support\ImageUploadSanitizer::safeBaseName($file->getClientOriginalName()) . '.' . $ext;
             $path = $file->storeAs('sidongan/documents', $filename, 'public');
             
             $document->update([
@@ -515,7 +527,7 @@ class AdminDocumentController extends Controller
     public function destroy(Document $document)
     {
         $user = auth()->guard('sidongan')->user();
-        if (!$user || !$user->hasSidonganRole('sekretaris')) {
+        if (!$user?->isSidonganSekretaris()) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -610,7 +622,7 @@ class AdminDocumentController extends Controller
     {
         $user = auth()->guard('sidongan')->user();
         
-        if (!$user->hasSidonganRole('ketua')) {
+        if (!$user->isSidonganKetua()) {
             abort(403, 'Akses ditolak');
         }
         
@@ -660,7 +672,7 @@ class AdminDocumentController extends Controller
     {
         $user = auth()->guard('sidongan')->user();
         
-        if (!$user->hasSidonganRole('ketua')) {
+        if (!$user->isSidonganKetua()) {
             abort(403, 'Akses ditolak');
         }
         
@@ -697,7 +709,7 @@ class AdminDocumentController extends Controller
     {
         $user = auth()->guard('sidongan')->user();
         
-        if (!$user->hasSidonganRole('ketua')) {
+        if (!$user->isSidonganKetua()) {
             abort(403, 'Akses ditolak');
         }
         
@@ -861,7 +873,7 @@ class AdminDocumentController extends Controller
         $user = auth()->guard('sidongan')->user();
         
         // Cek akses - hanya Sekretaris yang bisa archive
-        if (!$user || !$user->hasSidonganRole('sekretaris')) {
+        if (!$user?->isSidonganSekretaris()) {
             abort(403, 'Akses ditolak. Hanya Sekretaris yang dapat mengarsipkan surat.');
         }
         
@@ -899,7 +911,7 @@ class AdminDocumentController extends Controller
     {
         $user = auth()->guard('sidongan')->user();
 
-        if (!$user || !$user->hasSidonganRole('sekretaris')) {
+        if (!$user?->isSidonganSekretaris()) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -983,7 +995,7 @@ class AdminDocumentController extends Controller
     {
         $user = auth()->guard('sidongan')->user();
 
-        if (!$user || !$user->hasSidonganRole('sekretaris')) {
+        if (!$user?->isSidonganSekretaris()) {
             abort(403, 'Akses ditolak.');
         }
 

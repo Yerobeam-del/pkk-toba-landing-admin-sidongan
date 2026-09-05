@@ -48,7 +48,7 @@ class HeroSliderController extends Controller
         }
 
         $validated = $request->validate([
-            'image' => 'required|image|max:5120', // 5MB
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp,gif|max:5120', // 5MB
             'display_duration' => 'nullable|integer|min:3|max:30',
         ]);
 
@@ -77,7 +77,7 @@ class HeroSliderController extends Controller
     public function update(Request $request, HeroSlider $heroSlider)
     {
         $validated = $request->validate([
-            'image' => 'nullable|image|max:5120',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:5120',
             'display_duration' => 'nullable|integer|min:3|max:30',
         ]);
 

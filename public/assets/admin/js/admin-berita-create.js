@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
             allowedContent: true
         })
         .then(editor => {
-            console.log('✅ CKEditor 5 initialized with alignment!', editor);
             window.editor = editor;
         })
         .catch(error => {

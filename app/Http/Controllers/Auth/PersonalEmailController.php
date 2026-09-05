@@ -31,8 +31,9 @@ class PersonalEmailController extends Controller
                 ->with('info', 'Email pribadi <strong>' . e($user->personal_email) . '</strong> sudah diverifikasi.');
         }
 
-        // Cek apakah ada email yang sedang menunggu verifikasi di session
-        $pendingEmail = session('pending_personal_email');
+        // Cek apakah ada email yang sedang menunggu verifikasi (session, dengan
+        // fallback DB yang dinormalisasi ke session — lihat resolvePendingEmail).
+        $pendingEmail = $this->resolvePendingEmail($user);
 
         if ($pendingEmail) {
             return view('auth.setup-personal-email', [
@@ -109,8 +110,8 @@ class PersonalEmailController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        // Ambil email dari session
-        $pendingEmail = session('pending_personal_email');
+        // Ambil email pending (session, dengan fallback DB → session).
+        $pendingEmail = $this->resolvePendingEmail($user);
 
         // Kalau tidak ada pending email, redirect ke setup
         if (!$pendingEmail) {
@@ -180,11 +181,14 @@ class PersonalEmailController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        // Ambil email dari session
-        $email = session('pending_personal_email');
+        // Ambil email pending via resolver bersama (alur setup dari session;
+        // alur onboarding dari DB lalu dinormalisasi KE session supaya state-nya
+        // identik — user yang paling butuh kirim ulang tidak lagi dialihkan ke
+        // setup tanpa penjelasan).
+        $email = $this->resolvePendingEmail($user);
 
-        // Kalau tidak ada pending email, redirect ke setup
-        if (!$email) {
+        // Kalau tidak ada pending email sama sekali, redirect ke setup
+        if (!$email || $user->hasVerifiedPersonalEmail()) {
             return redirect()->route('personal-email.setup');
         }
 
@@ -237,6 +241,44 @@ class PersonalEmailController extends Controller
 
         return redirect()->intended(route('admin.dashboard'))
             ->with('info', 'Anda bisa setup email pribadi nanti melalui menu Profil.');
+    }
+
+    /**
+     * Email pribadi yang sedang menunggu verifikasi untuk user ini.
+     *
+     * Sumber utamanya SESSION (alur setup: PersonalEmailController@store).
+     * Bila session kosong, fallback ke kolom DB — email bisa tersimpan langsung
+     * di DB tanpa session (alur onboarding, atau akun yang disinkronkan dari
+     * SIEDA). Hasil fallback DINORMALISASI ke session supaya seluruh alur
+     * (halaman notice, tombol kirim ulang, verifikasi) berjalan identik di
+     * kedua titik masuk.
+     */
+    private function resolvePendingEmail($user): ?string
+    {
+        // Sudah terverifikasi → tidak ada email "pending"; bersihkan sisa
+        // session yang menggantung (mis. diverifikasi lewat rute SIDONGAN).
+        if ($user->hasVerifiedPersonalEmail()) {
+            if (session()->has('pending_personal_email')) {
+                session()->forget('pending_personal_email');
+            }
+
+            return null;
+        }
+
+        $pending = session('pending_personal_email');
+
+        if (is_string($pending) && $pending !== '') {
+            return $pending;
+        }
+
+        // Fallback DB — dinormalisasi ke session supaya seluruh alur identik.
+        if (!empty($user->personal_email)) {
+            session(['pending_personal_email' => $user->personal_email]);
+
+            return $user->personal_email;
+        }
+
+        return null;
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

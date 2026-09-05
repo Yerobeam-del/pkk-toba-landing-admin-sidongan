@@ -112,6 +112,44 @@
 .profile-section-title{margin:0;font-weight:600;font-size:0.9rem;color:#1e293b}
 .profile-section-label{margin:0 0 0.5rem 0;font-size:0.85rem;font-weight:600;color:#64748b}
 
+/* === STATUS PILLS (warna status terverifikasi/pending) === */
+.profile-status-pill{display:inline-flex;align-items:center;gap:0.25rem;padding:0.3rem 0.6rem;border-radius:6px;font-size:0.75rem;font-weight:500;white-space:nowrap}
+.profile-status-pill-green{background:#f0fdf4;color:#16a34a}
+.profile-status-pill-amber{background:#fef3c7;color:#d97706}
+
+/* === INFO BOX (Email Pribadi / Role) — pengganti style inline === */
+.profile-info-box{padding:1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.profile-info-box-label{font-weight:600;font-size:0.85rem;color:#334155;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.5rem}
+.profile-info-box-hint{font-size:0.8rem;color:#64748b;margin:0.35rem 0 0 0}
+.profile-link-btn{background:none;border:none;padding:0;color:var(--primary);font-weight:600;font-size:0.8rem;text-decoration:underline;cursor:pointer}
+
+/* === FORM FOOTER & HEADING === */
+.profile-form-footer{margin-top:2rem;padding-top:1.5rem;border-top:1px solid #e2e8f0;display:flex;gap:0.75rem;justify-content:flex-end}
+.profile-form-section{margin-top:2rem;padding-top:1.5rem;border-top:1px solid #e2e8f0}
+.profile-h4{font-size:0.95rem;font-weight:700;color:#1e293b;margin:0 0 0.75rem 0}
+.profile-h4-muted{font-size:0.9rem;color:#64748b;margin:1rem 0 0.5rem 0}
+
+/* === APP CARD BITS === */
+.profile-app-status{font-size:0.8rem;color:var(--primary);font-weight:500}
+.profile-app-status-muted{color:var(--text-muted);font-weight:400}
+.profile-app-open-btn{display:inline-flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;color:#fff;border-radius:6px;text-decoration:none;font-size:0.8rem;font-weight:500;white-space:nowrap}
+
+/* === SECONDARY BUTTON === */
+.profile-btn-secondary{background:#f1f5f9;color:#475569}
+.profile-btn-secondary:hover{filter:none;transform:none;background:#e2e8f0}
+
+/* === CROPPER MODAL === */
+.profile-modal-card{background:#fff;border-radius:12px;padding:1.5rem;max-width:600px;width:90%;max-height:90vh;overflow:auto}
+.profile-modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.profile-modal-title{font-size:1.1rem;font-weight:700;color:#1e293b;margin:0}
+.profile-modal-close{background:none;border:none;cursor:pointer;color:var(--text-muted);padding:0.25rem;border-radius:6px}
+.profile-modal-close:hover{color:var(--text-dark,#1e293b)}
+
+/* === FOCUS TERLIHAT UNTUK NAVIGASI KEYBOARD (tab & aksi) === */
+.profile-tab:focus-visible{outline:2px solid var(--primary);outline-offset:-2px;border-radius:6px}
+.profile-tab:focus:not(:focus-visible){outline:none}
+.profile-modal-close:focus-visible,.profile-link-btn:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
 /* === DARK MODE === */
 .dark-mode .profile-sidebar-card{background:#1e293b;border-color:#334155;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
 .dark-mode .profile-main-card{background:#1e293b;border-color:#334155;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
@@ -161,3 +199,22 @@
 .dark-mode .profile-section-label{color:#94a3b8}
 .dark-mode .profile-perm-icon{background:rgba(34,197,94,0.1)}
 .dark-mode .profile-avatar-fallback{background:linear-gradient(135deg,#0d9488,#115e59)}
+
+/* === DARK MODE — kelas tambahan (pengganti style inline blade) === */
+.dark-mode .profile-status-pill-green{background:rgba(34,197,94,0.15);color:#4ade80}
+.dark-mode .profile-status-pill-amber{background:rgba(245,158,11,0.15);color:#fbbf24}
+.dark-mode .profile-info-box{background:#0f172a;border-color:#334155}
+.dark-mode .profile-info-box-label{color:#e2e8f0}
+.dark-mode .profile-info-box-hint{color:#94a3b8}
+.dark-mode .profile-form-footer{border-top-color:#334155}
+.dark-mode .profile-form-section{border-top-color:#334155}
+.dark-mode .u-a56{background:#0f172a}
+.dark-mode .profile-h4{color:#e2e8f0}
+.dark-mode .profile-h4-muted{color:#94a3b8}
+.dark-mode .profile-app-open-btn{color:#fff}
+.dark-mode .profile-btn-secondary{background:#334155;color:#e2e8f0}
+.dark-mode .profile-btn-secondary:hover{background:#475569;color:#fff}
+.dark-mode .profile-modal-card{background:#1e293b;border:1px solid #334155}
+.dark-mode .profile-modal-title{color:#e2e8f0}
+.dark-mode .profile-modal-close{color:#94a3b8}
+.dark-mode .profile-modal-close:hover{color:#e2e8f0}

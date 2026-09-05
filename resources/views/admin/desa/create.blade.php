@@ -61,28 +61,23 @@
             <small id="desaError" style="color:#ef4444;display:none;margin-top:0.25rem;font-size:0.85rem"></small>
         </div>
 
-        {{-- Population, Households & Sort Order --}}
-        <div class="form-grid-3" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
-            <div>
-                <label class="u-label">Jumlah Penduduk</label>
-                <input type="number" name="population" class="form-control" value="{{ old('population', 0) }}" min="0" placeholder="0">
-                <small class="u-hint">Total penduduk desa</small>
-            </div>
-            <div>
-                <label class="u-label">Jumlah KK</label>
-                <input type="number" name="households" class="form-control" value="{{ old('households', 0) }}" min="0" placeholder="0">
-                <small class="u-hint">Kepala keluarga</small>
-            </div>
-            <div>
-                <label class="u-label">Urutan Tampil</label>
-                <input type="number" name="sort_order" id="sortOrderInput" class="form-control" value="{{ old('sort_order') }}" min="0" readonly style="background:#f8fafc;cursor:not-allowed">
-                <small class="u-hint">Otomatis terisi</small>
+        {{-- Population & Households: otomatis dari database SIEDA (tidak diinput manual) --}}
+        <div class="u-mb-6">
+            <div style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.9rem 1.1rem;border-radius:10px;background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.18)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f6b63" stroke-width="2" style="flex-shrink:0;margin-top:0.1rem">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">
+                    Jumlah <strong style="color:var(--text-dark)">Penduduk</strong> dan <strong style="color:var(--text-dark)">KK</strong> tidak perlu diinput manual —
+                    angka normor otomatis diambil dari <strong style="color:#0f6b63">database SIEDA</strong> berdasarkan kode desa yang dipilih.
+                    Yang perlu diisi hanyalah <strong style="color:var(--text-dark)">foto desa</strong> di bawah.
+                </div>
             </div>
         </div>
 
-        {{-- Image Upload --}}
+        {{-- Image Upload (input utama) --}}
         <div class="u-mb-6">
-            <label class="u-label">Foto Desa</label>
+            <label class="u-label">Foto Desa *</label>
             <input type="file" name="image" class="form-control" accept="image/*" id="imageInput">
             
             <div class="u-a2" id="imagePreview">
@@ -91,7 +86,7 @@
             </div>
             
             <small class="u-hint">
-                Format: JPG/PNG/WebP, maksimal 2MB
+                Format: JPG/PNG/WebP, maksimal 2MB • Gambar ini yang tampil pada kartu desa di website
             </small>
         </div>
 

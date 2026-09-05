@@ -80,7 +80,7 @@
                     <input type="text" name="features[]" class="form-control" value="{{ $feature }}" placeholder="Masukkan poin fitur" required>
                     <button type="button" class="btn u-delete-btn" data-remove-feature 
                             
-                            title="Hapus poin" 
+                            title="Hapus poin" aria-label="Hapus poin fitur" 
                             {{ count($features) <= 2 ? 'disabled' : '' }}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="3 6 5 6 21 6"/>

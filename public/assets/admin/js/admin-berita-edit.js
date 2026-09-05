@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
             allowedContent: true
         })
         .then(editor => {
-            console.log('✅ CKEditor 5 initialized with alignment!', editor);
             window.editor = editor;
         })
         .catch(error => {
@@ -97,6 +96,26 @@ document.getElementById('imageInput')?.addEventListener('change', function(e) {
         };
         reader.readAsDataURL(file);
     }
+});
+
+// Konfirmasi hapus gambar berita — Toast.confirm (konsisten dengan halaman lain).
+// Delegasi submit form (bukan onsubmit inline) agar tetap jalan walau tombol diklik
+// atau form disubmit via keyboard (Enter).
+document.addEventListener('submit', function(e) {
+    const form = e.target.closest('form.delete-image-form');
+    if (!form) return;
+    e.preventDefault();
+    Toast.confirm(
+        'Gambar berita ini akan dihapus secara permanen.',
+        {
+            title: 'Hapus Gambar?',
+            confirmText: 'Ya, Hapus',
+            cancelText: 'Batal',
+            type: 'danger'
+        }
+    ).then(function(confirmed) {
+        if (confirmed) form.submit();
+    });
 });
 
 // Checkbox Animation Handler

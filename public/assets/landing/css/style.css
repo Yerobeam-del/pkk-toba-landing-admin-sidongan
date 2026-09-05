@@ -1148,17 +1148,24 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 /* ==========================================
    13. DESA SECTION
    ========================================== */
-.desa-section { padding: 4rem 2rem 3rem; background: var(--bg-light); }
-.desa-toolbar { max-width: 1200px; margin: 0 auto 2.5rem; }
-.desa-search { position: relative; max-width: 480px; margin: 0 auto 1.5rem; }
-.desa-search-icon { position: absolute; left: 1.05rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
-.desa-search input {
-    width: 100%; padding: 12px 18px 12px 44px; border: 2px solid rgba(0,0,0,0.08); border-radius: 50px;
-    background: #fff; font-family: inherit; font-size: 0.9rem; font-weight: 500; color: var(--text-dark);
-    outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: all 0.3s ease;
-}
-.desa-search input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15,107,99,0.12); }
-.desa-search input::placeholder { color: var(--text-muted); font-weight: 400; }
+.desa-section { padding: 4rem 2rem; background: var(--bg-light); }
+.desa-container { max-width: 1200px; margin: 0 auto; }
+.desa-header { margin-bottom: 2.5rem; }
+.desa-section-title { font-size: 1.75rem; font-weight: 700; color: var(--text-dark); margin: 0 0 1.5rem 0; letter-spacing: -0.5px; line-height: 1; flex-shrink: 0; }
+.desa-header-controls { display: flex; align-items: center; gap: 1rem; width: 100%; justify-content: space-between; flex-wrap: wrap; }
+.desa-search-box { position: relative; flex: 1; min-width: 250px; max-width: 500px; }
+.desa-search-icon { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--text-muted); pointer-events: none; }
+.desa-search-input { width: 100%; padding: 0.75rem 1.25rem 0.75rem 3rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; transition: all 0.3s ease; background: #fff; font-family: inherit; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.desa-search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(15, 107, 99, 0.1); }
+.desa-search-input::placeholder { color: var(--text-muted); font-weight: 400; }
+/* Per page selector (selaras dengan SK & Dokumen) */
+.desa-perpage-selector { display: inline-flex; align-items: center; gap: 0.5rem; background: #fff; padding: 0.6rem 1rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; flex-shrink: 0; margin-left: auto; }
+.desa-perpage-label { display: flex; align-items: center; gap: 0.4rem; font-size: 0.875rem; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
+.desa-perpage-label svg { width: 16px; height: 16px; flex-shrink: 0; }
+.desa-perpage-select { padding: 0.4rem 2rem 0.4rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; font-weight: 600; color: var(--primary); background: #fff; cursor: pointer; transition: all 0.2s ease; font-family: inherit; min-width: 60px; appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230f6b63' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 16px; }
+.desa-perpage-select:hover { border-color: var(--primary); }
+.desa-perpage-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 107, 99, 0.1); }
+.desa-perpage-text { font-size: 0.875rem; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
 /* Baris filter: scroll horizontal agar tetap rapi walau kecamatan banyak */
 .desa-filter { display: flex; justify-content: flex-start; align-items: center; gap: 0.6rem; flex-wrap: nowrap; overflow-x: auto; padding: 4px 2px 12px; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent; }
 .desa-filter::-webkit-scrollbar { height: 6px; }
@@ -1166,6 +1173,32 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .filter-btn { padding: 8px 20px; border: 2px solid rgba(0,0,0,0.08); background: #fff; border-radius: 50px; font-family: inherit; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.3s ease; white-space: nowrap; flex-shrink: 0; }
 .filter-btn:hover, .filter-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
 .desa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; align-items: stretch; }
+/* Loading state (selaras dengan SK & Dokumen) */
+.desa-loading { text-align: center; padding: 4rem 2rem; }
+.desa-loading-spinner { width: 48px; height: 48px; border: 4px solid rgba(15, 107, 99, 0.1); border-top-color: var(--primary); border-radius: 50%; margin: 0 auto 1rem; animation: spin 0.8s linear infinite; }
+.desa-loading-text { font-size: 1.1rem; color: var(--text-muted); font-weight: 500; }
+/* Empty state (selaras dengan Berita) */
+.desa-empty-state { text-align: center; padding: 5rem 2rem; max-width: 650px; margin: 0 auto; }
+.desa-empty-icon { width: 120px; height: 120px; margin: 0 auto 2rem; background: linear-gradient(135deg, rgba(15, 107, 99, 0.1), rgba(20, 184, 166, 0.1)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0f6b63; }
+.desa-empty-icon svg { opacity: 0.8; }
+.desa-empty-title { font-size: 1.75rem; font-weight: 800; color: #1e293b; margin: 0 0 0.75rem 0; }
+.desa-empty-text { color: #64748b; font-size: 1.05rem; line-height: 1.7; margin: 0 auto 2rem; max-width: 500px; }
+.desa-back-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 2rem; background: linear-gradient(135deg, #0f6b63, #14b8a6); color: #fff; border-radius: 12px; font-weight: 600; text-decoration: none; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(15, 107, 99, 0.3); }
+.desa-back-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(15, 107, 99, 0.4); }
+.desa-back-btn svg { width: 18px; height: 18px; }
+/* Pagination (selaras dengan Berita / SK & Dokumen) */
+.desa-pagination-wrapper { padding: 1.5rem; background: #fff; border-radius: 16px; margin-top: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.04); max-width: 1200px; margin-left: auto; margin-right: auto; }
+.desa-pagination-wrapper.hidden, .desa-pagination-wrapper.u-hidden { display: none !important; }
+.desa-pagination-container { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.desa-pagination-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.3s ease; text-decoration: none; min-width: 40px; font-family: inherit; }
+.desa-pagination-btn:hover:not(:disabled):not(.active) { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff !important; border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(15, 107, 99, 0.3); }
+.desa-pagination-btn.active { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff !important; border-color: var(--primary) !important; box-shadow: 0 4px 12px rgba(15, 107, 99, 0.3); cursor: default; }
+.desa-pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #f1f5f9; }
+.desa-pagination-btn svg { width: 16px; height: 16px; }
+.desa-page-numbers { display: flex; align-items: center; gap: 0.5rem; }
+.desa-pagination-dots { padding: 0.5rem 0.25rem; color: var(--text-muted); font-size: 0.875rem; }
+.desa-pagination-info { text-align: center; font-size: 0.875rem; color: var(--text-muted); font-weight: 500; }
+.desa-pagination-info strong { color: var(--primary); font-weight: 600; }
 .desa-card { height: 100%; display: flex; flex-direction: column; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; }
 .desa-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
 .desa-card-image { width: 100%; height: 200px; object-fit: cover; display: block; }
@@ -1522,7 +1555,7 @@ body:has(.news-detail-wrapper) #newsModal,
     .quick-access-card { min-height: 120px; padding: 1.25rem 1rem; border-radius: 18px; }
     .quick-access-card h3 { font-size: 0.95rem; }
     .quick-access-card p { font-size: 0.82rem; }
-    .navbar-links a, .hamburger, .floating-trigger, .tab-btn, .filter-btn, .btn-see-all, .news-card-link, .news-back-btn, .sk-back-btn, .template-back-btn { min-height: 44px; }
+    .navbar-links a, .hamburger, .floating-trigger, .tab-btn, .filter-btn, .btn-see-all, .news-card-link, .news-back-btn, .desa-back-btn, .sk-back-btn, .template-back-btn { min-height: 44px; }
     .news-card-link { display: inline-flex; width: fit-content; }
     .slider-dot { width: 12px; height: 12px; }
     .quick-access-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1609,6 +1642,21 @@ body:has(.news-detail-wrapper) #newsModal,
     .sk-pagination-btn { padding: 0.4rem 0.75rem; font-size: 0.8rem; min-width: 36px; }
     .sk-pagination-btn .desktop-only { display: none !important; }
     .sk-pagination-info { font-size: 0.8rem; }
+    .desa-section { padding: 3rem 1.5rem; }
+    .desa-section-title { font-size: 1.5rem; }
+    .desa-header-controls { flex-direction: column; align-items: stretch; }
+    .desa-perpage-selector { width: 100%; justify-content: center; margin-left: 0; }
+    .desa-perpage-text { display: none; }
+    .desa-pagination-wrapper { padding: 1rem !important; background: transparent !important; border-radius: 0 !important; margin-top: 1rem !important; margin-bottom: 1rem !important; }
+    .desa-pagination-wrapper.hidden, .desa-pagination-wrapper.u-hidden { display: none !important; }
+    .desa-pagination-container { gap: 0.4rem; }
+    .desa-page-numbers { gap: 0.4rem; }
+    .desa-pagination-btn { padding: 0.4rem 0.75rem; font-size: 0.8rem; min-width: 36px; }
+    .desa-pagination-btn .desktop-only { display: none !important; }
+    .desa-pagination-info { font-size: 0.8rem; }
+    .desa-empty-state { padding: 3rem 1.5rem; }
+    .desa-empty-title { font-size: 1.5rem; }
+    .desa-empty-text { font-size: 0.95rem; }
     .news-full-section { padding: 3rem 1.5rem; }
     .news-empty-state { padding: 3rem 1.5rem; }
     .news-empty-title { font-size: 1.5rem; }
@@ -1683,7 +1731,7 @@ body:has(.news-detail-wrapper) #newsModal,
     .floating-app-btn .floating-menu-icon img, .floating-app-btn .floating-menu-icon span { width: 32px !important; height: 32px !important; font-size: 1.1rem !important; }
     .floating-app-btn .floating-trigger { width: 56px !important; height: 56px !important; }
     .btn-see-all, .news-back-btn, .sk-back-btn, .template-back-btn { padding: 14px 28px !important; min-height: 48px !important; }
-    .news-pagination-btn, .sk-pagination-btn, .template-pagination-btn { min-width: 44px !important; min-height: 44px !important; padding: 10px 14px !important; }
+    .news-pagination-btn, .desa-pagination-btn, .sk-pagination-btn, .template-pagination-btn { min-width: 44px !important; min-height: 44px !important; padding: 10px 14px !important; }
     .filter-btn, .tab-btn { min-height: 44px !important; padding: 10px 20px !important; }
     .quick-access-item { min-height: 48px !important; padding: 12px 16px !important; }
     .footer-contact-link { padding: 8px 0 !important; }
@@ -1752,6 +1800,9 @@ body:has(.news-detail-wrapper) #newsModal,
     .news-empty-state { padding: 2rem 1rem; }
     .news-pagination-wrapper { padding: 0.75rem; }
     .news-pagination-container { gap: 0.3rem; }
+    .desa-pagination-container { gap: 0.3rem; }
+    .desa-pagination-btn { padding: 0.35rem 0.6rem; font-size: 0.75rem; min-width: 32px; }
+    .desa-pagination-info { font-size: 0.75rem; }
     .news-pagination-btn { padding: 0.35rem 0.6rem; font-size: 0.75rem; min-width: 32px; }
     .news-pagination-info { font-size: 0.75rem; }
     .news-perpage-selector { padding: 0.6rem 0.75rem; }

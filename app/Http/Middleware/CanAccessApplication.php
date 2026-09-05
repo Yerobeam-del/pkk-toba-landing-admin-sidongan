@@ -22,7 +22,7 @@ class CanAccessApplication
         }
 
         // Super Admin bisa akses semua
-        if ($user->sidongan_role === 'super_admin') {
+        if ($user->isSuperAdmin()) {
             return $next($request);
         }
 

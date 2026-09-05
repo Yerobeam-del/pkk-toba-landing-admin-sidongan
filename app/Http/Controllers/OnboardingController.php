@@ -155,7 +155,7 @@ class OnboardingController extends Controller
         $rules = [];
 
         // Avatar is always optional
-        $rules['avatar'] = ['nullable', 'image', 'max:2048'];
+        $rules['avatar'] = ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:2048'];
 
         if (in_array('phone_number', $missingFields)) {
             $rules['phone_number'] = [
@@ -185,8 +185,12 @@ class OnboardingController extends Controller
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            $imageName = 'avatar_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('avatars', $imageName, 'public');
+            // Ekstensi dari isi file (magic bytes), bukan nama kiriman klien;
+            // SVG ditolak (XSS via /storage). Lihat ImageUploadSanitizer.
+            $path = \App\Support\ImageUploadSanitizer::store($file, 'avatars', 'avatar_' . $user->id . '_');
+            if ($path === false) {
+                return back()->withErrors(['avatar' => 'File avatar bukan gambar yang didukung (JPG/PNG/WEBP/GIF).'])->withInput();
+            }
             $updateData['avatar'] = $path;
         }
 
@@ -224,6 +228,13 @@ class OnboardingController extends Controller
             try {
                 $user->notify(new PersonalEmailVerificationNotification($updateData['personal_email'], $verifyRoute));
                 $verificationSent = true;
+
+                // Paritas dengan alur setup (Auth\PersonalEmailController): email
+                // pending JUGA disimpan di SESSION supaya halaman notice dan tombol
+                // "Kirim ulang" bekerja identik dari titik masuk mana pun. Email
+                // tetap tersimpan di DB karena logika field pemblokir onboarding
+                // membacanya dari sana.
+                session(['pending_personal_email' => $updateData['personal_email']]);
 
                 Log::channel('audit')->info('Link verifikasi email pribadi dikirim via onboarding', [
                     'user_id' => $user->id,

@@ -111,9 +111,12 @@
                     @foreach($berita->images as $img)
                     <div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:#f8fafc;">
                         <img src="{{ asset('storage/' . $img->image_path) }}" alt="{{ $img->caption ?? 'Gambar' }}" style="width:100%;height:100%;object-fit:cover;">
-                        <a href="{{ route('admin.berita.delete-image', [$berita, $img->id]) }}" 
-                           onclick="return confirm('Hapus gambar ini?')" 
-                           style="position:absolute;top:4px;right:4px;background:#e53e3e;color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:4px;text-decoration:none;">HAPUS</a>
+                        {{-- Rute-nya DELETE — wajib via form spoofing, bukan link GET (akan 405). --}}
+                        {{-- Konfirmasi memakai Toast.confirm via admin-berita-edit.js (delegasi submit). --}}
+                        <form class="delete-image-form" method="POST" action="{{ route('admin.berita.delete-image', [$berita, $img->id]) }}" style="position:absolute;top:4px;right:4px;">
+                            @csrf @method('DELETE')
+                            <button type="submit" aria-label="Hapus gambar ini" style="background:#e53e3e;color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:4px;border:none;cursor:pointer;">HAPUS</button>
+                        </form>
                     </div>
                     @endforeach
                 </div>

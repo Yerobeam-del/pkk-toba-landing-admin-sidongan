@@ -38,6 +38,13 @@ class InjectDeveloperCredit
             return $response;
         }
 
+        // Ambil objek View SEBELUM getContent() — getContent() merender
+        // view lalu MENIMPA $response->original dengan string hasil render,
+        // yang membuat assertViewHas()/assertSee dsb. gagal di seluruh test
+        // suite (dan API apa pun yang membaca ->original). Objek View
+        // dipulihkan setelah setContent agar perilaku runtime tidak berubah.
+        $originalView = $response->original ?? null;
+
         $original = $response->getContent();
         if (! is_string($original) || $original === '') {
             return $response;
@@ -70,6 +77,9 @@ class InjectDeveloperCredit
         }
 
         $response->setContent($original);
+
+        // Pulihkan objek View agar ->original tetap berisi View (bukan string)
+        $response->original = $originalView;
 
         return $response;
     }

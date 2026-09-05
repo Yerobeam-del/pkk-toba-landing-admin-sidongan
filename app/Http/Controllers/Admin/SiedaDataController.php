@@ -320,13 +320,13 @@ class SiedaDataController extends Controller
     /**
      * Pastikan hanya super admin yang bisa mengelola data ini
      *
-     * Menggunakan kolom sidongan_role (bukan role/permission generik) karena
-     * fitur ini adalah operasi berisiko tinggi yang seharusnya terbatas
-     * untuk administrator tingkat atas.
+     * Fitur ini adalah operasi berisiko tinggi yang seharusnya terbatas
+     * untuk administrator tingkat atas. Status Super Admin dicek lewat
+     * satu pintu: User::isSuperAdmin() (lihat app/Models/User.php).
      */
     private function authorizeSuperAdmin(): void
     {
-        if (auth()->user()->sidongan_role !== 'super_admin') {
+        if (!auth()->user()->isSuperAdmin()) {
             abort(403, 'Akses ditolak. Fitur ini hanya untuk Super Admin.');
         }
     }

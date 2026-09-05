@@ -74,8 +74,6 @@ class UnifiedForgotPasswordController extends Controller
         }
 
         // Detect which system(s) this user has access to
-        $hasSidonganAccess = $user->hasSidonganAccess();
-        $hasAdminAccess = $user->hasRole('super_admin') || $user->hasRole('admin');
         $hasPersonalEmail = !empty($user->personal_email);
         $hasVerifiedPersonalEmail = $user->hasVerifiedPersonalEmail();
 

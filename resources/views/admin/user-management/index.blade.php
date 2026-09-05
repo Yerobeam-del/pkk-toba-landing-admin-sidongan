@@ -18,7 +18,7 @@
             <p class="u-muted">Kelola akun pengguna dan hak akses aplikasi sistem PKK</p>
         </div>
         <div class="u-a64">
-            @if(auth()->user()->hasRole('super_admin'))
+            @if(auth()->user()->isSuperAdmin())
             <a href="{{ route('admin.user-management.export', ['tab' => $tab]) }}" class="btn um-export-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Export CSV
@@ -162,7 +162,7 @@
     </div>
 
     {{-- Bulk Action Bar (hidden by default, shown when checkboxes selected) --}}
-    @if(auth()->user()->hasRole('super_admin'))
+    @if(auth()->user()->isSuperAdmin())
     <div id="bulkActionBar" class="um-bulk-bar" style="display:none">
         <span class="um-bulk-count"><span id="bulkCount">0</span> dipilih</span>
         <div class="um-bulk-btns">
@@ -189,7 +189,7 @@
             @php
                 $userColumns = [];
 
-                if (auth()->user()->hasRole('super_admin')) {
+                if (auth()->user()->isSuperAdmin()) {
                     $userColumns[] = [
                         'key' => 'id',
                         'label' => '<input type="checkbox" id="selectAll">',
@@ -280,18 +280,18 @@
                 'actions' => ['show', 'edit', 'delete'],
                 'rowActions' => function($item) {
                     $html = '';
-                    if (auth()->user()->sidongan_role === 'super_admin') {
+                    if (auth()->user()->isSuperAdmin()) {
                         $statusAction = $item->email_verified_at
-                            ? '<button type="button" class="action-btn" data-toggle-status="1" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Nonaktifkan Akun"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>'
-                            : '<button type="button" class="action-btn" data-toggle-status="0" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Aktifkan Akun"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>';
+                            ? '<button type="button" class="action-btn" data-toggle-status="1" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Nonaktifkan Akun" aria-label="Nonaktifkan akun '.addslashes($item->name).'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>'
+                            : '<button type="button" class="action-btn" data-toggle-status="0" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Aktifkan Akun" aria-label="Aktifkan akun '.addslashes($item->name).'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>';
 
                         $html .= $statusAction;
 
                         // Tombol Salin Kredensial
-                        $html .= '<button type="button" class="action-btn" onclick="copyUserCredentials('.$item->id.', \'' . addslashes($item->name) . '\', \'' . addslashes($item->email) . '\')" title="Salin Kredensial"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>';
+                        $html .= '<button type="button" class="action-btn" onclick="copyUserCredentials('.$item->id.', \'' . addslashes($item->name) . '\', \'' . addslashes($item->email) . '\')" title="Salin Kredensial" aria-label="Salin kredensial akun '.addslashes($item->name).'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>';
 
                         // Tombol Reset Password
-                        $html .= '<button type="button" class="action-btn" data-reset-password-id="'.$item->id.'" data-reset-password-name="'.addslashes($item->name).'" title="Reset Password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>';
+                        $html .= '<button type="button" class="action-btn" data-reset-password-id="'.$item->id.'" data-reset-password-name="'.addslashes($item->name).'" title="Reset Password" aria-label="Reset password akun '.addslashes($item->name).'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>';
                     }
                     return $html;
                 }
@@ -349,7 +349,7 @@
     {{-- ==========================================
          MODAL: KREDENSIAL AKUN BARU
          ========================================== --}}
-    @if(auth()->user()->hasRole('super_admin'))
+    @if(auth()->user()->isSuperAdmin())
     <script>
     // ========== BULK ACTIONS ==========
     function initBulkSelection() {

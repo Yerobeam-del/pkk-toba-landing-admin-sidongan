@@ -220,7 +220,7 @@
                                     required
                                 >
                             </div>
-                            <span class="ob-field-hint">Nomor telepon aktif yang bisa dihubungi</span>
+                            <span class="ob-field-hint">Masukkan nomor TANPA awalan +62 (contoh: 812 3456 7890)</span>
                         @else
                             <div class="ob-field-filled">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -268,9 +268,16 @@
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                             Simpan & Lanjutkan
                         </button>
+                        @if($systemKey === 'sidongan')
+                        {{-- Skip bermakna untuk SIDONGAN (onboarding interstitial
+                             setelah login — skip tetap bisa masuk dashboard).
+                             Untuk Admin Panel tombol ini disembunyikan: tanpa skip,
+                             tujuannya sama persis dengan "Simpan & Lanjutkan" tapi
+                             tanpa menyimpan apa pun — cuma membingungkan. --}}
                         <a href="{{ route('onboarding.skip') }}" class="ob-btn-skip">
                             Lewati — nanti saja
                         </a>
+                        @endif
                     </div>
                 </form>
             </div>

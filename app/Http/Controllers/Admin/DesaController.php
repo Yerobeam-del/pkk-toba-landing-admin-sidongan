@@ -44,25 +44,64 @@ class DesaController extends Controller
         return view('admin.desa.create', compact('kecamatans', 'selectedKecamatan'));
     }
 
+    /**
+     * Ambil jumlah penduduk & KK per desa dari database SIEDA (koneksi 'sieda').
+     * Normor (angka) tidak lagi diinput manual — semuanya otomatis dari SIEDA.
+     *
+     * @return array{population: array<string,int>, households: array<string,int>}
+     *         keyed by kode_desa.
+     */
+    private function getStatsFromSieda(): array
+    {
+        try {
+            $sieda = \Illuminate\Support\Facades\DB::connection('sieda');
+
+            $latestYear = $sieda->table('tp_pkk_keluarga')->max('config_year');
+            $kkPerDesa = $sieda->table('tp_pkk_keluarga')
+                ->where('active', 1)
+                ->when($latestYear, fn($q) => $q->where('config_year', $latestYear))
+                ->selectRaw('kode_desa, COUNT(*) as total')->groupBy('kode_desa')
+                ->pluck('total', 'kode_desa');
+            $pendudukPerDesa = $sieda->table('tp_pkk_warga')
+                ->where('active', 1)
+                ->selectRaw('kode_desa, COUNT(*) as total')->groupBy('kode_desa')
+                ->pluck('total', 'kode_desa');
+
+            return [
+                'population' => $pendudukPerDesa->map(fn($v) => (int) $v)->all(),
+                'households' => $kkPerDesa->map(fn($v) => (int) $v)->all(),
+            ];
+        } catch (\Throwable $e) {
+            // SIEDA tidak terjangkau — biarkan angka 0, jangan gagalkan simpan.
+            \Illuminate\Support\Facades\Log::warning('[DesaController] Gagal mengambil statistik dari SIEDA: ' . $e->getMessage());
+            return ['population' => [], 'households' => []];
+        }
+    }
+
     public function store(Request $request)
     {
+        // Hanya gambar yang bisa diinput manual. Angka penduduk/KK otomatis
+        // diambil dari database SIEDA berdasarkan kode desa yang dipilih.
         $validated = $request->validate([
             'kecamatan_id' => 'required|exists:kecamatans,id',
             'desa_code'    => 'required|string',   // Kode dari API
             'desa_name'    => 'required|string|max:100', // Nama dari API
-            'population'   => 'nullable|integer|min:0',
-            'households'   => 'nullable|integer|min:0',
             'sort_order'   => 'nullable|integer|min:0',
             'is_active'    => 'boolean',
-            'image'        => 'nullable|image|max:2048',
+            'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
         ]);
 
         $validated['name'] = $validated['desa_name'];
         $validated['kode_wilayah'] = $validated['desa_code'];
         unset($validated['desa_code'], $validated['desa_name']); // Bersihkan sebelum save
-        
+
         $validated['is_active'] = $request->has('is_active');
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
+
+        // Angka dari SIEDA
+        $stats = $this->getStatsFromSieda();
+        $validated['population'] = $stats['population'][$validated['kode_wilayah']] ?? 0;
+        $validated['households'] = $stats['households'][$validated['kode_wilayah']] ?? 0;
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('desa', 'public');
@@ -80,15 +119,15 @@ class DesaController extends Controller
 
     public function update(Request $request, \App\Models\Desa $desa)
     {
+        // Hanya gambar yang bisa diinput manual. Angka penduduk/KK otomatis
+        // diambil dari database SIEDA berdasarkan kode desa yang dipilih.
         $validated = $request->validate([
             'kecamatan_id' => 'required|exists:kecamatans,id',
             'desa_code'    => 'required|string',
             'desa_name'    => 'required|string|max:100',
-            'population'   => 'nullable|integer|min:0',
-            'households'   => 'nullable|integer|min:0',
             'sort_order'   => 'nullable|integer|min:0',
             'is_active'    => 'boolean',
-            'image'        => 'nullable|image|max:2048',
+            'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
         ]);
 
         $validated['name'] = $validated['desa_name'];
@@ -97,6 +136,11 @@ class DesaController extends Controller
 
         $validated['is_active'] = $request->has('is_active');
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
+
+        // Angka dari SIEDA
+        $stats = $this->getStatsFromSieda();
+        $validated['population'] = $stats['population'][$validated['kode_wilayah']] ?? 0;
+        $validated['households'] = $stats['households'][$validated['kode_wilayah']] ?? 0;
 
         if ($request->hasFile('image')) {
             if ($desa->image) \Storage::disk('public')->delete($desa->image);

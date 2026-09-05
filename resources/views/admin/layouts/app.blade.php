@@ -30,8 +30,8 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/layout.css') }}">
 
-    <!-- Cropper.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" integrity="sha512-...">
+    {{-- Cropper.js --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     @stack('styles')
@@ -113,15 +113,15 @@
                 </a>
                 @endif
 
-                {{-- Desa
+                {{-- Desa --}}
                 @if(auth()->user()->hasPermission('manage-desa'))
-                <a href="{{ route('admin.desa.index') }}" class="nav-item {{ request()->routeIs('admin.desa.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.desa.index') }}" class="nav-item {{ request()->routeIs('admin.desa.*') ? 'active' : '' }}" data-tip="Desa">
                     <div class="nav-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     </div>
                     <span class="nav-text">Desa</span>
                 </a>
-                @endif --}}
+                @endif
 
                 {{-- SK & Dokumen --}}
                 @if(auth()->user()->hasPermission('manage-dokumen'))
@@ -170,7 +170,7 @@
                     </a>
 
                     {{-- Data SIDONGAN (Hanya untuk Super Admin) --}}
-                    @if(auth()->user()->sidongan_role === 'super_admin')
+                    @if(auth()->user()->isSuperAdmin())
                     <a href="{{ route('admin.sidongan-data.index') }}" class="nav-item {{ request()->routeIs('admin.sidongan-data.*') ? 'active' : '' }}" data-tip="Data SIDONGAN">
                         <div class="nav-icon-box">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -184,7 +184,7 @@
                     @endif
 
                     {{-- Manajemen Data SIEDA (Hanya Super Admin — hard delete permanen) --}}
-                    @if(auth()->user()->sidongan_role === 'super_admin')
+                    @if(auth()->user()->isSuperAdmin())
                     <a href="{{ route('admin.sieda-data.index') }}" class="nav-item {{ request()->routeIs('admin.sieda-data.*') ? 'active' : '' }}" data-tip="Manajemen SIEDA">
                         <div class="nav-icon-box">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

@@ -174,11 +174,26 @@ function initFormLoading() {
 }
 
 // ==========================================
+// PER-PAGE DROPDOWN: SUBMIT OTOMATIS
+// Dropdown "Tampilkan:" di halaman daftar (berita, sk, template, struktur,
+// user-management, sieda-data) tidak punya tombol submit — tanpa ini
+// pilihan per_page tidak pernah diterapkan sampai user menekan Enter di search.
+// ==========================================
+function initPerPageAutoSubmit() {
+    document.querySelectorAll('select[name="per_page"]').forEach(function (select) {
+        select.addEventListener('change', function () {
+            if (select.form) select.form.submit();
+        });
+    });
+}
+
+// ==========================================
 // INIT (jalankan di DOMContentLoaded)
 // ==========================================
 document.addEventListener('DOMContentLoaded', function () {
     initCustomCheckboxes();
     initFormLoading();
+    initPerPageAutoSubmit();
 
     // Email check
     const emailUsername = document.getElementById('email_username');

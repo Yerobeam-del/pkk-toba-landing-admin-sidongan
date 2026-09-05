@@ -74,7 +74,7 @@
                         value="{{ old('features.0', 'Terintegrasi dengan data PKK') }}" 
                         placeholder="Contoh: Terintegrasi dengan data PKK" required>
                     <button type="button" class="btn u-delete-btn" data-remove-feature 
-                            title="Hapus poin" disabled>
+                            title="Hapus poin" aria-label="Hapus poin fitur" disabled>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                     </button>
                 </div>
@@ -84,7 +84,7 @@
                         value="{{ old('features.1', 'Akses real-time 24/7') }}" 
                         placeholder="Contoh: Akses real-time 24/7" required>
                     <button type="button" class="btn u-delete-btn" data-remove-feature 
-                            title="Hapus poin" disabled>
+                            title="Hapus poin" aria-label="Hapus poin fitur" disabled>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                     </button>
                 </div>
@@ -94,7 +94,7 @@
                         value="{{ old('features.2', 'Keamanan data terjamin') }}" 
                         placeholder="Contoh: Keamanan data terjamin" required>
                     <button type="button" class="btn u-delete-btn" data-remove-feature 
-                            title="Hapus poin">
+                            title="Hapus poin" aria-label="Hapus poin fitur">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                     </button>
                 </div>

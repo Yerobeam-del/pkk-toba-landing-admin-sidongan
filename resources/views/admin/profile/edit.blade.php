@@ -135,27 +135,29 @@ $appList = [
 
     {{-- MAIN CONTENT --}}
     <div class="profile-main-card">
-        <div class="profile-tabs" role="tablist">
-            <button class="profile-tab active" data-tab="profil" role="tab">
+        {{-- Tab list — pola WAI-ARIA Tabs: roving tabindex + navigasi panah
+             (lihat admin-profile-edit.js). aria-selected/tabindex disinkronkan JS. --}}
+        <div class="profile-tabs" role="tablist" aria-label="Bagian halaman profil">
+            <button class="profile-tab active" data-tab="profil" id="tab-btn-profil" role="tab" aria-selected="true" aria-controls="tab-profil">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Informasi Profil
             </button>
-            <button class="profile-tab" data-tab="keamanan" role="tab">
+            <button class="profile-tab" data-tab="keamanan" id="tab-btn-keamanan" role="tab" aria-selected="false" aria-controls="tab-keamanan" tabindex="-1">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 Keamanan
             </button>
-            <button class="profile-tab" data-tab="apps" role="tab">
+            <button class="profile-tab" data-tab="apps" id="tab-btn-apps" role="tab" aria-selected="false" aria-controls="tab-apps" tabindex="-1">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 Akses Aplikasi
             </button>
-            <button class="profile-tab" data-tab="perizinan" role="tab">
+            <button class="profile-tab" data-tab="perizinan" id="tab-btn-perizinan" role="tab" aria-selected="false" aria-controls="tab-perizinan" tabindex="-1">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 Perizinan
             </button>
         </div>
 
         {{-- TAB 1: INFORMASI PROFIL --}}
-        <div class="tab-content active" id="tab-profil">
+        <div class="tab-content active" id="tab-profil" role="tabpanel" aria-labelledby="tab-btn-profil" tabindex="0">
             <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data" id="profileForm">
                 @csrf @method('PATCH')
                 <div class="profile-form-grid">
@@ -196,9 +198,9 @@ $appList = [
                         <div class="u-flex-center-gap-2">
                             <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required placeholder="contoh@email.com" style="flex:1">
                             @if($user->email_verified_at)
-                            <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.35rem 0.6rem;background:#f0fdf4;color:#16a34a;border-radius:6px;font-size:0.75rem;font-weight:500;white-space:nowrap;flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Terverifikasi</span>
+                            <span class="profile-status-pill profile-status-pill-green"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Terverifikasi</span>
                             @else
-                            <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.35rem 0.6rem;background:#fef3c7;color:#d97706;border-radius:6px;font-size:0.75rem;font-weight:500;white-space:nowrap;flex-shrink:0">Belum Verifikasi</span>
+                            <span class="profile-status-pill profile-status-pill-amber" title="Mengubah email akan menghapus verifikasi — verifikasi ulang melalui link yang dikirim ke email baru">Belum Verifikasi</span>
                             @endif
                         </div>
                         @error('email') <small class="u-error-block">{{ $message }}</small> @enderror
@@ -213,30 +215,37 @@ $appList = [
                     </div>
 
                     {{-- Personal Email --}}
-                    <div style="padding:1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0">
-                        <label style="font-weight:600;font-size:0.85rem;color:#334155;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.5rem">
+                    <div class="profile-info-box">
+                        <label class="profile-info-box-label">
                             Email Pribadi <span class="profile-tag profile-tag-sieda" style="padding:0.15rem 0.45rem;font-size:0.7rem">Digunakan untuk reset password</span>
                         </label>
                         @if($user->hasVerifiedPersonalEmail())
                         <div class="u-flex-center-gap-2">
-                            <span style="color:#16a34a;font-weight:600;font-size:0.9rem">{{ $user->personal_email }}</span>
-                            <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.5rem;background:#f0fdf4;color:#16a34a;border-radius:6px;font-size:0.75rem;font-weight:500">Terverifikasi</span>
+                            <span class="profile-status-pill profile-status-pill-green" style="font-size:0.9rem">{{ $user->personal_email }}</span>
+                            <span class="profile-status-pill profile-status-pill-green">Terverifikasi</span>
                         </div>
                         @elseif($user->personal_email)
                         <div class="u-flex-center-gap-2">
-                            <span style="color:#d97706;font-weight:600;font-size:0.9rem">{{ $user->personal_email }}</span>
-                            <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.5rem;background:#fef3c7;color:#d97706;border-radius:6px;font-size:0.75rem;font-weight:500">Menunggu Verifikasi</span>
+                            <span class="profile-status-pill profile-status-pill-amber" style="font-size:0.9rem">{{ $user->personal_email }}</span>
+                            <span class="profile-status-pill profile-status-pill-amber">Menunggu Verifikasi</span>
                         </div>
-                        <p style="font-size:0.8rem;color:var(--text-muted);margin:0.35rem 0 0 0">Cek email {{ $user->personal_email }} untuk link verifikasi.</p>
+                        <div class="profile-info-box-hint">
+                            Cek email {{ $user->personal_email }} untuk link verifikasi, atau
+                            <form action="{{ route('personal-email.resend') }}" method="POST" style="display:inline">
+                                @csrf
+                                <button type="submit" class="profile-link-btn" title="Kirim ulang link verifikasi">kirim ulang link</button>
+                            </form>
+                            (maks 3x per 30 menit).
+                        </div>
                         @else
-                        <p style="font-size:0.85rem;color:#64748b;margin:0">Belum diatur. <a href="{{ route('personal-email.setup') }}" style="color:var(--primary);font-weight:600;text-decoration:underline">Atur Sekarang</a></p>
+                        <p class="profile-info-box-hint" style="font-size:0.85rem;margin:0">Belum diatur. <a href="{{ route('personal-email.setup') }}" style="color:var(--primary);font-weight:600;text-decoration:underline">Atur Sekarang</a></p>
                         @endif
                     </div>
                 </div>
 
                 {{-- Submit --}}
-                <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid #e2e8f0;display:flex;gap:0.75rem;justify-content:flex-end">
-                    <button type="reset" class="profile-submit-btn" style="background:#f1f5f9;color:#475569">Reset</button>
+                <div class="profile-form-footer">
+                    <button type="reset" class="profile-submit-btn profile-btn-secondary">Reset</button>
                     <button type="submit" class="profile-submit-btn">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                         Simpan Perubahan
@@ -246,7 +255,7 @@ $appList = [
         </div>
 
         {{-- TAB 2: KEAMANAN --}}
-        <div class="tab-content" id="tab-keamanan">
+        <div class="tab-content" id="tab-keamanan" role="tabpanel" aria-labelledby="tab-btn-keamanan" tabindex="0">
             <div style="max-width:500px">
                 <h3 class="section-header">Ubah Password</h3>
                 <p class="section-desc">Pastikan password Anda kuat dan tidak digunakan di akun lain.</p>
@@ -258,7 +267,8 @@ $appList = [
                         <div class="u-relative">
                             <input type="password" id="current_password" name="current_password" class="form-control u-a59" required placeholder="Masukkan password saat ini">
                             <button class="u-a60" type="button" data-action="toggle-password" data-target="current_password" tabindex="-1">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg id="eyeOpenCurrent" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="u-hidden" id="eyeClosedCurrent" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                             </button>
                         </div>
                         @error('current_password') <small class="u-error-block">{{ $message }}</small> @enderror
@@ -268,7 +278,8 @@ $appList = [
                         <div class="u-relative">
                             <input type="password" id="password" name="password" class="form-control u-a59" required placeholder="Minimal 8 karakter">
                             <button class="u-a60" type="button" data-action="toggle-password" data-target="password" tabindex="-1">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg id="eyeOpenPassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="u-hidden" id="eyeClosedPassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                             </button>
                         </div>
                         <div class="strength-bar"><div class="strength-bar-fill" id="strengthFill"></div></div>
@@ -280,7 +291,8 @@ $appList = [
                         <div class="u-relative">
                             <input type="password" id="password_confirmation" name="password_confirmation" class="form-control u-a59" required placeholder="Ketik ulang password baru">
                             <button class="u-a60" type="button" data-action="toggle-password" data-target="password_confirmation" tabindex="-1">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg id="eyeOpenConfirm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="u-hidden" id="eyeClosedConfirm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                             </button>
                         </div>
                         <small id="matchMsg" style="display:block;margin-top:0.3rem;font-size:0.8rem"></small>
@@ -291,8 +303,8 @@ $appList = [
                     </button>
                 </form>
 
-                <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid #e2e8f0">
-                    <h4 style="font-size:0.95rem;font-weight:700;color:#1e293b;margin:0 0 0.75rem 0">Riwayat Keamanan</h4>
+                <div class="profile-form-section">
+                    <h4 class="profile-h4">Riwayat Keamanan</h4>
                     <div class="profile-sidebar-list">
                         <div class="u-a56">
                             <div class="profile-perm-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
@@ -308,7 +320,7 @@ $appList = [
         </div>
 
         {{-- TAB 3: AKSES APLIKASI --}}
-        <div class="tab-content" id="tab-apps">
+        <div class="tab-content" id="tab-apps" role="tabpanel" aria-labelledby="tab-btn-apps" tabindex="0">
             <h3 class="section-header">Akses Aplikasi</h3>
             <p class="section-desc">Aplikasi yang dapat Anda akses dengan akun ini.</p>
             <div class="u-grid-gap-3">
@@ -318,21 +330,21 @@ $appList = [
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="{{ $app['icon'] }}"/></svg>
                     </div>
                     <div class="u-flex-1">
-                        <p style="margin:0;font-weight:600;color:#1e293b;font-size:0.9rem">{{ $app['name'] }}</p>
+                        <p class="profile-app-label" style="font-size:0.9rem">{{ $app['name'] }}</p>
                         @if($app['accessible'])
-                        <span style="font-size:0.8rem;color:var(--primary);font-weight:500">Akses Aktif</span>
+                        <span class="profile-app-status">Akses Aktif</span>
                         @else
-                        <span style="font-size:0.8rem;color:var(--text-muted)">Tidak Ada Akses</span>
+                        <span class="profile-app-status profile-app-status-muted">Tidak Ada Akses</span>
                         @endif
                     </div>
                     @if($app['url'] !== '#' && $app['accessible'])
-                    <a href="{{ $app['url'] }}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;background:{{ $app['color'] }};color:#fff;border-radius:6px;text-decoration:none;font-size:0.8rem;font-weight:500;white-space:nowrap">Buka</a>
+                    <a href="{{ $app['url'] }}" target="_blank" rel="noopener noreferrer" class="profile-app-open-btn" style="background:{{ $app['color'] }}">Buka</a>
                     @endif
                 </div>
                 @endforeach
 
                 @if($linkedApplications && $linkedApplications->count() > 0)
-                <h4 style="font-size:0.9rem;font-weight:700;color:#64748b;margin:1rem 0 0.5rem 0">Aplikasi Tambahan</h4>
+                <h4 class="profile-h4 profile-h4-muted">Aplikasi Tambahan</h4>
                 @foreach($linkedApplications as $lap)
                 <div class="app-card">
                     <div class="app-icon-box" style="background:{{ $lap->effective_color ?? '#14b8a6' }}">
@@ -343,11 +355,11 @@ $appList = [
                         @endif
                     </div>
                     <div class="u-flex-1">
-                        <p style="margin:0;font-weight:600;color:#1e293b;font-size:0.9rem">{{ $lap->name }}</p>
-                        <span style="font-size:0.8rem;color:var(--primary);font-weight:500">Akses Aktif</span>
+                        <p class="profile-app-label" style="font-size:0.9rem">{{ $lap->name }}</p>
+                        <span class="profile-app-status">Akses Aktif</span>
                     </div>
                     @if($lap->url)
-                    <a href="{{ $lap->url }}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;background:{{ $lap->effective_color ?? '#14b8a6' }};color:#fff;border-radius:6px;text-decoration:none;font-size:0.8rem;font-weight:500">Buka</a>
+                    <a href="{{ $lap->url }}" target="_blank" rel="noopener noreferrer" class="profile-app-open-btn" style="background:{{ $lap->effective_color ?? '#14b8a6' }}">Buka</a>
                     @endif
                 </div>
                 @endforeach
@@ -356,7 +368,7 @@ $appList = [
         </div>
 
         {{-- TAB 4: PERIZINAN --}}
-        <div class="tab-content" id="tab-perizinan">
+        <div class="tab-content" id="tab-perizinan" role="tabpanel" aria-labelledby="tab-btn-perizinan" tabindex="0">
             <h3 class="section-header">Izin Efektif</h3>
             <p class="section-desc">Semua izin akses yang dimiliki akun ini dari role dan izin khusus.</p>
             <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem">
@@ -367,10 +379,10 @@ $appList = [
                 @endforelse
             </div>
             @if($user->role)
-            <div style="padding:1rem;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0">
+            <div class="profile-info-box">
                 <div class="u-flex-center-gap-3">
-                    <div style="width:40px;height:40px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-                    <div><p style="margin:0;font-weight:600;font-size:0.9rem;color:#1e293b">Role: {{ ucfirst($user->role->name) }}</p><p style="margin:0;font-size:0.8rem;color:#64748b">Izin bawaan dari role ini ditambah izin khusus akun.</p></div>
+                    <div class="profile-perm-icon profile-perm-icon-sm"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                    <div><p class="profile-app-label" style="font-size:0.9rem">Role: {{ ucfirst($user->role->name) }}</p><p class="profile-app-url">Izin bawaan dari role ini ditambah izin khusus akun.</p></div>
                 </div>
             </div>
             @endif
@@ -380,17 +392,17 @@ $appList = [
 
 {{-- CROPPER MODAL --}}
 <div id="cropperModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center">
-    <div style="background:#fff;border-radius:12px;padding:1.5rem;max-width:600px;width:90%;max-height:90vh;overflow:auto">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-            <h3 style="font-size:1.1rem;font-weight:700;color:#1e293b;margin:0">Crop Foto Profil</h3>
-            <button type="button" data-action="close-cropper" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:0.25rem"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="profile-modal-card">
+        <div class="profile-modal-head">
+            <h3 class="profile-modal-title">Crop Foto Profil</h3>
+            <button type="button" data-action="close-cropper" class="profile-modal-close" aria-label="Tutup dialog crop foto"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
         <div style="margin-bottom:1rem;background:#000;border-radius:8px;overflow:hidden;max-height:50vh">
             <img id="cropperImage" style="max-width:100%;display:block">
         </div>
         <div class="u-a61">
-            <button type="button" data-action="close-cropper" style="padding:0.6rem 1.25rem;background:#f1f5f9;color:#475569;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer">Batal</button>
-            <button type="button" data-action="crop-save" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.25rem;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer">
+            <button type="button" data-action="close-cropper" class="profile-submit-btn profile-btn-secondary">Batal</button>
+            <button type="button" data-action="crop-save" class="profile-submit-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                 Potong & Simpan
             </button>

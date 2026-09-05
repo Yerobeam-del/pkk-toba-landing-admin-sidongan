@@ -21,7 +21,7 @@ class VerificationController extends Controller
         $user = auth()->guard('sidongan')->user();
         
         // Cek akses (Hanya Ketua)
-        if (!$user->hasSidonganRole('ketua')) {
+        if (!$user->isSidonganKetua()) {
             abort(403, 'Akses ditolak');
         }
         
@@ -62,7 +62,7 @@ class VerificationController extends Controller
     {
         $user = auth()->guard('sidongan')->user();
         
-        if (!$user->hasSidonganRole('ketua')) {
+        if (!$user->isSidonganKetua()) {
             abort(403, 'Akses ditolak');
         }
         
@@ -85,7 +85,7 @@ class VerificationController extends Controller
     {
         $user = auth()->guard('sidongan')->user();
         
-        if (!$user->hasSidonganRole('ketua')) {
+        if (!$user->isSidonganKetua()) {
             abort(403, 'Akses ditolak');
         }
         

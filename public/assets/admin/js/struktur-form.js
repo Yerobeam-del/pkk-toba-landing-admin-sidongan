@@ -120,9 +120,6 @@ function removePhoto() {
 
 // Open crop modal - FIXED to handle existing photo
 function openCropModal() {
-    console.log('Opening crop modal...');
-    console.log('Existing photo URL:', existingPhotoUrl);
-    console.log('Original file:', originalFile);
     
     // Check if there's a photo to crop
     const hasExistingPhoto = existingPhotoUrl && existingPhotoUrl !== '#' && existingPhotoUrl !== '';
@@ -185,7 +182,6 @@ function initializeCropper(imageSrc) {
                 minContainerWidth: 300,
                 minContainerHeight: 300
             });
-            console.log('Cropper initialized successfully');
         } catch (error) {
             console.error('Error initializing cropper:', error);
             Toast.error('Gagal menginisialisasi crop tool.');
@@ -250,9 +246,6 @@ function applyCrop() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Edit page loaded');
-    console.log('Current group:', document.getElementById('editForm')?.dataset.currentGroup);
-    console.log('Current position:', document.getElementById('editForm')?.dataset.currentPosition);
     
     // 1. Set group & populate positions
     const groupSelect = document.getElementById('groupSelect');
@@ -277,7 +270,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const optionExists = Array.from(posSelect.options).some(opt => opt.value === positionToSelect);
                 if (optionExists) {
                     posSelect.value = positionToSelect;
-                    console.log('Position set to:', positionToSelect);
                 } else {
                     console.warn('Position option not found:', positionToSelect);
                 }

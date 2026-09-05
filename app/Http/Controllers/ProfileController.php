@@ -10,8 +10,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -60,34 +58,44 @@ class ProfileController extends Controller
         // HANDLE AVATAR DARI BASE64 (Prioritas)
         if ($request->filled('cropped_avatar_base64')) {
             $base64 = $request->input('cropped_avatar_base64');
-            
-            // Hapus prefix "data:image/jpeg;base64,"
-            $image = str_replace('data:image/jpeg;base64,', '', $base64);
+
+            // Hapus prefix "data:image/jpeg;base64," (juga aman untuk PNG/WebP:
+            // regex mencocokkan tipe apa pun yang dikirim Cropper)
+            $image = preg_replace('#^data:image/[\w.+-]+;base64,#', '', $base64);
             $image = str_replace(' ', '+', $image);
-            $imageName = 'avatar_' . $user->id . '_' . time() . '.jpg';
-            
-            // Hapus avatar lama
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
+
+            $decoded = base64_decode($image, true);
+            if ($decoded !== false && strlen($decoded) > 0) {
+                $imageName = 'avatar_' . $user->id . '_' . time() . '.jpg';
+
+                // Hapus avatar lama (sebelumnya file lama menumpuk di storage)
+                if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                    Storage::disk('public')->delete($user->avatar);
+                }
+
+                $path = 'avatars/' . $imageName;
+                Storage::disk('public')->put($path, $decoded);
+
+                $validated['avatar'] = $path;
             }
-            
-            // Simpan file
-            $path = 'avatars/' . $imageName;
-            Storage::disk('public')->put($path, base64_decode($image));
-            
-            $validated['avatar'] = $path;
         }
         
         // Fallback: handle file upload biasa
         elseif ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
             $file = $request->file('avatar');
-            
+
+            // Hapus avatar lama (sebelumnya file lama menumpuk di storage)
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            
-            $filename = 'avatar_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $validated['avatar'] = $file->storeAs('avatars', $filename, 'public');
+
+            // Ekstensi ditentukan dari ISI file (magic bytes), bukan nama kiriman
+            // klien — dan SVG ditolak (XSS via /storage). Lihat ImageUploadSanitizer.
+            $path = \App\Support\ImageUploadSanitizer::store($file, 'avatars', 'avatar_' . $user->id . '_');
+            if ($path === false) {
+                return back()->withErrors(['avatar' => 'File avatar bukan gambar yang didukung (JPG/PNG/WEBP/GIF).'])->withInput();
+            }
+            $validated['avatar'] = $path;
         }
 
         // Update user
@@ -103,15 +111,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display the change password form.
-     */
-    public function password(): View
-    {
-        return view('admin.profile.password');
-    }
-
-    /**
-     * Update the user's password.
+     * Update the user's password (form lives in the "Keamanan" tab of Edit Profil).
      */
     public function updatePassword(Request $request): RedirectResponse
     {
@@ -120,30 +120,13 @@ class ProfileController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        // Kolom 'password' di-cast 'hashed' (lihat app/Models/User.php) —
+        // memakai Hash::make di sini akan meng-hash dua kali dan merusak login.
+        $request->user()->forceFill(['password' => $validated['password']])->save();
 
-        return Redirect::route('admin.profile.password')->with('success', 'Password berhasil diubah!');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-        Auth::logout();
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('admin.profile.edit')
+            ->with('success', 'Password berhasil diubah!')
+            ->with('tab', 'keamanan');
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

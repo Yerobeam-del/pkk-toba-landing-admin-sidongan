@@ -38,8 +38,15 @@ class UserManagementController extends Controller
 
         $query = User::with('applications')->latest();
 
-        if ($currentUser->sidongan_role !== 'super_admin') {
-            $query->where('sidongan_role', '!=', 'super_admin');
+        if (!$currentUser->isSuperAdmin()) {
+            // Catatan SQL: 'sidongan_role != super_admin' MENYEMBUNYIKAN baris
+            // dengan sidongan_role NULL (semantik three-valued logic), sehingga
+            // akun panel-admin biasa tanpa peran SIDONGAN lenyap dari daftar.
+            // OrWhereNull wajib agar NULL tetap terlihat.
+            $query->where(function ($q) {
+                $q->where('sidongan_role', '!=', 'super_admin')
+                  ->orWhereNull('sidongan_role');
+            });
         }
 
         // Filter berdasarkan tab yang dipilih SEBELUM pagination
@@ -132,7 +139,7 @@ class UserManagementController extends Controller
 
         // VALIDASI KEAMANAN: Hanya Super Admin yang bisa membuat akun Super Admin
         $selectedRole = Role::find($validated['role_id']);
-        if ($selectedRole && $selectedRole->name === 'super_admin' && !auth()->user()->hasRole('super_admin')) {
+        if ($selectedRole && $selectedRole->name === 'super_admin' && !auth()->user()->isSuperAdmin()) {
             return redirect()->back()->withInput()->with('error', 'Anda tidak memiliki izin untuk membuat akun Super Admin.')->withErrors(['role_id' => 'Anda tidak memiliki izin untuk membuat akun Super Admin.']);
         }
 
@@ -226,7 +233,7 @@ class UserManagementController extends Controller
     public function edit(User $user)
     {
         // Hanya Super Admin yang bisa melihat form edit akun Super Admin
-        if ($user->hasRole('super_admin') && !auth()->user()->hasRole('super_admin')) {
+        if ($user->isSuperAdmin() && !auth()->user()->isSuperAdmin()) {
             abort(403, 'Akses ditolak!');
         }
 
@@ -261,7 +268,7 @@ class UserManagementController extends Controller
     public function update(Request $request, User $user)
     {
         // VALIDASI KEAMANAN: Hanya Super Admin yang bisa mengedit akun Super Admin
-        if ($user->hasRole('super_admin') && !auth()->user()->hasRole('super_admin')) {
+        if ($user->isSuperAdmin() && !auth()->user()->isSuperAdmin()) {
             return back()->with('error', 'Akses ditolak! Hanya Super Admin yang dapat mengedit akun Super Admin.');
         }
 
@@ -292,7 +299,7 @@ class UserManagementController extends Controller
 
         // VALIDASI KEAMANAN: Hanya Super Admin yang bisa mengubah role menjadi Super Admin
         $selectedRole = Role::find($validated['role_id']);
-        if ($selectedRole && $selectedRole->name === 'super_admin' && !auth()->user()->hasRole('super_admin')) {
+        if ($selectedRole && $selectedRole->name === 'super_admin' && !auth()->user()->isSuperAdmin()) {
             return redirect()->back()->withInput()->with('error', 'Anda tidak memiliki izin untuk mengubah role menjadi Super Admin.')->withErrors(['role_id' => 'Anda tidak memiliki izin untuk mengubah role menjadi Super Admin.']);
         }
 
@@ -378,7 +385,7 @@ class UserManagementController extends Controller
      */
     public function toggleStatus(User $user)
     {
-        if (auth()->user()->sidongan_role !== 'super_admin') {
+        if (!auth()->user()->isSuperAdmin()) {
             return response()->json(['success' => false, 'message' => 'Akses ditolak!'], 403);
         }
 
@@ -388,6 +395,16 @@ class UserManagementController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Anda tidak bisa menonaktifkan akun sendiri! Minta Super Admin lain untuk melakukannya.'
+            ], 403);
+        }
+
+        // Konsisten dengan destroy() & bulkAction(): akun Super Admin lain
+        // tidak boleh dinonaktifkan lewat toggle satu-per-satu (sebelumnya
+        // hanya destroy & bulk yang punya filter ini).
+        if ($user->isSuperAdmin() && $user->id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun Super Admin tidak dapat dinonaktifkan/diaktifkan lewat aksi ini.'
             ], 403);
         }
 
@@ -421,11 +438,11 @@ class UserManagementController extends Controller
             return back()->with('error', 'Anda tidak bisa menghapus akun sendiri!');
         }
 
-        if ($currentUser->sidongan_role !== 'super_admin') {
+        if (!$currentUser->isSuperAdmin()) {
             return back()->with('error', 'Akses ditolak! Hanya Super Admin yang dapat menghapus akun.');
         }
 
-        if ($user->sidongan_role === 'super_admin') {
+        if ($user->isSuperAdmin()) {
             return back()->with('error', 'Anda tidak bisa menghapus akun Super Admin!');
         }
 
@@ -469,12 +486,8 @@ class UserManagementController extends Controller
     public function resetPassword(Request $request, User $user)
     {
         // VALIDASI KEAMANAN: Hanya Super Admin yang bisa reset password akun lain
-        if (!auth()->user()->hasRole('super_admin')) {
+        if (!auth()->user()->isSuperAdmin()) {
             return response()->json(['success' => false, 'message' => 'Akses ditolak! Hanya Super Admin yang dapat mereset password.'], 403);
-        }
-
-        if ($user->hasRole('super_admin') && !auth()->user()->hasRole('super_admin')) {
-            return response()->json(['success' => false, 'message' => 'Akses ditolak!'], 403);
         }
 
         $validated = $request->validate([
@@ -520,7 +533,7 @@ class UserManagementController extends Controller
      */
     public function export(Request $request)
     {
-        if (!auth()->user()->hasRole('super_admin')) {
+        if (!auth()->user()->isSuperAdmin()) {
             return back()->with('error', 'Akses ditolak!');
         }
 
@@ -571,7 +584,7 @@ class UserManagementController extends Controller
      */
     public function bulkAction(Request $request)
     {
-        if (!auth()->user()->hasRole('super_admin')) {
+        if (!auth()->user()->isSuperAdmin()) {
             return response()->json(['success' => false, 'message' => 'Akses ditolak!'], 403);
         }
 
@@ -591,7 +604,7 @@ class UserManagementController extends Controller
         // Filter: tidak bisa aksi ke super_admin lain
         $userIds = array_filter($userIds, function ($id) {
             $user = User::find($id);
-            return $user && $user->sidongan_role !== 'super_admin';
+            return $user && !$user->isSuperAdmin();
         });
 
         $userIds = array_values($userIds);

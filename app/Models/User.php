@@ -129,12 +129,33 @@ class User extends Authenticatable
     }
 
     /**
+     * Check apakah user adalah Super Admin (akses penuh).
+     *
+     * Sumber status Super Admin ada DUA dan keduanya valid:
+     *  1. role di tabel roles bernama 'super_admin'
+     *     (dipakai sebagian controller/view lama),
+     *  2. kolom users.sidongan_role === 'super_admin'
+     *     (penanda lama yang juga dipakai dropdown "Role SIDONGAN";
+     *      akun Super Admin resmi dari SuperAdminSeeder memakai cara ini).
+     *
+     * Sebelumnya kode server & blade campur aduk memakai salah satunya saja,
+     * sehingga tombol bisa tampil di UI tapi ditolak server — atau sebaliknya.
+     * Mulai sekarang SEMUA pengecekan "apakah Super Admin" WAJIB lewat method
+     * ini (lihat UserManagementController, SiedaDataController, dan view
+     * admin/user-management/*).
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('super_admin') || $this->sidongan_role === 'super_admin';
+    }
+
+    /**
      * Check apakah user adalah admin (bisa akses semua)
      */
     public function isAdmin()
     {
-        // Izinkan jika email admin ATAU role super_admin
-        return $this->email === 'admin@pkk-toba.id' || $this->sidongan_role === 'super_admin';
+        // Izinkan jika email admin ATAU Super Admin
+        return $this->email === 'admin@pkk-toba.id' || $this->isSuperAdmin();
     }
 
     // ==================== SIDONGAN ROLE HELPERS ====================
@@ -184,43 +205,50 @@ class User extends Authenticatable
     }
 
     /**
-     * Check apakah user adalah Ketua PKK (bisa disposisi & verifikasi)
+     * Check apakah user adalah Ketua PKK (bisa disposisi & verifikasi).
+     * Super Admin SELALU termasuk — menyebabkan sebagian fitur SIDONGAN
+     * tidak bisa diakses Super Admin jika di-hardcode 'ketua' saja.
      */
     public function isSidonganKetua()
     {
-        return $this->hasSidonganRole('ketua');
+        return $this->isSuperAdmin() || $this->hasSidonganRole('ketua');
     }
 
     /**
-     * Check apakah user adalah Sekretaris PKK (bikin agenda surat)
+     * Check apakah user adalah Sekretaris PKK (bikin agenda surat).
+     * Super Admin SELALU termasuk (lihat isSidonganKetua).
      */
     public function isSidonganSekretaris()
     {
-        return $this->hasSidonganRole('sekretaris');
+        return $this->isSuperAdmin() || $this->hasSidonganRole('sekretaris');
     }
 
     /**
-     * Check apakah user adalah Bendahara PKK
+     * Check apakah user adalah Bendahara PKK.
+     * Super Admin SELALU termasuk (lihat isSidonganKetua).
      */
     public function isSidonganBendahara()
     {
-        return $this->hasSidonganRole('bendahara');
+        return $this->isSuperAdmin() || $this->hasSidonganRole('bendahara');
     }
 
     /**
-     * Check apakah user adalah Ketua POKJA / Pengurus (bisa terima disposisi & buat laporan)
+     * Check apakah user adalah Ketua POKJA / Pengurus (bisa terima disposisi & buat laporan).
+     * Super Admin SELALU termasuk (lihat isSidonganKetua).
      */
     public function isSidonganPokja()
     {
-        return in_array($this->sidongan_role, ['pengurus_1', 'pengurus_2', 'pengurus_3', 'pengurus_4']);
+        return $this->isSuperAdmin()
+            || in_array($this->sidongan_role, ['pengurus_1', 'pengurus_2', 'pengurus_3', 'pengurus_4']);
     }
 
     /**
-     * Check apakah user adalah Staf Ahli
+     * Check apakah user adalah Staf Ahli.
+     * Super Admin SELALU termasuk (lihat isSidonganKetua).
      */
     public function isSidonganStafAhli()
     {
-        return in_array($this->sidongan_role, ['staf_ahli_1', 'staf_ahli_2']);
+        return $this->isSuperAdmin() || in_array($this->sidongan_role, ['staf_ahli_1', 'staf_ahli_2']);
     }
 
     public function role(): BelongsTo

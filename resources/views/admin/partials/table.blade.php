@@ -105,7 +105,7 @@
                         <td class="actions-cell" style="padding: 1rem; text-align: right;">
                             <div class="actions-container" style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
                                 @if(in_array('show', $actions) && $showRoute)
-                                    <a href="{{ route($showRoute, $item) }}" class="action-btn" title="Lihat">
+                                    <a href="{{ route($showRoute, $item) }}" class="action-btn" title="Lihat" aria-label="Lihat detail {{ data_get($item, 'name') ?? data_get($item, 'title') ?? 'data' }}">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                             <circle cx="12" cy="12" r="3"/>
@@ -114,7 +114,7 @@
                                 @endif
 
                                 @if(in_array('edit', $actions) && $editRoute)
-                                    <a href="{{ route($editRoute, $item) }}" class="action-btn btn-edit" title="Edit">
+                                    <a href="{{ route($editRoute, $item) }}" class="action-btn btn-edit" title="Edit" aria-label="Edit {{ data_get($item, 'name') ?? data_get($item, 'title') ?? 'data' }}">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -123,7 +123,7 @@
                                 @endif
 
                                 @if(in_array('delete', $actions) && $deleteRoute)
-                                    <button type="button" data-delete-item="{{ $item->id }}" data-delete-title="{{ addslashes(data_get($item, 'name')) }}" class="action-btn btn-delete" title="Hapus">
+                                    <button type="button" data-delete-item="{{ $item->id }}" data-delete-title="{{ addslashes(data_get($item, 'name')) }}" class="action-btn btn-delete" title="Hapus" aria-label="Hapus {{ data_get($item, 'name') ?? 'data' }}">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <polyline points="3 6 5 6 21 6"/>
                                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -323,7 +323,7 @@
                 {{-- Action Buttons --}}
                 <div class="member-card-actions" style="display:flex;gap:0.5rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.06)">
                     @if(in_array('show', $actions) && $showRoute)
-                        <a href="{{ route($showRoute, $item) }}" class="action-btn btn-show u-a54" title="Lihat">
+                        <a href="{{ route($showRoute, $item) }}" class="action-btn btn-show u-a54" title="Lihat" aria-label="Lihat detail {{ data_get($item, 'name') ?? data_get($item, 'title') ?? 'data' }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                 <circle cx="12" cy="12" r="3"/>
@@ -332,7 +332,7 @@
                         </a>
                     @endif
                     @if(in_array('edit', $actions) && $editRoute)
-                        <a href="{{ route($editRoute, $item) }}" class="action-btn btn-edit u-a54" title="Edit">
+                        <a href="{{ route($editRoute, $item) }}" class="action-btn btn-edit u-a54" title="Edit" aria-label="Edit {{ data_get($item, 'name') ?? data_get($item, 'title') ?? 'data' }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -341,7 +341,7 @@
                         </a>
                     @endif
                     @if(in_array('delete', $actions) && $deleteRoute)
-                        <button type="button" data-delete-item="{{ $item->id }}" data-delete-title="{{ addslashes(data_get($item, 'name') ?? data_get($item, 'title') ?? data_get($item, 'subject')) }}" class="action-btn btn-delete" title="Hapus">
+                        <button type="button" data-delete-item="{{ $item->id }}" data-delete-title="{{ addslashes(data_get($item, 'name') ?? data_get($item, 'title') ?? data_get($item, 'subject')) }}" class="action-btn btn-delete" title="Hapus" aria-label="Hapus {{ data_get($item, 'name') ?? data_get($item, 'title') ?? 'data' }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="3 6 5 6 21 6"/>
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>

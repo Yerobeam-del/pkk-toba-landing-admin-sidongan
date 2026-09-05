@@ -145,7 +145,7 @@ class ActivityReportController extends Controller
 
             $targetRoles = $dispo['target_roles'] ?? [];
 
-            if (!in_array($user->sidongan_role, $targetRoles)) {
+            if (!$user->isSuperAdmin() && !in_array($user->sidongan_role, $targetRoles)) {
                 abort(403, 'Anda tidak berhak membuat laporan untuk surat ini.');
             }
 
@@ -176,10 +176,10 @@ class ActivityReportController extends Controller
             'kelurahan' => 'required|string|max:255',
             'alamat_lengkap' => 'required|string',
             'deskripsi' => 'required|string',
-            'fotos.*' => 'nullable|file|mimes:jpg,jpeg,png,heic|max:5120',
+            'fotos.*' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
         ], [
             'end_time.after' => 'Jam selesai harus lebih besar dari jam mulai.',
-            'fotos.*.mimes' => 'File foto harus berformat JPG, JPEG, PNG, atau HEIC.',
+            'fotos.*.mimes' => 'File foto harus berformat JPG, JPEG, atau PNG.',
             'fotos.*.max' => 'Ukuran foto maksimal 5MB.',
         ]);
         
@@ -192,7 +192,7 @@ class ActivityReportController extends Controller
         
         $targetRoles = $dispo['target_roles'] ?? [];
         
-        if (!in_array($user->sidongan_role, $targetRoles)) {
+        if (!$user->isSuperAdmin() && !in_array($user->sidongan_role, $targetRoles)) {
             return back()->with('error', 'Gagal: Anda tidak berhak melapor untuk surat ini.')
                 ->withErrors(['document_id' => 'Gagal: Anda tidak berhak melapor untuk surat ini.'])
                 ->withInput();
@@ -202,8 +202,11 @@ class ActivityReportController extends Controller
         $fotoPaths = [];
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $foto) {
-                $filename = time() . '_' . uniqid() . '.' . $foto->getClientOriginalExtension();
-                $path = $foto->storeAs('activity-reports', $filename, 'public');
+                // Ekstensi dari isi file (magic bytes), bukan nama kiriman klien.
+                $path = \App\Support\ImageUploadSanitizer::store($foto, 'activity-reports', time() . '_' . uniqid() . '_');
+                if ($path === false) {
+                    return back()->withErrors(['fotos' => 'Ada file yang bukan gambar didukung (JPG/PNG/WEBP/GIF).'])->withInput();
+                }
                 $fotoPaths[] = $path;
             }
         }
@@ -403,8 +406,11 @@ class ActivityReportController extends Controller
             }
             
             foreach ($request->file('fotos') as $foto) {
-                $filename = time() . '_' . uniqid() . '.' . $foto->getClientOriginalExtension();
-                $path = $foto->storeAs('activity-reports', $filename, 'public');
+                // Ekstensi dari isi file (magic bytes), bukan nama kiriman klien.
+                $path = \App\Support\ImageUploadSanitizer::store($foto, 'activity-reports', time() . '_' . uniqid() . '_');
+                if ($path === false) {
+                    return back()->withErrors(['fotos' => 'Ada file yang bukan gambar didukung (JPG/PNG/WEBP/GIF).'])->withInput();
+                }
                 $fotoPaths[] = $path;
             }
         } else {

@@ -280,9 +280,7 @@ async function updateOrder() {
             body: JSON.stringify({ order })
         });
 
-        if (response.ok) {
-            console.log('✅ Order updated successfully');
-        } else {
+        if (!response.ok) {
             console.error('❌ Failed to update order');
         }
     } catch (error) {

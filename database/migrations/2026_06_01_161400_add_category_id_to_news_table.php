@@ -34,27 +34,37 @@ return new class extends Migration
             });
         }
         
-        // Tambahkan foreign key jika belum ada
-        Schema::table('news', function (Blueprint $table) {
-            // Cek apakah foreign key sudah ada
-            $sm = Schema::getConnection()->getDoctrineSchemaManager();
-            $foreignKeys = $sm->listTableForeignKeys('news');
-            $hasForeignKey = false;
-            
-            foreach ($foreignKeys as $foreignKey) {
-                if (in_array('category_id', $foreignKey->getLocalColumns())) {
-                    $hasForeignKey = true;
-                    break;
-                }
-            }
-            
-            if (!$hasForeignKey) {
+        // Tambahkan foreign key jika belum ada.
+        // Catatan Laravel 11: API Doctrine (getDoctrineSchemaManager) sudah
+        // dihapus — cek FK dilakukan manual per driver agar migrasi tetap
+        // bisa dijalankan dari nol (fresh install, test database :memory:).
+        $connection = Schema::getConnection();
+        $hasForeignKey = false;
+
+        if ($connection->getDriverName() === 'sqlite') {
+            // Baris PRAGMA foreign_key_list(news): kolom 'from' = kolom lokal FK
+            $hasForeignKey = collect($connection->select('PRAGMA foreign_key_list(news)'))
+                ->contains(fn ($fk) => ($fk->from ?? null) === 'category_id');
+        } else {
+            // MySQL/MariaDB via information_schema
+            $rows = $connection->select(
+                "SELECT COUNT(*) AS c FROM information_schema.key_column_usage
+                 WHERE table_schema = DATABASE()
+                   AND table_name = 'news'
+                   AND column_name = 'category_id'
+                   AND referenced_table_name = 'categories'"
+            );
+            $hasForeignKey = ((int) ($rows[0]->c ?? 0)) > 0;
+        }
+
+        if (!$hasForeignKey) {
+            Schema::table('news', function (Blueprint $table) {
                 $table->foreign('category_id')
                       ->references('id')
                       ->on('categories')
                       ->nullOnDelete();
-            }
-        });
+            });
+        }
     }
 
     /**

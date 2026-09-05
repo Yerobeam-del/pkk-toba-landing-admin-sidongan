@@ -66,6 +66,13 @@
             return;
         }
 
+        // Desa
+        const desaPage = target.closest('[data-desa-page]');
+        if (desaPage) {
+            call('changeDesaPage', [desaPage.getAttribute('data-desa-page')]);
+            return;
+        }
+
         // SK & Dokumen
         const skPage = target.closest('[data-sk-page]');
         if (skPage) {
@@ -126,6 +133,8 @@
             call('changeNewsSort', [target.value]);
         } else if (target.id === 'newsPerPageSelect') {
             call('changeNewsPerPage', [target.value]);
+        } else if (target.id === 'desaPerPageSelect') {
+            call('changeDesaPerPage', [target.value]);
         } else if (target.id === 'perPageSelect') {
             call('changePerPage', [target.value]);
         } else if (target.id === 'templatePerPageSelect') {

@@ -16,7 +16,7 @@ function addProgram() {
     div.innerHTML = `
         <input type="text" name="programs[]" class="form-control u-flex-1" placeholder="Nama program" required>
         <button type="button" onclick="removeProgram(this)" 
-                title="Hapus program"
+                title="Hapus program" aria-label="Hapus program"
                 style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--text-muted);border:none;border-radius:6px;cursor:pointer;transition:all 0.2s"
                 onmouseover="this.style.background='#fef2f2';this.style.color='#ef4444';this.style.transform='translateY(-2px)'"
                 onmouseout="this.style.background='transparent';this.style.color='var(--text-muted)';this.style.transform='translateY(0)'">

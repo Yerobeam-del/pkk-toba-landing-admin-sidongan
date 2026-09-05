@@ -21,6 +21,17 @@ return Application::configure(basePath: dirname(__DIR__))
         // "Dikembangkan oleh Institut Teknologi Del"
         $middleware->append(InjectDeveloperCredit::class);
 
+        // Header keamanan dasar (anti-clickjacking, nosniff, referrer policy).
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+
+        // CSRF tetap berlaku untuk semua route web; endpoint server-to-server
+        // /api/sieda/* dikecualikan karena autentikasinya shared-secret + HMAC
+        // (lihat App\Http\Middleware\VerifySiedaSyncKey) dan dipanggil tanpa
+        // session/cookie dari aplikasi SIEDA.
+        $middleware->validateCsrfTokens(except: [
+            'api/sieda/*',
+        ]);
+
         $middleware->alias([
             // Endpoint sinkronisasi yang dipanggil aplikasi SIEDA
             // (mis. sinkronisasi avatar user) — verifikasi shared secret
