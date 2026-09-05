@@ -22,11 +22,22 @@ class PersonalEmailVerificationNotification extends Notification
     public string $email;
 
     /**
+     * Nama route signed URL verifikasi.
+     *
+     * Default = route Admin Panel (personal-email.verify). Saat email pribadi
+     * didaftarkan dari SIDONGAN, pakai route milik SIDONGAN
+     * (sidongan.personal-email.verify) supaya link verifikasi menunjuk ke host
+     * SIDONGAN dan tidak menabrak guard/domain aplikasi lain.
+     */
+    public string $verifyRoute;
+
+    /**
      * Create a new notification instance.
      */
-    public function __construct(string $email)
+    public function __construct(string $email, string $verifyRoute = 'personal-email.verify')
     {
         $this->email = $email;
+        $this->verifyRoute = $verifyRoute;
     }
 
     /**
@@ -45,7 +56,7 @@ class PersonalEmailVerificationNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         // Signed URL valid 24 jam — sertakan email agar diverifikasi dulu baru disimpan
-        $verificationUrl = URL::signedRoute('personal-email.verify', [
+        $verificationUrl = URL::signedRoute($this->verifyRoute, [
             'id' => $notifiable->id,
             'email' => $this->email,
         ], now()->addHours(24));

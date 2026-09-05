@@ -5,6 +5,7 @@
  * ============================================================ */
 namespace App\Http\Middleware;
 
+use App\Support\ProfileFields;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,9 +23,6 @@ class SidonganEnsureProfileComplete
         'sidongan.profile.password',
         'sidongan.profile.password.update',
         'sidongan.logout',
-        'sidongan.onboarding',
-        'sidongan.onboarding.store',
-        'sidongan.onboarding.skip',
         'onboarding',
         'onboarding.store',
         'onboarding.skip',
@@ -37,7 +35,6 @@ class SidonganEnsureProfileComplete
     private array $exemptPaths = [
         '/sidongan/profile',
         '/sidongan/logout',
-        '/sidongan/onboarding',
         '/onboarding',
     ];
 
@@ -54,8 +51,10 @@ class SidonganEnsureProfileComplete
             return $next($request);
         }
 
-        // Skip if user previously chose to skip onboarding
-        if (session('onboarding_skipped', false)) {
+        // Skip if user previously chose to skip onboarding — baik lewat session
+        // (sesi aktif) maupun preferensi tersimpan di DB (users.onboarding_skipped_at,
+        // bertahan lintas login) supaya user tidak terjebak loop onboarding.
+        if (session('onboarding_skipped', false) || $user->onboarding_skipped_at) {
             return $next($request);
         }
 
@@ -68,7 +67,8 @@ class SidonganEnsureProfileComplete
         }
 
         foreach ($this->exemptPaths as $exemptPath) {
-            if (str_starts_with($path, ltrim($exemptPath, '/'))) {
+            $exemptPath = ltrim($exemptPath, '/');
+            if ($path === $exemptPath || str_starts_with($path, $exemptPath . '/')) {
                 return $next($request);
             }
         }
@@ -90,13 +90,9 @@ class SidonganEnsureProfileComplete
      */
     private function isProfileComplete($user): bool
     {
-        $phone = trim($user->phone_number ?? '');
-        $hasPhone = !empty($phone) && !in_array($phone, ['-', '--', '0', 'n/a', '- -', 'Belum diisi', 'Tidak ada']);
-
-        $email = trim($user->personal_email ?? '');
-        $hasPersonalEmail = !empty($email) && !in_array($email, ['-', '--', 'n/a', 'Belum diisi', 'Tidak ada']);
-
-        return $hasPhone && $hasPersonalEmail;
+        // Satu sumber kebenaran: field pemblokir phone_number & personal_email
+        // (App\Support\ProfileFields) — identik dengan SIEDA.
+        return ProfileFields::blockingComplete($user);
     }
 
     /**
@@ -107,13 +103,13 @@ class SidonganEnsureProfileComplete
     {
         $missing = [];
 
-        $phone = trim($user->phone_number ?? '');
-        if (empty($phone) || in_array($phone, ['-', '--', '0', 'n/a', '- -', 'Belum diisi', 'Tidak ada'])) {
+        // Field pemblokir & placeholder memakai aturan terpusat di
+        // App\Support\ProfileFields (case-insensitive) — identik dengan SIEDA.
+        if (!ProfileFields::isFilled($user->phone_number ?? null)) {
             $missing[] = 'phone_number';
         }
 
-        $email = trim($user->personal_email ?? '');
-        if (empty($email) || in_array($email, ['-', '--', 'n/a', 'Belum diisi', 'Tidak ada'])) {
+        if (!ProfileFields::isFilled($user->personal_email ?? null)) {
             $missing[] = 'personal_email';
         }
 
@@ -147,7 +143,7 @@ class SidonganEnsureProfileComplete
      */
     public static function isProfileBlocking($user): bool
     {
-        return empty($user->phone_number) || empty($user->personal_email);
+        return ProfileFields::missingBlocking($user) !== [];
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

@@ -29,6 +29,7 @@ class User extends Authenticatable
         'avatar',
         'email_verified_at',
         'personal_email_verified_at',
+        'onboarding_skipped_at',
         'password',
         'remember_token',
         'sidongan_role',
@@ -48,6 +49,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'personal_email_verified_at' => 'datetime',
+            'onboarding_skipped_at' => 'datetime',
             'password' => 'hashed',
         ];
     }

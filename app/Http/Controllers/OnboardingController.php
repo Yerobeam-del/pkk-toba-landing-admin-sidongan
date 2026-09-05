@@ -6,6 +6,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\SidonganEnsureProfileComplete;
+use App\Notifications\PersonalEmailVerificationNotification;
+use App\Support\ProfileFields;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,16 +87,35 @@ class OnboardingController extends Controller
     }
 
     /**
+     * Route login yang sesuai dengan host saat ini.
+     *
+     * Halaman onboarding dipakai lintas aplikasi (SIDONGAN / Admin Panel).
+     * Pengunjung yang belum login harus diarahkan ke halaman login aplikasi
+     * yang sedang dibuka — kalau di host SIDONGAN → login SIDONGAN, selain itu
+     * → login Admin Panel (route login lama selalu tersedia di host mana pun).
+     */
+    private function loginRoute(Request $request): string
+    {
+        $sidonganDomain = (string) config('app.sidongan_domain');
+
+        if ($sidonganDomain !== '' && str_ends_with($request->getHost(), $sidonganDomain)) {
+            return 'sidongan.login';
+        }
+
+        return 'login';
+    }
+
+    /**
      * Display the onboarding page.
      * Smart: detects which system the user came from and adapts branding.
      */
-    public function show(): View|RedirectResponse
+    public function show(Request $request): View|RedirectResponse
     {
         [$user, $systemKey] = $this->getUserAndSystem();
 
-        // Not authenticated → redirect to login
+        // Not authenticated → redirect ke login aplikasi yang sesuai host
         if (!$user) {
-            return redirect()->route('sidongan.login');
+            return redirect()->route($this->loginRoute($request));
         }
 
         $system = $this->systems[$systemKey];
@@ -124,7 +145,7 @@ class OnboardingController extends Controller
         [$user, $systemKey] = $this->getUserAndSystem();
 
         if (!$user) {
-            return redirect()->route('sidongan.login');
+            return redirect()->route($this->loginRoute($request));
         }
 
         $system = $this->systems[$systemKey];
@@ -189,30 +210,84 @@ class OnboardingController extends Controller
             ]);
         }
 
-        // Check remaining
-        $remaining = $this->getMissingFields($user->fresh(), $systemKey);
+        // Personal email baru didaftarkan lewat onboarding → kirim link verifikasi
+        // (paritas dengan alur personal email Admin Panel). Fitur Lupa Password
+        // hanya aktif setelah email pribadi diverifikasi.
+        $verificationSent = false;
+        if (isset($updateData['personal_email']) && ProfileFields::isFilled($updateData['personal_email'])) {
+            // Route signed URL mengikuti sistem asal: SIDONGAN memakai route
+            // sendiri (host sidongan), Admin Panel memakai route default.
+            $verifyRoute = $systemKey === 'sidongan'
+                ? 'sidongan.personal-email.verify'
+                : 'personal-email.verify';
 
-        if (empty($remaining)) {
-            // Profile complete — clear skip flag
+            try {
+                $user->notify(new PersonalEmailVerificationNotification($updateData['personal_email'], $verifyRoute));
+                $verificationSent = true;
+
+                Log::channel('audit')->info('Link verifikasi email pribadi dikirim via onboarding', [
+                    'user_id' => $user->id,
+                    'user_name' => $user->name,
+                    'system' => $systemKey,
+                    'personal_email' => $updateData['personal_email'],
+                    'timestamp' => now()->toIso8601String(),
+                ]);
+            } catch (\Throwable $e) {
+                Log::channel('audit')->warning('Gagal kirim link verifikasi email pribadi via onboarding', [
+                    'user_id' => $user->id,
+                    'system' => $systemKey,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        // "Simpan & Lanjutkan" = simpan lalu LANGSUNG lanjut ke aplikasi
+        // (dashboard), meskipun masih ada langkah yang belum dilengkapi — selama
+        // tidak ada field PEMBLOKIR yang kosong. Field pemblokir didefinisikan
+        // sekali di App\Support\ProfileFields (phone_number & personal_email) —
+        // identik dengan SIEDA; avatar opsional tidak pernah mengunci user.
+        // "Lewati — nanti saja" tetap tersedia untuk user yang ingin melewati
+        // onboarding tanpa menyimpan apa pun.
+        $freshUser = $user->fresh();
+        $blockingRemaining = ProfileFields::missingBlocking($freshUser);
+
+        if (empty($blockingRemaining)) {
+            // Tidak ada field pemblokir tersisa — hapus status skip (session & DB)
+            // supaya kalau suatu saat field dikosongkan lagi, onboarding muncul lagi.
             session()->forget('onboarding_skipped');
+            if ($freshUser->onboarding_skipped_at) {
+                $freshUser->forceFill(['onboarding_skipped_at' => null])->save();
+            }
 
+            $successMessage = 'Profil berhasil disimpan! Anda bisa melengkapi foto profil nanti melalui menu Edit Profil.';
+            if ($verificationSent) {
+                $successMessage .= ' Link verifikasi email pribadi telah dikirim ke <strong>' . e($updateData['personal_email']) . '</strong> — silakan cek inbox Anda.';
+            }
+
+            // Flash 'success' (bukan 'status') supaya muncul sebagai toast di dashboard SIDONGAN.
             return redirect()->route($system['dashboard_route'])
-                ->with('status', 'Profil Anda berhasil dilengkapi! Selamat datang.');
+                ->with('success', $successMessage)
+                ->with('status', $successMessage);
+        }
+
+        $statusMessage = 'Profil berhasil disimpan. Silakan lengkapi data yang tersisa.';
+        if ($verificationSent) {
+            $statusMessage .= ' Link verifikasi email pribadi telah dikirim ke <strong>' . e($updateData['personal_email']) . '</strong> — silakan cek inbox Anda.';
         }
 
         return redirect()->route('onboarding')
-            ->with('status', 'Profil berhasil disimpan. Silakan lengkapi data yang tersisa.');
+            ->with('status', $statusMessage);
     }
 
     /**
      * Skip onboarding.
      */
-    public function skip(): RedirectResponse
+    public function skip(Request $request): RedirectResponse
     {
         [$user, $systemKey] = $this->getUserAndSystem();
 
         if (!$user) {
-            return redirect()->route('sidongan.login');
+            return redirect()->route($this->loginRoute($request));
         }
 
         $system = $this->systems[$systemKey];
@@ -225,7 +300,12 @@ class OnboardingController extends Controller
             'timestamp' => now()->toIso8601String(),
         ]);
 
-        // Set session flag so middleware allows access to dashboard
+        // Simpan keputusan skip di DB (bertahan lintas login) + session flag.
+        // Tanpa ini, user yang melewati onboarding akan dilempar ke onboarding
+        // LAGI setiap kali login — tidak bisa "melewati" halaman onboarding.
+        if (!$user->onboarding_skipped_at) {
+            $user->forceFill(['onboarding_skipped_at' => now()])->save();
+        }
         session(['onboarding_skipped' => true]);
 
         return redirect()->route($system['dashboard_route'])
@@ -239,15 +319,13 @@ class OnboardingController extends Controller
     {
         $missing = [];
 
-        // Phone: empty or placeholder values like '-', '0', 'n/a'
-        $phone = trim($user->phone_number ?? '');
-        if (empty($phone) || in_array($phone, ['-', '--', '0', 'n/a', '- -', 'Belum diisi', 'Tidak ada'])) {
+        // Field pemblokir & placeholder memakai aturan terpusat di
+        // App\Support\ProfileFields (case-insensitive) — identik dengan SIEDA.
+        if (!ProfileFields::isFilled($user->phone_number ?? null)) {
             $missing[] = 'phone_number';
         }
 
-        // Email: empty or placeholder
-        $email = trim($user->personal_email ?? '');
-        if (empty($email) || in_array($email, ['-', '--', 'n/a', 'Belum diisi', 'Tidak ada'])) {
+        if (!ProfileFields::isFilled($user->personal_email ?? null)) {
             $missing[] = 'personal_email';
         }
 
@@ -278,7 +356,7 @@ class OnboardingController extends Controller
      */
     public static function isProfileBlocking($user): bool
     {
-        return empty($user->phone_number) || empty($user->personal_email);
+        return ProfileFields::missingBlocking($user) !== [];
     }
 
     /**
@@ -287,8 +365,8 @@ class OnboardingController extends Controller
     public static function getMissingFieldsStatic($user): array
     {
         $missing = [];
-        if (empty($user->phone_number)) $missing[] = 'phone_number';
-        if (empty($user->personal_email)) $missing[] = 'personal_email';
+        if (!ProfileFields::isFilled($user->phone_number ?? null)) $missing[] = 'phone_number';
+        if (!ProfileFields::isFilled($user->personal_email ?? null)) $missing[] = 'personal_email';
         if (empty($user->avatar)) $missing[] = 'avatar';
         return $missing;
     }

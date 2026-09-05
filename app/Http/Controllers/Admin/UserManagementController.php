@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\User;
+use App\Support\ProfileFields;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\Kecamatan;
@@ -306,8 +307,19 @@ class UserManagementController extends Controller
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
-        $user->phone_number = $validated['phone_number'] ?? null;
-        $user->personal_email = $validated['personal_email'] ?? null;
+
+        // Field pemblokir (phone_number & personal_email) menentukan apakah user
+        // boleh masuk SIDONGAN tanpa terjebak onboarding. JANGAN menimpa nilai
+        // lama yang sudah terisi dengan input kosong/placeholder ('-', '0', dll)
+        // — itu membuat user terlempar balik ke onboarding padahal datanya sudah
+        // lengkap. Input terisi baru tetap menggantikan nilai lama.
+        $user->phone_number = ProfileFields::isFilled($validated['phone_number'] ?? null)
+            ? trim((string) $validated['phone_number'])
+            : $user->phone_number;
+        $user->personal_email = ProfileFields::isFilled($validated['personal_email'] ?? null)
+            ? trim((string) $validated['personal_email'])
+            : $user->personal_email;
+
         $user->role_id = $validated['role_id'];
         $user->sidongan_role = $validated['sidongan_role'] ?? null;
         $user->sieda_role = $validated['sieda_role'] ?? null;
@@ -319,6 +331,15 @@ class UserManagementController extends Controller
         }
 
         $user->save();
+
+        // Bila field pemblokir kini lengkap, hapus status skip onboarding
+        // (baik dari session user maupun kolom users.onboarding_skipped_at).
+        if (ProfileFields::blockingComplete($user->fresh())) {
+            session()->forget('onboarding_skipped');
+            if ($user->onboarding_skipped_at) {
+                $user->forceFill(['onboarding_skipped_at' => null])->save();
+            }
+        }
 
         // Activity Log
         AdminActivityLog::log('updated', $user, 'Akun "' . $user->name . '" berhasil diperbarui');

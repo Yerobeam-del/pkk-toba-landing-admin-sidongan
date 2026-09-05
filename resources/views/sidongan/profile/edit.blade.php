@@ -176,6 +176,10 @@
 }
 .sp-btn-secondary:hover { background: var(--border-light, #e2e8f0); }
 
+/* Jarak header halaman (judul + subtitle "Perbarui informasi profil Anda")
+   dengan kartu konten di bawahnya — subtitle tidak menempel ke kartu. */
+.sd-page-header { margin-bottom: 1.5rem; }
+
 /* Password tab */
 .sp-password-grid { max-width: 400px; }
 
@@ -384,6 +388,7 @@
                                 @elseif($user->personal_email)
                                     <span class="sp-badge-pending" style="padding:0.1rem 0.35rem;font-size:0.65rem">Menunggu Verifikasi</span>
                                     <span style="font-size:0.75rem;color:var(--text-muted,#64748b)">Cek email untuk link verifikasi</span>
+                                    <button type="submit" form="formResendPersonalEmail" style="margin-left:0.5rem;background:none;border:none;padding:0;color:var(--primary,#14b8a6);font-size:0.75rem;font-weight:600;text-decoration:underline;cursor:pointer;font-family:inherit" title="Kirim ulang link verifikasi ke email ini">Kirim ulang link</button>
                                 @endif
                             </div>
                             <p class="sp-hint">Email aktif untuk reset password (Gmail, Yahoo, dll). Jika diubah, perlu verifikasi ulang.</p>
@@ -399,6 +404,12 @@
                             Simpan Perubahan
                         </button>
                     </div>
+                </form>
+
+                {{-- Form kirim ulang verifikasi email pribadi (di luar <form> utama,
+                     dihubungkan lewat atribut form= pada tombolnya) --}}
+                <form id="formResendPersonalEmail" method="POST" action="{{ route('sidongan.personal-email.resend') }}" style="display:none">
+                    @csrf
                 </form>
             </div>
 

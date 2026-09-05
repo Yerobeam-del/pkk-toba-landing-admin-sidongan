@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Notifications\PersonalEmailVerificationNotification;
+use App\Support\ProfileFields;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -87,23 +93,149 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
 
-        // Reset verification if personal email changed
-        if ($user->isDirty('personal_email')) {
+        // Personal email berubah/baru → status verifikasi direset dan link
+        // verifikasi baru dikirim (paritas dengan alur personal email Admin Panel).
+        $personalEmailChanged = $user->isDirty('personal_email');
+        if ($personalEmailChanged) {
             $user->personal_email_verified_at = null;
         }
 
         $user->save();
 
-        // If profile was previously skipped, check if it's now complete
-        if (session('onboarding_skipped')) {
-            $hasPhone = !empty($user->phone_number);
-            $hasEmail = !empty($user->personal_email);
-            if ($hasPhone && $hasEmail) {
-                session()->forget('onboarding_skipped');
+        $verificationSent = false;
+        if ($personalEmailChanged && ProfileFields::isFilled($user->personal_email)) {
+            $verificationSent = $this->sendPersonalEmailVerification($user);
+        }
+
+        // Jika profil (field pemblokir) kini lengkap, bersihkan status skip
+        // — baik flag session maupun preferensi tersimpan di DB — supaya lain
+        // kali login tidak langsung masuk tanpa diminta melengkapi data.
+        $freshUser = $user->fresh();
+        if ($freshUser && ProfileFields::blockingComplete($freshUser)) {
+            session()->forget('onboarding_skipped');
+            if ($freshUser->onboarding_skipped_at) {
+                $freshUser->forceFill(['onboarding_skipped_at' => null])->save();
             }
         }
 
-        return Redirect::route('sidongan.profile.edit')->with('success', 'Profil berhasil diperbarui!');
+        $message = 'Profil berhasil diperbarui!';
+        if ($verificationSent) {
+            $message .= ' Link verifikasi email pribadi telah dikirim ke <strong>' . e($user->personal_email) . '</strong> — silakan cek inbox Anda.';
+        }
+
+        return Redirect::route('sidongan.profile.edit')->with('success', $message);
+    }
+
+    /**
+     * Kirim notifikasi verifikasi email pribadi (signed link 24 jam) dengan
+     * route milik SIDONGAN, supaya link menunjuk ke host SIDONGAN dan user
+     * bisa langsung klik tanpa dialihkan ke aplikasi lain.
+     */
+    private function sendPersonalEmailVerification(User $user): bool
+    {
+        try {
+            $user->notify(new PersonalEmailVerificationNotification(
+                $user->personal_email,
+                'sidongan.personal-email.verify'
+            ));
+
+            Log::channel('audit')->info('Link verifikasi email pribadi dikirim (SIDONGAN)', [
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'personal_email' => $user->personal_email,
+            ]);
+
+            return true;
+        } catch (\Throwable $e) {
+            Log::channel('audit')->warning('Gagal kirim link verifikasi email pribadi (SIDONGAN)', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return false;
+        }
+    }
+
+    /**
+     * Verifikasi email pribadi via signed link dari email.
+     *
+     * Tidak perlu login: link signed (24 jam) itu sendiri adalah bukti
+     * kepemilikan email. Email di link harus sama dengan email yang tersimpan
+     * di database — kalau user sudah mengganti email, link lama ditolak.
+     */
+    public function verifyPersonalEmail(Request $request, int $id): RedirectResponse
+    {
+        $user = User::findOrFail($id);
+        $email = trim((string) $request->query('email', ''));
+
+        if (
+            !ProfileFields::isFilled($email)
+            || !ProfileFields::isFilled($user->personal_email)
+            || strcasecmp($user->personal_email, $email) !== 0
+        ) {
+            return redirect()->route('sidongan.login')
+                ->with('error', 'Link verifikasi tidak valid atau email pribadi Anda sudah diubah. Silakan daftarkan ulang lewat menu Edit Profil.');
+        }
+
+        // Idempoten: aman walau link diklik berulang kali.
+        $user->markPersonalEmailAsVerified();
+
+        Log::channel('audit')->info('Email pribadi berhasil diverifikasi (SIDONGAN)', [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'personal_email' => $user->personal_email,
+        ]);
+
+        if (Auth::guard('sidongan')->check() && Auth::guard('sidongan')->id() === $user->id) {
+            return redirect()->route('sidongan.dashboard')
+                ->with('success', '🎉 Email pribadi <strong>' . e($user->personal_email) . '</strong> berhasil diverifikasi! Sekarang fitur Lupa Password sudah aktif.');
+        }
+
+        return redirect()->route('sidongan.login')
+            ->with('success', 'Email pribadi berhasil diverifikasi. Silakan login untuk melanjutkan.');
+    }
+
+    /**
+     * Kirim ulang link verifikasi email pribadi (dari halaman Edit Profil).
+     * Rate limit: 3x per 30 menit per user.
+     */
+    public function resendPersonalEmailVerification(Request $request): RedirectResponse
+    {
+        $user = auth()->guard('sidongan')->user();
+
+        if ($user->hasVerifiedPersonalEmail()) {
+            return Redirect::route('sidongan.profile.edit')
+                ->with('info', 'Email pribadi Anda sudah terverifikasi.');
+        }
+
+        if (!ProfileFields::isFilled($user->personal_email)) {
+            return Redirect::route('sidongan.profile.edit')
+                ->with('warning', 'Simpan dulu email pribadi Anda sebelum meminta link verifikasi.');
+        }
+
+        $throttleKey = 'sidongan-resend-personal-email:' . $user->id . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 3)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+
+            Log::channel('audit')->warning('Rate limit — kirim ulang verifikasi email pribadi (SIDONGAN)', [
+                'user_id' => $user->id,
+                'cooldown' => ceil($seconds / 60) . ' menit',
+            ]);
+
+            return Redirect::route('sidongan.profile.edit')
+                ->with('error', 'Terlalu banyak permintaan. Silakan coba lagi dalam ' . ceil($seconds / 60) . ' menit.');
+        }
+
+        if ($this->sendPersonalEmailVerification($user)) {
+            RateLimiter::hit($throttleKey, 1800); // 30 menit cooldown
+
+            return Redirect::route('sidongan.profile.edit')
+                ->with('success', 'Link verifikasi telah dikirim ulang ke <strong>' . e($user->personal_email) . '</strong>.');
+        }
+
+        return Redirect::route('sidongan.profile.edit')
+            ->with('error', 'Link verifikasi gagal dikirim. Silakan coba lagi nanti.');
     }
 
     /**
@@ -119,8 +251,11 @@ class ProfileController extends Controller
      */
     public function updatePassword(Request $request): RedirectResponse
     {
+        // Guard 'sidongan' — bukan 'web' — karena user login via guard
+        // sidongan (guard web di-logout saat login SIDONGAN). Rule
+        // current_password:web dulu selalu gagal walau password benar.
         $validated = $request->validate([
-            'current_password' => ['required', 'current_password:web'],
+            'current_password' => ['required', 'current_password:sidongan'],
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 

@@ -22,6 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(InjectDeveloperCredit::class);
 
         $middleware->alias([
+            // Endpoint sinkronisasi yang dipanggil aplikasi SIEDA
+            // (mis. sinkronisasi avatar user) — verifikasi shared secret
+            // dengan pola header yang sama seperti saat Admin Panel
+            // memanggil /api/sieda/* di SIEDA.
+            'sieda.sync' => \App\Http\Middleware\VerifySiedaSyncKey::class,
             'can.access' => \App\Http\Middleware\CanAccessApplication::class,
             'sidongan.auth' => \App\Http\Middleware\SidonganAuthenticate::class,
             'sidongan.guest' => \App\Http\Middleware\RedirectIfAuthenticatedSidongan::class,

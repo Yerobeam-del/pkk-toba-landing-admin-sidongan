@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Sidongan;
 
 use App\Http\Controllers\Controller;
+use App\Support\ProfileFields;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -50,10 +51,27 @@ class AuthController extends Controller
         // Attempt login dengan guard 'sidongan'
         if (Auth::guard('sidongan')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            
+
             // Clear any old session data
             $request->session()->forget('url.intended');
-            
+
+            $user = Auth::guard('sidongan')->user();
+
+            // Redirect langsung ke onboarding bila field pemblokir belum lengkap
+            // — paritas dengan SIEDA (LoginController) yang memeriksa kelengkapan
+            // saat login, bukan lewat bounce middleware dashboard. Field pemblokir
+            // didefinisikan sekali di App\Support\ProfileFields.
+            //
+            // PENGECUALIAN: user yang sebelumnya memilih "Lewati — nanti saja"
+            // (tersimpan di DB users.onboarding_skipped_at / session) TIDAK
+            // dilempar ke onboarding lagi di setiap login — tanpa ini user yang
+            // belum lengkap akan terjebak loop onboarding setiap kali login.
+            if (!ProfileFields::blockingComplete($user)
+                && !$user->onboarding_skipped_at
+                && !session('onboarding_skipped')) {
+                return redirect()->route('onboarding');
+            }
+
             return redirect()->intended(route('sidongan.dashboard'));
         }
 

@@ -60,8 +60,199 @@ Route::get('/api/v1/wilayah/villages/{districtCode}', function ($districtCode) {
     } catch (\Exception $e) { return response()->json(['success' => false, 'message' => $e->getMessage()], 500); }
 });
 
+// ================= SYNC AVATAR DARI SIEDA (server-to-server) =================
+// Dipanggil aplikasi SIEDA dengan shared secret (middleware 'sieda.sync',
+// header X-Sieda-Key/Timestamp/Signature — pola sama seperti saat Admin Panel
+// memanggil /api/sieda/* di SIEDA). Menyimpan foto yang diunggah user lewat
+// Edit Profil SIEDA ke akun Admin Panel (pkk_toba_local.users.avatar) + file-nya
+// ke storage Admin Panel, supaya foto konsisten di kedua aplikasi.
+//
+// Tanpa CSRF token (request server-to-server), bukan dari browser.
+Route::post('/api/sieda/sync-avatar', [App\Http\Controllers\Api\SiedaAvatarSyncController::class, 'store'])
+    ->middleware(['sieda.sync', 'throttle:30,1'])
+    ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+
 // ======================================================================
-// 1. ROUTES KHUSUS DOMAIN: tp-pkk.tobakab.go.id (Landing Page & Admin Panel)
+// 1. ROUTES KHUSUS DOMAIN: sidongan.tobakab.go.id (Aplikasi SIDONGAN)
+//
+// Didaftarkan SEBELUM grup landing supaya route "/" milik SIDONGAN menang di
+// host sidongan.* — saat LANDING_DOMAIN dikosongkan (dev), grup landing tanpa
+// constraint host akan menelan route "/" SIDONGAN kalau didaftarkan lebih dulu.
+//
+// Seluruh route SIDONGAN dibungkus closure $registerSidonganRoutes agar bisa
+// didaftarkan DUA kali:
+//   1. Untuk subdomain SIDONGAN yang sesungguhnya (sidongan.*).
+//   2. KHUSUS APP_ENV=local: fallback tanpa constraint host supaya SIDONGAN
+//      bisa dibuka sementara lewat 127.0.0.1 / localhost (mis. preview lokal),
+//      tanpa perlu mengubah DNS/hosts. Fallback ini TIDAK aktif di produksi,
+//      jadi di produksi SIDONGAN tetap hanya melayani host sidongan.*.
+// ======================================================================
+$registerSidonganRoutes = function (bool $withLanding): void {
+
+    // ================= API: SIDONGAN PUBLIC =================
+    Route::get('/api/v1/sidongan/documents', function () {
+        try {
+            $documents = \App\Models\Document::published()->with(['category', 'tags'])->orderBy('document_date', 'desc')->orderBy('created_at', 'desc')->paginate(12)
+                ->through(function($doc) {
+                    return ['id' => $doc->id, 'title' => $doc->title, 'slug' => $doc->slug, 'description' => $doc->description, 'document_number' => $doc->document_number, 'document_date' => $doc->document_date?->format('Y-m-d'), 'formatted_date' => $doc->document_date?->translatedFormat('d F Y'), 'category' => $doc->category ? ['id' => $doc->category->id, 'name' => $doc->category->name, 'color' => $doc->category->color] : null, 'tags' => $doc->tags->pluck('name'), 'file_name' => $doc->file_name, 'file_type' => $doc->file_type, 'file_size' => $doc->file_size, 'formatted_size' => $doc->formatted_size, 'file_url' => $doc->file_url, 'status' => $doc->status, 'is_public' => $doc->is_public, 'created_at' => $doc->created_at->format('Y-m-d H:i:s')];
+                });
+            return response()->json(['success' => true, 'data' => $documents, 'meta' => ['total' => $documents->total(), 'per_page' => $documents->perPage(), 'current_page' => $documents->currentPage(), 'last_page' => $documents->lastPage()]]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    });
+
+    Route::get('/api/v1/sidongan/documents/{slug}', function ($slug) {
+        try {
+            $document = \App\Models\Document::published()->with(['category', 'tags', 'creator'])->where('slug', $slug)->firstOrFail();
+            return response()->json(['success' => true, 'data' => ['id' => $document->id, 'title' => $document->title, 'slug' => $document->slug, 'description' => $document->description, 'document_number' => $document->document_number, 'document_date' => $document->document_date?->format('Y-m-d'), 'formatted_date' => $document->document_date?->translatedFormat('d F Y'), 'category' => $document->category ? ['id' => $document->category->id, 'name' => $document->category->name, 'color' => $document->category->color, 'description' => $document->category->description] : null, 'tags' => $document->tags->map(fn($t) => ['id' => $t->id, 'name' => $t->name, 'slug' => $t->slug]), 'file_name' => $document->file_name, 'file_type' => $document->file_type, 'file_size' => $document->file_size, 'formatted_size' => $document->formatted_size, 'file_url' => $document->file_url, 'metadata' => $document->metadata, 'creator' => $document->creator ? ['id' => $document->creator->id, 'name' => $document->creator->name] : null, 'created_at' => $document->created_at->format('Y-m-d H:i:s'), 'updated_at' => $document->updated_at?->format('Y-m-d H:i:s')]]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Dokumen tidak ditemukan'], 404);
+        }
+    });
+
+    Route::get('/api/v1/sidongan/categories', function () {
+        try {
+            $categories = \App\Models\DocumentCategory::where('is_active', true)->withCount('documents')->orderBy('name')->get()->map(fn($c) => ['id' => $c->id, 'name' => $c->name, 'slug' => $c->slug, 'description' => $c->description, 'color' => $c->color, 'documents_count' => $c->documents_count]);
+            return response()->json(['success' => true, 'data' => $categories]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    });
+
+    Route::get('/api/v1/sidongan/tags', function () {
+        try {
+            $tags = \App\Models\DocumentTag::orderBy('name')->get()->map(fn($t) => ['id' => $t->id, 'name' => $t->name, 'slug' => $t->slug]);
+            return response()->json(['success' => true, 'data' => $tags]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    });
+
+    // ================= WEB: SIDONGAN AUTH =================
+    Route::middleware(['sidongan.guest'])->group(function () use ($withLanding) {
+        // Landing page untuk SIDONGAN — hanya didaftarkan di subdomain asli.
+        // Fallback lokal (127.0.0.1) sengaja TIDAK mendefinisikan route "/"
+        // supaya halaman landing PKK tetap yang menang di host tersebut.
+        if ($withLanding) {
+            Route::get('/', function () {
+                return view('sidongan.landing');
+            })->name('sidongan.landing');
+        }
+
+        Route::get('/sidongan-login', function () {
+            \Illuminate\Support\Facades\Auth::guard('web')->logout();
+            if (session()->isStarted()) {
+                session()->flush();
+                session()->regenerateToken();
+            }
+            return view('sidongan-auth.login');
+        })->name('sidongan.login');
+
+        Route::post('/sidongan-login', [App\Http\Controllers\Sidongan\AuthController::class, 'login'])
+            ->middleware('throttle:5,1') // Max 5 attempts per minute
+            ->name('sidongan.login.post');
+
+        // ================= SIDONGAN FORGOT PASSWORD =================
+        Route::get('/sidongan-forgot-password', [App\Http\Controllers\Sidongan\ForgotPasswordController::class, 'create'])
+            ->name('sidongan.password.request');
+
+        Route::post('/sidongan-forgot-password', [App\Http\Controllers\Sidongan\ForgotPasswordController::class, 'store'])
+            ->name('sidongan.password.email');
+
+        Route::get('/sidongan-reset-password/{token}', [App\Http\Controllers\Sidongan\ResetPasswordController::class, 'create'])
+            ->name('sidongan.password.reset');
+
+        Route::post('/sidongan-reset-password', [App\Http\Controllers\Sidongan\ResetPasswordController::class, 'store'])
+            ->name('sidongan.password.store');
+    });
+
+    Route::post('/sidongan-logout', [App\Http\Controllers\Sidongan\AuthController::class, 'logout'])->name('sidongan.logout');
+
+    // ================= VERIFIKASI EMAIL PRIBADI (SIDONGAN) =================
+    // Link signed dikirim via email saat user mendaftarkan personal_email di
+    // onboarding / Edit Profil. Link-nya sendiri adalah bukti otorisasi, jadi
+    // tidak perlu login — cukup signature + kecocokan email di database.
+    Route::get('/sidongan/verify-personal-email/{id}', [App\Http\Controllers\Sidongan\ProfileController::class, 'verifyPersonalEmail'])
+        ->middleware('signed')
+        ->name('sidongan.personal-email.verify');
+
+    // ================= WEB: SIDONGAN ADMIN =================
+    Route::middleware(['sidongan.auth', 'sidongan.profile'])->prefix('sidongan')->name('sidongan.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'dashboard'])->name('dashboard');
+
+        Route::get('/documents', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'index'])->name('documents.index');
+        Route::get('/documents/create', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'create'])->name('documents.create');
+        Route::post('/documents', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'store'])->name('documents.store');
+        Route::get('/documents/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'show'])->name('documents.show');
+        Route::get('/documents/{document}/edit', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'edit'])->name('documents.edit');
+        Route::put('/documents/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'update'])->name('documents.update');
+        Route::delete('/documents/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'destroy'])->name('documents.destroy');
+        Route::get('/documents/{document}/download', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'download'])->name('documents.download');
+        Route::get('/documents/{document}/disposisi-print', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'printDisposisi'])->name('documents.disposisi-print');
+        Route::patch('/documents/{document}/archive', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'archive'])->name('documents.archive');
+        Route::post('/documents/bulk-archive', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'bulkArchive'])->name('documents.bulk-archive');
+        Route::post('/documents/bulk-delete', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'bulkDelete'])->name('documents.bulk-delete');
+
+        Route::get('/disposisi', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'disposisi'])->name('disposisi');
+        Route::get('/disposisi/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'showDisposisiForm'])->name('disposisi.form');
+        Route::post('/disposisi/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'storeDisposisi'])->name('disposisi.store');
+
+        Route::get('/verifikasi', [App\Http\Controllers\Sidongan\VerificationController::class, 'index'])->name('verifikasi');
+        Route::get('/verifikasi/{id}/form', [App\Http\Controllers\Sidongan\VerificationController::class, 'form'])->name('verifikasi.form');
+        Route::match(['post', 'put'], '/verifikasi/{id}', [App\Http\Controllers\Sidongan\VerificationController::class, 'store'])->name('verifikasi.store');
+
+        Route::get('/arsip', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'arsip'])->name('arsip');
+
+        Route::get('/lapor-kegiatan', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'index'])->name('lapor_kegiatan.index');
+        Route::get('/lapor-kegiatan/create/{document_id?}', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'create'])->name('lapor_kegiatan.create');
+        Route::post('/lapor-kegiatan', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'store'])->name('lapor_kegiatan.store');
+        Route::get('/lapor-kegiatan/{id}', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'show'])->name('lapor_kegiatan.show');
+        Route::get('/lapor-kegiatan/{id}/edit', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'edit'])->name('lapor_kegiatan.edit');
+        Route::put('/lapor-kegiatan/{id}', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'update'])->name('lapor_kegiatan.update');
+        Route::delete('/lapor-kegiatan/{id}', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'destroy'])->name('lapor_kegiatan.destroy');
+
+        Route::get('/notifications', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'notifications'])->name('notifications');
+        Route::post('/notifications/{id}/read', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'markNotificationAsRead'])->name('notifications.read');
+        Route::post('/notifications/mark-all-read', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'markAllNotificationsAsRead'])->name('notifications.mark-all-read');
+
+        // Profile (Edit Profil)
+        Route::get('/profile', [App\Http\Controllers\Sidongan\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [App\Http\Controllers\Sidongan\ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/profile/password', [App\Http\Controllers\Sidongan\ProfileController::class, 'password'])->name('profile.password');
+        Route::put('/profile/password', [App\Http\Controllers\Sidongan\ProfileController::class, 'updatePassword'])->name('profile.password.update');
+        Route::post('/verify-personal-email/resend', [App\Http\Controllers\Sidongan\ProfileController::class, 'resendPersonalEmailVerification'])
+            ->middleware('throttle:3,30') // Max 3x per 30 menit
+            ->name('personal-email.resend');
+    });
+};
+
+// 1) Registrasi utama: subdomain SIDONGAN yang sesungguhnya.
+if (config('app.sidongan_domain')) {
+    Route::domain((string) config('app.sidongan_domain'))->group(fn () => $registerSidonganRoutes(true));
+}
+
+// 2) Khusus pengembangan lokal (APP_ENV=local): fallback tanpa domain supaya
+//    SIDONGAN bisa dibuka via 127.0.0.1 / localhost (preview Freebuff dsb.).
+if (app()->environment('local')) {
+    Route::group([], fn () => $registerSidonganRoutes(false));
+}
+
+// ======================================================================
+// 2. ONBOARDING — STANDALONE (works from any login source)
+// ======================================================================
+Route::middleware(['web'])->group(function () {
+    // Onboarding
+    Route::get('/onboarding', [App\Http\Controllers\OnboardingController::class, 'show'])->name('onboarding');
+    Route::post('/onboarding', [App\Http\Controllers\OnboardingController::class, 'store'])->name('onboarding.store');
+    Route::get('/onboarding/skip', [App\Http\Controllers\OnboardingController::class, 'skip'])->name('onboarding.skip');
+
+    // Unified Forgot Password
+    Route::get('/forgot-password', [App\Http\Controllers\UnifiedForgotPasswordController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [App\Http\Controllers\UnifiedForgotPasswordController::class, 'store'])->name('password.email');
+});
+// ======================================================================
+// 3. ROUTES KHUSUS DOMAIN: tp-pkk.tobakab.go.id (Landing Page & Admin Panel)
 // ======================================================================
 Route::domain(config('app.landing_domain'))->group(function () {
 
@@ -377,148 +568,6 @@ Route::domain(config('app.landing_domain'))->group(function () {
         Route::get('/skip', [App\Http\Controllers\Auth\PersonalEmailController::class, 'skip'])->name('skip');
     });
 
-});
-
-// ======================================================================
-// 2. ONBOARDING — STANDALONE (works from any login source)
-// ======================================================================
-Route::middleware(['web'])->group(function () {
-    // Onboarding
-    Route::get('/onboarding', [App\Http\Controllers\OnboardingController::class, 'show'])->name('onboarding');
-    Route::post('/onboarding', [App\Http\Controllers\OnboardingController::class, 'store'])->name('onboarding.store');
-    Route::get('/onboarding/skip', [App\Http\Controllers\OnboardingController::class, 'skip'])->name('onboarding.skip');
-
-    // Unified Forgot Password
-    Route::get('/forgot-password', [App\Http\Controllers\UnifiedForgotPasswordController::class, 'create'])->name('password.request');
-    Route::post('/forgot-password', [App\Http\Controllers\UnifiedForgotPasswordController::class, 'store'])->name('password.email');
-});
-
-// ======================================================================
-// 3. ROUTES KHUSUS DOMAIN: sidongan.tobakab.go.id (Aplikasi SIDONGAN)
-// ======================================================================
-Route::domain(config('app.sidongan_domain'))->group(function () {
-
-    // ================= API: SIDONGAN PUBLIC =================
-    Route::get('/api/v1/sidongan/documents', function () {
-        try {
-            $documents = \App\Models\Document::published()->with(['category', 'tags'])->orderBy('document_date', 'desc')->orderBy('created_at', 'desc')->paginate(12)
-                ->through(function($doc) {
-                    return ['id' => $doc->id, 'title' => $doc->title, 'slug' => $doc->slug, 'description' => $doc->description, 'document_number' => $doc->document_number, 'document_date' => $doc->document_date?->format('Y-m-d'), 'formatted_date' => $doc->document_date?->translatedFormat('d F Y'), 'category' => $doc->category ? ['id' => $doc->category->id, 'name' => $doc->category->name, 'color' => $doc->category->color] : null, 'tags' => $doc->tags->pluck('name'), 'file_name' => $doc->file_name, 'file_type' => $doc->file_type, 'file_size' => $doc->file_size, 'formatted_size' => $doc->formatted_size, 'file_url' => $doc->file_url, 'status' => $doc->status, 'is_public' => $doc->is_public, 'created_at' => $doc->created_at->format('Y-m-d H:i:s')];
-                });
-            return response()->json(['success' => true, 'data' => $documents, 'meta' => ['total' => $documents->total(), 'per_page' => $documents->perPage(), 'current_page' => $documents->currentPage(), 'last_page' => $documents->lastPage()]]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    });
-
-    Route::get('/api/v1/sidongan/documents/{slug}', function ($slug) {
-        try {
-            $document = \App\Models\Document::published()->with(['category', 'tags', 'creator'])->where('slug', $slug)->firstOrFail();
-            return response()->json(['success' => true, 'data' => ['id' => $document->id, 'title' => $document->title, 'slug' => $document->slug, 'description' => $document->description, 'document_number' => $document->document_number, 'document_date' => $document->document_date?->format('Y-m-d'), 'formatted_date' => $document->document_date?->translatedFormat('d F Y'), 'category' => $document->category ? ['id' => $document->category->id, 'name' => $document->category->name, 'color' => $document->category->color, 'description' => $document->category->description] : null, 'tags' => $document->tags->map(fn($t) => ['id' => $t->id, 'name' => $t->name, 'slug' => $t->slug]), 'file_name' => $document->file_name, 'file_type' => $document->file_type, 'file_size' => $document->file_size, 'formatted_size' => $document->formatted_size, 'file_url' => $document->file_url, 'metadata' => $document->metadata, 'creator' => $document->creator ? ['id' => $document->creator->id, 'name' => $document->creator->name] : null, 'created_at' => $document->created_at->format('Y-m-d H:i:s'), 'updated_at' => $document->updated_at?->format('Y-m-d H:i:s')]]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Dokumen tidak ditemukan'], 404);
-        }
-    });
-
-    Route::get('/api/v1/sidongan/categories', function () {
-        try {
-            $categories = \App\Models\DocumentCategory::where('is_active', true)->withCount('documents')->orderBy('name')->get()->map(fn($c) => ['id' => $c->id, 'name' => $c->name, 'slug' => $c->slug, 'description' => $c->description, 'color' => $c->color, 'documents_count' => $c->documents_count]);
-            return response()->json(['success' => true, 'data' => $categories]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    });
-
-    Route::get('/api/v1/sidongan/tags', function () {
-        try {
-            $tags = \App\Models\DocumentTag::orderBy('name')->get()->map(fn($t) => ['id' => $t->id, 'name' => $t->name, 'slug' => $t->slug]);
-            return response()->json(['success' => true, 'data' => $tags]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    });
-
-    // ================= WEB: SIDONGAN AUTH =================
-    Route::middleware(['sidongan.guest'])->group(function () {
-        // Landing page untuk SIDONGAN
-        Route::get('/', function () {
-            return view('sidongan.landing');
-        })->name('sidongan.landing');
-
-        Route::get('/sidongan-login', function () {
-            \Illuminate\Support\Facades\Auth::guard('web')->logout();
-            if (session()->isStarted()) {
-                session()->flush();
-                session()->regenerateToken();
-            }
-            return view('sidongan-auth.login');
-        })->name('sidongan.login');
-
-        Route::post('/sidongan-login', [App\Http\Controllers\Sidongan\AuthController::class, 'login'])
-            ->middleware('throttle:5,1') // Max 5 attempts per minute
-            ->name('sidongan.login.post');
-
-        // ================= SIDONGAN FORGOT PASSWORD =================
-        Route::get('/sidongan-forgot-password', [App\Http\Controllers\Sidongan\ForgotPasswordController::class, 'create'])
-            ->name('sidongan.password.request');
-
-        Route::post('/sidongan-forgot-password', [App\Http\Controllers\Sidongan\ForgotPasswordController::class, 'store'])
-            ->name('sidongan.password.email');
-
-        Route::get('/sidongan-reset-password/{token}', [App\Http\Controllers\Sidongan\ResetPasswordController::class, 'create'])
-            ->name('sidongan.password.reset');
-
-        Route::post('/sidongan-reset-password', [App\Http\Controllers\Sidongan\ResetPasswordController::class, 'store'])
-            ->name('sidongan.password.store');
-    });
-
-    Route::post('/sidongan-logout', [App\Http\Controllers\Sidongan\AuthController::class, 'logout'])->name('sidongan.logout');
-
-    // ================= WEB: SIDONGAN ADMIN =================
-    Route::middleware(['sidongan.auth', 'sidongan.profile'])->prefix('sidongan')->name('sidongan.')->group(function () {
-        Route::get('/', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'dashboard'])->name('dashboard');
-
-        Route::get('/documents', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'index'])->name('documents.index');
-        Route::get('/documents/create', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'create'])->name('documents.create');
-        Route::post('/documents', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'store'])->name('documents.store');
-        Route::get('/documents/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'show'])->name('documents.show');
-        Route::get('/documents/{document}/edit', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'edit'])->name('documents.edit');
-        Route::put('/documents/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'update'])->name('documents.update');
-        Route::delete('/documents/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'destroy'])->name('documents.destroy');
-        Route::get('/documents/{document}/download', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'download'])->name('documents.download');
-        Route::get('/documents/{document}/disposisi-print', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'printDisposisi'])->name('documents.disposisi-print');
-        Route::patch('/documents/{document}/archive', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'archive'])->name('documents.archive');
-        Route::post('/documents/bulk-archive', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'bulkArchive'])->name('documents.bulk-archive');
-        Route::post('/documents/bulk-delete', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'bulkDelete'])->name('documents.bulk-delete');
-
-        Route::get('/disposisi', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'disposisi'])->name('disposisi');
-        Route::get('/disposisi/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'showDisposisiForm'])->name('disposisi.form');
-        Route::post('/disposisi/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'storeDisposisi'])->name('disposisi.store');
-
-        Route::get('/verifikasi', [App\Http\Controllers\Sidongan\VerificationController::class, 'index'])->name('verifikasi');
-        Route::get('/verifikasi/{id}/form', [App\Http\Controllers\Sidongan\VerificationController::class, 'form'])->name('verifikasi.form');
-        Route::match(['post', 'put'], '/verifikasi/{id}', [App\Http\Controllers\Sidongan\VerificationController::class, 'store'])->name('verifikasi.store');
-
-        Route::get('/arsip', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'arsip'])->name('arsip');
-
-        Route::get('/lapor-kegiatan', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'index'])->name('lapor_kegiatan.index');
-        Route::get('/lapor-kegiatan/create/{document_id?}', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'create'])->name('lapor_kegiatan.create');
-        Route::post('/lapor-kegiatan', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'store'])->name('lapor_kegiatan.store');
-        Route::get('/lapor-kegiatan/{id}', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'show'])->name('lapor_kegiatan.show');
-        Route::get('/lapor-kegiatan/{id}/edit', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'edit'])->name('lapor_kegiatan.edit');
-        Route::put('/lapor-kegiatan/{id}', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'update'])->name('lapor_kegiatan.update');
-        Route::delete('/lapor-kegiatan/{id}', [App\Http\Controllers\Sidongan\ActivityReportController::class, 'destroy'])->name('lapor_kegiatan.destroy');
-
-        Route::get('/notifications', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'notifications'])->name('notifications');
-        Route::post('/notifications/{id}/read', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'markNotificationAsRead'])->name('notifications.read');
-        Route::post('/notifications/mark-all-read', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'markAllNotificationsAsRead'])->name('notifications.mark-all-read');
-
-        // Profile (Edit Profil)
-        Route::get('/profile', [App\Http\Controllers\Sidongan\ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [App\Http\Controllers\Sidongan\ProfileController::class, 'update'])->name('profile.update');
-        Route::get('/profile/password', [App\Http\Controllers\Sidongan\ProfileController::class, 'password'])->name('profile.password');
-        Route::put('/profile/password', [App\Http\Controllers\Sidongan\ProfileController::class, 'updatePassword'])->name('profile.password.update');
-    });
 });
 
 // ================= DEV: SIDONGAN LANDING PREVIEW (hanya environment local) =================

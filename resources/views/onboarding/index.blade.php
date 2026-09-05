@@ -27,6 +27,35 @@
             --gradient-end: {{ $system['color_end'] }};
         }
     </style>
+
+    {{-- Tanda "Opsional" — foto profil tidak wajib, bisa dilengkapi nanti lewat
+         menu Edit Profil (lihat ProfileFields: avatar tidak pernah menghalangi
+         akses aplikasi). --}}
+    <style>
+        .ob-step-tag, .ob-avatar-opt {
+            display: inline-block;
+            margin-left: 0.45rem;
+            padding: 0.12rem 0.5rem;
+            border-radius: 99px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            vertical-align: 2px;
+        }
+        /* di panel kiri (latar gradasi gelap) */
+        .ob-step-tag {
+            background: rgba(255,255,255,0.16);
+            color: #fff;
+            border: 1px dashed rgba(255,255,255,0.55);
+        }
+        /* di panel kanan (latar putih) */
+        .ob-avatar-opt {
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1px dashed #6ee7b7;
+        }
+    </style>
 </head>
 <body>
     <div class="ob-split">
@@ -53,8 +82,8 @@
                             @endif
                         </div>
                         <div class="ob-step-info">
-                            <span class="ob-step-title">Upload Foto Profil</span>
-                            <span class="ob-step-desc">Agar dikenali oleh tim Anda</span>
+                            <span class="ob-step-title">Upload Foto Profil <span class="ob-step-tag">Opsional</span></span>
+                            <span class="ob-step-desc">Agar dikenali oleh tim Anda — bisa dilewati dulu</span>
                         </div>
                     </div>
 
@@ -158,8 +187,8 @@
                             </label>
                         </div>
                         <div class="ob-avatar-info">
-                            <span class="ob-avatar-label">Foto Profil</span>
-                            <span class="ob-avatar-hint">JPG/PNG, maks 2MB</span>
+                            <span class="ob-avatar-label">Foto Profil <span class="ob-avatar-opt">Opsional</span></span>
+                            <span class="ob-avatar-hint">Boleh kosong — Anda bisa langsung lanjut tanpa foto. Tambahkan nanti lewat menu Edit Profil (JPG/PNG, maks 2MB)</span>
                             <input type="file" id="avatarInput" name="avatar" accept="image/jpeg,image/png" class="ob-file-input">
                         </div>
                     </div>
