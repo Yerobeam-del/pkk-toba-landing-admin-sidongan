@@ -116,7 +116,7 @@
             @if(count($allImages) > 0)
             <div class="news-magazine-gallery">
                 <div class="news-gallery-main" id="galleryMain">
-                    <img src="{{ $allImages[0]['path'] }}" alt="{{ $allImages[0]['caption'] }}" id="galleryMainImg" loading="lazy">
+                    <img src="{{ $allImages[0]['path'] }}" alt="{{ $allImages[0]['caption'] }}" id="galleryMainImg" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/landing/images/berita/default.jpg') }}'">
 
                     @if(count($allImages) > 1)
                     <button type="button" class="news-gallery-arrow news-gallery-prev" id="galleryPrev" aria-label="Gambar sebelumnya">
@@ -185,7 +185,7 @@
                 @foreach($relatedNews as $item)
                     <a href="{{ url('/berita/' . $item->slug) }}" class="news-related-card">
                         @if($item->image_path)
-                            <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="news-related-image" loading="lazy">
+                            <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->title }}" class="news-related-image" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/landing/images/berita/default.jpg') }}'">
                         @else
                             <div class="news-related-image-placeholder">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>

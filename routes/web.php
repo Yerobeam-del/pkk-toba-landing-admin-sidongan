@@ -382,77 +382,21 @@ Route::domain(config('app.landing_domain'))->group(function () {
     });
 
     Route::get('/api/v1/desas', function () {
-        // Sumber utama: database SIEDA (koneksi 'sieda'). Struktur:
-        //   ref_kecamatan(kode, nama) → ref_desa(kode, nama, kode_kecamatan)
-        //   tp_pkk_warga / tp_pkk_keluarga (kode_desa, active) → jumlah penduduk & KK
-        // Fallback ke tabel lokal (kecamatans/desas) bila SIEDA tidak terjangkau.
+        // HANYA desa yang sudah ditambahkan admin lewat Admin Panel (tabel
+        // desas) yang tampil di landing page. Angka penduduk/KK diambil otomatis
+        // dari database SIEDA saat admin menyimpan desa; foto desa diunggah
+        // admin. Sebelum admin mengisi data, landing page tetap kosong.
         try {
-            $sieda = \Illuminate\Support\Facades\DB::connection('sieda');
-
-            // Jumlah KK & penduduk per desa (tahun data terbaru di SIEDA)
-            $latestYear = $sieda->table('tp_pkk_keluarga')->max('config_year');
-            $kkPerDesa = $sieda->table('tp_pkk_keluarga')
-                ->where('active', 1)
-                ->when($latestYear, fn($q) => $q->where('config_year', $latestYear))
-                ->selectRaw('kode_desa, COUNT(*) as total')->groupBy('kode_desa')
-                ->pluck('total', 'kode_desa');
-            $pendudukPerDesa = $sieda->table('tp_pkk_warga')
-                ->where('active', 1)
-                ->selectRaw('kode_desa, COUNT(*) as total')->groupBy('kode_desa')
-                ->pluck('total', 'kode_desa');
-
-            // Hanya desa yang benar-benar punya data (warga/KK) di SIEDA yang ditampilkan
-            $kodeDesaDenganData = $pendudukPerDesa->keys()->merge($kkPerDesa->keys())->unique()->values();
-            $desas = $kodeDesaDenganData->isNotEmpty()
-                ? $sieda->table('ref_desa')->whereIn('kode', $kodeDesaDenganData)->orderBy('kode')->get()
-                : collect();
-            $desasByKecamatan = $desas->groupBy('kode_kecamatan');
-
-            // Foto desa yang diunggah lewat Admin Panel (hanya gambar yang
-            // dikelola admin — angka tetap murni dari database SIEDA).
-            $fotoDesa = \App\Models\Desa::whereNotNull('image')
-                ->where('image', '!=', '')
-                ->pluck('image', 'kode_wilayah');
-
-            $kecamatans = $sieda->table('ref_kecamatan')->orderBy('kode')->get()
-                ->filter(fn($kec) => $desasByKecamatan->has($kec->kode))
-                ->map(function ($kec) use ($desasByKecamatan, $kkPerDesa, $pendudukPerDesa, $fotoDesa) {
-                $desas = $desasByKecamatan->get($kec->kode, collect());
-                return [
-                    'id' => $kec->kode,
-                    'name' => $kec->nama,
-                    'desas' => $desas->map(function ($desa) use ($kkPerDesa, $pendudukPerDesa, $fotoDesa) {
-                        $foto = $fotoDesa[$desa->kode] ?? null;
-                        return [
-                            'id' => $desa->kode,
-                            'name' => $desa->nama,
-                            'kode_wilayah' => $desa->kode,
-                            'description' => null,
-                            'image' => $foto ? asset('storage/' . $foto) : null,
-                            'population' => (int) ($pendudukPerDesa[$desa->kode] ?? 0),
-                            'households' => (int) ($kkPerDesa[$desa->kode] ?? 0),
-                            'sort_order' => 0,
-                            'is_active' => true,
-                        ];
-                    })->values(),
-                ];
-            })->values();
-
-            return response()->json(['success' => true, 'source' => 'sieda', 'data' => $kecamatans]);
-        } catch (\Throwable $e) {
-            // Fallback: tabel lokal (data dikelola admin panel)
-            try {
-                $kecamatans = \App\Models\Kecamatan::with(['activeDesas' => function($q) {
-                    $q->select('id', 'kecamatan_id', 'name', 'kode_wilayah', 'description', 'image', 'population', 'households', 'sort_order', 'is_active')->orderBy('sort_order');
-                }])->orderBy('name')->get()->map(function($kec) {
-                    return ['id' => $kec->id, 'name' => $kec->name, 'desas' => $kec->activeDesas->map(function($desa) {
-                        return ['id' => $desa->id, 'name' => $desa->name, 'kode_wilayah' => $desa->kode_wilayah, 'description' => $desa->description, 'image' => $desa->image ? asset('storage/' . $desa->image) : null, 'population' => $desa->population, 'households' => $desa->households, 'sort_order' => $desa->sort_order, 'is_active' => $desa->is_active];
-                    })];
-                });
-                return response()->json(['success' => true, 'source' => 'local', 'data' => $kecamatans]);
-            } catch (\Exception $e2) {
-                return response()->json(['success' => false, 'message' => 'Gagal memuat data desa: ' . $e2->getMessage()], 500);
-            }
+            $kecamatans = \App\Models\Kecamatan::with(['activeDesas' => function($q) {
+                $q->select('id', 'kecamatan_id', 'name', 'kode_wilayah', 'description', 'image', 'population', 'households', 'sort_order', 'is_active')->orderBy('sort_order');
+            }])->orderBy('name')->get()->map(function($kec) {
+                return ['id' => $kec->id, 'name' => $kec->name, 'desas' => $kec->activeDesas->map(function($desa) {
+                    return ['id' => $desa->id, 'name' => $desa->name, 'kode_wilayah' => $desa->kode_wilayah, 'description' => $desa->description, 'image' => $desa->image ? asset('storage/' . $desa->image) : null, 'population' => $desa->population, 'households' => $desa->households, 'sort_order' => $desa->sort_order, 'is_active' => $desa->is_active];
+                })];
+            });
+            return response()->json(['success' => true, 'source' => 'local', 'data' => $kecamatans]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Gagal memuat data desa: ' . $e->getMessage()], 500);
         }
     });
 
@@ -601,6 +545,10 @@ Route::domain(config('app.landing_domain'))->group(function () {
             Route::put('/{desa}', [App\Http\Controllers\Admin\DesaController::class, 'update'])->name('update');
             Route::delete('/{desa}', [App\Http\Controllers\Admin\DesaController::class, 'destroy'])->name('destroy');
             Route::get('/max-sort-order', [App\Http\Controllers\Admin\DesaController::class, 'getMaxSortOrder'])->name('max-sort-order');
+            // Dropdown kecamatan/desa untuk form Tambah/Edit Desa — hanya
+            // wilayah yang sudah terisi datanya di database SIEDA yang boleh
+            // dipilih (lihat DesaController::siedaWilayah).
+            Route::get('/sieda-wilayah', [App\Http\Controllers\Admin\DesaController::class, 'siedaWilayah'])->name('sieda-wilayah');
             // Catatan: route kecamatan (store/update/destroy) dihapus — metodenya tidak
             // pernah ada di DesaController dan tidak ada UI yang memanggilnya.
         });

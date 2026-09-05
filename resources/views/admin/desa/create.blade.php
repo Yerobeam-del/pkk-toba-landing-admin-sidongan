@@ -57,7 +57,7 @@
                 </select>
             </div>
             <input type="hidden" name="desa_name" id="desaNameInput">
-            <small class="u-hint" id="desaHelp">Data desa otomatis dari API wilayah.id</small>
+            <small class="u-hint" id="desaHelp">Hanya desa yang sudah terisi datanya di SIEDA yang bisa dipilih</small>
             <small id="desaError" style="color:#ef4444;display:none;margin-top:0.25rem;font-size:0.85rem"></small>
         </div>
 

@@ -11,7 +11,7 @@
 <div class="desa-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
     <div class="u-flex-1-min">
         <h1 class="u-page-title-tight">Manajemen Desa</h1>
-        <p class="u-muted">Kabupaten Toba • Data dari API wilayah.id</p>
+        <p class="u-muted">Kabupaten Toba • Angka penduduk &amp; KK otomatis dari database SIEDA</p>
     </div>
     
     <div class="desa-header-actions" style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">

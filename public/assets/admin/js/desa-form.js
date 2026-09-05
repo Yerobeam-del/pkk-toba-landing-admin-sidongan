@@ -56,7 +56,11 @@ async function loadDesaByKecamatan(kecCode, preselectCode = null) {
             const opt = document.createElement('option');
             opt.value = d.code;
             opt.textContent = d.name;
+            opt.dataset.nama = d.name;
             if (preselectCode && d.code === preselectCode) {
+                // Desa yang sedang diedit harus tetap bisa dipilih walau
+                // sudah terdaftar (opsi disabled hanya untuk pilihan lain).
+                opt.disabled = false;
                 opt.selected = true;
             }
             desaSelect.appendChild(opt);
@@ -125,7 +129,7 @@ kecamatanSelect.addEventListener('change', function() {
 
 desaSelect.addEventListener('change', function() {
     const selected = this.options[this.selectedIndex];
-    desaNameInput.value = this.value ? selected.textContent : '';
+    desaNameInput.value = this.value && !selected.disabled ? selected.getAttribute('data-nama') || selected.textContent : '';
 });
 
 document.getElementById('imageInput')?.addEventListener('change', function(e) {
@@ -148,12 +152,14 @@ document.getElementById('imageInput')?.addEventListener('change', function(e) {
     }
 });
 
+// Checkbox animation handler — sadar tema (dark mode pakai warna lain)
 function updateCheckboxStyle(boxId, checkId, isChecked) {
     const box = document.getElementById(boxId);
     const check = document.getElementById(checkId);
-    
+    const isDark = document.documentElement.classList.contains('dark-mode');
+
     if (!box || !check) return;
-    
+
     if (isChecked) {
         box.style.background = 'linear-gradient(135deg, #14b8a6, #0d9488)';
         box.style.borderColor = '#14b8a6';
@@ -161,8 +167,8 @@ function updateCheckboxStyle(boxId, checkId, isChecked) {
         check.style.opacity = '1';
         check.style.transform = 'scale(1)';
     } else {
-        box.style.background = '#fff';
-        box.style.borderColor = '#cbd5e1';
+        box.style.background = isDark ? '#1e293b' : '#fff';
+        box.style.borderColor = isDark ? '#475569' : '#cbd5e1';
         box.style.boxShadow = 'none';
         check.style.opacity = '0';
         check.style.transform = 'scale(0.5)';
@@ -172,9 +178,14 @@ function updateCheckboxStyle(boxId, checkId, isChecked) {
 const isActiveCheckbox = document.getElementById('isActive');
 if (isActiveCheckbox) {
     updateCheckboxStyle('isActiveBox', 'isActiveCheck', isActiveCheckbox.checked);
-    
+
     isActiveCheckbox.addEventListener('change', function() {
         updateCheckboxStyle('isActiveBox', 'isActiveCheck', this.checked);
     });
+
+    // Saat tema berubah (toggle dark mode manual), segarkan ulang warna kotak
+    new MutationObserver(() => {
+        updateCheckboxStyle('isActiveBox', 'isActiveCheck', isActiveCheckbox.checked);
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 }
 

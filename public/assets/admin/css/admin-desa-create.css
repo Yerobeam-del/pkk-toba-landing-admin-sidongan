@@ -8,6 +8,52 @@
  * ============================================================ */
 
 
+/* ============================================================
+   DARK MODE — Tambah Desa
+   Menimpa warna inline terang pada view.
+   ============================================================ */
+
+/* Select kecamatan & desa (inline background:#fff di view) */
+html.dark-mode select.form-control {
+    background-color:#1e293b !important;
+    border-color:#334155 !important;
+    color:#e2e8f0 !important;
+}
+html.dark-mode select.form-control:disabled {
+    opacity:0.55;
+    cursor:not-allowed;
+}
+html.dark-mode .u-a33 { color:#94a3b8 }
+
+/* Input file (foto desa) */
+html.dark-mode .form-control[type="file"] {
+    border:2px dashed #334155;
+    background:#0f172a;
+    color:#e2e8f0;
+}
+html.dark-mode .form-control[type="file"]:hover {
+    border-color:#14b8a6;
+    background:rgba(20,184,166,0.08);
+}
+
+/* Info box "otomatis dari SIEDA" */
+html.dark-mode div[style*="background:rgba(20,184,166,0.06)"] {
+    background:rgba(20,184,166,0.08) !important;
+    border-color:rgba(20,184,166,0.25) !important;
+}
+html.dark-mode div[style*="background:rgba(20,184,166,0.06)"] strong {
+    color:#e2e8f0 !important;
+}
+
+/* Preview foto */
+html.dark-mode .u-a2 img { background:#0f172a }
+html.dark-mode .u-a2 span { color:#94a3b8 }
+
+/* Teks bantuan */
+html.dark-mode .u-hint,
+html.dark-mode .u-hint-sm { color:#94a3b8 }
+
+
 /* Responsive untuk Mobile */
 @media (max-width: 768px) {
     .desa-header {

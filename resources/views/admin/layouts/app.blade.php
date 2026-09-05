@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    
+
     <link rel="stylesheet" href="{{ asset('assets/shared/css/utilities.css') }}">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -179,7 +179,7 @@
                                 <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
                             </svg>
                         </div>
-                        <span class="nav-text">Data SIDONGAN</span>
+                        <span class="nav-text">Manajemen SIDONGAN</span>
                     </a>
                     @endif
 

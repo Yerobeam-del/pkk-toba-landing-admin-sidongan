@@ -39,20 +39,112 @@ class DesaController extends Controller
 
     public function create()
     {
+        // Pastikan master kecamatan tersedia (sama seperti index) supaya
+        // dropdown form punya pasangan id lokal untuk kode wilayah SIEDA.
+        if (Kecamatan::count() === 0) {
+            $this->wilayahService->syncKecamatansToba();
+        }
+
         $kecamatans = Kecamatan::orderBy('name')->get();
         $selectedKecamatan = request('kecamatan');
         return view('admin.desa.create', compact('kecamatans', 'selectedKecamatan'));
     }
 
     /**
-     * Ambil jumlah penduduk & KK per desa dari database SIEDA (koneksi 'sieda').
+     * Endpoint dropdown form Tambah/Edit Desa.
+     *
+     * Kecamatan & desa yang BOLEH dipilih hanyalah yang sudah terisi datanya
+     * di database SIEDA (punya data warga/KK). Desa yang sudah pernah
+     * ditambahkan admin ditandai sudah_terdaftar = true agar tidak bisa
+     * didaftarkan dua kali (opsi dinonaktifkan di form — kecuali desa yang
+     * sedang diedit sendiri).
+     */
+    public function siedaWilayah()
+    {
+        $snapshot = $this->getSiedaSnapshot();
+
+        // Pasangan id lokal ↔ kode wilayah, dipakai sebagai value <select>
+        // kecamatan_id (divalidasi exists:kecamatans,id).
+        $kecamatanLokal = Kecamatan::select('id', 'kode_wilayah', 'name')->get()->keyBy('kode_wilayah');
+
+        // Desa yang sudah didaftarkan admin, dikelompokkan per kode kecamatan.
+        $terdaftarPerKecamatan = Desa::with('kecamatan:id,kode_wilayah')
+            ->get()
+            ->filter(fn($d) => !empty($d->kode_wilayah))
+            ->groupBy(fn($d) => (string) ($d->kecamatan->kode_wilayah ?? ''));
+
+        $kodeSudahTerdaftar = Desa::pluck('kode_wilayah')->map(fn($k) => (string) $k)->all();
+
+        $data = collect($snapshot['kecamatan'])->map(function ($kec) use ($snapshot, $kecamatanLokal, $terdaftarPerKecamatan, $kodeSudahTerdaftar) {
+            $dariSieda = collect($snapshot['desas'])
+                ->where('kode_kecamatan', $kec['kode'])
+                ->map(fn($d) => [
+                    'kode'            => (string) $d['kode'],
+                    'nama'            => $d['nama'],
+                    'sudah_terdaftar' => in_array((string) $d['kode'], $kodeSudahTerdaftar, true),
+                ]);
+
+            // Desa terdaftar yang tidak ada di data SIEDA (mis. data lama)
+            // tetap ditampilkan (berstatus terdaftar) supaya form Edit tetap
+            // bisa memuat nilai saat ini.
+            $ekstra = $terdaftarPerKecamatan->get((string) $kec['kode'], collect())
+                ->filter(fn($d) => !$dariSieda->contains('kode', (string) $d->kode_wilayah))
+                ->map(fn($d) => [
+                    'kode'            => (string) $d->kode_wilayah,
+                    'nama'            => $d->name,
+                    'sudah_terdaftar' => true,
+                ]);
+
+            return [
+                'id'    => $kecamatanLokal[$kec['kode']]->id ?? null,
+                'kode'  => $kec['kode'],
+                'nama'  => $kec['nama'],
+                'desas' => $dariSieda->merge($ekstra)
+                    ->sortBy('nama', SORT_NATURAL | SORT_FLAG_CASE)
+                    ->values()->all(),
+            ];
+        });
+
+        // Kecamatan lokal yang punya desa terdaftar tapi tidak ada di data
+        // SIEDA — tetap disertakan agar form Edit tidak kehilangan pilihan.
+        $tambahan = $terdaftarPerKecamatan
+            ->keys()
+            ->reject(fn($kode) => $kode === '' || $data->contains('kode', $kode))
+            ->map(function ($kode) use ($kecamatanLokal, $terdaftarPerKecamatan) {
+                return [
+                    'id'    => $kecamatanLokal[$kode]->id ?? null,
+                    'kode'  => $kode,
+                    'nama'  => $kecamatanLokal[$kode]->name ?? $kode,
+                    'desas' => $terdaftarPerKecamatan->get($kode)
+                        ->map(fn($d) => [
+                            'kode'            => (string) $d->kode_wilayah,
+                            'nama'            => $d->name,
+                            'sudah_terdaftar' => true,
+                        ])->values()->all(),
+                ];
+            });
+
+        return response()->json(['success' => true, 'data' => $data->merge($tambahan)->values()->all()]);
+    }
+
+    /**
+     * Ambil referensi wilayah + jumlah penduduk & KK per desa dari database
+     * SIEDA (koneksi 'sieda') dalam sekali jalan.
      * Normor (angka) tidak lagi diinput manual — semuanya otomatis dari SIEDA.
      *
-     * @return array{population: array<string,int>, households: array<string,int>}
-     *         keyed by kode_desa.
+     * Struktur ref SIEDA: ref_kecamatan(kode, nama) → ref_desa(kode, nama,
+     * kode_kecamatan); tp_pkk_warga / tp_pkk_keluarga (kode_desa, active).
+     *
+     * @return array{
+     *   population: array<string,int>, households: array<string,int>,
+     *   desas: array<int,array{kode:string,nama:string,kode_kecamatan:string}>,
+     *   kecamatan: array<int,array{kode:string,nama:string}>,
+     * }
      */
-    private function getStatsFromSieda(): array
+    private function getSiedaSnapshot(): array
     {
+        $kosong = ['population' => [], 'households' => [], 'desas' => [], 'kecamatan' => []];
+
         try {
             $sieda = \Illuminate\Support\Facades\DB::connection('sieda');
 
@@ -67,14 +159,27 @@ class DesaController extends Controller
                 ->selectRaw('kode_desa, COUNT(*) as total')->groupBy('kode_desa')
                 ->pluck('total', 'kode_desa');
 
+            // Hanya desa yang benar-benar punya data (warga/KK) di SIEDA.
+            $kodeDenganData = $pendudukPerDesa->keys()->merge($kkPerDesa->keys())->unique()->values();
+            $desas = $kodeDenganData->isNotEmpty()
+                ? $sieda->table('ref_desa')->whereIn('kode', $kodeDenganData)->orderBy('kode')->get(['kode', 'nama', 'kode_kecamatan'])
+                : collect();
+
+            $kecamatans = $desas->isNotEmpty()
+                ? $sieda->table('ref_kecamatan')->orderBy('nama')->get(['kode', 'nama'])
+                    ->filter(fn($kec) => $desas->contains('kode_kecamatan', $kec->kode))->values()
+                : collect();
+
             return [
                 'population' => $pendudukPerDesa->map(fn($v) => (int) $v)->all(),
                 'households' => $kkPerDesa->map(fn($v) => (int) $v)->all(),
+                'desas'      => $desas->map(fn($d) => ['kode' => $d->kode, 'nama' => $d->nama, 'kode_kecamatan' => $d->kode_kecamatan])->all(),
+                'kecamatan'  => $kecamatans->map(fn($k) => ['kode' => $k->kode, 'nama' => $k->nama])->all(),
             ];
         } catch (\Throwable $e) {
-            // SIEDA tidak terjangkau — biarkan angka 0, jangan gagalkan simpan.
-            \Illuminate\Support\Facades\Log::warning('[DesaController] Gagal mengambil statistik dari SIEDA: ' . $e->getMessage());
-            return ['population' => [], 'households' => []];
+            // SIEDA tidak terjangkau — biarkan kosong, jangan gagalkan halaman.
+            \Illuminate\Support\Facades\Log::warning('[DesaController] Gagal mengambil data dari SIEDA: ' . $e->getMessage());
+            return $kosong;
         }
     }
 
@@ -99,7 +204,7 @@ class DesaController extends Controller
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         // Angka dari SIEDA
-        $stats = $this->getStatsFromSieda();
+        $stats = $this->getSiedaSnapshot();
         $validated['population'] = $stats['population'][$validated['kode_wilayah']] ?? 0;
         $validated['households'] = $stats['households'][$validated['kode_wilayah']] ?? 0;
 
@@ -138,7 +243,7 @@ class DesaController extends Controller
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
         // Angka dari SIEDA
-        $stats = $this->getStatsFromSieda();
+        $stats = $this->getSiedaSnapshot();
         $validated['population'] = $stats['population'][$validated['kode_wilayah']] ?? 0;
         $validated['households'] = $stats['households'][$validated['kode_wilayah']] ?? 0;
 
