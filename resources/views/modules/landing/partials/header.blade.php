@@ -27,7 +27,7 @@
             <li><a href="{{ route('landing.home') }}#struktur" class="nav-link" data-page="struktur">Struktur</a></li>
             <li><a href="{{ route('landing.home') }}#aplikasi" class="nav-link" data-page="aplikasi">Aplikasi</a></li>
             <li><a href="{{ route('landing.home') }}#berita" class="nav-link" data-page="berita">Berita</a></li>
-            {{-- <li><a href="{{ route('landing.home') }}#desa" class="nav-link" data-page="desa">Desa</a></li> --}}
+            <li><a href="{{ route('landing.home') }}#desa" class="nav-link" data-page="desa">Desa</a></li>
             <li><a href="{{ route('landing.home') }}#sk" class="nav-link" data-page="sk">SK & Dokumen</a></li>
             <li><a href="{{ route('landing.home') }}#template" class="nav-link" data-page="template">Template</a></li>
             <li><a href="{{ route('landing.home') }}#tentang" class="nav-link" data-page="tentang">Tentang</a></li>
@@ -44,7 +44,7 @@
         <a href="{{ route('landing.home') }}#struktur" class="nav-link" data-page="struktur">Struktur</a>
         <a href="{{ route('landing.home') }}#aplikasi" class="nav-link" data-page="aplikasi">Aplikasi</a>
         <a href="{{ route('landing.home') }}#berita" class="nav-link" data-page="berita">Berita</a>
-        {{-- <a href="{{ route('landing.home') }}#desa" class="nav-link" data-page="desa">Desa</a> --}}
+        <a href="{{ route('landing.home') }}#desa" class="nav-link" data-page="desa">Desa</a>
         <a href="{{ route('landing.home') }}#sk" class="nav-link" data-page="sk">SK & Dokumen</a>
         <a href="{{ route('landing.home') }}#template" class="nav-link" data-page="template">Template</a>
         <a href="{{ route('landing.home') }}#tentang" class="nav-link" data-page="tentang">Tentang</a>

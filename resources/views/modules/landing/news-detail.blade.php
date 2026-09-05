@@ -224,7 +224,6 @@
         var currentEl = document.getElementById('galleryCurrent');
         var thumbs = document.querySelectorAll('.news-gallery-thumb');
         var current = 0;
-        var autoInterval;
 
         function goTo(idx) {
             if (idx < 0) idx = images.length - 1;
@@ -237,17 +236,115 @@
             if (thumbs[current]) thumbs[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
 
-        prevBtn.addEventListener('click', function() { goTo(current - 1); resetAuto(); });
-        nextBtn.addEventListener('click', function() { goTo(current + 1); resetAuto(); });
-        thumbs.forEach(function(t) { t.addEventListener('click', function() { goTo(parseInt(this.dataset.index)); resetAuto(); }); });
+        prevBtn.addEventListener('click', function() { goTo(current - 1); });
+        nextBtn.addEventListener('click', function() { goTo(current + 1); });
+        thumbs.forEach(function(t) { t.addEventListener('click', function() { goTo(parseInt(this.dataset.index)); }); });
 
-        function startAuto() { autoInterval = setInterval(function() { goTo(current + 1); }, 4000); }
-        function resetAuto() { clearInterval(autoInterval); startAuto(); }
-        startAuto();
+        // Keyboard navigation (left/right arrows)
+        document.addEventListener('keydown', function(e) {
+            var tag = (e.target.tagName || '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
+            if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+            else if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); }
+        });
 
+        // Touch swipe navigation with drag-follow effect
         var gallery = document.getElementById('galleryMain');
-        gallery.addEventListener('mouseenter', function() { clearInterval(autoInterval); });
-        gallery.addEventListener('mouseleave', startAuto);
+        var dragStartX = null;
+        var dragStartY = null;
+        var dragActive = false;
+
+        function neighborPath(offset) {
+            return images[(current + offset + images.length) % images.length].path;
+        }
+
+        function clearDragStyles() {
+            mainImg.style.transition = '';
+            mainImg.style.transform = '';
+            mainImg.style.willChange = '';
+            gallery.style.backgroundImage = '';
+            gallery.style.backgroundSize = '';
+            gallery.style.backgroundPosition = '';
+        }
+
+        gallery.addEventListener('touchstart', function(e) {
+            var t = e.changedTouches[0];
+            dragStartX = t.clientX;
+            dragStartY = t.clientY;
+            dragActive = false;
+        }, { passive: true });
+
+        gallery.addEventListener('touchmove', function(e) {
+            if (dragStartX === null) return;
+            var t = e.changedTouches[0];
+            var deltaX = t.clientX - dragStartX;
+            var deltaY = t.clientY - dragStartY;
+
+            if (!dragActive) {
+                // Vertical scroll dominates: cancel the horizontal gesture
+                if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) {
+                    dragStartX = null;
+                    return;
+                }
+                // Start dragging once horizontal movement clearly dominates
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+                    dragActive = true;
+                    mainImg.style.transition = 'none';
+                    mainImg.style.willChange = 'transform';
+                } else {
+                    return;
+                }
+            }
+
+            e.preventDefault();
+            mainImg.style.transform = 'translateX(' + deltaX + 'px)';
+            // Show the neighbor image peeking behind while dragging
+            gallery.style.backgroundImage = deltaX < 0
+                ? 'url(' + neighborPath(1) + ')'
+                : 'url(' + neighborPath(-1) + ')';
+            gallery.style.backgroundSize = 'cover';
+            gallery.style.backgroundPosition = 'center';
+        }, { passive: false });
+
+        gallery.addEventListener('touchend', function(e) {
+            if (dragStartX === null && !dragActive) return;
+            var t = e.changedTouches[0];
+            var deltaX = dragStartX !== null ? t.clientX - dragStartX : 0;
+            var deltaY = dragStartY !== null ? t.clientY - dragStartY : 0;
+
+            var shouldChange = dragActive && Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY);
+
+            if (shouldChange) {
+                var dir = deltaX < 0 ? 1 : -1;
+                var width = gallery.clientWidth;
+                mainImg.style.transition = 'transform 0.3s ease';
+                mainImg.style.transform = 'translateX(' + (dir < 0 ? width : -width) + 'px)';
+                setTimeout(function() {
+                    goTo(current + dir);
+                    mainImg.style.transition = 'none';
+                    mainImg.style.transform = '';
+                    mainImg.style.willChange = '';
+                    gallery.style.backgroundImage = '';
+                    gallery.style.backgroundSize = '';
+                    gallery.style.backgroundPosition = '';
+                }, 300);
+            } else {
+                mainImg.style.transition = 'transform 0.3s ease';
+                mainImg.style.transform = 'translateX(0)';
+                setTimeout(clearDragStyles, 300);
+            }
+
+            dragStartX = null;
+            dragStartY = null;
+            dragActive = false;
+        }, { passive: true });
+
+        gallery.addEventListener('touchcancel', function() {
+            dragStartX = null;
+            dragStartY = null;
+            dragActive = false;
+            clearDragStyles();
+        }, { passive: true });
     })();
     </script>
 @endsection

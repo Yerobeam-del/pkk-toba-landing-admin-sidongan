@@ -1148,9 +1148,22 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 /* ==========================================
    13. DESA SECTION
    ========================================== */
-.desa-section { padding: 4rem 2rem; background: var(--bg-light); }
-.desa-filter { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 3rem; flex-wrap: wrap; max-width: 1200px; margin-left: auto; margin-right: auto; }
-.filter-btn { padding: 8px 20px; border: 2px solid rgba(0,0,0,0.08); background: #fff; border-radius: 50px; font-family: inherit; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.3s ease; }
+.desa-section { padding: 4rem 2rem 3rem; background: var(--bg-light); }
+.desa-toolbar { max-width: 1200px; margin: 0 auto 2.5rem; }
+.desa-search { position: relative; max-width: 480px; margin: 0 auto 1.5rem; }
+.desa-search-icon { position: absolute; left: 1.05rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+.desa-search input {
+    width: 100%; padding: 12px 18px 12px 44px; border: 2px solid rgba(0,0,0,0.08); border-radius: 50px;
+    background: #fff; font-family: inherit; font-size: 0.9rem; font-weight: 500; color: var(--text-dark);
+    outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: all 0.3s ease;
+}
+.desa-search input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15,107,99,0.12); }
+.desa-search input::placeholder { color: var(--text-muted); font-weight: 400; }
+/* Baris filter: scroll horizontal agar tetap rapi walau kecamatan banyak */
+.desa-filter { display: flex; justify-content: flex-start; align-items: center; gap: 0.6rem; flex-wrap: nowrap; overflow-x: auto; padding: 4px 2px 12px; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent; }
+.desa-filter::-webkit-scrollbar { height: 6px; }
+.desa-filter::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+.filter-btn { padding: 8px 20px; border: 2px solid rgba(0,0,0,0.08); background: #fff; border-radius: 50px; font-family: inherit; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.3s ease; white-space: nowrap; flex-shrink: 0; }
 .filter-btn:hover, .filter-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
 .desa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; align-items: stretch; }
 .desa-card { height: 100%; display: flex; flex-direction: column; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; }
@@ -1285,6 +1298,10 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
 .stat-item { text-align: center; opacity: 0; transform: translateY(20px); }
 .stat-item.visible { opacity: 1; transform: translateY(0); transition: all 0.6s ease; }
+/* Kartu desa (Section Desa) ikut memakai class .stat-item untuk angka Penduduk/KK.
+   Kartu dirender dinamis setelah observer reveal berjalan, jadi .visible tidak
+   pernah ditambahkan — tampilkan langsung tanpa animasi reveal. */
+.desa-card .stat-item { opacity: 1; transform: none; }
 .stat-number { font-size: 2.8rem; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 0.5rem; }
 .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.65); font-weight: 500; }
 
@@ -2067,11 +2084,17 @@ APLIKASI CAROUSEL - FEATURES & COLORS
 /* ==========================================
    25. NEWS DETAIL - BACK TO TOP BUTTON
    ========================================== */
-.news-back-to-top { position: fixed; bottom: 2rem; right: 2rem; width: 48px; height: 48px; border-radius: 50%; background: var(--news-color); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2); opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; z-index: 999; }
+.news-back-to-top { position: fixed; bottom: 7rem; right: 2rem; width: 48px; height: 48px; border-radius: 50%; background: var(--news-color); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2); opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; z-index: 999; }
 .news-back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
 .news-back-to-top:hover { background: var(--primary); transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
 .news-back-to-top svg { width: 20px; height: 20px; }
-@media (max-width: 768px) { .news-back-to-top { bottom: 1.5rem; right: 1.5rem; width: 44px; height: 44px; } }
+@media (max-width: 768px) { .news-back-to-top { bottom: 6.75rem; right: 1.5rem; width: 44px; height: 44px; } }
+/* Sembunyikan tombol kembali ke atas saat menu aplikasi mengambang terbuka,
+   karena item menu membuka ke atas dan bisa menutupi tombol tersebut.
+   Kelas .floating-menu-closing menahannya tetap tersembunyi selama menu
+   menutup, lalu tombol muncul kembali dengan fade setelah animasi selesai. */
+body.floating-menu-open .news-back-to-top,
+body.floating-menu-closing .news-back-to-top { opacity: 0 !important; visibility: hidden !important; transform: translateY(20px) !important; }
 
 /* ==========================================
    26. NEWS DETAIL - PRINT STYLES (printer)
@@ -2083,6 +2106,7 @@ APLIKASI CAROUSEL - FEATURES & COLORS
     .news-detail-actions, .news-detail-share,
     .news-detail-meta .news-detail-reading-time,
     .news-progress-bar, .news-back-to-top,
+    .news-gallery-arrow, .news-gallery-counter,
     body > script, body > noscript { display: none !important; }
 
     /* ── Reset page ── */

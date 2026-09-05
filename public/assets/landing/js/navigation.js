@@ -96,6 +96,7 @@ function closeFloatingMenu() {
     const menu = document.getElementById('floatingMenu');
     if (container) container.classList.remove('open');
     if (menu) menu.style.pointerEvents = 'none';
+    document.body.classList.remove('floating-menu-open', 'floating-menu-closing');
 }
 
 // ==========================================

@@ -8,6 +8,23 @@
  * ============================================================ */
 
 
+function collapseFloatingMenu(btn, menu) {
+    btn.classList.remove('open');
+    document.body.classList.remove('floating-menu-open');
+    // Tahan tombol kembali ke atas tetap tersembunyi selama menu menutup,
+    // lalu biarkan dia muncul kembali dengan fade setelah animasi selesai.
+    document.body.classList.add('floating-menu-closing');
+    setTimeout(() => {
+        document.body.classList.remove('floating-menu-closing');
+    }, 350);
+    // Nonaktifkan pointer events setelah animasi selesai (misal 300ms)
+    setTimeout(() => {
+        if (!btn.classList.contains('open')) {
+            menu.style.pointerEvents = 'none';
+        }
+    }, 300);
+}
+
 function toggleFloatingMenu(event) {
     if (event) {
         event.preventDefault();
@@ -22,16 +39,11 @@ function toggleFloatingMenu(event) {
 
     if (isOpen) {
         // Tutup menu
-        btn.classList.remove('open');
-        // Nonaktifkan pointer events setelah animasi selesai (misal 300ms)
-        setTimeout(() => {
-            if (!btn.classList.contains('open')) {
-                menu.style.pointerEvents = 'none';
-            }
-        }, 300);
+        collapseFloatingMenu(btn, menu);
     } else {
         // Buka menu
         btn.classList.add('open');
+        document.body.classList.add('floating-menu-open');
         // Aktifkan pointer events segera agar bisa diklik
         menu.style.pointerEvents = 'auto';
     }
@@ -43,12 +55,7 @@ document.addEventListener('click', function(e) {
     const menu = document.getElementById('floatingMenu');
 
     if (btn && menu && !btn.contains(e.target)) {
-        btn.classList.remove('open');
-        setTimeout(() => {
-            if (!btn.classList.contains('open')) {
-                menu.style.pointerEvents = 'none';
-            }
-        }, 300);
+        collapseFloatingMenu(btn, menu);
     }
 });
 
@@ -59,10 +66,7 @@ window.addEventListener('scroll', function() {
     const menu = document.getElementById('floatingMenu');
     if (btn && menu && btn.classList.contains('open')) {
         clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-            btn.classList.remove('open');
-            menu.style.pointerEvents = 'none';
-        }, 100);
+        scrollTimeout = setTimeout(() => collapseFloatingMenu(btn, menu), 100);
     }
 }, { passive: true });
 
