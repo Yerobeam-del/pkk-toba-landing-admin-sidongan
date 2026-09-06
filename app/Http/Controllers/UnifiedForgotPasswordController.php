@@ -81,7 +81,18 @@ class UnifiedForgotPasswordController extends Controller
         // (Works for BOTH SIDONGAN and Admin users)
         if ($hasPersonalEmail && $hasVerifiedPersonalEmail) {
             $token = Password::createToken($user);
-            $user->sendSidonganPasswordResetNotification($token);
+
+            // Pilih tautan reset sesuai sistem si pengguna: akun dengan akses
+            // SIDONGAN dapat link bermerek SIDONGAN (halaman reset di domain
+            // sidongan.*), sisanya link Admin Panel — bukan sebaliknya
+            // seluruhnya, sehingga branding email & halaman reset konsisten
+            // dengan sistem tempat akun benar-benar dipakai. Token & broker
+            // resetnya sama, jadi reset tetap valid dari halaman mana pun.
+            if ($user->hasSidonganAccess()) {
+                $user->sendSidonganPasswordResetNotification($token);
+            } else {
+                $user->sendPasswordResetNotification($token);
+            }
 
             RateLimiter::hit($throttleKey, 1800);
 

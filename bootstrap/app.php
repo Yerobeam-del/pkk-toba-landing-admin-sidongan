@@ -32,6 +32,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'api/sieda/*',
         ]);
 
+        // Pengunjung yang SUDAH login tapi membuka halaman guest (/login,
+        // /register) diteruskan ke dashboard Admin Panel — bukan landing
+        // publik. Tanpa ini, fallback framework jatuh ke '/' karena tidak
+        // ada route bernama 'dashboard'/'home'. Login SIDONGAN punya
+        // middleware terpisah (sidongan.guest) yang sudah benar.
+        $middleware->redirectUsersTo(fn () => route('admin.dashboard', absolute: false));
+
         $middleware->alias([
             // Endpoint sinkronisasi yang dipanggil aplikasi SIEDA
             // (mis. sinkronisasi avatar user) — verifikasi shared secret
