@@ -65,7 +65,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        // Kembali ke halaman login Admin Panel (bukan landing publik) —
+        // konsisten dengan alur login yang selalu berakhir di admin.dashboard.
+        return redirect()->route('login');
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

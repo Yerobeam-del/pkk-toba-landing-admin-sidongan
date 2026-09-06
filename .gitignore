@@ -20,6 +20,7 @@
 # Storage (user uploads — managed per-deployment)
 /storage/*.key
 /storage/app/public/
+/storage/framework/testing/
 
 # Laravel / PHP
 /.phpunit.result.cache
