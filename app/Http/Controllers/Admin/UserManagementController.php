@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\User;
 use App\Support\ProfileFields;
+use App\Support\ImageUploadSanitizer;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\Kecamatan;
@@ -21,6 +22,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Services\SiedaSyncService;
 use App\Models\AdminActivityLog;
 
@@ -134,19 +136,32 @@ class UserManagementController extends Controller
             'sieda_role' => 'nullable|in:operator,kader,viewer',
             'sieda_kecamatan' => 'nullable|string|max:255',
             'sieda_kelurahan' => 'nullable|string|max:255',
-            'cropped_photo' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
+            'cropped_photo' => 'nullable|string|max:6000000',
+            'remove_photo' => 'nullable|boolean',
         ]);
 
         // VALIDASI KEAMANAN: Hanya Super Admin yang bisa membuat akun Super Admin
         $selectedRole = Role::find($validated['role_id']);
-        if ($selectedRole && $selectedRole->name === 'super_admin' && !auth()->user()->isSuperAdmin()) {
-            return redirect()->back()->withInput()->with('error', 'Anda tidak memiliki izin untuk membuat akun Super Admin.')->withErrors(['role_id' => 'Anda tidak memiliki izin untuk membuat akun Super Admin.']);
+        if (($selectedRole && $selectedRole->name === 'super_admin')
+            || ($validated['sidongan_role'] ?? null) === 'super_admin') {
+            if (!auth()->user()->isSuperAdmin()) {
+                return redirect()->back()->withInput()->with('error', 'Anda tidak memiliki izin untuk membuat akun Super Admin.')->withErrors(['role_id' => 'Anda tidak memiliki izin untuk membuat akun Super Admin.']);
+            }
         }
 
         // === HANDLE AVATAR UPLOAD ===
         $avatarPath = null;
         if (!empty($validated['cropped_photo'])) {
             $avatarPath = $this->saveCroppedPhoto($validated['cropped_photo'], 'avatars');
+            if ($avatarPath === false) {
+                return back()->withInput()->withErrors(['cropped_photo' => 'Foto hasil crop bukan gambar yang valid.']);
+            }
+        } elseif ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            $avatarPath = ImageUploadSanitizer::store($request->file('photo'), 'avatars', 'avatar_');
+            if ($avatarPath === false) {
+                return back()->withInput()->withErrors(['photo' => 'File foto bukan gambar yang didukung (JPG/PNG/WEBP/GIF).']);
+            }
         }
 
         $user = User::create([
@@ -210,6 +225,10 @@ class UserManagementController extends Controller
      */
     public function show(User $user)
     {
+        if ($user->isSuperAdmin() && !auth()->user()->isSuperAdmin()) {
+            abort(403, 'Akses ditolak!');
+        }
+
         $user->load(['applications', 'role.permissions']);
 
         // Ambil data kecamatan berdasarkan kode
@@ -294,24 +313,41 @@ class UserManagementController extends Controller
             'sieda_role' => 'nullable|in:operator,kader,viewer',
             'sieda_kecamatan' => 'nullable|string|max:255',
             'sieda_kelurahan' => 'nullable|string|max:255',
-            'cropped_photo' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
+            'cropped_photo' => 'nullable|string|max:6000000',
+            'remove_photo' => 'nullable|boolean',
         ]);
 
         // VALIDASI KEAMANAN: Hanya Super Admin yang bisa mengubah role menjadi Super Admin
         $selectedRole = Role::find($validated['role_id']);
-        if ($selectedRole && $selectedRole->name === 'super_admin' && !auth()->user()->isSuperAdmin()) {
-            return redirect()->back()->withInput()->with('error', 'Anda tidak memiliki izin untuk mengubah role menjadi Super Admin.')->withErrors(['role_id' => 'Anda tidak memiliki izin untuk mengubah role menjadi Super Admin.']);
+        if (($selectedRole && $selectedRole->name === 'super_admin')
+            || ($validated['sidongan_role'] ?? null) === 'super_admin') {
+            if (!auth()->user()->isSuperAdmin()) {
+                return redirect()->back()->withInput()->with('error', 'Anda tidak memiliki izin untuk mengubah role menjadi Super Admin.')->withErrors(['role_id' => 'Anda tidak memiliki izin untuk mengubah role menjadi Super Admin.']);
+            }
         }
 
         // === HANDLE AVATAR UPLOAD ===
+        $oldAvatarPath = $user->avatar;
+        $newAvatarPath = null;
         if (!empty($validated['cropped_photo'])) {
-            // Hapus avatar lama jika ada
-            if ($user->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->avatar)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+            $newAvatarPath = $this->saveCroppedPhoto($validated['cropped_photo'], 'avatars');
+            if ($newAvatarPath === false) {
+                return back()->withInput()->withErrors(['cropped_photo' => 'Foto hasil crop bukan gambar yang valid.']);
             }
-            $user->avatar = $this->saveCroppedPhoto($validated['cropped_photo'], 'avatars');
+        } elseif ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            $newAvatarPath = ImageUploadSanitizer::store($request->file('photo'), 'avatars', 'avatar_');
+            if ($newAvatarPath === false) {
+                return back()->withInput()->withErrors(['photo' => 'File foto bukan gambar yang didukung (JPG/PNG/WEBP/GIF).']);
+            }
+        } elseif ($request->boolean('remove_photo')) {
+            $newAvatarPath = '';
+        }
+        if ($newAvatarPath !== null) {
+            $user->avatar = $newAvatarPath ?: null;
         }
 
+        $oldEmail = $user->getOriginal('email');
         $user->name = $validated['name'];
         $user->email = $validated['email'];
 
@@ -338,6 +374,11 @@ class UserManagementController extends Controller
         }
 
         $user->save();
+
+        if ($newAvatarPath !== null && $oldAvatarPath && $oldAvatarPath !== $user->avatar
+            && Storage::disk('public')->exists($oldAvatarPath)) {
+            Storage::disk('public')->delete($oldAvatarPath);
+        }
 
         // Bila field pemblokir kini lengkap, hapus status skip onboarding
         // (baik dari session user maupun kolom users.onboarding_skipped_at).
@@ -373,7 +414,7 @@ class UserManagementController extends Controller
                 'sieda_role' => $user->sieda_role,
                 'kecamatan_code' => $user->sieda_kecamatan,
                 'kelurahan_code' => $user->sieda_kelurahan,
-            ], $user->getOriginal('email')); // Kirim email lama untuk path /sync-user/{email}
+            ], $oldEmail); // Kirim email lama untuk path /sync-user/{email}
         }
 
         return redirect()->route('admin.user-management.edit', $user)
@@ -698,6 +739,8 @@ class UserManagementController extends Controller
      */
     private function saveCroppedPhoto($base64Image, $folder = 'avatars')
     {
+        return ImageUploadSanitizer::storeBase64($base64Image, $folder, 'avatar_');
+        /*
         try {
             // Hapus prefix data:image/xxx;base64,
             if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
@@ -721,6 +764,7 @@ class UserManagementController extends Controller
             Log::error('Error saving cropped avatar: ' . $e->getMessage());
             return null;
         }
+        */
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

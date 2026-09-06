@@ -20,7 +20,7 @@
 
 {{-- Form Card --}}
 <div class="card u-a71">
-    <form action="{{ route('admin.user-management.store') }}" method="POST" id="createUserForm">
+    <form action="{{ route('admin.user-management.store') }}" method="POST" enctype="multipart/form-data" id="createUserForm">
         @csrf
 
         {{-- =============================================

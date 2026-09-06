@@ -31,8 +31,9 @@ class HeroSliderController extends Controller
         $sliders = HeroSlider::orderBy('sort_order')->paginate($perPage);
         $totalSliders = HeroSlider::count();
         $maxSliders = self::MAX_SLIDERS;
+        $sliderSettings = $this->getSliderSettings();
 
-        return view('admin.hero-sliders.index', compact('sliders', 'totalSliders', 'maxSliders', 'perPage'));
+        return view('admin.hero-sliders.index', compact('sliders', 'totalSliders', 'maxSliders', 'perPage', 'sliderSettings'));
     }
 
     /**
@@ -115,6 +116,74 @@ class HeroSliderController extends Controller
 
         return redirect()->route('admin.hero-sliders.index')
             ->with('success', 'Slide berhasil dihapus!');
+    }
+
+    /**
+     * Update slider playback settings.
+     */
+    public function updateSettings(Request $request)
+    {
+        // Pengaturan slider bersifat global (berlaku untuk beranda publik),
+        // jadi hanya Super Admin yang boleh mengubahnya.
+        if (!auth()->user()?->isSuperAdmin()) {
+            abort(403, 'Akses ditolak. Pengaturan slider hanya untuk Super Admin.');
+        }
+
+        $validated = $request->validate([
+            'auto_play' => 'nullable|boolean',
+            'transition_duration' => 'nullable|integer|min:100|max:5000',
+            'show_arrows' => 'nullable|boolean',
+            'show_dots' => 'nullable|boolean',
+        ]);
+
+        $settings = $this->getSliderSettings();
+
+        foreach (array_keys($this->sliderSettingDefaults()) as $key) {
+            // Gunakan filled()/exists() — bukan has() — agar panel bisa mengirim
+            // semua field sekaligus (termasuk hidden input "0" untuk toggle nonaktif).
+            if ($request->exists($key)) {
+                if ($key === 'transition_duration') {
+                    // Input kosong → pertahankan nilai lama (jangan cast ke 0).
+                    if ($request->filled($key)) {
+                        $settings[$key] = (int) $request->input($key);
+                    }
+                } else {
+                    $settings[$key] = filter_var($request->input($key), FILTER_VALIDATE_BOOLEAN);
+                }
+            }
+        }
+
+        Storage::disk('local')->put(
+            'hero_slider_settings.json',
+            json_encode($settings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+        );
+
+        return redirect()->route('admin.hero-sliders.index')
+            ->with('success', 'Pengaturan slider berhasil diperbarui.');
+    }
+
+    /**
+     * Baca pengaturan playback slider (JSON di storage lokal),
+     * sudah digabung dengan nilai default.
+     */
+    private function getSliderSettings(): array
+    {
+        $disk = Storage::disk('local');
+        $current = $disk->exists('hero_slider_settings.json')
+            ? json_decode($disk->get('hero_slider_settings.json'), true)
+            : [];
+
+        return array_merge($this->sliderSettingDefaults(), is_array($current) ? $current : []);
+    }
+
+    private function sliderSettingDefaults(): array
+    {
+        return [
+            'auto_play' => true,
+            'transition_duration' => 500,
+            'show_arrows' => false,
+            'show_dots' => true,
+        ];
     }
 
     /**

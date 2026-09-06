@@ -42,7 +42,13 @@ class SiedaDataController extends Controller
             'with' => [],
             // Tabel yang mereferensikan tabel modul (foreign key) — wajib dibersihkan
             // lebih dulu agar penghapusan tidak diblokir constraint.
-            'cascade' => ['catatan_kelahiran_kematian', 'tp_pkk_kegiatan_warga', 'tp_pkk_kader_dasawisma', 'tp_pkk_kegiatan_penduduk', 'tp_pkk_anggota_keluarga'],
+            'cascade' => [
+                ['table' => 'catatan_kelahiran_kematian', 'columns' => ['id_warga_ibu', 'id_warga_suami']],
+                ['table' => 'tp_pkk_kegiatan_warga', 'columns' => ['nik', 'id_warga', 'id_penduduk']],
+                ['table' => 'tp_pkk_kader_dasawisma', 'columns' => ['nik', 'id_warga', 'id_kader']],
+                ['table' => 'tp_pkk_kegiatan_penduduk', 'columns' => ['nik', 'id_warga', 'id_penduduk']],
+                ['table' => 'tp_pkk_anggota_keluarga', 'columns' => ['nik']],
+            ],
             'cascade_label' => 'anggota keluarga, kader dasawisma, kegiatan warga, dan catatan ibu & anak',
         ],
         'keluarga' => [
@@ -53,7 +59,11 @@ class SiedaDataController extends Controller
             'display_fields' => ['no_kk', 'id_kepala_keluarga', 'id_kelompok_dasawisma', 'config_year'],
             'search_fields' => ['no_kk', 'no_registrasi_keluarga'],
             'with' => ['kepalaKeluarga', 'kelompokDasawisma'],
-            'cascade' => ['catatan_kelahiran_kematian', 'tp_pkk_anggota_keluarga', 'tp_pkk_dasawisma_keluarga'],
+            'cascade' => [
+                ['table' => 'catatan_kelahiran_kematian', 'columns' => ['no_kk']],
+                ['table' => 'tp_pkk_anggota_keluarga', 'columns' => ['no_kk']],
+                ['table' => 'tp_pkk_dasawisma_keluarga', 'columns' => ['no_kk']],
+            ],
             'cascade_label' => 'anggota keluarga, catatan ibu & anak, dan data dasawisma keluarga',
         ],
         'anggota-keluarga' => [
@@ -75,7 +85,10 @@ class SiedaDataController extends Controller
             'display_fields' => ['id', 'nama', 'id_dusun', 'kader', 'config_year'],
             'search_fields' => ['nama', 'kader'],
             'with' => ['dusun'],
-            'cascade' => ['catatan_kelahiran_kematian', 'tp_pkk_kader_dasawisma'],
+            'cascade' => [
+                ['table' => 'catatan_kelahiran_kematian', 'columns' => ['id_group_dasawisma', 'id_kelompok_dasawisma']],
+                ['table' => 'tp_pkk_kader_dasawisma', 'columns' => ['id_group_dasawisma', 'id_kelompok_dasawisma', 'id_dasawisma']],
+            ],
             'cascade_label' => 'kader dasawisma dan catatan ibu & anak',
         ],
         'catatan-ibu-anak' => [
@@ -219,18 +232,21 @@ class SiedaDataController extends Controller
             return back()->with('info', 'Tidak ada data untuk dihapus pada modul ini.');
         }
 
-        DB::beginTransaction();
+        $sieda = DB::connection('sieda');
+        $sieda->beginTransaction();
         try {
             // Hapus dulu tabel anak yang mereferensikan tabel modul (foreign key),
             // agar penghapusan tidak diblokir constraint MySQL (SQLSTATE 23000/1451).
             // Urutan mengikuti dependensi tabel di database SIEDA (db_sieda_app).
-            $cascadeCounts = [];
-            foreach ($config['cascade'] as $table) {
-                $cascadeCounts[$table] = DB::connection('sieda')->table($table)->delete();
-            }
+            $cascadeCounts = $this->deleteRelatedRecords(
+                $sieda,
+                $config['cascade'],
+                $model,
+                $model::primaryKey()
+            );
 
             $model::query()->delete(); // Model tanpa SoftDeletes → hard-delete permanen
-            DB::commit();
+            $sieda->commit();
 
             Log::warning('[SiedaData] HAPUS SEMUA data', [
                 'module' => $module,
@@ -241,7 +257,7 @@ class SiedaDataController extends Controller
 
             return back()->with('success', number_format($count) . ' data ' . $config['label'] . ' beserta data terkait berhasil dihapus permanen dari database SIEDA.');
         } catch (\Exception $e) {
-            DB::rollBack();
+            $sieda->rollBack();
             Log::error('[SiedaData] Delete all gagal', [
                 'module' => $module,
                 'error' => $e->getMessage(),
@@ -269,20 +285,29 @@ class SiedaDataController extends Controller
         $primaryKey = $model::primaryKey();
         $item = $model::where($primaryKey, $id)->firstOrFail();
 
-        DB::beginTransaction();
+        $sieda = DB::connection('sieda');
+        $sieda->beginTransaction();
         try {
+            $cascadeCounts = $this->deleteRelatedRecords(
+                $sieda,
+                $config['cascade'],
+                $model,
+                $primaryKey,
+                $id
+            );
             $item->delete(); // Model tanpa SoftDeletes → ini hard-delete permanen
-            DB::commit();
+            $sieda->commit();
 
             Log::warning('[SiedaData] HARD DELETE permanen', [
                 'module' => $module,
                 'id' => $id,
+                'cascade' => $cascadeCounts,
                 'by' => auth()->id(),
             ]);
 
             return back()->with('success', 'Data berhasil dihapus permanen.');
         } catch (\Exception $e) {
-            DB::rollBack();
+            $sieda->rollBack();
             Log::error('[SiedaData] Force delete gagal', [
                 'module' => $module,
                 'id' => $id,
@@ -290,6 +315,49 @@ class SiedaDataController extends Controller
             ]);
             return back()->with('error', 'Gagal menghapus data. Silakan coba lagi.');
         }
+    }
+
+    /**
+     * Hapus record terkait hanya jika kolom relasinya cocok dengan modul target.
+     *
+     * Jangan pernah menghapus seluruh tabel cascade: modul SIEDA berbagi tabel
+     * relasi, sehingga delete-all pada satu modul tidak boleh menyapu data modul
+     * lain. Relasi yang belum dikenal sengaja dilewati (dan dicatat) agar gagal
+     * aman, bukan menghapus terlalu banyak data.
+     */
+    private function deleteRelatedRecords($connection, array $relations, string $model, string $primaryKey, ?string $id = null): array
+    {
+        $counts = [];
+        $targetSubquery = $model::query()->select($primaryKey);
+
+        foreach ($relations as $relation) {
+            $table = $relation['table'];
+            $availableColumns = $connection->getSchemaBuilder()->getColumnListing($table);
+            $columns = array_values(array_intersect($relation['columns'], $availableColumns));
+
+            if ($columns === []) {
+                $counts[$table] = 0;
+                Log::warning('[SiedaData] Relasi cascade dilewati karena kolom tidak ditemukan', [
+                    'table' => $table,
+                    'expected_columns' => $relation['columns'],
+                ]);
+                continue;
+            }
+
+            $query = $connection->table($table)->where(function ($query) use ($columns, $targetSubquery, $id) {
+                foreach ($columns as $column) {
+                    if ($id === null) {
+                        $query->orWhereIn($column, $targetSubquery);
+                    } else {
+                        $query->orWhere($column, $id);
+                    }
+                }
+            });
+
+            $counts[$table] = $query->delete();
+        }
+
+        return $counts;
     }
 
     /**

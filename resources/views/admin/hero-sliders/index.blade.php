@@ -66,6 +66,75 @@
         </div>
     </div>
 
+    {{-- PANEL PENGATURAN SLIDER (Super Admin) --}}
+    @if(auth()->check() && auth()->user()->isSuperAdmin())
+    <div class="card">
+        <div class="add-slide-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <h3 class="add-slide-title" style="color: var(--primary);">Pengaturan Slider</h3>
+        </div>
+        <p class="add-slide-description">Pengaturan ini berlaku global untuk slider di beranda publik.</p>
+
+        <form action="{{ route('admin.hero-sliders.settings') }}" method="POST" id="sliderSettingsForm">
+            @csrf
+            <div class="settings-grid">
+                <label class="checkbox-wrapper">
+                    <input class="u-hidden" type="checkbox" name="auto_play" id="settingsAutoPlay" value="1" @checked($sliderSettings['auto_play'])>
+                    <input type="hidden" name="auto_play" value="0" data-settings-sync="settingsAutoPlay">
+                    <div class="checkbox-box {{ $sliderSettings['auto_play'] ? 'checked' : '' }}" id="settingsAutoPlayBox">
+                        <svg id="settingsAutoPlayCheck" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </div>
+                    <span class="checkbox-label">Auto Play</span>
+                </label>
+
+                <label class="checkbox-wrapper">
+                    <input class="u-hidden" type="checkbox" name="show_arrows" id="settingsShowArrows" value="1" @checked($sliderSettings['show_arrows'])>
+                    <input type="hidden" name="show_arrows" value="0" data-settings-sync="settingsShowArrows">
+                    <div class="checkbox-box {{ $sliderSettings['show_arrows'] ? 'checked' : '' }}" id="settingsShowArrowsBox">
+                        <svg id="settingsShowArrowsCheck" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </div>
+                    <span class="checkbox-label">Tampilkan Panah</span>
+                </label>
+
+                <label class="checkbox-wrapper">
+                    <input class="u-hidden" type="checkbox" name="show_dots" id="settingsShowDots" value="1" @checked($sliderSettings['show_dots'])>
+                    <input type="hidden" name="show_dots" value="0" data-settings-sync="settingsShowDots">
+                    <div class="checkbox-box {{ $sliderSettings['show_dots'] ? 'checked' : '' }}" id="settingsShowDotsBox">
+                        <svg id="settingsShowDotsCheck" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </div>
+                    <span class="checkbox-label">Tampilkan Dot Navigasi</span>
+                </label>
+
+                <div class="settings-duration">
+                    <label class="form-label" for="settingsTransitionDuration">Durasi Transisi (ms)</label>
+                    <input type="number" name="transition_duration" id="settingsTransitionDuration" class="form-control" value="{{ $sliderSettings['transition_duration'] }}" min="100" max="5000" step="100">
+                    <small class="settings-hint">100–5000 ms. Kecepatan pergantian antar-slide.</small>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Simpan Pengaturan
+                </button>
+            </div>
+        </form>
+    </div>
+    @endif
+
     {{-- FORM TAMBAH SLIDE --}}
     @if($totalSliders < $maxSliders)
     <div class="add-slide-card">

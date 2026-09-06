@@ -8,7 +8,7 @@
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <div class="sidebar-logo">
-            <img src="{{ asset('assets\sidongan\images\Logo-SIDONGAN.svg') }}" 
+            <img src="{{ asset('assets/sidongan/images/Logo-SIDONGAN.svg') }}"
                 alt="SIDONGAN" 
                 class="sidebar-logo-img"
                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -30,8 +30,8 @@
             <span class="nav-text">Dashboard</span>
         </a>
         
-        {{-- MENU KHUSUS SEKRETARIS --}}
-        @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
+        {{-- MENU KHUSUS SEKRETARIS (Super Admin ikut melihat, sesuai gate server) --}}
+        @if($currentUser && $currentUser->isSidonganSekretaris())
         @php
             $isSuratActive = request()->routeIs('sidongan.documents.*');
         @endphp
@@ -73,7 +73,7 @@
         @endif
 
         {{-- MENU KHUSUS KETUA PKK --}}
-        @if($currentUser && $currentUser->hasSidonganRole('ketua'))
+        @if($currentUser && $currentUser->isSidonganKetua())
             <a href="{{ route('sidongan.documents.index') }}" class="nav-item {{ request()->routeIs('sidongan.documents.*') ? 'active' : '' }}">
                 <div class="nav-icon-box">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -95,7 +95,7 @@
         @endif
 
         {{-- MENU KHUSUS BENDAHARA & KETUA POKJA --}}
-        @if($currentUser && ($currentUser->hasSidonganRole('bendahara') || $currentUser->isSidonganPokja() || $currentUser->hasSidonganRole('staf_ahli_1') || $currentUser->hasSidonganRole('staf_ahli_2')))
+        @if($currentUser && ($currentUser->isSidonganBendahara() || $currentUser->isSidonganPokja() || $currentUser->isSidonganStafAhli()))
             <a href="{{ route('sidongan.documents.index') }}" class="nav-item {{ request()->routeIs('sidongan.documents.*') ? 'active' : '' }}">
                 <div class="nav-icon-box">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

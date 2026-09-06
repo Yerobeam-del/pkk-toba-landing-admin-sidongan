@@ -35,7 +35,7 @@
             <h1 class="u-h2-slate">Daftar Surat Masuk</h1>
             <p class="u-text-muted-lead">Kelola semua dokumen surat masuk</p>
         </div>
-        @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
+        @if($currentUser && $currentUser->isSidonganSekretaris())
         <a href="{{ route('sidongan.documents.create') }}" class="sd-btn-create btn-action">
             <i class="fas fa-plus"></i>
             <span>Buat Surat Baru</span>
@@ -220,7 +220,7 @@
                 <span id="bulkSelectedCount">0</span> surat dipilih
             </div>
             <div class="sd-bulk-bar-actions">
-                @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
+                @if($currentUser && $currentUser->isSidonganSekretaris())
                 <button type="button" data-action="bulk-archive" class="sd-bulk-btn sd-bulk-btn-archive" title="Pindahkan surat yang dipilih ke Arsip">
                     <i class="fas fa-archive"></i>
                     Arsipkan
@@ -625,7 +625,7 @@
                                 </a>
 
                                 {{-- Disposisi (Ketua PKK, surat menunggu disposisi) --}}
-                                @if($currentUser && $currentUser->hasSidonganRole('ketua') && $doc->status === 'menunggu_disposisi')
+                                @if($currentUser && $currentUser->isSidonganKetua() && $doc->status === 'menunggu_disposisi')
                                     <a href="{{ route('sidongan.disposisi') }}?doc_id={{ $doc->id }}"
                                     class="sd-icon-btn sd-icon-disposisi"
                                     title="Disposisi Surat"
@@ -783,7 +783,7 @@
                 </div>
                 <h3 class="sd-empty-title">Belum Ada Dokumen</h3>
                 <p class="sd-empty-desc">Belum ada dokumen surat yang ditemukan.</p>
-                @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
+                @if($currentUser && $currentUser->isSidonganSekretaris())
                 <a href="{{ route('sidongan.documents.create') }}" class="btn-action sd-empty-btn">
                     <i class="fas fa-plus"></i>
                     <span>Buat Surat Pertama</span>

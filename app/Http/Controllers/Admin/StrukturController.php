@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pokja;
 use App\Models\StrukturMember;
 use App\Models\AdminActivityLog;
+use App\Support\ImageUploadSanitizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -213,7 +214,7 @@ class StrukturController extends Controller
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
-            'cropped_photo' => 'nullable|string',
+            'cropped_photo' => 'nullable|string|max:6000000',
         ]);
 
         // === HANDLE PHOTO UPLOAD (FIXED LOGIC) ===
@@ -225,7 +226,11 @@ class StrukturController extends Controller
         }
         // 2. Jika tidak ada cropped, cek regular file upload
         elseif ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            $photoPath = $request->file('photo')->store('struktur', 'public');
+            $photoPath = ImageUploadSanitizer::store($request->file('photo'), 'struktur', 'struktur_');
+        }
+
+        if ($photoPath === false) {
+            return back()->withInput()->withErrors(['photo' => 'Foto bukan gambar yang valid.']);
         }
         // ==========================================
 
@@ -268,23 +273,29 @@ class StrukturController extends Controller
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
-            'cropped_photo' => 'nullable|string',
+            'cropped_photo' => 'nullable|string|max:6000000',
+            'remove_photo' => 'nullable|boolean',
         ]);
 
-        // === HANDLE PHOTO UPDATE (FIXED LOGIC) ===
-        $photoPath = $struktur->photo_path; // Keep existing by default
+        // === HANDLE PHOTO UPDATE ===
+        $oldPhotoPath = $struktur->photo_path;
+        $photoPath = $oldPhotoPath; // Keep existing by default
 
-        // 1. Jika ada cropped photo baru
+        // A new image takes precedence over the remove flag.
         if (!empty($validated['cropped_photo'])) {
-            // Hapus foto lama
-            if ($photoPath) Storage::disk('public')->delete($photoPath);
             $photoPath = $this->saveCroppedPhoto($validated['cropped_photo']);
+        } elseif ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            $photoPath = ImageUploadSanitizer::store($request->file('photo'), 'struktur', 'struktur_');
+        } elseif ($request->boolean('remove_photo')) {
+            $photoPath = null;
         }
-        // 2. Jika ada regular file upload baru
-        elseif ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            // Hapus foto lama
-            if ($photoPath) Storage::disk('public')->delete($photoPath);
-            $photoPath = $request->file('photo')->store('struktur', 'public');
+
+        if ($photoPath === false) {
+            return back()->withInput()->withErrors(['photo' => 'Foto bukan gambar yang valid.']);
+        }
+
+        if ($photoPath !== $oldPhotoPath && $oldPhotoPath) {
+            Storage::disk('public')->delete($oldPhotoPath);
         }
         // ==========================================
 
@@ -322,6 +333,8 @@ class StrukturController extends Controller
      */
     private function saveCroppedPhoto($base64Image)
     {
+        return ImageUploadSanitizer::storeBase64($base64Image, 'struktur', 'struktur_');
+        /*
         try {
             // Remove data:image/jpeg;base64, prefix
             if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
@@ -350,6 +363,7 @@ class StrukturController extends Controller
             Log::error('Error saving cropped photo: ' . $e->getMessage());
             return null;
         }
+        */
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

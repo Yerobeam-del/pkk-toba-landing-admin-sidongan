@@ -60,7 +60,7 @@ $staticParams = [
     'admin.user-management.show'    => ['user' => $admin->id],
     'admin.user-management.edit'    => ['user' => $admin->id],
     'admin.user-management.desas'   => ['kecamatanKode' => '12.01'],
-    'admin.admin.struktur.tab'      => ['tab' => 'pengurus'],
+    'admin.struktur.tab'            => ['tab' => 'pengurus'],
     'admin.sieda-data.module'       => ['module' => 'keluarga'],
     'admin.sieda-data.show'         => ['module' => 'keluarga', 'id' => '1'],
     // Placeholder IDs: detail pages should render or 404 gracefully,

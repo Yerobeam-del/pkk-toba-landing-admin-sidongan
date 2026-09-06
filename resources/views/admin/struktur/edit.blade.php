@@ -19,15 +19,14 @@
 </div>
 
 {{-- Form Card --}}
+@php
+    $currentGroup = is_null($struktur->pokja_id) ? 'pengurus' : 'pokja' . $struktur->pokja_id;
+    $currentPosition = $struktur->position;
+@endphp
 <div class="card" style="border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 1.5rem;">
     <form action="{{ route('admin.struktur.update', $struktur) }}" method="POST" enctype="multipart/form-data" id="editForm" data-current-group="{{ $currentGroup }}" data-current-position="{{ $currentPosition }}" data-existing-photo="{{ $struktur->photo_path ? asset('storage/'.$struktur->photo_path) : '' }}">
         @csrf
         @method('PUT')
-        
-        @php
-            $currentGroup = is_null($struktur->pokja_id) ? 'pengurus' : 'pokja' . $struktur->pokja_id;
-            $currentPosition = $struktur->position;
-        @endphp
 
         {{-- Group & Position Row --}}
         <div class="form-grid-2 u-grid-2">
@@ -72,7 +71,7 @@
         {{-- Photo Upload with Crop --}}
         <div class="u-mb-8">
             <label class="u-label-slate">Foto Anggota</label>
-            <input type="file" id="photoInput" class="form-control" accept="image/*"  style="width:100%;padding:0.75rem;border:2px dashed #e2e8f0;border-radius:8px;background:#f8fafc;font-size:0.9rem;cursor:pointer;transition:all 0.2s">
+            <input type="file" id="photoInput" name="photo" class="form-control" accept="image/*"  style="width:100%;padding:0.75rem;border:2px dashed #e2e8f0;border-radius:8px;background:#f8fafc;font-size:0.9rem;cursor:pointer;transition:all 0.2s">
             <small class="u-hint-line">JPG/PNG, maksimal 2MB. Klik foto untuk mengatur crop.</small>
             
             {{-- Preview Container --}}
@@ -95,6 +94,7 @@
 
         {{-- Hidden input for cropped image --}}
         <input type="hidden" name="cropped_photo" id="croppedPhoto">
+        <input type="hidden" name="remove_photo" id="removePhoto" value="0">
 
         {{-- Action Buttons --}}
         <div style="display:flex;gap:0.75rem;justify-content:flex-end;padding-top:1.5rem;border-top:1px solid rgba(0,0,0,0.06)">

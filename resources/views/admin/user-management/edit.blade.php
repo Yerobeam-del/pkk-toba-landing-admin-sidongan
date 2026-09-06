@@ -20,7 +20,7 @@
 
 {{-- Form Card --}}
 <div class="card u-a71">
-    <form action="{{ route('admin.user-management.update', $user) }}" method="POST" id="editUserForm">
+    <form action="{{ route('admin.user-management.update', $user) }}" method="POST" enctype="multipart/form-data" id="editUserForm">
         @csrf
         @method('PUT')
 
@@ -67,10 +67,11 @@
                                     <div class="avatar-text-secondary">Format: JPG/PNG, maks 2MB</div>
                                 @endif
                             </div>
-                            <button type="button" id="removePhotoBtn" class="avatar-remove-btn" style="display:none" data-action="remove-photo">Hapus</button>
+                            <button type="button" id="removePhotoBtn" class="avatar-remove-btn" style="display:{{ $user->avatar ? 'flex' : 'none' }}" data-action="remove-photo">Hapus</button>
                         </div>
                     </div>
                     <input type="hidden" name="cropped_photo" id="croppedPhoto">
+                    <input type="hidden" name="remove_photo" id="removePhoto" value="0">
                 </div>
 
                 {{-- Nama Lengkap --}}

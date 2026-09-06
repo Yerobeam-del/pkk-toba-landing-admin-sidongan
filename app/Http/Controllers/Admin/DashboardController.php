@@ -13,6 +13,7 @@ use App\Models\News;
 use App\Models\Template;
 use App\Models\User;
 use App\Models\Document;
+use App\Models\StrukturMember;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -25,7 +26,7 @@ class DashboardController extends Controller
             // Hitung secara terpisah agar jika satu tabel gagal, yang lain tetap jalan
             $counts = new \stdClass();
             try { $counts->total_berita = News::count(); } catch (\Exception $e) { $counts->total_berita = 0; }
-            try { $counts->total_pengurus = User::whereNotNull('email_verified_at')->count(); } catch (\Exception $e) { $counts->total_pengurus = 0; }
+            try { $counts->total_pengurus = StrukturMember::where('is_active', true)->count(); } catch (\Exception $e) { $counts->total_pengurus = 0; }
             try { $counts->total_template = Template::count(); } catch (\Exception $e) { $counts->total_template = 0; }
             try { $counts->total_aplikasi = Application::where('is_active', true)->count(); } catch (\Exception $e) { $counts->total_aplikasi = 0; }
             try { $counts->total_users = User::count(); } catch (\Exception $e) { $counts->total_users = 0; }

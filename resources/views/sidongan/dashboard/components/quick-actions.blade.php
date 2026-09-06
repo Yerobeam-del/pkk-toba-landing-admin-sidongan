@@ -5,7 +5,7 @@
     <div class="card-body">
         <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e293b; margin: 0 0 1rem 0;">Aksi Cepat</h3>
         <div class="quick-actions-grid">
-            @if($currentUser && $currentUser->hasSidonganRole('sekretaris'))
+            @if($currentUser && $currentUser->isSidonganSekretaris())
                 <a href="{{ route('sidongan.documents.create') }}" class="quick-action-item">
                     <div class="quick-action-icon" style="background: #dbeafe;">
                         <i class="fas fa-plus" style="color: #2563eb;"></i>
@@ -17,7 +17,7 @@
                 </a>
             @endif
 
-            @if($currentUser && $currentUser->hasSidonganRole('ketua'))
+            @if($currentUser && $currentUser->isSidonganKetua())
                 <a href="{{ route('sidongan.disposisi') }}" class="quick-action-item">
                     <div class="quick-action-icon" style="background: #ffedd5;">
                         <i class="fas fa-tasks" style="color: #ea580c;"></i>

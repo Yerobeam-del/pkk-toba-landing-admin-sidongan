@@ -68,6 +68,8 @@ function handlePhotoUpload(event) {
     }
     
     originalFile = file;
+    const removePhotoInput = document.getElementById('removePhoto');
+    if (removePhotoInput) removePhotoInput.value = '0';
     const reader = new FileReader();
     reader.onload = function(e) {
         const preview = document.getElementById('photoPreview');
@@ -80,10 +82,10 @@ function handlePhotoUpload(event) {
         textDiv.querySelector('div:last-child').textContent = 'Klik foto untuk atur crop';
         
         // Add remove button if not exists
-        if (!document.querySelector('button[onclick="removePhoto()"]')) {
+        if (!document.querySelector('[data-action="remove-photo"]')) {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.onclick = removePhoto;
+            btn.setAttribute('data-action', 'remove-photo');
             btn.style.cssText = 'margin-left:auto;background:#fef2f2;color:#ef4444;border:none;padding:0.5rem 1rem;border-radius:6px;cursor:pointer;font-size:0.85rem;font-weight:600;transition:all 0.2s';
             btn.textContent = 'Hapus';
             btn.onmouseover = function() { this.style.background='#fee2e2'; this.style.transform='translateY(-2px)'; };
@@ -101,6 +103,9 @@ function removePhoto() {
     preview.style.display = 'none';
     preview.src = '#';
     document.getElementById('croppedPhoto').value = '';
+    const removePhotoInput = document.getElementById('removePhoto');
+    if (removePhotoInput) removePhotoInput.value = '1';
+    existingPhotoUrl = '';
     originalFile = null;
     
     // Reset text
@@ -109,7 +114,7 @@ function removePhoto() {
     textDiv.querySelector('div:last-child').textContent = 'Klik foto untuk atur crop';
     
     // Remove button
-    const btn = document.querySelector('button[onclick="removePhoto()"]');
+    const btn = document.querySelector('[data-action="remove-photo"]');
     if (btn) btn.remove();
     
     if (cropper) {
@@ -228,6 +233,8 @@ function applyCrop() {
         // Set to preview
         document.getElementById('photoPreview').src = croppedDataUrl;
         document.getElementById('croppedPhoto').value = croppedDataUrl;
+        const removePhotoInput = document.getElementById('removePhoto');
+        if (removePhotoInput) removePhotoInput.value = '0';
         
         // Update text to show it's been cropped
         const preview = document.getElementById('photoPreview');

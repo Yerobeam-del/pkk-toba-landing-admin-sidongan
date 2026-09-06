@@ -96,21 +96,21 @@
                     <span>Kembali</span>
                 </a>
                 
-                @if($currentUser && $currentUser->hasSidonganRole('sekretaris') && $document->status === 'menunggu_disposisi')
+                @if($currentUser && $currentUser->isSidonganSekretaris() && $document->status === 'menunggu_disposisi')
                 <a href="{{ route('sidongan.documents.edit', $document) }}?from={{ urlencode(url()->current()) }}" class="ds-btn ds-btn-edit">
                     <i class="fas fa-edit"></i>
                     <span>Edit Surat</span>
                 </a>
                 @endif
                 
-                @if($currentUser && $currentUser->hasSidonganRole('ketua') && $document->status === 'menunggu_disposisi')
+                @if($currentUser && $currentUser->isSidonganKetua() && $document->status === 'menunggu_disposisi')
                 <a href="{{ route('sidongan.disposisi.form', $document) }}?from={{ urlencode(url()->current()) }}" class="ds-btn ds-btn-disposisi">
                     <i class="fas fa-paper-plane"></i>
                     <span>Disposisi</span>
                 </a>
                 @endif
 
-                @if(is_array($disposisiData) && isset($disposisiData['action']) && ($currentUser->hasSidonganRole('sekretaris') || $currentUser->hasSidonganRole('ketua')))
+                @if(is_array($disposisiData) && isset($disposisiData['action']) && ($currentUser->isSidonganSekretaris() || $currentUser->isSidonganKetua()))
                 <a href="{{ route('sidongan.documents.disposisi-print', $document) }}?from={{ urlencode(url()->current()) }}" class="ds-btn ds-btn-print">
                     <i class="fas fa-print"></i>
                     <span>Cetak Disposisi</span>

@@ -530,12 +530,14 @@ Route::domain(config('app.landing_domain'))->group(function () {
         // akan 500 jika diakses langsung. Hapus except() ini bila show() dibuat.
         Route::resource('struktur', App\Http\Controllers\Admin\StrukturController::class)
             ->except(['show'])->middleware('permission:manage-struktur');
-        Route::get('/admin/struktur/tab/{tab}', [App\Http\Controllers\Admin\StrukturController::class, 'getTabData'])->name('admin.struktur.tab');
+        Route::get('/struktur/tab/{tab}', [App\Http\Controllers\Admin\StrukturController::class, 'getTabData'])
+            ->name('struktur.tab')->middleware('permission:manage-struktur');
         Route::resource('aplikasi', App\Http\Controllers\Admin\ApplicationController::class)
             ->except(['show'])->middleware('permission:manage-aplikasi');
         Route::resource('berita', App\Http\Controllers\Admin\BeritaController::class)
             ->except(['show'])->middleware('permission:manage-berita');
-        Route::delete('/berita/{beritum}/image/{image}', [App\Http\Controllers\Admin\BeritaController::class, 'deleteImage'])->name('berita.delete-image');
+        Route::delete('/berita/{beritum}/image/{image}', [App\Http\Controllers\Admin\BeritaController::class, 'deleteImage'])
+            ->name('berita.delete-image')->middleware('permission:manage-berita');
 
         Route::prefix('desa')->name('desa.')->middleware('permission:manage-desa')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\DesaController::class, 'index'])->name('index');

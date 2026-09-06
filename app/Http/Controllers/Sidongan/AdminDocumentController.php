@@ -297,6 +297,12 @@ class AdminDocumentController extends Controller
 
     public function create()
     {
+        // HANYA Sekretaris yang mengelola surat masuk — gerbang di sini,
+        // bukan hanya menyembunyikan tombol di view.
+        if (!auth()->guard('sidongan')->user()?->isSidonganSekretaris()) {
+            abort(403, 'Akses ditolak. Hanya Sekretaris yang dapat membuat surat.');
+        }
+
         $categories = DocumentCategory::where('is_active', true)->orderBy('name')->get();
         return view('sidongan.documents.create', compact('categories'));
     }
@@ -305,13 +311,10 @@ class AdminDocumentController extends Controller
     {
         // SAFETY CHECK: Pastikan user login via guard sidongan
         $user = auth()->guard('sidongan')->user();
-        // Note: toast via with() already used in success/error redirects below
-        
-        if (!$user) {
-            \Log::error('SIDONGAN Store: User not authenticated');
-            return redirect()->route('sidongan.login')
-                ->with('error', 'Session expired. Silakan login ulang.')
-                ->withErrors(['auth' => 'Session expired. Silakan login ulang.']);
+
+        // HANYA Sekretaris yang mencatat surat masuk.
+        if (!$user?->isSidonganSekretaris()) {
+            abort(403, 'Akses ditolak. Hanya Sekretaris yang dapat membuat surat.');
         }
         
         // Validasi input dengan custom messages
@@ -529,6 +532,13 @@ class AdminDocumentController extends Controller
         $user = auth()->guard('sidongan')->user();
         if (!$user?->isSidonganSekretaris()) {
             abort(403, 'Akses ditolak.');
+        }
+
+        // Konsisten dengan authorizeDocumentAccess(): Sekretaris hanya boleh
+        // menghapus surat yang DIBUATNYA SENDIRI. Super Admin (lolos
+        // isSidonganSekretaris() lewat isSuperAdmin()) boleh menghapus semua.
+        if (!$user->isSuperAdmin() && $document->created_by !== $user->id) {
+            abort(403, 'Anda tidak berhak menghapus surat ini.');
         }
 
         if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {

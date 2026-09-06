@@ -8,6 +8,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Support\ImageUploadSanitizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -57,54 +58,53 @@ class ProfileController extends Controller
 
         // HANDLE AVATAR DARI BASE64 (Prioritas)
         if ($request->filled('cropped_avatar_base64')) {
-            $base64 = $request->input('cropped_avatar_base64');
+            $path = ImageUploadSanitizer::storeBase64(
+                $request->input('cropped_avatar_base64'),
+                'avatars',
+                'avatar_' . $user->id . '_'
+            );
 
-            // Hapus prefix "data:image/jpeg;base64," (juga aman untuk PNG/WebP:
-            // regex mencocokkan tipe apa pun yang dikirim Cropper)
-            $image = preg_replace('#^data:image/[\w.+-]+;base64,#', '', $base64);
-            $image = str_replace(' ', '+', $image);
-
-            $decoded = base64_decode($image, true);
-            if ($decoded !== false && strlen($decoded) > 0) {
-                $imageName = 'avatar_' . $user->id . '_' . time() . '.jpg';
-
-                // Hapus avatar lama (sebelumnya file lama menumpuk di storage)
-                if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                    Storage::disk('public')->delete($user->avatar);
-                }
-
-                $path = 'avatars/' . $imageName;
-                Storage::disk('public')->put($path, $decoded);
-
-                $validated['avatar'] = $path;
+            if ($path === false) {
+                return back()
+                    ->withErrors(['cropped_avatar_base64' => 'Foto hasil crop bukan gambar yang valid.'])
+                    ->withInput();
             }
-        }
-        
-        // Fallback: handle file upload biasa
-        elseif ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
-            $file = $request->file('avatar');
 
-            // Hapus avatar lama (sebelumnya file lama menumpuk di storage)
+            // Hapus avatar lama hanya setelah foto baru lolos validasi.
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
 
-            // Ekstensi ditentukan dari ISI file (magic bytes), bukan nama kiriman
-            // klien — dan SVG ditolak (XSS via /storage). Lihat ImageUploadSanitizer.
-            $path = \App\Support\ImageUploadSanitizer::store($file, 'avatars', 'avatar_' . $user->id . '_');
+            $validated['avatar'] = $path;
+        }
+        // Fallback: handle file upload biasa
+        elseif ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
+            $path = ImageUploadSanitizer::store(
+                $request->file('avatar'),
+                'avatars',
+                'avatar_' . $user->id . '_'
+            );
+
             if ($path === false) {
-                return back()->withErrors(['avatar' => 'File avatar bukan gambar yang didukung (JPG/PNG/WEBP/GIF).'])->withInput();
+                return back()
+                    ->withErrors(['avatar' => 'File avatar bukan gambar yang didukung (JPG/PNG/WEBP/GIF).'])
+                    ->withInput();
             }
+
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
             $validated['avatar'] = $path;
         }
 
         // Update user
         $user->fill($validated);
-        
+
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
-        
+
         $user->save();
 
         return Redirect::route('admin.profile.edit')->with('success', 'Profil berhasil diperbarui!');

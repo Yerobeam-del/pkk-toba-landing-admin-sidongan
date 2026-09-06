@@ -6,6 +6,7 @@
 namespace App\Support;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -58,6 +59,42 @@ class ImageUploadSanitizer
         $filename = $prefix . time() . '.' . $ext;
 
         return $file->storeAs($directory, $filename, 'public');
+    }
+
+    /**
+     * Simpan data URL hasil crop setelah memvalidasi MIME dari isi biner.
+     *
+     * Data URL berasal dari browser, jadi prefix dan isi base64 tetap harus
+     * dianggap tidak tepercaya. SVG/script dan payload yang bukan gambar
+     * ditolak sebelum ditulis ke disk public.
+     */
+    public static function storeBase64(string $dataUrl, string $directory, string $prefix): string|false
+    {
+        if (!preg_match('#^data:image/(?:jpeg|jpg|png|webp|gif);base64,#i', $dataUrl, $match)) {
+            return false;
+        }
+
+        $encoded = substr($dataUrl, strlen($match[0]));
+        $decoded = base64_decode(str_replace(' ', '+', $encoded), true);
+        if ($decoded === false || $decoded === '' || strlen($decoded) > 4 * 1024 * 1024) {
+            return false;
+        }
+
+        $imageInfo = @getimagesizefromstring($decoded);
+        $mime = $imageInfo['mime'] ?? null;
+        $extension = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+            'image/gif' => 'gif',
+        ][$mime] ?? null;
+
+        if ($extension === null) {
+            return false;
+        }
+
+        $path = $directory . '/' . $prefix . time() . '_' . Str::random(12) . '.' . $extension;
+        return Storage::disk('public')->put($path, $decoded) ? $path : false;
     }
 
     /**

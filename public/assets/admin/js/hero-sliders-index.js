@@ -147,6 +147,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // PANEL PENGATURAN SLIDER — animasi checkbox + sinkronisasi hidden input.
+    // Hidden input "0" wajib dikirim agar toggle nonaktif tetap tersimpan
+    // (checkbox HTML yang tidak dicentang tidak ikut ter-submit).
+    document.querySelectorAll('[data-settings-sync]').forEach(function(hidden) {
+        const checkbox = document.getElementById(hidden.getAttribute('data-settings-sync'));
+        if (!checkbox) return;
+
+        const boxId = checkbox.id + 'Box';
+        const checkId = checkbox.id + 'Check';
+
+        updateCheckboxStyle(boxId, checkId, checkbox.checked);
+        checkbox.addEventListener('change', function() {
+            updateCheckboxStyle(boxId, checkId, this.checked);
+            hidden.value = this.checked ? '1' : '0';
+        });
+    });
+
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeEditModal();
     });

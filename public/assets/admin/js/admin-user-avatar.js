@@ -22,6 +22,8 @@ function handleAvatarUpload(event) {
     }
 
     avatarOriginalFile = file;
+    const removePhotoInput = document.getElementById('removePhoto');
+    if (removePhotoInput) removePhotoInput.value = '0';
     const preview = document.getElementById('photoPreview');
     const placeholder = document.getElementById('avatarPlaceholder');
     const avatarText = document.getElementById('avatarText');
@@ -58,6 +60,8 @@ function removeAvatar() {
     if (placeholder) placeholder.style.display = 'flex';
     if (removeBtn) removeBtn.style.display = 'none';
     if (croppedPhoto) croppedPhoto.value = '';
+    const removePhotoInput = document.getElementById('removePhoto');
+    if (removePhotoInput) removePhotoInput.value = '1';
     avatarOriginalFile = null;
 
     if (avatarText) {
@@ -167,6 +171,8 @@ function applyAvatarCrop() {
         const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
         document.getElementById('photoPreview').src = croppedDataUrl;
         document.getElementById('croppedPhoto').value = croppedDataUrl;
+        const removePhotoInput = document.getElementById('removePhoto');
+        if (removePhotoInput) removePhotoInput.value = '0';
 
         const avatarText = document.getElementById('avatarText');
         if (avatarText) {

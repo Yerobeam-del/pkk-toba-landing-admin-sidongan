@@ -23,6 +23,8 @@ class SidonganDataController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorizeSuperAdmin();
+
         $perPage = request('per_page', 10);
         $search = request('search', '');
         $currentTab = request('tab', 'all');
@@ -119,6 +121,8 @@ class SidonganDataController extends Controller
      */
     public function cleanup(Request $request)
     {
+        $this->authorizeSuperAdmin();
+
         $request->validate([
             'action' => 'required|in:delete_archived,delete_completed,delete_old,delete_all_reports,delete_all_notifications',
             'days' => 'nullable|integer|min:1',
@@ -235,6 +239,8 @@ class SidonganDataController extends Controller
      */
     public function show(Document $document)
     {
+        $this->authorizeSuperAdmin();
+
         // Load document dengan relasi yang benar
         $document->load(['category', 'creator', 'activityReports.creator']);
 
@@ -257,6 +263,8 @@ class SidonganDataController extends Controller
      */
     public function deleteReport($reportId)
     {
+        $this->authorizeSuperAdmin();
+
         try {
             $report = ActivityReport::findOrFail($reportId);
             $documentId = $report->document_id;
@@ -289,6 +297,8 @@ class SidonganDataController extends Controller
      */
     public function destroy(Document $document)
     {
+        $this->authorizeSuperAdmin();
+
         try {
             // Hapus file
             if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
@@ -312,6 +322,16 @@ class SidonganDataController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('admin.sidongan-data.index')
                 ->with('error', 'Gagal menghapus surat: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Pastikan data SIDONGAN hanya bisa dikelola Super Admin.
+     */
+    private function authorizeSuperAdmin(): void
+    {
+        if (!auth()->user()?->isSuperAdmin()) {
+            abort(403, 'Akses ditolak. Fitur ini hanya untuk Super Admin.');
         }
     }
 
