@@ -7,16 +7,16 @@
 
 @section('content')
 
-@section('styles')
+@push('styles')
     <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-user-management-index.css') }}">
-@endsection
+@endpush
 
 <div class="u-header-row-plain">
     <div>
         <h1 class="u-page-title">Detail Akun</h1>
         <p class="u-muted">Informasi akun {{ $user->name }}</p>
     </div>
-    <div class="u-a64">
+    <div class="u-a64 u-flex-wrap">
         
         {{-- Tombol Salin Kredensial --}}
         <button type="button" onclick="copyAccountCredentials()" id="copyCredentialsBtn" class="btn um-export-btn">
@@ -225,8 +225,8 @@
 
 <script>
     function copyAccountCredentials() {
-        var name = {{ json_encode($user->name) }};
-        var email = {{ json_encode($user->email) }};
+        var name = @json($user->name);
+        var email = @json($user->email);
         var loginUrl = window.location.origin;
 
         var text = 'Halo ' + name + ',\n\n' +

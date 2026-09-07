@@ -100,57 +100,11 @@ function checkPasswordMatch() {
 
 // ==========================================
 // EMAIL AVAILABILITY CHECK (debounced)
+// Dihapus dari file ini: logika yang sama sudah ada di
+// admin-user-management-create.js & user-management-edit.js.
+// Deklarasi ganda `let emailCheckTimeout` membuat seluruh script
+// halaman create/edit gagal parse (ReferenceError di console).
 // ==========================================
-let emailCheckTimeout = null;
-
-function updateEmailWithCheck() {
-    const username = document.getElementById('email_username');
-    const fullEmail = document.getElementById('email_full');
-    const preview = document.getElementById('email_preview');
-    const statusEl = document.getElementById('emailStatus');
-    if (!username) return;
-
-    const val = username.value.trim();
-    const email = val ? val + '@pkk-toba.id' : '';
-    if (fullEmail) fullEmail.value = email;
-    if (preview) preview.textContent = email || 'username@pkk-toba.id';
-
-    clearTimeout(emailCheckTimeout);
-    if (!statusEl || val.length < 3) {
-        if (statusEl) statusEl.style.display = 'none';
-        return;
-    }
-
-    statusEl.style.display = 'flex';
-    statusEl.className = 'email-status email-status--checking';
-    statusEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Mengecek...';
-
-    emailCheckTimeout = setTimeout(() => {
-        const excludeUserId = statusEl.dataset.excludeUserId || '';
-        checkEmailAvailability(email, excludeUserId);
-    }, 500);
-}
-
-async function checkEmailAvailability(email, excludeUserId) {
-    const statusEl = document.getElementById('emailStatus');
-    if (!statusEl) return;
-    try {
-        let url = `/admin/user-management/check-email?email=${encodeURIComponent(email)}`;
-        if (excludeUserId) url += `&exclude_user_id=${excludeUserId}`;
-        const response = await fetch(url);
-        const result = await response.json();
-        statusEl.style.display = 'flex';
-        if (result.available) {
-            statusEl.className = 'email-status email-status--available';
-            statusEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ' + result.message;
-        } else {
-            statusEl.className = 'email-status email-status--taken';
-            statusEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> ' + result.message;
-        }
-    } catch (error) {
-        statusEl.style.display = 'none';
-    }
-}
 
 // ==========================================
 // FORM SUBMIT LOADING STATE (auto for all POST forms)
@@ -194,13 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
     initCustomCheckboxes();
     initFormLoading();
     initPerPageAutoSubmit();
-
-    // Email check
-    const emailUsername = document.getElementById('email_username');
-    if (emailUsername) {
-        emailUsername.addEventListener('input', updateEmailWithCheck);
-        updateEmailWithCheck();
-    }
 
     // Password features
     const passwordInput = document.getElementById('passwordInput');

@@ -5,8 +5,11 @@
 @section('title', 'Manajemen Akun')
 @section('page-title', 'Manajemen Akun')
 
-@section('content')
+@push('styles')
     <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-user-management-index.css') }}">
+@endpush
+
+@section('content')
 
 
 <div class="u-mb-8">
@@ -589,9 +592,9 @@
     </div>
     <script>
         function copyCredentials(type) {
-            const name = {{ json_encode(session('new_account.name')) }};
-            const email = {{ json_encode(session('new_account.email')) }};
-            const password = {{ json_encode(session('new_account.password', '')) }};
+            const name = @json(session('new_account.name'));
+            const email = @json(session('new_account.email'));
+            const password = @json(session('new_account.password', ''));
 
             let text = '';
             if (type === 'full') {
