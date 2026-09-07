@@ -93,17 +93,32 @@ class SiedaAvatarSyncController extends Controller
             ], 422);
         }
 
-        // Hapus foto lama di storage Admin Panel sebelum menulis yang baru
-        if (!empty($user->avatar) && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
-        }
-
+        // Tulis file BARU dulu, hapus foto lama hanya setelah write terkonfirmasi
+        // (sebelumnya delete-dulu: kegagalan disk setelahnya menyisakan kolom
+        // users.avatar menunjuk file yang sudah tidak ada).
         $filename = 'avatar_' . $user->id . '_' . time() . '.' . $ext;
         $path = 'avatars/' . $filename;
 
-        Storage::disk('public')->put($path, $bytes);
+        if (!Storage::disk('public')->put($path, $bytes)) {
+            Log::error('[SiedaSync] Avatar sync — gagal menulis file avatar', [
+                'email' => $user->email,
+                'path' => $path,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan avatar',
+            ], 500);
+        }
 
         $user->forceFill(['avatar' => $path])->save();
+
+        // Hapus foto lama SETELAH DB menunjuk file baru (bila beda path).
+        if (!empty($user->getOriginal('avatar'))
+            && $user->getOriginal('avatar') !== $path
+            && Storage::disk('public')->exists($user->getOriginal('avatar'))) {
+            Storage::disk('public')->delete($user->getOriginal('avatar'));
+        }
 
         Log::info('[SiedaSync] Avatar user berhasil disinkronkan dari SIEDA', [
             'email' => $user->email,

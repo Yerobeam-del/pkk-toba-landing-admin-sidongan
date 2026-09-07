@@ -193,17 +193,14 @@ class UserManagementController extends Controller
         }
 
         // SINKRONISASI KE SIEDA BACKEND via service (auto header X-Sieda-Key + HMAC)
-        if ($user->sieda_role) {
-            $syncService = app(SiedaSyncService::class);
-            $syncService->syncUser([
-                'name' => $user->name,
-                'email' => $user->email,
-                'password' => $request->password,
-                'sieda_role' => $user->sieda_role,
-                'kecamatan_code' => $user->sieda_kecamatan,
-                'kelurahan_code' => $user->sieda_kelurahan,
-            ]);
-        }
+        $siedaSyncOk = app(SiedaSyncService::class)->syncUser([
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => $request->password,
+            'sieda_role' => $user->sieda_role,
+            'kecamatan_code' => $user->sieda_kecamatan,
+            'kelurahan_code' => $user->sieda_kelurahan,
+        ]);
 
         // Activity Log
         AdminActivityLog::log('created', $user, 'Akun "' . $user->name . '" berhasil dibuat', [
@@ -211,8 +208,14 @@ class UserManagementController extends Controller
             'role' => $user->role?->display_name,
         ]);
 
+        // Jangan klaim "dan disinkronisasi" bila SIEDA menolak/tidak terjangkau —
+        // admin harus tahu bila kedua sistem tidak sinkron.
+        $successMessage = $siedaSyncOk
+            ? 'Akun berhasil dibuat dan disinkronisasi ke SIEDA!'
+            : 'Akun berhasil dibuat, NAMUN sinkronisasi ke SIEDA gagal — periksa log dan ulangi sinkronisasi.';
+
         return redirect()->route('admin.user-management.index')
-            ->with('success', 'Akun berhasil dibuat dan disinkronisasi!')
+            ->with('success', $successMessage)
             ->with('new_account', [
                 'name' => $user->name,
                 'email' => $user->email,
@@ -348,6 +351,7 @@ class UserManagementController extends Controller
         }
 
         $oldEmail = $user->getOriginal('email');
+        $oldSiedaRole = $user->getOriginal('sieda_role');
         $user->name = $validated['name'];
         $user->email = $validated['email'];
 
@@ -405,9 +409,13 @@ class UserManagementController extends Controller
         }
 
         // SINKRONISASI UPDATE KE SIEDA BACKEND via service (auto header X-Sieda-Key + HMAC)
+        $syncService = app(SiedaSyncService::class);
+
         if ($user->sieda_role) {
-            $syncService = app(SiedaSyncService::class);
-            $syncService->syncUser([
+            // Role SIEDA ada (lama/baru): kirim payload update. Email lama
+            // dikirim di path supaya SIEDA mengubah akun LAMA, bukan membuat
+            // akun baru — tanpa ini, rename email menghasilkan dua akun SIEDA.
+            $siedaSyncOk = $syncService->syncUser([
                 'name' => $user->name,
                 'email' => $user->email,
                 'password' => !empty($validated['password']) ? $request->password : null,
@@ -415,10 +423,30 @@ class UserManagementController extends Controller
                 'kecamatan_code' => $user->sieda_kecamatan,
                 'kelurahan_code' => $user->sieda_kelurahan,
             ], $oldEmail); // Kirim email lama untuk path /sync-user/{email}
+
+            // Kasus rawan: email berubah tapi SIEDA tidak terjangkau — akun di
+            // SIEDA masih memakai email lama. Tandai eksplisit untuk rekonsiliasi.
+            if (!$siedaSyncOk && $oldEmail !== $user->email) {
+                Log::warning('[SiedaSync] Email diubah di Admin Panel namun sinkronisasi gagal — akun SIEDA masih memakai email lama', [
+                    'old_email' => $oldEmail,
+                    'new_email' => $user->email,
+                ]);
+            }
+        } elseif ($oldSiedaRole) {
+            // Role SIEDA DIHAPUS lewat form edit → cabut juga aksesnya di SIEDA.
+            // Sebelumnya hanya kolom lokal yang kosong; akun SIEDA tetap aktif.
+            $siedaSyncOk = $syncService->revokeAccess($oldEmail);
+        } else {
+            // Tidak ada keterlibatan SIEDA sebelum/sesudah — tidak ada yang disinkron.
+            $siedaSyncOk = true;
         }
 
+        $successMessage = $siedaSyncOk
+            ? 'Akun berhasil diperbarui dan disinkronisasi ke SIEDA!'
+            : 'Akun berhasil diperbarui, NAMUN sinkronisasi ke SIEDA gagal — periksa log dan ulangi sinkronisasi.';
+
         return redirect()->route('admin.user-management.edit', $user)
-            ->with('success', 'Akun berhasil diperbarui dan disinkronisasi!');
+            ->with('success', $successMessage);
     }
 
     /**
