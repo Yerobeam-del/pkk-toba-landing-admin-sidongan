@@ -62,12 +62,12 @@ body {
 }
 
 .sidebar-logo {
-    width: 44px; 
+    width: 44px;
     height: 44px;
     background: transparent;
     border-radius: 0;
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
     justify-content: center;
     flex-shrink: 0;
     padding: 4px;
@@ -337,7 +337,7 @@ body {
         max-width: none !important;
         max-height: calc(100vh - 90px) !important;
     }
-    
+
     #notificationPopup > div:nth-child(2) {
         max-height: calc(100vh - 180px) !important;
         overflow-y: auto !important;
@@ -351,7 +351,7 @@ body {
         left: 0.5rem !important;
         max-height: calc(100vh - 80px) !important;
     }
-    
+
     #notificationPopup > div:nth-child(2) {
         max-height: calc(100vh - 160px) !important;
     }
@@ -443,27 +443,27 @@ body {
     .admin-footer {
         left: 0 !important;
     }
-    
+
     .admin-footer-inner {
         max-width: 100% !important;
     }
-    
+
     .admin-footer {
         padding: 1.25rem 1.5rem;
     }
-    
+
     .admin-footer-inner {
         flex-direction: column;
         text-align: center;
         gap: 0.75rem;
     }
-    
+
     .admin-footer-right {
         flex-wrap: wrap;
         justify-content: center;
         gap: 1rem;
     }
-    
+
     .content-area {
         padding: 1.5rem;
         padding-bottom: 7.5rem; /* Ruang untuk footer mobile (2 baris) */
@@ -474,7 +474,7 @@ body {
     .admin-footer-right {
         display: none;
     }
-    
+
     .content-area {
         padding-bottom: 4rem;
     }
@@ -781,6 +781,30 @@ body {
     }
 }
 
+/* 3b. sd-edit-header — header gradient halaman form (dipakai create & edit,
+   sebelumnya hanya ada di sidongan-documents-edit.css sehingga halaman lain
+   yang memakai kelas ini tampil tanpa latar gradient) */
+.sd-edit-header {
+    background: linear-gradient(135deg, #0891b2, #14b8a6);
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    box-shadow: 0 4px 20px rgba(8, 145, 178, 0.2);
+}
+
+/* 3c. verifikasi-header — header gradient halaman verifikasi (ungu, pembeda
+   alur persetujuan). Sebelumnya inline style di view — dipindah agar konsisten
+   dengan header gradient halaman lain. */
+.verifikasi-header {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);
+}
+
 /* 4. sd-btn-back — base styles (universal) */
 .sd-btn-back,
 .ds-header-actions .ds-btn-back,
@@ -820,7 +844,11 @@ body {
 .sd-page-header-gradient .sd-btn-back,
 .lk-page-header .sd-btn-back,
 .sd-edit-header .sd-btn-back,
-.dl-header .sd-btn-back {
+.dl-header .sd-btn-back,
+.ds-header .sd-btn-back,
+.disposisi-header .sd-btn-back,
+.verifikasi-header .sd-btn-back,
+.action-buttons .btn-back {
     background: rgba(255,255,255,0.2);
     color: white;
     border: 1px solid rgba(255,255,255,0.3);
@@ -829,7 +857,11 @@ body {
 .sd-page-header-gradient .sd-btn-back:hover,
 .lk-page-header .sd-btn-back:hover,
 .sd-edit-header .sd-btn-back:hover,
-.dl-header .sd-btn-back:hover {
+.dl-header .sd-btn-back:hover,
+.ds-header .sd-btn-back:hover,
+.disposisi-header .sd-btn-back:hover,
+.verifikasi-header .sd-btn-back:hover,
+.action-buttons .btn-back:hover {
     background: rgba(255,255,255,0.35);
     color: white;
     transform: translateY(-1px);
@@ -1251,7 +1283,8 @@ html.dark-mode .toggle-btn {
 }
 html.dark-mode .toggle-btn:hover {
     background: rgba(255,255,255,0.05);
-    color: #14b8a6;}
+    color: #14b8a6;
+}
 
 html.dark-mode h1, html.dark-mode h2, html.dark-mode h3,
 html.dark-mode h4, html.dark-mode p {
@@ -1263,7 +1296,8 @@ html.dark-mode a:not(.nav-item):not(.btn-action):not(.sd-btn-back) {
 }
 
 html.dark-mode .sd-table-wrap {
-    border-color: rgba(255,255,255,0.08);}
+    border-color: rgba(255,255,255,0.08);
+}
 
 html.dark-mode .sd-table-wrap td {
     border-color: rgba(255,255,255,0.05);
@@ -1284,6 +1318,21 @@ html.dark-mode div[style*="background: white"],
 html.dark-mode div[style*="background:#fff"],
 html.dark-mode div[style*="background: #fff"] {
     background: #1e293b !important;
+}
+
+/* Header gradient TIDAK boleh ikut tergelapkan rule blanket di atas
+   (semua header form membawa .animate-slide-in) — re-assert gradient. */
+html.dark-mode .sd-edit-header,
+html.dark-mode .disposisi-header,
+html.dark-mode .lk-page-header,
+html.dark-mode .action-bar {
+    background: linear-gradient(135deg, #0891b2, #14b8a6) !important;
+    color: #fff !important;
+}
+
+html.dark-mode .verifikasi-header {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+    color: #fff !important;
 }
 
 html.dark-mode input[readonly],
@@ -2012,7 +2061,8 @@ html.dark-mode .sd-action-avatar {
     border-color: #334155;
 }
 html.dark-mode .sd-action-avatar-placeholder {
-    border-color: #334155;}
+    border-color: #334155;
+}
 
 /* --- User profile avatar in header --- */
 html.dark-mode .user-profile-btn > div:last-child {
@@ -2022,7 +2072,8 @@ html.dark-mode .user-profile-btn > div:last-child {
 /* --- Notification badge border --- */
 html.dark-mode [style*="border: 2px solid white"],
 html.dark-mode [style*="border:2px solid white"] {
-    border-color: #1e293b !important;}
+    border-color: #1e293b !important;
+}
 
 /* --- Quick filter buttons base state --- */
 html.dark-mode .sd-filter-btn {

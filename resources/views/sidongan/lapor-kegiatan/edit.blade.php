@@ -25,7 +25,7 @@
 
 <div class="lapor-container">
     {{-- HEADER --}}
-    <div style="background: linear-gradient(135deg, #0891b2, #14b8a6); padding: 1.5rem 2rem; border-radius: 1rem; margin-bottom: 1.5rem; color: white; box-shadow: 0 4px 20px rgba(8, 145, 178, 0.2);">
+    <div class="sd-edit-header animate-slide-in">
         <div class="sd-page-header u-a89">
             <div class="u-flex-center-gap-3">
                 <div class="u-icon-badge-sm">

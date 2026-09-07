@@ -6,16 +6,11 @@
 @section('page-title', 'Koneksi Database SIEDA Gagal')
 
 @section('content')
-<div class="sieda-header">
-    <div>
-        <a href="{{ route('admin.sieda-data.index') }}" class="btn btn-outline-secondary btn-sm" style="margin-bottom:0.5rem;display:inline-flex;align-items:center;gap:0.4rem">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"/>
-            </svg>
-            Kembali
-        </a>
-        <h1 style="margin:0">Manajemen Data SIEDA</h1>
+<div class="u-header-row">
+    <div class="u-flex-1-min">
+        <h1 class="u-page-title">Manajemen Data SIEDA</h1>
     </div>
+    <x-admin.back-button :href="route('admin.sieda-data.index')" />
 </div>
 
 <div class="card" style="padding:2.5rem;text-align:center">

@@ -7,7 +7,10 @@
 
 @section('content')
 
-<div class="u-mb-6">
+<div class="u-header-row">
+    <div class="u-flex-1-min">
+        <h1 class="u-page-title">Detail Surat</h1>
+    </div>
     <x-admin.back-button :href="route('admin.sidongan-data.index')" label="Kembali ke Daftar Surat" />
 </div>
 

@@ -219,6 +219,11 @@ body {
 .btn-back { white-space: nowrap; flex-shrink: 0; }
 .btn-back svg { width: 18px; height: 18px; flex-shrink: 0; }
 
+/* "Kembali ke SIEDA" (header profil, saat sesi SSO dari SIEDA):
+   ukuran & posisi sama dengan .btn-back, hanya warnanya primary. */
+.btn-back-sieda { white-space: nowrap; flex-shrink: 0; }
+.btn-back-sieda svg { width: 18px; height: 18px; flex-shrink: 0; }
+
 /* FIX: Card border diperhalus */
 .card {
   background: var(--card-bg);

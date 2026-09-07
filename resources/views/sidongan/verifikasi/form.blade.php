@@ -21,7 +21,7 @@
 
 <div class="verifikasi-container sd-page u-px-6">
 {{-- Header --}}
-<div class="verifikasi-header animate-slide-in" style="background: linear-gradient(135deg, #7c3aed, #6d28d9); padding: 1.5rem 2rem; border-radius: 1rem; margin-bottom: 1.5rem; color: white; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);">
+<div class="verifikasi-header animate-slide-in">
     <div class="sd-page-header u-a89">
         <div class="u-flex-center-gap-3">
             <div class="u-icon-badge-sm">
@@ -32,9 +32,8 @@
                 <p class="u-subtitle-flat">Tinjau detail laporan dan tentukan keputusan</p>
             </div>
         </div>
-        <div class="sd-header-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <a href="{{ $backUrl }}" class="sd-btn-back"
-               style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.25); color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 600; transition: all 0.25s ease; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.3);">
+        <div class="sd-header-actions">
+            <a href="{{ $backUrl }}" class="sd-btn-back">
                 <i class="fas fa-arrow-left"></i>
                 <span>Kembali</span>
             </a>

@@ -7,21 +7,16 @@
 
 @section('content')
 {{-- Header --}}
-<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
-    <div>
-        <a href="{{ route('admin.sieda-data.index') }}" class="btn btn-outline-secondary btn-sm" style="margin-bottom:0.5rem;display:inline-flex;align-items:center;gap:0.4rem">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"/>
-            </svg>
-            Kembali ke Daftar Modul
-        </a>
-        <h1 style="margin:0 0 0.25rem 0; font-size:1.5rem; font-weight:800; color:var(--text-dark); letter-spacing:-0.5px">{{ $config['label'] }}</h1>
-        <p style="color:var(--text-muted); margin:0; font-size:0.9rem">Kelola data {{ strtolower($config['label']) }} dari aplikasi SIEDA</p>
+<div class="u-header-row">
+    <div class="u-flex-1-min">
+        <h1 class="u-page-title-tight">{{ $config['label'] }}</h1>
+        <p class="u-muted">Kelola data {{ strtolower($config['label']) }} dari aplikasi SIEDA</p>
     </div>
-    <div style="text-align:right; font-size:0.9rem; color:var(--text-muted)">
+    <div class="u-text-right">
         <div><strong style="color:var(--text-dark)">{{ number_format($totalCount) }}</strong> total record</div>
         <div class="u-badge-green"><strong>{{ number_format($totalAktif) }}</strong> aktif</div>
     </div>
+    <x-admin.back-button :href="route('admin.sieda-data.index')" label="Kembali ke Daftar Modul" />
 </div>
 
 {{-- Search & Tampilkan --}}

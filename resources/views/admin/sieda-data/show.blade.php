@@ -10,18 +10,12 @@
 
 
 {{-- Header --}}
-<div class="sieda-header">
-    <div>
-        <a href="{{ route('admin.sieda-data.module', $module) }}" class="btn btn-outline-secondary btn-sm" style="margin-bottom:0.5rem;display:inline-flex;align-items:center;gap:0.4rem">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"/>
-            </svg>
-            Kelola {{ $config['label'] }}
-        </a>
-        <h1 style="margin:0">{{ $config['label'] }}</h1>
-        <p style="color:#64748b; margin:0; font-size:0.9rem">Detail record #{{ $item->{$config['id_field']} }} dari aplikasi SIEDA</p>
+<div class="u-header-row">
+    <div class="u-flex-1-min">
+        <h1 class="u-page-title-tight">{{ $config['label'] }}</h1>
+        <p class="u-muted">Detail record #{{ $item->{$config['id_field']} }} dari aplikasi SIEDA</p>
     </div>
-    <div>
+    <div class="u-flex-center-gap-2-shrink">
         @if ($item->active)
             <span class="u-badge-green">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -34,6 +28,7 @@
             </span>
         @endif
     </div>
+    <x-admin.back-button :href="route('admin.sieda-data.module', $module)" label="Kelola {{ $config['label'] }}" />
 </div>
 
 {{-- Card status --}}

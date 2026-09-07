@@ -18,10 +18,25 @@
 
 
 <div class="form-container u-px-6">
-    {{-- Page Header --}}
-    <div class="animate-slide-in u-mb-6">
-        <h1 class="u-h2-slate">Buat Surat Masuk Baru</h1>
-        <p class="u-text-muted-lead">Isi formulir berikut untuk membuat surat masuk baru</p>
+    {{-- Page Header — gradient + tombol Kembali, konsisten dengan halaman Edit Surat --}}
+    <div class="sd-edit-header animate-slide-in">
+        <div class="sd-page-header u-a89">
+            <div class="u-flex-center-gap-3">
+                <div class="u-icon-badge-sm">
+                    <i class="fas fa-file-signature u-a90"></i>
+                </div>
+                <div>
+                    <h1 class="u-h3">Buat Surat Masuk Baru</h1>
+                    <p class="u-subtitle-flat">Isi formulir berikut untuk membuat surat masuk baru</p>
+                </div>
+            </div>
+            <div class="sd-header-actions">
+                <a href="{{ route('sidongan.documents.index') }}" class="sd-btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Kembali</span>
+                </a>
+            </div>
+        </div>
     </div>
 
     {{-- Error Alert Box --}}
