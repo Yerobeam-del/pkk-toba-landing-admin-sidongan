@@ -10,14 +10,19 @@
 
         .quick-access-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr) !important; /* 5 kartu = 1 baris */
+            grid-template-columns: repeat(6, 1fr) !important; /* 6 kartu = 1 baris */
             gap: 1.25rem;
+            max-width: 1200px !important;
             width: 100%;
         }
 
-        /* Tablet: 3 kolom per baris */
+        /* Kartu sedikit lebih ramping agar 6 kartu tetap lega dalam satu baris */
+        .quick-access-card { padding: 1.75rem 1rem !important; }
+
+        /* Laptop kecil: 3 kolom per baris (2 baris) */
         @media (max-width: 1024px) {
             .quick-access-grid { grid-template-columns: repeat(3, 1fr) !important; }
+            .quick-access-card { padding: 2rem 1.5rem !important; }
         }
 
         /* HP Besar: 2 kolom per baris */
@@ -29,4 +34,17 @@
         @media (max-width: 480px) {
             .quick-access-grid { grid-template-columns: 1fr !important; }
         }
-    
+
+/* Berita beranda: perataan padding dengan seksi lain + judul adaptif */
+.qa-news-section { padding: 5rem 2rem; }
+@media (max-width: 768px) { .qa-news-section { padding: 3rem 1rem; } }
+@media (max-width: 480px) { .qa-news-section { padding: 2.5rem 1rem; } }
+.qa-news-header { text-align: center; margin-bottom: 3rem; }
+.qa-news-header .qa-news-title { font-size: 2.2rem; }
+@media (max-width: 1024px) { .qa-news-header .qa-news-title { font-size: 1.9rem; } }
+@media (max-width: 768px) { .qa-news-header .qa-news-title { font-size: 1.8rem; } }
+
+/* Berita beranda: 2 kolom di tablet (menggantikan perilaku auto-fit lama) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .news-home-grid { grid-template-columns: repeat(2, 1fr); }
+}

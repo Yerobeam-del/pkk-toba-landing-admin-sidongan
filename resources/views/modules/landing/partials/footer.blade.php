@@ -12,9 +12,11 @@
         {{-- Main Content: 2 Columns --}}
         <div class="footer-main">
 
-            {{-- Left Column: Logo + Info --}}
+            {{-- Left Column: Logo Kabupaten Toba + Logo PKK + Info --}}
             <div class="footer-left">
                 <div class="footer-brand-row">
+                    <img src="{{ asset('assets/landing/images/Logo-Kabupaten-Toba-Transparent.png') }}" alt="Kabupaten Toba Logo" class="footer-secondary-logo">
+
                     <img src="{{ asset('assets/landing/images/Logo-PKK-Transparent.png') }}" alt="PKK Logo" class="footer-brand-logo">
 
                     <div class="footer-info">
@@ -41,44 +43,41 @@
                 </div>
             </div>
 
-            {{-- Right Column: Logo Kabupaten Toba --}}
+            {{-- Right Column: Quick Access --}}
             <div class="footer-right">
-                <img src="{{ asset('assets/landing/images/Logo-Kabupaten-Toba-Transparent.png') }}" alt="Kabupaten Toba Logo" class="footer-secondary-logo">
+                @php
+                    // Ambil aplikasi yang aktif, status active, DAN show_in_footer = true
+                    $quickAccessApps = \App\Models\Application::where('is_active', true)
+                        ->where('status', 'active')
+                        ->where('show_in_footer', true)
+                        ->orderBy('sort_order')
+                        ->get();
+                @endphp
+
+                @if($quickAccessApps->count() > 0)
+                <div class="footer-quick-access">
+                    <h3 class="quick-access-title">Quick Access</h3>
+                    <div class="quick-access-links">
+                        @foreach($quickAccessApps as $app)
+                        <a href="{{ $app->url ?? '#' }}" target="_blank" class="quick-access-item" title="{{ $app->name }}" style="min-height:44px;">
+                            @if($app->icon)
+                                <img src="{{ asset('storage/' . $app->icon) }}" alt="{{ $app->short_name }}" class="app-icon">
+                            @else
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                            @endif
+                            <span>{{ $app->short_name ?? $app->name }}</span>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
-
-        {{-- Quick Access Section - Dynamic from Database --}}
-        @php
-            // Ambil aplikasi yang aktif, status active, DAN show_in_footer = true
-            $quickAccessApps = \App\Models\Application::where('is_active', true)
-                ->where('status', 'active')
-                ->where('show_in_footer', true)
-                ->orderBy('sort_order')
-                ->get();
-        @endphp
-
-        @if($quickAccessApps->count() > 0)
-        <div class="footer-quick-access">
-            <h3 class="quick-access-title">Quick Access</h3>
-            <div class="quick-access-links">
-                @foreach($quickAccessApps as $app)
-                <a href="{{ $app->url ?? '#' }}" target="_blank" class="quick-access-item" title="{{ $app->name }}" style="min-height:44px;">
-                    @if($app->icon)
-                        <img src="{{ asset('storage/' . $app->icon) }}" alt="{{ $app->short_name }}" class="app-icon">
-                    @else
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="14" width="7" height="7"></rect>
-                            <rect x="3" y="14" width="7" height="7"></rect>
-                        </svg>
-                    @endif
-                    <span>{{ $app->short_name ?? $app->name }}</span>
-                </a>
-                @endforeach
-            </div>
-        </div>
-        @endif
 
         {{-- Bottom Copyright --}}
         <div class="footer-bottom">

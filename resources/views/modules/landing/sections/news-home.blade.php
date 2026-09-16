@@ -1,14 +1,14 @@
 {{-- ============================================================
      Dikembangkan oleh Institut Teknologi Del
      ============================================================ --}}
-<section class="news-home-section" style="padding: 4rem 2rem;">
-    <div style="text-align: center; margin-bottom: 3rem;">
-        <div style="display: inline-block; padding: 0.5rem 1rem; background: rgba(39,103,73,0.1); border-radius: 50px; color: #276749; font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem;">BERITA TERKINI</div>
-        <h2 style="font-size: 2.5rem; font-weight: 800; color: #0f766e; margin: 0 0 0.5rem 0;">Kabar Terbaru PKK</h2>
-        <p style="color: #64748b; font-size: 1.05rem; margin: 0;">Ikuti perkembangan terbaru dari kegiatan dan program PKK Kabupaten Toba.</p>
+<section class="news-home-section qa-news-section">
+    <div class="section-header qa-news-header">
+        <div class="section-label qa-news-label">Berita Terkini</div>
+        <h2 class="section-title qa-news-title">Kabar Terbaru PKK</h2>
+        <p class="section-desc qa-news-desc">Ikuti perkembangan terbaru dari kegiatan dan program PKK Kabupaten Toba.</p>
     </div>
 
-    <div class="news-home-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto;">
+    <div class="news-home-grid">
         @php
             try {
                 $recentNews = \App\Models\News::published()->latest('published_at')->limit(3)->get();

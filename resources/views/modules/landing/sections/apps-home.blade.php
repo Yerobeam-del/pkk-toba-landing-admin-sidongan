@@ -1,7 +1,7 @@
 {{-- ============================================================
      Dikembangkan oleh Institut Teknologi Del
      ============================================================ --}}
-<section class="apps-home-section" id="aplikasiSection" style="padding: 4rem 2rem; background: #f8fafc;">
+<section class="apps-home-section" id="aplikasiSection" style="background: #f8fafc;">
         @once
     @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/landing/css/modules-landing-sections-apps-home.css') }}">

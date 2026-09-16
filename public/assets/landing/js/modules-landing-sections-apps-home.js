@@ -81,9 +81,12 @@ async function loadApps() {
                     </li>
                 `).join('');
 
+                // Inisial kartu: fallback bila ikon gagal dimuat (404) atau tidak ada.
+                const initial = (app.short_name || app.name || 'A').charAt(0).replace(/['"<>&]/g, '');
+                const initialHtml = `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 2rem;">${initial}</div>`;
                 const iconHtml = iconUrl
-                    ? `<img src="${iconUrl}" alt="${app.short_name}" style="width: 100%; height: 100%; object-fit: contain; padding: 10px; ${isMaintenance ? 'filter: grayscale(100%) brightness(1.3);' : 'filter: brightness(0) invert(1);'}">`
-                    : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 2rem;">${(app.short_name || 'A').charAt(0)}</div>`;
+                    ? `<img src="${iconUrl}" alt="${app.short_name}" onerror="var f=document.createElement('div');f.style.cssText='width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:2rem';f.textContent='${initial}';this.replaceWith(f);" style="width: 100%; height: 100%; object-fit: contain; padding: 10px; ${isMaintenance ? 'filter: grayscale(100%) brightness(1.3);' : 'filter: brightness(0) invert(1);'}">`
+                    : initialHtml;
 
                 const appUrl = app.url || '#';
 
@@ -110,22 +113,25 @@ async function loadApps() {
                             MAINTENANCE
                         </div>` : ''}
 
-                        <div style="position: relative; padding: 2.5rem 2.5rem 1.5rem; overflow: hidden; background: ${isMaintenance ? '#f1f5f9' : colors.bg}; pointer-events: none;">
+                        <div class="app-card-header" style="position: relative; display: flex; align-items: center; gap: 1.25rem; padding: 2rem 2.5rem; overflow: hidden; background: ${isMaintenance ? '#f1f5f9' : colors.bg}; pointer-events: none;">
                             <div style="position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; border-radius: 50%; background: ${isMaintenance ? '#cbd5e1' : colors.circle}; opacity: ${isMaintenance ? '0.2' : '0.4'};"></div>
 
-                            <div style="width: 80px; height: 80px; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 8px 25px rgba(0,0,0,0.1); background: ${isMaintenance ? '#94a3b8' : colors.primary}; position: relative; z-index: 2;">
+                            <div style="width: 72px; height: 72px; border-radius: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 8px 25px rgba(0,0,0,0.1); background: ${isMaintenance ? '#94a3b8' : colors.primary}; position: relative; z-index: 2;">
                                 ${iconHtml}
+                            </div>
+
+                            <div style="position: relative; z-index: 2; min-width: 0;">
+                                <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0 0 0.2rem 0; color: ${isMaintenance ? '#64748b' : colors.primary};">${app.short_name || app.name}</h3>
+                                <p style="font-size: 0.85rem; color: #64748b; margin: 0; font-weight: 500;">${app.name || ''}</p>
                             </div>
                         </div>
 
-                        <div style="padding: 2rem 2.5rem 2rem; flex: 1; display: flex; flex-direction: column; pointer-events: none;">
-                            <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.3rem; color: ${isMaintenance ? '#64748b' : colors.primary};">${app.short_name || app.name}</h3>
-                            <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1rem; font-weight: 500;">${app.name || ''}</p>
+                        <div class="app-card-body" style="padding: 1.75rem 2.5rem 2rem; flex: 1; display: flex; flex-direction: column; pointer-events: none;">
                             <p style="color: ${isMaintenance ? '#94a3b8' : '#4a5568'}; line-height: 1.7; margin-bottom: 1.5rem; font-size: 0.95rem;">${app.description || ''}</p>
-                            ${features.length ? `<ul style="list-style: none; margin: 0; padding: 0; margin-bottom: 2rem;">${featuresHtml}</ul>` : ''}
+                            ${features.length ? `<ul style="list-style: none; margin: 0; padding: 0; margin-bottom: 0.5rem;">${featuresHtml}</ul>` : ''}
                         </div>
 
-                        <div style="padding: 1.5rem 2.5rem; border-top: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; pointer-events: none;">
+                        <div class="app-card-footer" style="padding: 1.5rem 2.5rem; border-top: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; pointer-events: none;">
                             <span style="
                                 display: inline-flex;
                                 align-items: center;
