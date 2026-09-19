@@ -24,7 +24,10 @@ return new class extends Migration
             $table->string('description', 500)->nullable();
             $table->timestamps();
 
-            $table->index(['outgoing_letter_id', 'created_at']);
+            // Nama indeks eksplisit: nama otomatis Laravel
+            // (sidongan_outgoing_letter_activities_outgoing_letter_id_created_at_index,
+            // 71 karakter) melebihi batas 64 karakter MySQL di production.
+            $table->index(['outgoing_letter_id', 'created_at'], 'soll_letter_created_index');
         });
 
         // Backfill riwayat surat yang dibuat sebelum fitur ini ada,
