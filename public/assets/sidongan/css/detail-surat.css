@@ -1366,4 +1366,9 @@ html.dark-mode .ds-timeline-note-danger {
     border-left-color: #ef4444;
     color: #fca5a5;
 }
+
+html.dark-mode .ds-timeline-role-badge {
+    background: #1e3a5f;
+    color: #93c5fd;
+}
 /* Dikembangkan oleh Institut Teknologi Del */

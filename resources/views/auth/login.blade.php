@@ -10,13 +10,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Admin Panel</title>
 
-    {{-- Favicon untuk Tab Browser --}}
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
+    {{-- Favicon untuk Tab Browser - Theme Aware (selaras dengan panel admin) --}}
+    <link rel="icon" type="image/svg+xml" id="favicon" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
     <link rel="alternate icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        <link rel="stylesheet" href="{{ asset('assets/auth/css/auth-login.css') }}">
+        {{-- Tema 3-mode (system/light/dark) bersama dengan panel admin: system = ikut preferensi perangkat.
+         Terapkan class SEBELUM CSS render agar tidak flicker. --}}
+    <script>
+    (function(){
+        var k='admin-dark-mode',s=localStorage.getItem(k);
+        var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme:dark)'):null;
+        var dark=(s==='true')||(s!=='false'&&mq&&mq.matches);
+        if(dark){document.documentElement.classList.add('dark-mode');}
+        if(mq&&mq.addEventListener){
+            mq.addEventListener('change',function(e){
+                if(localStorage.getItem(k)!=='false'&&localStorage.getItem(k)!=='true'){
+                    document.documentElement.classList.toggle('dark-mode',e.matches);
+                }
+            });
+        }
+        // Favicon mengikuti tema aktif — pasangan logo yang sama dengan panel admin
+        window.addEventListener('DOMContentLoaded',function(){
+            var fav=document.getElementById('favicon');
+            if(!fav)return;
+            var LIGHT='{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}';
+            var DARK='{{ asset('assets/admin/images/Logo_Admin-Panel-White.svg') }}';
+            var apply=function(){fav.href=document.documentElement.classList.contains('dark-mode')?DARK:LIGHT;};
+            apply();
+            if(mq&&mq.addEventListener){mq.addEventListener('change',apply);}
+        });
+    })();
+    </script>
+
+    <link rel="stylesheet" href="{{ asset('assets/auth/css/auth-login.css') }}">
 
 </head>
 <body>

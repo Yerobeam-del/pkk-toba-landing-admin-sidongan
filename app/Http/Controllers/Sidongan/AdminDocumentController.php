@@ -616,7 +616,7 @@ class AdminDocumentController extends Controller
         // Cari notifikasi milik user ini
         $notification = Notification::where('user_id', $user->id)->findOrFail($id);
         
-        // ✅ LANGSUNG HAPUS (karena sudah "dibaca")
+        // LANGSUNG HAPUS (karena sudah "dibaca")
         $notification->delete();
         
         return response()->json([
@@ -686,7 +686,7 @@ class AdminDocumentController extends Controller
             abort(403, 'Akses ditolak');
         }
         
-        // ✅ PRIORITAS 1: URL parameter 'from'
+        // PRIORITAS 1: URL parameter 'from'
         if ($request->has('from')) {
             $fromUrl = $request->get('from');
             if (!str_contains($fromUrl, '/disposisi/form') &&
@@ -694,7 +694,7 @@ class AdminDocumentController extends Controller
                 session(['disposisi_form_back_url' => $fromUrl]);
             }
         }
-        // ✅ PRIORITAS 2: previousUrl
+        // PRIORITAS 2: previousUrl
         else {
             $previousUrl = url()->previous();
             
@@ -1067,9 +1067,9 @@ class AdminDocumentController extends Controller
     {
         $user = auth()->guard('sidongan')->user();
         
-        // ✅ HANYA ambil notifikasi yang BELUM dibaca (read_at = null)
+        // HANYA ambil notifikasi yang BELUM dibaca (read_at = null)
         $notifications = Notification::where('user_id', $user->id)
-            ->whereNull('read_at')  // ← Filter hanya yang belum dibaca
+            ->whereNull('read_at')  // Filter hanya yang belum dibaca
             ->latest()
             ->paginate(15);
 
@@ -1087,7 +1087,7 @@ class AdminDocumentController extends Controller
         $user = auth()->guard('sidongan')->user();
         
         if ($user) {
-            // ✅ HAPUS SEMUA notifikasi user ini yang belum dibaca
+            // HAPUS SEMUA notifikasi user ini yang belum dibaca
             $count = Notification::where('user_id', $user->id)
                 ->whereNull('read_at')  // Hanya yang belum dibaca
                 ->delete();             // Langsung hapus

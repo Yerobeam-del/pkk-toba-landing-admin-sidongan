@@ -298,10 +298,10 @@ async function updateOrder() {
         });
 
         if (!response.ok) {
-            console.error('❌ Failed to update order');
+            console.error('Failed to update order');
         }
     } catch (error) {
-        console.error('❌ Error updating order:', error);
+        console.error('Error updating order:', error);
     }
 }
 

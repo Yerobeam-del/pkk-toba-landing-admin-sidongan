@@ -115,7 +115,7 @@ foreach ($it as $file) {
 
     file_put_contents($path, $content);
     $changed++;
-    echo "✏️  {$rel} → assets/{$area}/css/{$slug}.css\n";
+    echo "[OK]   {$rel} -> assets/{$area}/css/{$slug}.css\n";
 }
 
 echo "\nBerkas diubah: {$changed}\n";

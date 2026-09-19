@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // 🟢 TAMBAHAN: Mempercayai semua proxy luar (Localtunnel / VS Code Ports)
+        // TAMBAHAN: Mempercayai semua proxy luar (Localtunnel / VS Code Ports)
         // Ini wajib agar Laravel membaca header X-Forwarded-Proto untuk HTTPS
         $middleware->trustProxies(at: '*');
 

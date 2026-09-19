@@ -10,10 +10,10 @@ let currentSKPage = 1;
 let skPagination = null;
 let currentPerPage = 5;
 let currentSearchTerm = '';
-let originalSearchTerm = ''; // ← TAMBAHKAN INI - preserve case untuk display
+let originalSearchTerm = ''; // Preserve case untuk display
 
 function navigateTo(pageId) {
-    console.log('🔄 navigateTo:', pageId);
+    console.log('navigateTo:', pageId);
     
     document.querySelectorAll('.page').forEach(p => {
         p.classList.remove('active');
@@ -25,9 +25,9 @@ function navigateTo(pageId) {
         targetPage.classList.add('active');
         targetPage.style.display = 'block';
         void targetPage.offsetHeight;
-        console.log('✅ Page shown:', pageId);
+        console.log('Page shown:', pageId);
     } else {
-        console.error('❌ Page not found:', pageId);
+        console.error('Page not found:', pageId);
         return;
     }
 
@@ -69,7 +69,7 @@ function navigateTo(pageId) {
         history.replaceState(null, null, baseUrl + '#' + pageId);
     }
     
-    console.log('🔗 URL updated to:', window.location.href);
+    console.log('URL updated to:', window.location.href);
 
     requestAnimationFrame(() => {
         requestAnimationFrame(loadPageData);
@@ -120,7 +120,7 @@ function clearSearchAndShowAll() {
 // LOAD SK DOCUMENTS WITH PAGINATION & SEARCH
 // ==========================================
 function loadSKDocuments(page = 1) {
-    console.log('📄 loadSKDocuments() called, page:', page, 'search:', currentSearchTerm, 'original:', originalSearchTerm);
+    console.log('loadSKDocuments() called, page:', page, 'search:', currentSearchTerm, 'original:', originalSearchTerm);
     currentSKPage = page;
     
     const loadingEl = document.getElementById('loadingState');
@@ -131,7 +131,7 @@ function loadSKDocuments(page = 1) {
     const paginationWrapper = document.getElementById('paginationWrapper');
     
     if (!tbodyEl) {
-        console.error('❌ documentsBody not found!');
+        console.error('documentsBody not found!');
         return;
     }
     
@@ -363,10 +363,10 @@ function loadSKDocuments(page = 1) {
                 }
             }
             
-            console.log('✅ Table rendered:', docs.length, 'documents, page:', page);
+            console.log('Table rendered:', docs.length, 'documents, page:', page);
         })
         .catch(err => {
-            console.error('❌ Error:', err);
+            console.error('Error:', err);
             if (loadingEl) {
                 loadingEl.innerHTML = `
                     <div style="text-align:center;padding:2rem">
@@ -393,7 +393,7 @@ function loadSKDocuments(page = 1) {
 // ==========================================
 function renderSKPagination() {
     if (!skPagination) {
-        console.error('❌ No pagination data');
+        console.error('No pagination data');
         return;
     }
     
@@ -403,13 +403,13 @@ function renderSKPagination() {
     const infoEl = document.getElementById('paginationInfo');
     
     if (!pageNumbersEl || !prevBtn || !nextBtn) {
-        console.error('❌ Pagination elements not found!');
+        console.error('Pagination elements not found!');
         return;
     }
     
     const { current_page, last_page, from, to, total } = skPagination;
     
-    console.log('📊 Pagination Data:', { current_page, last_page, from, to, total });
+    console.log('Pagination Data:', { current_page, last_page, from, to, total });
     
     prevBtn.disabled = current_page === 1;
     nextBtn.disabled = current_page === last_page || last_page === 0;
@@ -417,7 +417,7 @@ function renderSKPagination() {
     pageNumbersEl.innerHTML = '';
     
     if (last_page <= 1) {
-        console.log('ℹ️ Only 1 page, hiding page numbers');
+        console.log('Only 1 page, hiding page numbers');
         return;
     }
     
@@ -458,7 +458,7 @@ function renderSKPagination() {
         }
     }
     
-    console.log('✅ Pagination rendered successfully');
+    console.log('Pagination rendered successfully');
 }
 
 // ==========================================
@@ -508,15 +508,15 @@ window.showPage = function(pageName) {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('📄 DOMContentLoaded | SPA Router Starting...');
+    console.log('DOMContentLoaded | SPA Router Starting...');
     
     let targetPage = window.location.hash.replace('#', '');
-    console.log('🔍 Hash detected:', targetPage || '(none)');
+    console.log('Hash detected:', targetPage || '(none)');
     
     const isValidPage = targetPage && document.getElementById('page-' + targetPage);
     if (!isValidPage) {
         targetPage = 'beranda';
-        console.log('️ Invalid/Empty hash. Defaulting to: beranda');
+        console.log('Invalid/Empty hash. Defaulting to: beranda');
     }
     
     setTimeout(() => {
@@ -525,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
             navigateTo(targetPage);
             if (typeof updateActiveNav === 'function') updateActiveNav(targetPage);
         } else {
-            console.error('❌ navigateTo function not found!');
+            console.error('navigateTo function not found!');
         }
     }, 50);
 });

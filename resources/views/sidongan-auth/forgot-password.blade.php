@@ -8,10 +8,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password - SIDONGAN PKK Kabupaten Toba</title>
 
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/sidongan/images/Logo-SIDONGAN-white.svg') }}">
+    <link rel="icon" type="image/svg+xml" id="favicon" href="{{ asset('assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/sidongan-auth/css/auth-onboarding.css') }}">
+
+    {{-- Tema 3-mode (system/light/dark, ala SIEDA) bersama aplikasi SIDONGAN —
+         class dipasang SEBELUM CSS render agar tidak flicker. Selaras dengan
+         halaman login SIDONGAN. --}}
+    <script>
+    (function(){
+        var k='sidongan-theme',s=localStorage.getItem(k);
+        var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme:dark)'):null;
+        var dark=(s==='dark')||(s!=='light'&&s!=='dark'&&mq&&mq.matches);
+        if(dark){document.documentElement.classList.add('dark-mode');}
+        if(mq&&mq.addEventListener){
+            mq.addEventListener('change',function(e){
+                if((localStorage.getItem(k)!=='light'&&localStorage.getItem(k)!=='dark')){
+                    document.documentElement.classList.toggle('dark-mode',e.matches);
+                    document.dispatchEvent(new CustomEvent('sidongan-theme-changed'));
+                }
+            });
+        }
+        // Favicon mengikuti tema aktif (bukan hanya preferensi OS)
+        window.addEventListener('DOMContentLoaded',function(){
+            var fav=document.getElementById('favicon');
+            if(!fav)return;
+            var LIGHT='{{ asset('assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg') }}';
+            var DARK='{{ asset('assets/sidongan/images/Logo-SIDONGAN-white.svg') }}';
+            var apply=function(){fav.href=document.documentElement.classList.contains('dark-mode')?DARK:LIGHT;};
+            apply();
+            document.addEventListener('sidongan-theme-changed',apply);
+            if(mq&&mq.addEventListener){mq.addEventListener('change',apply);}
+        });
+    })();
+    </script>
 </head>
 <body>
     <div class="ob-split">

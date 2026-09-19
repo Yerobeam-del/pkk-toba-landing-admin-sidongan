@@ -317,6 +317,15 @@
     background: #f1f5f9;
 }
 
+html.dark-mode .sd-btn-cancel {
+    background: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+html.dark-mode .sd-btn-cancel:hover {
+    background: #26334a;
+}
+
 /* Tombol submit */
 .sd-btn-submit {
     display: inline-flex;

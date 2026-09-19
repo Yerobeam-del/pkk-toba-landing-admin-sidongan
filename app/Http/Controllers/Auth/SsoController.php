@@ -119,7 +119,20 @@ class SsoController extends Controller
             return redirect()->route('login');
         }
 
-        return redirect()->to($sso->buildCallbackUrl());
+        // ?to= dari launcher "Pilih Ruang Kerja": minta SIEDA mengarahkan user
+        // ke halamannya (mis. 'desa' → Admin Panel landing page desa di SIEDA).
+        // ?desa= kode desa terpilih dari dropdown kartu (pengelola lintas desa)
+        // — divalidasi format kode wilayah Kabupaten Toba sebelum diteruskan.
+        // Tanpa parameter → dashboard SIEDA seperti biasa.
+        $to = $request->query('to');
+        $to = in_array($to, ['desa', 'sidongan'], true) ? $to : null;
+
+        $desa = $request->query('desa');
+        $desa = ($to === 'desa' && is_string($desa) && preg_match('/^12\.12\.\d{2}\.\d{4}$/', $desa))
+            ? $desa
+            : null;
+
+        return redirect()->away($sso->buildCallbackUrl(null, $to, $desa));
     }
 
     /**

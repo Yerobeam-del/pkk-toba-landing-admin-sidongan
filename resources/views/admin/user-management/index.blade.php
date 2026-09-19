@@ -2,6 +2,17 @@
      Dikembangkan oleh Institut Teknologi Del
      ============================================================ --}}
 @extends('admin.layouts.app')
+@php $sysArea = ['key' => 'akun', 'label' => 'Manajemen Akun', 'desc' => 'Kelola pengguna, role & permission, dan penugasan desa seluruh sistem PKK.']; @endphp
+@section('sysAreaStyles')
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-system-area.css') }}">
+@endsection
+@section('sysBodyAttr') data-area="{{ $sysArea['key'] }}" @endsection
+@section('sysSidebar')
+    @include('admin.partials.sys-sidebar')
+@endsection
+@section('sysBanner')
+    @include('admin.partials.sys-banner')
+@endsection
 @section('title', 'Manajemen Akun')
 @section('page-title', 'Manajemen Akun')
 
@@ -93,6 +104,7 @@
                     'all' => 'Semua Pengguna',
                     'active' => 'Aktif',
                     'inactive' => 'Nonaktif',
+                    'pemail-unverified' => 'Email Pribadi Belum Verifikasi',
                     'with-access' => 'Punya Akses'
                 ];
             @endphp
@@ -108,6 +120,7 @@
                             $badgeCount = 0;
                             if($key === 'active') $badgeCount = \App\Models\User::whereNotNull('email_verified_at')->count();
                             if($key === 'inactive') $badgeCount = \App\Models\User::whereNull('email_verified_at')->count();
+                            if($key === 'pemail-unverified') $badgeCount = \App\Models\User::whereNotNull('personal_email')->whereNull('personal_email_verified_at')->count();
                             if($key === 'with-access') $badgeCount = \App\Models\User::whereHas('applications')->count();
                         @endphp
                         @if($badgeCount > 0)
@@ -221,7 +234,7 @@
                                     </div>
                                     <div>
                                         <div class="u-a30">' . $item->name . '</div>
-                                        <div class="u-text-muted-sm">' . Str::limit($item->email, 20) . '</div>
+                                        <div class="u-text-muted-sm">' . Str::limit($item->email, 16) . '</div>
                                     </div>
                                 </div>
                             ';
@@ -261,13 +274,40 @@
                         }
                     ];
 
+                    // Email pribadi: alamat + badge status verifikasi (sumber
+                    // kebenaran fitur Lupa Password). Tiga keadaan: belum
+                    // diatur, terverifikasi, menunggu verifikasi.
+                    $userColumns[] = [
+                        'key' => 'personal_email_verified_at',
+                        'label' => 'Email Pribadi',
+                        'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-10 7L4 6"/></svg>',
+                        'type' => 'callback',
+                        'callback' => function($item, $value) {
+                            // Ikon status sebagai SVG (bukan karakter unicode)
+                            // agar konsisten dengan ikon Feather di halaman ini.
+                            $iconOk = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>';
+                            $iconPending = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+
+                            if (!$item->personal_email) {
+                                return '<span class="um-pemail-badge um-pemail-badge--none" title="User belum mengatur email pribadi">-</span>';
+                            }
+                            // Alamat dipotong agar baris tabel tidak melar;
+                            // alamat lengkap & status ada di tooltip.
+                            if ($item->personal_email_verified_at) {
+                                return '<span class="um-pemail-badge um-pemail-badge--ok" title="' . e($item->personal_email) . ' — terverifikasi">' . $iconOk . e(Str::limit($item->personal_email, 14)) . '</span>';
+                            }
+                            return '<span class="um-pemail-badge" title="' . e($item->personal_email) . ' — belum terverifikasi (Lupa Password terkunci)">' . $iconPending . e(Str::limit($item->personal_email, 14)) . '</span>';
+                        }
+                    ];
+
                     $userColumns[] = [
                         'key' => 'created_at',
                         'label' => 'Dibuat',
                         'icon' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
                         'type' => 'callback',
                         'callback' => function($item, $value) {
-                            return $item->created_at->locale('id')->translatedFormat('d F Y');
+                            // Format singkat (04 Sep 2026) agar kolom tidak lebar
+                            return $item->created_at->locale('id')->translatedFormat('d M Y');
                         }
                     ];
             @endphp
@@ -281,20 +321,52 @@
                 'deleteRoute' => 'admin.user-management.destroy',
                 'showRoute' => 'admin.user-management.show',
                 'actions' => ['show', 'edit', 'delete'],
+                // Kolom Aksi: tiga ikon utama (Lihat, Edit, Hapus) + menu
+                // dropdown untuk aksi sekunder, agar baris ikon tidak
+                // memaksa tabel melebar (horizontal scroll).
                 'rowActions' => function($item) {
                     $html = '';
                     if (auth()->user()->isSuperAdmin()) {
-                        $statusAction = $item->email_verified_at
-                            ? '<button type="button" class="action-btn" data-toggle-status="1" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Nonaktifkan Akun" aria-label="Nonaktifkan akun '.addslashes($item->name).'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button>'
-                            : '<button type="button" class="action-btn" data-toggle-status="0" data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="Aktifkan Akun" aria-label="Aktifkan akun '.addslashes($item->name).'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>';
+                        $statusLabel = $item->email_verified_at ? 'Nonaktifkan Akun' : 'Aktifkan Akun';
+                        $statusIcon = $item->email_verified_at
+                            ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+                            : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+                        $statusAttr = $item->email_verified_at ? 'data-toggle-status="1"' : 'data-toggle-status="0"';
 
-                        $html .= $statusAction;
+                        $menuItems = '
+                            <button type="button" class="um-menu-item" '.$statusAttr.' data-toggle-status-id="'.$item->id.'" data-toggle-status-name="'.addslashes($item->name).'" title="'.$statusLabel.'">
+                                '.$statusIcon.'
+                                <span>'.$statusLabel.'</span>
+                            </button>
+                            <button type="button" class="um-menu-item" onclick="copyUserCredentials('.$item->id.', \'' . addslashes($item->name) . '\', \'' . addslashes($item->email) . '\')" title="Salin Kredensial">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                <span>Salin Kredensial</span>
+                            </button>
+                            <button type="button" class="um-menu-item" data-reset-password-id="'.$item->id.'" data-reset-password-name="'.addslashes($item->name).'" title="Reset Password">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <span>Reset Password</span>
+                            </button>';
 
-                        // Tombol Salin Kredensial
-                        $html .= '<button type="button" class="action-btn" onclick="copyUserCredentials('.$item->id.', \'' . addslashes($item->name) . '\', \'' . addslashes($item->email) . '\')" title="Salin Kredensial" aria-label="Salin kredensial akun '.addslashes($item->name).'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>';
+                        // Kirim ulang verifikasi email pribadi — hanya untuk
+                        // kandidat sah (punya email pribadi & belum
+                        // terverifikasi), paritas dengan gate endpoint resend.
+                        if ($item->personal_email && !$item->personal_email_verified_at) {
+                            $menuItems .= '
+                            <button type="button" class="um-menu-item" data-resend-pemail-id="'.$item->id.'" data-resend-pemail-name="'.addslashes($item->name).'" title="Kirim Ulang Verifikasi Email Pribadi">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                <span>Kirim Ulang Verifikasi Email Pribadi</span>
+                            </button>';
+                        }
 
-                        // Tombol Reset Password
-                        $html .= '<button type="button" class="action-btn" data-reset-password-id="'.$item->id.'" data-reset-password-name="'.addslashes($item->name).'" title="Reset Password" aria-label="Reset password akun '.addslashes($item->name).'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>';
+                        $html .= '
+                        <div class="um-actions-menu" data-menu-user-id="'.$item->id.'">
+                            <button type="button" class="action-btn um-menu-trigger" title="Aksi Lainnya" aria-label="Aksi lainnya untuk akun '.addslashes($item->name).'" aria-haspopup="true" aria-expanded="false">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                            </button>
+                            <div class="um-menu-dropdown">
+                                '.$menuItems.'
+                            </div>
+                        </div>';
                     }
                     return $html;
                 }
@@ -643,12 +715,13 @@
         function showCopyBtnSuccess(type) {
             const btn = type === 'full' ? document.getElementById('copyFullBtn') : document.getElementById('copyEmailBtn');
             const span = btn.querySelector('span');
-            const originalText = span.textContent;
-            span.textContent = '✓ Tersalin!';
+            const originalHtml = btn.innerHTML;
+            // Ikon centang sebagai SVG, menggantikan karakter unicode
+            span.outerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Tersalin!';
             btn.style.background = type === 'full' ? 'linear-gradient(135deg,#22c55e,#16a34a)' : '#dcfce7';
             btn.style.color = type === 'full' ? '#fff' : '#166534';
             setTimeout(() => {
-                span.textContent = originalText;
+                btn.innerHTML = originalHtml;
                 btn.style.background = type === 'full' ? 'linear-gradient(135deg,var(--primary),#0d9488)' : '#f1f5f9';
                 btn.style.color = type === 'full' ? '#fff' : '#475569';
             }, 2000);

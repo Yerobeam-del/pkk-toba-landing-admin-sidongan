@@ -6,7 +6,7 @@
 
 @section('content')
 @php
-    // ✅ Ambil URL kembali dari session
+    // Ambil URL kembali dari session
     $backUrl = session('lapor_kegiatan_back_url', route('sidongan.lapor_kegiatan.index'));
     
     // Validasi URL - pastikan bukan halaman create/edit/preview

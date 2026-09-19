@@ -304,6 +304,32 @@
 }
 .sd-btn-cancel-edit:hover { background: #e2e8f0; }
 
+html.dark-mode .sd-btn-cancel-edit {
+    background: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+html.dark-mode .sd-btn-cancel-edit:hover { background: #26334a; }
+
+/* Dark mode: box file saat ini & tombol aksinya */
+html.dark-mode .sd-current-file {
+    background: #0f172a;
+    border-color: #334155;
+}
+html.dark-mode .sd-current-file-name {
+    color: #e2e8f0;
+}
+html.dark-mode .sd-file-view {
+    background: #1e3a5f;
+    color: #93c5fd;
+}
+html.dark-mode .sd-file-view:hover { background: #254a77; }
+html.dark-mode .sd-file-delete {
+    background: #450a0a;
+    color: #fca5a5;
+}
+html.dark-mode .sd-file-delete:hover { background: #7f1d1d; color: white; }
+
 .sd-btn-submit-edit {
     display: inline-flex;
     align-items: center;

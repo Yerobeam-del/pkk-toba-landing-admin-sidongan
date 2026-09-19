@@ -2,6 +2,17 @@
      Dikembangkan oleh Institut Teknologi Del
      ============================================================ --}}
 @extends('admin.layouts.app')
+@php $sysArea = ['key' => 'akun', 'label' => 'Manajemen Akun', 'desc' => 'Kelola pengguna, role & permission, dan penugasan desa seluruh sistem PKK.']; @endphp
+@section('sysAreaStyles')
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-system-area.css') }}">
+@endsection
+@section('sysBodyAttr') data-area="{{ $sysArea['key'] }}" @endsection
+@section('sysSidebar')
+    @include('admin.partials.sys-sidebar')
+@endsection
+@section('sysBanner')
+    @include('admin.partials.sys-banner')
+@endsection
 @section('title', 'Edit Akun')
 @section('page-title', 'Edit Akun')
 
@@ -125,9 +136,26 @@
                     <small class="u-hint-line">
                         Email pribadi untuk menerima link reset password.
                         @if($user->personal_email_verified_at)
-                            <span style="color:#16a34a;font-weight:600">✓ Terverifikasi ({{ $user->personal_email_verified_at->translatedFormat('d F Y') }})</span>
+                            <span style="color:#16a34a;font-weight:600;display:inline-flex;align-items:center;gap:0.3rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Terverifikasi ({{ $user->personal_email_verified_at->translatedFormat('d F Y') }})</span>
+                        @else
+                            <span style="color:#d97706;font-weight:600;display:inline-flex;align-items:center;gap:0.3rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Belum terverifikasi</span>
                         @endif
                     </small>
+
+                    @if($user->personal_email && !$user->personal_email_verified_at)
+                    {{-- Kirim ulang link verifikasi — muncul hanya bila email
+                         pribadi ada tapi belum terverifikasi (mis. baru diganti
+                         admin / link kedaluwarsa). --}}
+                    <div id="resend-verification-box" style="margin-top:0.6rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+                        <button type="button" id="resendVerificationBtn"
+                                data-url="{{ route('admin.user-management.resend-personal-email-verification', $user) }}"
+                                style="padding:0.45rem 0.9rem;font-size:0.82rem;font-weight:600;display:inline-flex;align-items:center;gap:0.4rem;background:#fff;color:var(--primary);border:1px solid rgba(0,0,0,0.12);border-radius:8px;cursor:pointer;transition:all 0.2s">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                            Kirim Ulang Verifikasi
+                        </button>
+                        <span id="resendVerificationMsg" style="font-size:0.82rem;color:var(--text-muted)"></span>
+                    </div>
+                    @endif
                     @error('personal_email')
                         <small class="u-error-block">{{ $message }}</small>
                     @enderror
@@ -288,7 +316,16 @@
                                 <select name="sieda_kelurahan" id="siedaKelurahan" class="form-control">
                                     <option value="">-- Pilih Desa/Kelurahan --</option>
                                 </select>
-                                <small class="u-hint-line">Kader: Hanya akses desa ini</small>
+                                <small class="u-hint-line">Kader: Hanya akses desa ini (desa utama)</small>
+
+                                <div id="desaTambahanField" style="margin-top:0.75rem;">
+                                    <label class="u-label-slate">Desa Tambahan <span class="u-text-muted">(opsional)</span></label>
+                                    <select name="sieda_desas[]" id="siedaDesaTambahan" class="form-control" multiple size="5"
+                                        data-selected='@json($user->sieda_desas ?? [])'>
+                                        <option value="">-- Memuat desa... --</option>
+                                    </select>
+                                    <small class="u-hint-line">Tahan Ctrl (Windows) / Cmd (Mac) untuk memilih beberapa desa — akun bisa mengelola landing page lebih dari satu desa. Desa utama selalu ikut tersimpan.</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -435,6 +472,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <script src="{{ asset('assets/admin/js/user-management-edit.js') }}"></script>
     <script src="{{ asset('assets/admin/js/admin-user-avatar.js') }}"></script>
+    <script>
+    // Kirim ulang verifikasi email pribadi (Admin Panel > Edit Akun)
+    (function(){
+        var btn = document.getElementById('resendVerificationBtn');
+        if (!btn) return;
+        var msg = document.getElementById('resendVerificationMsg');
+
+        btn.addEventListener('click', function(){
+            btn.disabled = true;
+            msg.textContent = 'Mengirim...';
+            msg.style.color = 'var(--text-muted)';
+
+            fetch(btn.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                    'Accept': 'application/json',
+                },
+            })
+            .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, status: r.status, body: j }; }); })
+            .then(function(res){
+                msg.textContent = res.body.message || (res.ok ? 'Terkirim.' : 'Gagal.');
+                msg.style.color = res.ok ? '#16a34a' : '#dc2626';
+                // Cooldown klien mengikuti cooldown server (60s) bila 429
+                if (res.status === 429) { cooldown(60); }
+                else if (res.ok) { cooldown(60); }
+                else { btn.disabled = false; }
+            })
+            .catch(function(){
+                msg.textContent = 'Terjadi kesalahan jaringan. Coba lagi.';
+                msg.style.color = '#dc2626';
+                btn.disabled = false;
+            });
+        });
+
+        function cooldown(seconds){
+            var sisa = seconds;
+            var t = setInterval(function(){
+                sisa--;
+                if (sisa <= 0) { clearInterval(t); btn.disabled = false; msg.textContent = 'Bisa kirim ulang sekarang.'; return; }
+                msg.textContent = 'Tunggu ' + sisa + ' detik sebelum kirim ulang.';
+            }, 1000);
+        }
+    })();
+    </script>
 @endpush
 
 @endsection
@@ -451,8 +533,8 @@
         </div>
         <div class="crop-modal-footer">
             <div class="crop-modal-tools">
-                <button type="button" class="btn u-a13" data-action="rotate-crop" data-deg="-90">↺ Putar Kiri</button>
-                <button type="button" class="btn u-a13" data-action="rotate-crop" data-deg="90">Putar Kanan ↻</button>
+                <button type="button" class="btn u-a13" data-action="rotate-crop" data-deg="-90" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Putar Kiri</button>
+                <button type="button" class="btn u-a13" data-action="rotate-crop" data-deg="90" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Putar Kanan</button>
                 <button type="button" class="btn u-a13" data-action="reset-crop">Reset</button>
             </div>
             <div class="crop-modal-hint">Drag untuk geser, scroll untuk zoom</div>

@@ -33,7 +33,7 @@
         {{-- MENU KHUSUS SEKRETARIS (Super Admin ikut melihat, sesuai gate server) --}}
         @if($currentUser && $currentUser->isSidonganSekretaris())
         @php
-            $isSuratActive = request()->routeIs('sidongan.documents.*');
+            $isSuratActive = request()->routeIs('sidongan.documents.*') || request()->routeIs('sidongan.outgoing.*');
         @endphp
         <div class="nav-item-wrapper u-a86">
             <a href="javascript:void(0)" data-action="toggle-surat-menu" class="nav-item has-submenu {{ $isSuratActive ? 'active' : '' }}" style="justify-content: space-between;">
@@ -48,11 +48,14 @@
                 </svg>
             </a>
             <div id="suratSubmenu" class="surat-submenu" style="display: {{ $isSuratActive ? 'block' : 'none' }}; padding-left: 1.25rem; margin-top: 0.25rem;">
+                <a href="{{ route('sidongan.documents.create') }}" class="nav-item {{ request()->routeIs('sidongan.documents.create') ? 'active' : '' }}" style="font-size: 0.85rem; padding: 0.5rem 0.75rem; margin-bottom: 0.125rem;">
+                    <span class="nav-text">Buat Surat Baru</span>
+                </a>
                 <a href="{{ route('sidongan.documents.index') }}" class="nav-item {{ request()->routeIs('sidongan.documents.*') && !request()->routeIs('sidongan.documents.create') ? 'active' : '' }}" style="font-size: 0.85rem; padding: 0.5rem 0.75rem; margin-bottom: 0.125rem;">
                     <span class="nav-text">Daftar Surat Masuk</span>
                 </a>
-                <a href="{{ route('sidongan.documents.create') }}" class="nav-item {{ request()->routeIs('sidongan.documents.create') ? 'active' : '' }}" style="font-size: 0.85rem; padding: 0.5rem 0.75rem; margin-bottom: 0.125rem;">
-                    <span class="nav-text">Buat Surat Baru</span>
+                <a href="{{ route('sidongan.outgoing.index') }}" class="nav-item {{ request()->routeIs('sidongan.outgoing.*') ? 'active' : '' }}" style="font-size: 0.85rem; padding: 0.5rem 0.75rem; margin-bottom: 0.125rem;">
+                    <span class="nav-text">Daftar Surat Keluar</span>
                 </a>
             </div>
         </div>
@@ -81,6 +84,12 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 </div>
                 <span class="nav-text">Surat</span>
+            </a>
+            @endunless
+            @unless($currentUser->isSidonganSekretaris())
+            <a href="{{ route('sidongan.outgoing.index') }}" class="nav-item {{ request()->routeIs('sidongan.outgoing.*') ? 'active' : '' }}">
+                <div class="nav-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 8h16M8 4v16"/></svg></div>
+                <span class="nav-text">Surat Keluar</span>
             </a>
             @endunless
             <a href="{{ route('sidongan.disposisi') }}" class="nav-item {{ request()->routeIs('sidongan.disposisi*') ? 'active' : '' }}">

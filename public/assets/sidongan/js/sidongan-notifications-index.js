@@ -97,6 +97,25 @@ document.addEventListener('click', function (event) {
     }
     const row = event.target.closest('[data-notif-id]');
     if (row) {
+        // Notifikasi dengan data-notif-url (mis. Surat Keluar): tandai
+        // dibaca lalu langsung menuju detail yang dimaksud.
+        if (row.hasAttribute('data-notif-url')) {
+            markNotificationReadAndRedirect(row.getAttribute('data-notif-id'), row.getAttribute('data-notif-url'), row);
+            return;
+        }
         markAsRead(row.getAttribute('data-notif-id'), row);
     }
 });
+
+function markNotificationReadAndRedirect(notificationId, url, row) {
+    // Penandaan dibaca bersifat best-effort; navigasi tetap dilakukan.
+    fetch(`/sidongan/notifications/${notificationId}/read`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+        }
+    }).catch(() => {}).finally(() => {
+        window.location.href = url;
+    });
+}

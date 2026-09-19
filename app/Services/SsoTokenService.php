@@ -35,19 +35,27 @@ class SsoTokenService
 
     /**
      * Terbitkan token SSO untuk sebuah email.
+     *
+     * $to: penanda tujuan lintas aplikasi untuk launcher "Pilih Ruang Kerja"
+     * ('desa' → Admin Panel landing di SIEDA, 'sidongan' → dashboard SIDONGAN).
+     * $desa: kode wilayah desa terpilih (pemilih desa di kartu Admin Panel
+     * Desa untuk pengelola lintas desa) — SIEDA memakainya untuk mengaktifkan
+     * konteks desa yang diminta. Field tambahan diabaikan aplikasi lama.
      */
-    public function issue(string $email, string $returnPath = ''): ?string
+    public function issue(string $email, string $returnPath = '', ?string $to = null, ?string $desa = null): ?string
     {
         if (!$this->isConfigured()) {
             Log::warning('SSO: SIEDA_SYNC_SECRET belum diatur, token tidak dibuat.');
             return null;
         }
 
-        $payload = json_encode([
+        $payload = json_encode(array_filter([
             'email'  => $email,
             'exp'    => time() + self::TTL,
             'return' => $returnPath,
-        ]);
+            'to'     => $to,
+            'desa'   => $desa,
+        ]));
 
         return $this->encode($payload);
     }
@@ -92,8 +100,12 @@ class SsoTokenService
     /**
      * URL callback SSO menuju SIEDA ("Kembali ke SIEDA"). Bila secret
      * belum diatur, fallback ke halaman login SIEDA.
+     *
+     * $to & $desa diteruskan dalam token — SIEDA memakainya untuk
+     * mengarahkan user ke halaman/konteks tujuan ('desa' → Admin Panel
+     * landing page desa, $desa → kode desa terpilih pengelola lintas desa).
      */
-    public function buildCallbackUrl(?string $email = null): string
+    public function buildCallbackUrl(?string $email = null, ?string $to = null, ?string $desa = null): string
     {
         $base = rtrim((string) config('services.sieda.base_url', 'http://127.0.0.1:8004'), '/');
         $email = $email ?? auth()->user()?->email;
@@ -102,7 +114,7 @@ class SsoTokenService
             return $base . '/login';
         }
 
-        $token = $this->issue($email);
+        $token = $this->issue($email, '', $to, $desa);
 
         return $token
             ? $base . '/sso/callback?token=' . urlencode($token)

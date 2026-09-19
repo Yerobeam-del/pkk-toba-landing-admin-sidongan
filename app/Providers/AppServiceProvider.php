@@ -73,6 +73,12 @@ class AppServiceProvider extends ServiceProvider
             'modules.landing.partials.floating-btn',
             \App\Http\View\Composers\FloatingButtonComposer::class
         );
+
+        // View Composer untuk footer (Pengaturan Situs + Quick Access)
+        View::composer(
+            'modules.landing.partials.footer',
+            \App\Http\View\Composers\FooterComposer::class
+        );
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */

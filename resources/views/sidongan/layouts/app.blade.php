@@ -10,15 +10,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {{-- Favicon - Theme Aware --}}
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg') }}">
     <title>@yield('title', 'SIDONGAN - PKK Kabupaten Toba')</title>
 
-    {{-- Dark Mode: apply class SEBELUM CSS render agar tidak flicker --}}
+    {{-- Favicon theme-aware: href ditukar JS sesuai tema aktif --}}
+    <link rel="icon" type="image/svg+xml" id="favicon" href="{{ asset('assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg') }}">
+
+    {{-- Tema 3-mode (system/light/dark, ala SIEDA): system = ikut preferensi perangkat user.
+         Terapkan class SEBELUM CSS render agar tidak flicker. --}}
     <script>
     (function(){
         var k='sidongan-theme',s=localStorage.getItem(k);
-        if(s==='dark'||(s===null&&window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark-mode');}
+        var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme:dark)'):null;
+        // system (default) mengikuti prefers-color-scheme perangkat; light/dark mengikuti pilihan eksplisit
+        var dark=(s==='dark')||(s!=='light'&&s!=='dark'&&mq&&mq.matches);
+        if(dark){document.documentElement.classList.add('dark-mode');}
+        // Jika perangkat berganti tema saat halaman terbuka dan user memakai mode system, ikuti live
+        if(mq&&mq.addEventListener){
+            mq.addEventListener('change',function(e){
+                if((localStorage.getItem(k)!=='light'&&localStorage.getItem(k)!=='dark')){
+                    document.documentElement.classList.toggle('dark-mode',e.matches);
+                    document.dispatchEvent(new CustomEvent('sidongan-theme-changed'));
+                }
+            });
+        }
+        // Favicon mengikuti tema aktif (bukan hanya preferensi OS)
+        window.addEventListener('DOMContentLoaded',function(){
+            var fav=document.getElementById('favicon');
+            if(!fav)return;
+            var LIGHT='{{ asset('assets/sidongan/images/Logo-SIDONGAN-ThemeAware.svg') }}';
+            var DARK='{{ asset('assets/sidongan/images/Logo-SIDONGAN-white.svg') }}';
+            var apply=function(){fav.href=document.documentElement.classList.contains('dark-mode')?DARK:LIGHT;};
+            apply();
+            document.addEventListener('sidongan-theme-changed',apply);
+            if(mq&&mq.addEventListener){mq.addEventListener('change',apply);}
+        });
     })();
     </script>
 
@@ -64,8 +89,8 @@
                         'sidongan' => 'Dashboard',
                         'dashboard' => 'Dashboard',
                         'documents' => 'Daftar Surat Masuk',
-                        'create' => 'Buat Surat Baru',
-                        'edit' => 'Edit Surat',
+                        'create' => request()->routeIs('sidongan.outgoing*') || request()->routeIs('sidongan.documents.outgoing*') ? 'Buat Surat Keluar' : 'Buat Surat Baru',
+                        'edit' => request()->routeIs('sidongan.outgoing*') ? 'Edit Surat Keluar' : 'Edit Surat',
                         'disposisi' => 'Disposisi',
                         'form' => 'Formulir',
                         'verifikasi' => 'Verifikasi',
@@ -76,6 +101,7 @@
                         'admin' => 'Admin',
                         'tags' => 'Tag',
                         'categories' => 'Kategori',
+                        'outgoing' => 'Surat Keluar',
                     ];
                 @endphp
                 @if($segments->count() > 1)
@@ -87,7 +113,9 @@
                                 $isNumeric = is_numeric($segment);
                                 $isLast = $loop->last;
                             @endphp
-                            @if($isNumeric)
+                            @if($isNumeric && !$isLast)
+                                <li class="sd-breadcrumb-item">Detail<span class="sd-breadcrumb-sep">/</span></li>
+                            @elseif($isNumeric)
                                 <li class="sd-breadcrumb-item sd-breadcrumb-current">Detail</li>
                             @elseif(!$isLast)
                                 <li class="sd-breadcrumb-item"><a class="sd-breadcrumb-link" href="#">{{ $label }}</a><span class="sd-breadcrumb-sep">/</span></li>

@@ -36,7 +36,7 @@ class MigrateNewsCategorySeeder extends Seeder
             // Update news dengan category_id
             $news->update(['category_id' => $category->id]);
             
-            echo "✓ Updated: {$news->title} → {$category->name}\n";
+            echo "Updated: {$news->title} - {$category->name}\n";
         }
         
         echo "Selesai! {$newsItems->count()} berita dimigrasi.\n";

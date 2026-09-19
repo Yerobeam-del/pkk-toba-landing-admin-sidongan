@@ -196,7 +196,7 @@ class ProfileController extends Controller
 
         if (Auth::guard('sidongan')->check() && Auth::guard('sidongan')->id() === $user->id) {
             return redirect()->route('sidongan.dashboard')
-                ->with('success', '🎉 Email pribadi <strong>' . e($user->personal_email) . '</strong> berhasil diverifikasi! Sekarang fitur Lupa Password sudah aktif.');
+                ->with('success', 'Email pribadi <strong>' . e($user->personal_email) . '</strong> berhasil diverifikasi! Sekarang fitur Lupa Password sudah aktif.');
         }
 
         return redirect()->route('sidongan.login')

@@ -38,7 +38,7 @@ return new class extends Migration
                 $table->enum('status', ['draft', 'menunggu_disposisi', 'berjalan', 'selesai', 'diarsipkan'])
                       ->default('menunggu_disposisi')->after('suggestion');
             }
-            // ✅ Pastikan category_id nullable
+            // Pastikan category_id nullable
             if (!Schema::hasColumn('sidongan_documents', 'category_id')) {
                 $table->foreignId('category_id')->nullable()->constrained('sidongan_categories')->onDelete('set null');
             }

@@ -262,8 +262,12 @@
                     <div class="slider-path">{{ Str::limit($slider->image_path, 40) }}</div>
                     <div class="slider-meta">
                         <span>{{ $slider->display_duration }}s</span>
-                        <span class="{{ $slider->is_active ? 'status-active' : 'status-inactive' }}">
-                            ● {{ $slider->is_active ? 'Aktif' : 'Nonaktif' }}
+                        <span class="{{ $slider->is_active ? 'status-active' : 'status-inactive' }}" style="display:inline-flex;align-items:center;gap:0.3rem">
+                            @if($slider->is_active)
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg> Aktif
+                            @else
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg> Nonaktif
+                            @endif
                         </span>
                     </div>
                 </div>

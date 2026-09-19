@@ -119,7 +119,7 @@
                             <path d="M12 10v4"/>
                             <path d="M10 12h4"/>
                         </svg>
-                        <span>Cara mendapatkan: Buka Google Maps → Cari lokasi → Share → Embed a map → Copy HTML</span>
+                        <span>Cara mendapatkan: Buka Google Maps, cari lokasi, klik Share, pilih Embed a map, lalu Copy HTML</span>
                     </small>
                 </div>
                 

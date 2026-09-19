@@ -17,11 +17,11 @@ class SyncKecamatansToba extends Command
 
     public function handle(WilayahIndonesiaService $service)
     {
-        $this->info('🔄 Syncing kecamatan Kabupaten Toba...');
+        $this->info('Syncing kecamatan Kabupaten Toba...');
         
         $count = $service->syncKecamatansToba();
         
-        $this->info("✅ Successfully synced {$count} kecamatan(s)!");
+        $this->info("Successfully synced {$count} kecamatan(s)!");
         
         return Command::SUCCESS;
     }

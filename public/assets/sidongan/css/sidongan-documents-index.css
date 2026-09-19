@@ -681,3 +681,34 @@ html.dark-mode .sd-page-btn-white:hover {
 html.dark-mode .sd-btn-create {
     box-shadow: 0 4px 12px rgba(8, 145, 178, 0.35);
 }
+
+/* ===== MOBILE: kartu filter Surat Masuk & Surat Keluar =====
+   Grid desktop 6 kolom tidak muat di layar sempit — elemen terdorong
+   keluar viewport. Di mobile: 2 kolom, Filter Cepat & Reset full-width. */
+@media (max-width: 768px) {
+    .sd-filter-row-1 {
+        grid-template-columns: 1fr;
+    }
+
+    .sd-filter-row-2 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Filter Cepat (kolom pertama) & Reset memakai satu baris penuh */
+    .sd-filter-row-2 > div:first-child,
+    .sd-filter-row-2 .sd-filter-reset-wrap {
+        grid-column: 1 / -1;
+    }
+
+    .sd-filter-reset-wrap .sd-btn-reset-filter {
+        width: 100%;
+        min-height: 44px;
+        justify-content: center;
+    }
+
+    .sd-filter-date,
+    .sd-filter-select {
+        width: 100%;
+        min-width: 0;
+    }
+}

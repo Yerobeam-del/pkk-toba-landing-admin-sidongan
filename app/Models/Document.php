@@ -99,6 +99,11 @@ class Document extends Model
         return $this->hasMany(ActivityReport::class, 'document_id');
     }
 
+    public function outgoingLetters()
+    {
+        return $this->hasMany(OutgoingLetter::class, 'incoming_document_id');
+    }
+
     // Scope: Hanya dokumen published & public
     public function scopePublished($query)
     {

@@ -10,10 +10,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password - PKK Kabupaten Toba</title>
 
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
+    {{-- Favicon theme-aware — pasangan logo yang sama dengan panel admin --}}
+    <link rel="icon" type="image/svg+xml" id="favicon" href="{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/sidongan-auth/css/auth-onboarding.css') }}">
+
+    {{-- Tema 3-mode (system/light/dark) bersama panel admin — class dipasang
+         SEBELUM CSS render agar tidak flicker. Selaras dengan halaman login. --}}
+    <script>
+    (function(){
+        var k='admin-dark-mode',s=localStorage.getItem(k);
+        var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme:dark)'):null;
+        var dark=(s==='true')||(s!=='false'&&mq&&mq.matches);
+        if(dark){document.documentElement.classList.add('dark-mode');}
+        if(mq&&mq.addEventListener){
+            mq.addEventListener('change',function(e){
+                if(localStorage.getItem(k)!=='false'&&localStorage.getItem(k)!=='true'){
+                    document.documentElement.classList.toggle('dark-mode',e.matches);
+                }
+            });
+        }
+        // Favicon mengikuti tema aktif (bukan hanya preferensi OS)
+        window.addEventListener('DOMContentLoaded',function(){
+            var fav=document.getElementById('favicon');
+            if(!fav)return;
+            var LIGHT='{{ asset('assets/admin/images/Logo_Admin-Panel.svg') }}';
+            var DARK='{{ asset('assets/admin/images/Logo_Admin-Panel-White.svg') }}';
+            var apply=function(){fav.href=document.documentElement.classList.contains('dark-mode')?DARK:LIGHT;};
+            apply();
+            if(mq&&mq.addEventListener){mq.addEventListener('change',apply);}
+        });
+    })();
+    </script>
 
     <style>
         :root {
@@ -29,7 +58,7 @@
         <div class="ob-left">
             <div class="ob-left-content">
                 <div class="ob-logo">
-                    <img src="{{ asset('assets/admin/images/Logo-PKK-Toba-White.png') }}" alt="Logo PKK" width="56" height="56">
+                    <img src="{{ asset('assets/shared/images/Logo-Kabupaten-Toba-White.svg') }}" alt="Logo PKK" width="56" height="56">
                 </div>
 
                 <h1 class="ob-welcome">Lupa Password?</h1>
@@ -173,14 +202,14 @@
                 </form>
 
                 {{-- Login Links --}}
-                <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border,#e2e8f0);text-align:center">
+                <div class="ob-login-divider" style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border,#e2e8f0);text-align:center">
                     <p style="font-size:0.8rem;color:var(--text-muted,#64748b);margin-bottom:0.75rem">Atau login langsung ke:</p>
                     <div style="display:flex;gap:0.75rem;justify-content:center">
-                        <a href="{{ url('/login') }}" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;border-radius:8px;background:var(--surface-hover,#f8fafc);border:1px solid var(--border,#e2e8f0);font-size:0.8rem;font-weight:600;color:var(--text-dark,#334155);text-decoration:none;transition:all 0.2s">
+                        <a href="{{ url('/login') }}" class="ob-login-chip" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;border-radius:8px;background:var(--surface-hover,#f8fafc);border:1px solid var(--border,#e2e8f0);font-size:0.8rem;font-weight:600;color:var(--text-dark,#334155);text-decoration:none;transition:all 0.2s">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
                             Admin Panel
                         </a>
-                        <a href="{{ url('/sidongan-login') }}" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;border-radius:8px;background:var(--surface-hover,#f8fafc);border:1px solid var(--border,#e2e8f0);font-size:0.8rem;font-weight:600;color:var(--text-dark,#334155);text-decoration:none;transition:all 0.2s">
+                        <a href="{{ url('/sidongan-login') }}" class="ob-login-chip" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;border-radius:8px;background:var(--surface-hover,#f8fafc);border:1px solid var(--border,#e2e8f0);font-size:0.8rem;font-weight:600;color:var(--text-dark,#334155);text-decoration:none;transition:all 0.2s">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                             SIDONGAN
                         </a>

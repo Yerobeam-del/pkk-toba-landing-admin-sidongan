@@ -12,7 +12,7 @@
     // Validasi URL - pastikan bukan halaman create/edit/verifikasi/form
     if (str_contains($backUrl, '/create') || 
         str_contains($backUrl, '/edit') || 
-        str_contains($backUrl, '/verifikasi/form')) {  // ← Hanya tolak form verifikasi
+        str_contains($backUrl, '/verifikasi/form')) {  // Hanya tolak form verifikasi
         $backUrl = route('sidongan.lapor_kegiatan.index');
     }
     

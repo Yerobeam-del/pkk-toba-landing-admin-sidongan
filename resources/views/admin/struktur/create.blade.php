@@ -109,8 +109,8 @@
         {{-- Controls (Fixed at bottom) --}}
         <div style="padding:1rem 1.5rem;background:#fff;border-top:1px solid rgba(0,0,0,0.06);flex-shrink:0">
             <div style="display:flex;gap:0.5rem;justify-content:center;margin-bottom:0.75rem;flex-wrap:wrap">
-                <button type="button" data-action="rotate-crop" data-deg="-90" class="btn u-a13">↺ Putar Kiri</button>
-                <button type="button" data-action="rotate-crop" data-deg="90" class="btn u-a13">Putar Kanan ↻</button>
+                <button type="button" data-action="rotate-crop" data-deg="-90" class="btn u-a13" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Putar Kiri</button>
+                <button type="button" data-action="rotate-crop" data-deg="90" class="btn u-a13" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Putar Kanan</button>
                 <button type="button" data-action="reset-crop" class="btn u-a13">Reset</button>
             </div>
             <div style="text-align:center;font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">

@@ -19,6 +19,7 @@ use App\Models\Desa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -58,6 +59,12 @@ class UserManagementController extends Controller
             $query->whereNull('email_verified_at');
         } elseif ($tab === 'with-access') {
             $query->whereHas('applications');
+        } elseif ($tab === 'pemail-unverified') {
+            // Hanya akun yang PUNYA email pribadi tapi belum terverifikasi —
+            // inilah populasi yang bisa ditindaklanjuti (kirim ulang
+            // verifikasi). Akun tanpa email pribadi tidak ikut.
+            $query->whereNotNull('personal_email')
+                  ->whereNull('personal_email_verified_at');
         }
 
         // Tambahkan filter pencarian berdasarkan Nama atau Email
@@ -136,6 +143,8 @@ class UserManagementController extends Controller
             'sieda_role' => 'nullable|in:operator,kader,viewer',
             'sieda_kecamatan' => 'nullable|string|max:255',
             'sieda_kelurahan' => 'nullable|string|max:255',
+            'sieda_desas' => 'nullable|array',
+            'sieda_desas.*' => 'nullable|string|max:20',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
             'cropped_photo' => 'nullable|string|max:6000000',
             'remove_photo' => 'nullable|boolean',
@@ -176,6 +185,9 @@ class UserManagementController extends Controller
             'sieda_role' => $validated['sieda_role'] ?? null,
             'sieda_kecamatan' => $validated['sieda_kecamatan'] ?? null,
             'sieda_kelurahan' => $validated['sieda_kelurahan'] ?? null,
+            // Multi-desa: daftar lengkap desa yang boleh dikelola (desa utama
+            // = sieda_kelurahan selalu posisi pertama).
+            'sieda_desas' => $this->normalisasiDesaTerpilih($validated),
             'email_verified_at' => now(),
         ]);
 
@@ -316,6 +328,8 @@ class UserManagementController extends Controller
             'sieda_role' => 'nullable|in:operator,kader,viewer',
             'sieda_kecamatan' => 'nullable|string|max:255',
             'sieda_kelurahan' => 'nullable|string|max:255',
+            'sieda_desas' => 'nullable|array',
+            'sieda_desas.*' => 'nullable|string|max:20',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
             'cropped_photo' => 'nullable|string|max:6000000',
             'remove_photo' => 'nullable|boolean',
@@ -363,15 +377,30 @@ class UserManagementController extends Controller
         $user->phone_number = ProfileFields::isFilled($validated['phone_number'] ?? null)
             ? trim((string) $validated['phone_number'])
             : $user->phone_number;
-        $user->personal_email = ProfileFields::isFilled($validated['personal_email'] ?? null)
+
+        $personalEmailBaru = ProfileFields::isFilled($validated['personal_email'] ?? null)
             ? trim((string) $validated['personal_email'])
-            : $user->personal_email;
+            : null;
+        $emailPribadiDiganti = false;
+        if ($personalEmailBaru !== null && $personalEmailBaru !== $user->personal_email) {
+            $user->personal_email = $personalEmailBaru;
+
+            // Email baru belum terbukti milik user → verifikasi lama dibatalkan
+            // (paritas dengan SIEDA & onboarding). Link verifikasi dikirim ke
+            // email baru di bawah, setelah save().
+            if ($user->personal_email_verified_at) {
+                $user->personal_email_verified_at = null;
+                $emailPribadiDiganti = true;
+            }
+        }
 
         $user->role_id = $validated['role_id'];
         $user->sidongan_role = $validated['sidongan_role'] ?? null;
         $user->sieda_role = $validated['sieda_role'] ?? null;
         $user->sieda_kecamatan = $validated['sieda_kecamatan'] ?? null;
         $user->sieda_kelurahan = $validated['sieda_kelurahan'] ?? null;
+        // Multi-desa: segarkan daftar lengkap desa yang boleh dikelola.
+        $user->sieda_desas = $this->normalisasiDesaTerpilih($validated);
 
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
@@ -390,6 +419,29 @@ class UserManagementController extends Controller
             session()->forget('onboarding_skipped');
             if ($user->onboarding_skipped_at) {
                 $user->forceFill(['onboarding_skipped_at' => null])->save();
+            }
+        }
+
+        // Email pribadi diganti → kirim link verifikasi ke alamat baru.
+        // Fitur Lupa Password terkunci sampai email baru diverifikasi.
+        $verifikasiTerkirim = false;
+        if ($emailPribadiDiganti) {
+            try {
+                $user->notify(new \App\Notifications\PersonalEmailVerificationNotification($user->personal_email));
+                $verifikasiTerkirim = true;
+
+                Log::channel('audit')->info('Email pribadi diganti admin — link verifikasi dikirim', [
+                    'admin_id' => auth()->id(),
+                    'user_id' => $user->id,
+                    'personal_email' => $user->personal_email,
+                    'timestamp' => now()->toIso8601String(),
+                ]);
+            } catch (\Throwable $e) {
+                Log::channel('audit')->warning('Gagal kirim link verifikasi setelah admin ganti email pribadi', [
+                    'admin_id' => auth()->id(),
+                    'user_id' => $user->id,
+                    'error' => $e->getMessage(),
+                ]);
             }
         }
 
@@ -445,8 +497,80 @@ class UserManagementController extends Controller
             ? 'Akun berhasil diperbarui dan disinkronisasi ke SIEDA!'
             : 'Akun berhasil diperbarui, NAMUN sinkronisasi ke SIEDA gagal — periksa log dan ulangi sinkronisasi.';
 
+        // Info tindak lanjut verifikasi email pribadi yang diganti
+        if ($emailPribadiDiganti) {
+            $successMessage .= $verifikasiTerkirim
+                ? ' Email pribadi diganti — link verifikasi telah dikirim ke ' . $user->personal_email . ' (Lupa Password terkunci sampai email baru diverifikasi).'
+                : ' Email pribadi diganti — NAMUN link verifikasi gagal dikirim. Gunakan tombol "Kirim Ulang Verifikasi".';
+        }
+
         return redirect()->route('admin.user-management.edit', $user)
             ->with('success', $successMessage);
+    }
+
+    /**
+     * Kirim ulang link verifikasi email pribadi user (Admin Panel > Manajemen
+     * Akun > Edit). Dipakai bila link sebelumnya gagal terkirim / kedaluwarsa.
+     */
+    public function resendPersonalEmailVerification(Request $request, User $user)
+    {
+        if (!auth()->user()->isSuperAdmin() && !auth()->user()->hasPermission('manage-users')) {
+            return response()->json(['success' => false, 'message' => 'Akses ditolak!'], 403);
+        }
+
+        if (!$user->personal_email) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User ini belum memiliki email pribadi.',
+            ], 422);
+        }
+
+        // Sudah terverifikasi — tidak ada yang perlu dikirim ulang
+        if ($user->hasVerifiedPersonalEmail()) {
+            return response()->json([
+                'success' => true,
+                'already_verified' => true,
+                'message' => 'Email pribadi user ini sudah terverifikasi.',
+            ]);
+        }
+
+        // Cooldown anti spam email: 60 detik antar pengiriman
+        $cacheKey = 'resend-personal-email-verification:' . $user->id;
+        $lastSent = Cache::get($cacheKey);
+        if ($lastSent instanceof \Carbon\CarbonInterface && $lastSent->diffInSeconds(now()) < 60) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Link baru saja dikirim. Tunggu ' . max(1, (int) ceil(60 - $lastSent->diffInSeconds(now()))) . ' detik sebelum mengirim ulang.',
+            ], 429);
+        }
+        Cache::put($cacheKey, now(), now()->addSeconds(60));
+
+        try {
+            $user->notify(new \App\Notifications\PersonalEmailVerificationNotification($user->personal_email));
+        } catch (\Throwable $e) {
+            Log::channel('audit')->warning('Gagal kirim ulang link verifikasi email pribadi (Manajemen Akun)', [
+                'admin_id' => auth()->id(),
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengirim email verifikasi. Coba lagi sebentar.',
+            ], 500);
+        }
+
+        Log::channel('audit')->info('Link verifikasi email pribadi dikirim ulang (Manajemen Akun)', [
+            'admin_id' => auth()->id(),
+            'user_id' => $user->id,
+            'personal_email' => $user->personal_email,
+            'timestamp' => now()->toIso8601String(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Link verifikasi telah dikirim ulang ke ' . $user->personal_email . '.',
+        ]);
     }
 
     /**
@@ -756,6 +880,26 @@ class UserManagementController extends Controller
             'available' => !$exists,
             'message' => $exists ? 'Email sudah digunakan' : 'Email tersedia',
         ]);
+    }
+
+    /**
+     * Normalisasi daftar desa terpilih (multi-assignment) dari form:
+     * buang nilai kosong/duplikat, pastikan desa utama (sieda_kelurahan)
+     * selalu posisi pertama. Return null bila kosong.
+     */
+    private function normalisasiDesaTerpilih(array $validated): ?array
+    {
+        $utama = $validated['sieda_kelurahan'] ?? null;
+        $daftar = collect($validated['sieda_desas'] ?? [])
+            ->filter(fn ($k) => is_string($k) && preg_match('/^12\.12\.\d{2}\.\d{4}$/', $k))
+            ->unique()
+            ->values();
+
+        if (filled($utama)) {
+            $daftar = collect([$utama])->merge($daftar->reject(fn ($k) => $k === $utama));
+        }
+
+        return $daftar->isEmpty() ? null : $daftar->all();
     }
 
     /**

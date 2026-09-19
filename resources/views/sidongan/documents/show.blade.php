@@ -101,6 +101,10 @@
                     <i class="fas fa-edit"></i>
                     <span>Edit Surat</span>
                 </a>
+                <a href="{{ route('sidongan.documents.outgoing.create', $document) }}" class="ds-btn ds-btn-disposisi">
+                    <i class="fas fa-file-export"></i>
+                    <span>Buat Surat Keluar</span>
+                </a>
                 @endif
                 
                 @if($currentUser && $currentUser->isSidonganKetua() && $document->status === 'menunggu_disposisi')
@@ -540,7 +544,7 @@
                         }
                     }
                     
-                    // 4. ✅ PENGARSIPAN (BARU!)
+                    // 4. PENGARSIPAN (BARU!)
                     if ($document->status === 'diarsipkan') {
                         $archivedAt = $document->updated_at;
                         

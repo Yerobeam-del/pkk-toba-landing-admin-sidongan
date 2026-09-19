@@ -21,6 +21,21 @@ class RedirectIfAuthenticatedSidongan
     {
         // Cek apakah sudah login dengan guard sidongan
         if (Auth::guard('sidongan')->check()) {
+            $user = Auth::guard('sidongan')->user();
+
+            // Email pribadi pending (terisi tapi belum terverifikasi) →
+            // onboarding dengan panel "Cek Email" — satu pintu verifikasi,
+            // paritas dengan alur pasca-login AuthController@login. Tanpa ini
+            // user pending yang membuka /sidongan-login bisa lolos langsung ke
+            // dashboard dan melewati verifikasi.
+            $pendingEmail = session('pending_personal_email') ?? $user->personal_email;
+
+            if ($pendingEmail && !$user->hasVerifiedPersonalEmail()) {
+                session(['pending_personal_email' => $pendingEmail]);
+
+                return redirect()->route('onboarding');
+            }
+
             return redirect()->route('sidongan.dashboard');
         }
 

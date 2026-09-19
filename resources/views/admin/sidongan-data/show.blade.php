@@ -2,6 +2,17 @@
      Dikembangkan oleh Institut Teknologi Del
      ============================================================ --}}
 @extends('admin.layouts.app')
+@php $sysArea = ['key' => 'data-sidongan', 'label' => 'Manajemen Data SIDONGAN', 'desc' => 'Area inspeksi & penghapusan arsip surat database SIDONGAN — terpisah dari konten website.']; @endphp
+@section('sysAreaStyles')
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-system-area.css') }}">
+@endsection
+@section('sysBodyAttr') data-area="{{ $sysArea['key'] }}" @endsection
+@section('sysSidebar')
+    @include('admin.partials.sys-sidebar')
+@endsection
+@section('sysBanner')
+    @include('admin.partials.sys-banner')
+@endsection
 @section('title', 'Detail Surat - ' . $document->agenda_number)
 @section('page-title', 'Detail Surat')
 

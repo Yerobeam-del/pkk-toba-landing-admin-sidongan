@@ -225,6 +225,57 @@ body {
 .toggle-btn:hover { background: #f1f5f9; color: var(--primary); }
 .toggle-btn svg { width: 20px; height: 20px; }
 
+/* === Pemilih Tema 3-mode (System/Terang/Gelap, ala SIEDA) === */
+.theme-picker {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 3px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+.theme-picker__opt {
+    position: relative;
+    z-index: 1;
+    width: 32px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #94a3b8;
+    transition: color 0.2s;
+}
+.theme-picker__opt:hover { color: var(--primary); }
+.theme-picker__opt.active { color: var(--primary); }
+.theme-picker__thumb {
+    position: absolute;
+    top: 3px; left: 0;
+    height: 28px;
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15);
+    transition: transform 0.25s ease, width 0.25s ease;
+    will-change: transform, width;
+}
+/* Ringkas (idle): hanya ikon mode aktif yang terlihat — hemat ruang header.
+   Diklik → terbuka menampilkan ketiga pilihan; memilih/klik di luar → ringkas kembali. */
+.theme-picker--collapsed .theme-picker__opt:not(.active) { display: none; }
+.theme-picker--collapsed { cursor: pointer; }
+html.dark-mode .theme-picker {
+    background: #0f172a;
+    border-color: #334155;
+}
+html.dark-mode .theme-picker__opt { color: #64748b; }
+html.dark-mode .theme-picker__opt:hover,
+html.dark-mode .theme-picker__opt.active { color: #38bdf8; }
+html.dark-mode .theme-picker__thumb {
+    background: #1e293b;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
 .header-right { display: flex; align-items: center; gap: 1rem; }
 
 .content-area {
@@ -1216,7 +1267,8 @@ body {
     }
     /* Hamburger & lonceng berada di luar .content-area sehingga luput
        dari aturan tombol 44px yang sudah ada. */
-    .top-header .toggle-btn {
+    .top-header .toggle-btn,
+    .top-header .theme-picker.theme-picker--collapsed {
         width: 44px !important;
         height: 44px !important;
         min-width: 44px !important;
@@ -1225,6 +1277,14 @@ body {
         align-items: center !important;
         justify-content: center !important;
         flex: 0 0 auto !important;
+    }
+    .top-header .theme-picker:not(.theme-picker--collapsed) {
+        height: 44px !important;
+        min-height: 44px !important;
+    }
+    .top-header .theme-picker__opt {
+        width: 40px !important;
+        height: 40px !important;
     }
 }
 /* Dikembangkan oleh Institut Teknologi Del */
@@ -1291,7 +1351,7 @@ html.dark-mode h4, html.dark-mode p {
     color: #e2e8f0;
 }
 
-html.dark-mode a:not(.nav-item):not(.btn-action):not(.sd-btn-back) {
+html.dark-mode a:not(.nav-item):not(.btn-action):not(.sd-btn-back):not([class*="btn"]):not(.quick-action-item) {
     color: #38bdf8;
 }
 
@@ -2048,9 +2108,27 @@ html.dark-mode .sidebar-section-separator {
 html.dark-mode table {
     background: transparent;
 }
-/* thead gradient dijaga — JANGAN override background */
+/* Tabel berheader gradient (Surat Masuk & Surat Keluar): header TETAP berwarna sama seperti tema terang.
+   Gradient HANYA di thead (satu pita mulus penuh selebar tabel) — th transparan, jangan beri gradient per sel
+   atau gradient akan restart di tiap kolom dan terlihat patah-patah. */
 html.dark-mode .sd-doc-table thead {
     background: linear-gradient(135deg, #0891b2, #14b8a6) !important;
+}
+html.dark-mode .sd-doc-table thead th {
+    background: transparent !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+/* Tabel dengan gradient inline di thead (mis. Arsip Surat): gradient dipertahankan, sel th-nya transparan */
+html.dark-mode thead[style*="background"] th {
+    background: transparent !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+/* Baris di dalam thead berwarna tidak boleh ditimpa rule .sd-table-wrap tr */
+html.dark-mode thead[style*="background"] tr,
+html.dark-mode .sd-doc-table thead tr {
+    background: transparent !important;
 }
 
 /* stat cards gradient dijaga tetap cerah di dark mode */

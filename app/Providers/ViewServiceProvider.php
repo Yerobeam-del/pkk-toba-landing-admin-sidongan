@@ -20,7 +20,7 @@ class ViewServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // ✅ Daftarkan composer untuk layout SIDONGAN
+        // Daftarkan composer untuk layout SIDONGAN
         View::composer('sidongan.layouts.app', SidonganNotificationComposer::class);
     }
 }

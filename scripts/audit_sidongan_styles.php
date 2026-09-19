@@ -132,9 +132,9 @@ foreach ($files as $rel) {
         }
 
         $curStyle = $classToStyle[$auto] ?? '(kelas tidak ada di utilities.css!)';
-        $ok = $curStyle === $match['style'] ? '✓' : '✗';
+        $ok = $curStyle === $match['style'] ? '[OK]' : '[BEDA]';
         echo "  {$auto} {$ok} tag={$w['tag']} text=\"{$w['text']}\"\n";
-        if ($ok !== '✓') {
+        if ($ok !== '[OK]') {
             echo "      HEAD : {$match['style']}\n";
             echo "      KELAS: {$curStyle}\n";
         }

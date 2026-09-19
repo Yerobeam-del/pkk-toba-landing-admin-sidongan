@@ -22,6 +22,11 @@
 <div class="card">
     <form id="desaForm" data-current-kec="{{ old('kecamatan_id', $desa->kecamatan_id) }}" data-current-desa="{{ old('desa_code', $desa->kode_wilayah) }}" action="{{ route('admin.desa.update', $desa) }}" method="POST" enctype="multipart/form-data">
         @csrf @method('PUT')
+        @if($errors->any())
+            <div class="u-inline-alert-danger" style="padding:0.9rem 1.1rem;border-radius:10px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.08);margin-bottom:1.25rem;font-size:0.875rem;color:#b91c1c">
+                <strong>{{ $errors->first() }}</strong>
+            </div>
+        @endif
         
         {{-- Kecamatan Select (dengan Icon Pin) --}}
         <div class="u-mb-6">
@@ -58,6 +63,7 @@
             </div>
             <input type="hidden" name="desa_name" id="desaNameInput" value="{{ old('desa_name', $desa->name) }}">
             <small class="u-hint" id="desaHelp">Hanya desa yang sudah terisi datanya di SIEDA yang bisa dipilih</small>
+            @error('desa_code')<small class="u-error-block" style="color:#ef4444;display:block;margin-top:0.25rem;font-size:0.85rem">{{ $message }}</small>@enderror
             <small id="desaError" style="color:#ef4444;display:none;margin-top:0.25rem;font-size:0.85rem"></small>
         </div>
 

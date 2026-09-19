@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\SyncKecamatansToba::class,
-        \App\Console\Commands\ClearOldNotifications::class, // ✅ Tambahkan ini
+        \App\Console\Commands\ClearOldNotifications::class,
     ];
 
     /**

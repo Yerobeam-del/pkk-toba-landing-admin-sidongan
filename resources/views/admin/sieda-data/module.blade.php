@@ -2,6 +2,17 @@
      Dikembangkan oleh Institut Teknologi Del
      ============================================================ --}}
 @extends('admin.layouts.app')
+@php $sysArea = ['key' => 'data-sieda', 'label' => 'Manajemen Data SIEDA', 'desc' => 'Area inspeksi & penghapusan permanen data database SIEDA — terpisah dari konten website.']; @endphp
+@section('sysAreaStyles')
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-system-area.css') }}">
+@endsection
+@section('sysBodyAttr') data-area="{{ $sysArea['key'] }}" @endsection
+@section('sysSidebar')
+    @include('admin.partials.sys-sidebar')
+@endsection
+@section('sysBanner')
+    @include('admin.partials.sys-banner')
+@endsection
 @section('title', 'Manajemen Data SIEDA — ' . $config['label'])
 @section('page-title', 'Manajemen Data SIEDA — ' . $config['label'])
 

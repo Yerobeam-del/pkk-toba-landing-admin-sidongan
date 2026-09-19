@@ -48,7 +48,7 @@ async function initData() {
                 });
             }
         } catch (error) {
-            console.warn('⚠️ Failed to load desa:', error);
+            console.warn('Failed to load desa:', error);
             desasData = {};
         }
 
@@ -77,7 +77,7 @@ async function initData() {
         document.getElementById('content-state').style.display = 'block';
 
     } catch (err) {
-        console.error('💥 Fatal error:', err);
+        console.error('Fatal error:', err);
         document.getElementById('loading-state').style.display = 'none';
         document.getElementById('error-state').style.display = 'block';
         document.getElementById('error-message').textContent = err.message;
@@ -296,7 +296,7 @@ async function deleteDesa(id, name) {
         form.submit();
         
     } catch (err) { 
-        console.error('💥 Delete error:', err);
+        console.error('Delete error:', err);
         Toast.error(err.message || 'Terjadi kesalahan saat menghapus desa.');
     }
 }

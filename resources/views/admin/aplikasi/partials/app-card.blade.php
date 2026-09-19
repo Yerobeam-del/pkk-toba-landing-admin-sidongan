@@ -49,11 +49,15 @@
             <div class="u-a32">{{ $app->sort_order }}</div>
         </div>
 
-        {{-- Aktif/Nonaktif --}}
+        {{-- Aktif/Nonaktif — ikon status SVG, bukan karakter unicode --}}
         <div class="u-box-soft">
             <div class="u-eyebrow-xs">Status Tampil</div>
-            <div style="font-weight:600;color:{{ $app->is_active ? '#166534' : '#92400e' }};font-size:0.85rem">
-                {{ $app->is_active ? '✓ Aktif' : '○ Nonaktif' }}
+            <div style="font-weight:600;color:{{ $app->is_active ? '#166534' : '#92400e' }};font-size:0.85rem;display:inline-flex;align-items:center;gap:0.3rem">
+                @if($app->is_active)
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Aktif
+                @else
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg> Nonaktif
+                @endif
             </div>
         </div>
     </div>

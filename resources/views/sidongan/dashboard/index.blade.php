@@ -65,7 +65,7 @@
         <div class="card">
             <div class="card-header">
                 <h3>Surat Terbaru</h3>
-                <a href="{{ route('sidongan.documents.index') }}" class="link">Lihat Semua →</a>
+                <a href="{{ route('sidongan.documents.index') }}" class="link" style="display:inline-flex;align-items:center;gap:0.3rem">Lihat Semua<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
             </div>
             
             <div class="card-body p-0">
@@ -84,7 +84,7 @@
         <div class="card">
             <div class="card-header">
                 <h3>Notifikasi</h3>
-                <a href="{{ route('sidongan.notifications') }}" class="link">Semua →</a>
+                <a href="{{ route('sidongan.notifications') }}" class="link" style="display:inline-flex;align-items:center;gap:0.3rem">Semua<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
             </div>
             
             <div class="card-body notification-list">

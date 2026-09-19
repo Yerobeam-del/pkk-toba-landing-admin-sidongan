@@ -26,19 +26,19 @@ class Notification extends Model
         return $this->belongsTo(User::class); 
     }
 
-    // ✅ Scope: Hanya notifikasi belum dibaca
+    // Scope: Hanya notifikasi belum dibaca
     public function scopeUnread($query)
     {
         return $query->whereNull('read_at');
     }
 
-    // ✅ Scope: Hanya notifikasi sudah dibaca
+    // Scope: Hanya notifikasi sudah dibaca
     public function scopeRead($query)
     {
         return $query->whereNotNull('read_at');
     }
 
-    // ✅ Helper: Mark as read & auto-delete
+    // Helper: Mark as read & auto-delete
     public function markAsReadAndDelete()
     {
         $this->update(['read_at' => now()]);

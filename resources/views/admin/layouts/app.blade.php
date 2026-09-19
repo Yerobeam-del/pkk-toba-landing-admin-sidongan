@@ -30,6 +30,10 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/layout.css') }}">
 
+    {{-- Area Sistem (Manajemen Akun / Data SIEDA / Data SIDONGAN): aksen
+         warna & sidebar khusus. CSS hanya dimuat saat mode area aktif. --}}
+    @yield('sysAreaStyles')
+
     {{-- Cropper.js --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -39,7 +43,8 @@
 <body data-session-success="{{ session('success') }}"
       data-session-error="{{ session('error') }}"
       data-session-warning="{{ session('warning') }}"
-      data-session-info="{{ session('info') }}">
+      data-session-info="{{ session('info') }}"
+      @yield('sysBodyAttr')>
 
     <div class="admin-layout" id="adminLayout">
 
@@ -59,6 +64,9 @@
             </div>
 
             <nav class="sidebar-nav">
+                @hasSection('sysSidebar')
+                    @yield('sysSidebar')
+                @else
                 <div class="nav-section-title">Menu Utama</div>
 
                 {{-- Beranda (Semua user bisa akses) --}}
@@ -153,6 +161,16 @@
                 </a>
                 @endif
 
+                {{-- Pengaturan Situs --}}
+                @if(auth()->user()->hasPermission('manage-settings'))
+                <a href="{{ route('admin.settings.index') }}" class="nav-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" data-tip="Pengaturan Situs">
+                    <div class="nav-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </div>
+                    <span class="nav-text">Pengaturan Situs</span>
+                </a>
+                @endif
+
                 {{-- Section Separator --}}
                 @if(auth()->user()->hasPermission('manage-users'))
                 <div class="sidebar-section-separator">
@@ -199,6 +217,7 @@
                     @endif
                 </div>
                 @endif
+                @endif {{-- /hasSection sysSidebar --}}
             </nav>
         </aside>
 
@@ -258,6 +277,15 @@
 
                         {{-- Menu Items --}}
                         <div class="user-menu-body">
+                            <a href="{{ route('workspace.pilih') }}" class="user-menu-item" role="menuitem">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                </svg>
+                                <span>Ganti Ruang Kerja</span>
+                            </a>
                             <a href="{{ route('admin.profile.edit') }}" class="user-menu-item" role="menuitem">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -288,6 +316,12 @@
 
             <main class="content-area">
                 @include('admin.partials.breadcrumb')
+
+                {{-- Banner konteks area sistem (Manajemen Akun / Data) --}}
+                @hasSection('sysBanner')
+                    @yield('sysBanner')
+                @endif
+
                 @yield('content')
             </main>
 

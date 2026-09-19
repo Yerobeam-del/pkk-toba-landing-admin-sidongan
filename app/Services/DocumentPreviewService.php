@@ -155,8 +155,8 @@ class DocumentPreviewService
         // Teks utama
         imagestring($img, $fontSize, ($width - $textWidth) / 2, $height / 2 - $textHeight / 2, $text, $blue);
         
-        // Tambahkan icon dokumen
-        $iconText = '📄';
+        // Catatan: ikon dokumen di thumbnail dirender sebagai bentuk geometris
+        // GD (kotak + lipatan), bukan karakter unicode.
         
         // Simpan
         $thumbnailPath = 'previews/' . uniqid() . '_thumb.jpg';

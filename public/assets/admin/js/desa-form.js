@@ -8,6 +8,18 @@
 
 
 const form = document.getElementById('desaForm');
+
+// Anti double-submit: nonaktifkan tombol simpan setelah dikirim.
+if (form) {
+    form.addEventListener('submit', function () {
+        const btn = this.querySelector('button[type="submit"]');
+        if (btn) {
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+        }
+    });
+}
 const currentKecId = form ? form.dataset.currentKec : null;
 const currentDesaCode = form ? form.dataset.currentDesa : null;
 const kecamatanSelect = document.getElementById('kecamatanSelect');

@@ -99,28 +99,25 @@ class PersonalEmailController extends Controller
     }
 
     /**
-     * Tampilkan halaman "Cek Email Anda".
+     * Halaman "Cek Email Anda" standalone sudah TIDAK DIPAKAI lagi —
+     * verifikasi email kini hanya ada satu alur: panel OTP di halaman
+     * onboarding. Route notice lama dialihkan ke sana supaya deep link
+     * lama (mis. bookmark) tetap berfungsi tanpa dead end.
      */
-    public function showNotice(): View|RedirectResponse
+    public function showNotice(): RedirectResponse
     {
         $user = Auth::user();
 
-        // Kalau sudah diverifikasi, langsung redirect ke dashboard
+        // Kalau sudah diverifikasi, langsung ke dashboard
         if ($user->hasVerifiedPersonalEmail()) {
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        // Ambil email pending (session, dengan fallback DB → session).
-        $pendingEmail = $this->resolvePendingEmail($user);
+        // Normalisasi email pending ke session — panel OTP di onboarding
+        // membacanya lewat OnboardingController::show.
+        $this->resolvePendingEmail($user);
 
-        // Kalau tidak ada pending email, redirect ke setup
-        if (!$pendingEmail) {
-            return redirect()->route('personal-email.setup');
-        }
-
-        return view('auth.personal-email-notice', [
-            'personal_email' => $pendingEmail,
-        ]);
+        return redirect()->route('onboarding');
     }
 
     /**
@@ -165,7 +162,7 @@ class PersonalEmailController extends Controller
         ]);
 
         return redirect()->intended(route('admin.dashboard'))
-            ->with('success', '🎉 Email pribadi <strong>' . e($email) . '</strong> berhasil diverifikasi! Sekarang Anda bisa menggunakan fitur Lupa Password.');
+            ->with('success', 'Email pribadi <strong>' . e($email) . '</strong> berhasil diverifikasi! Sekarang Anda bisa menggunakan fitur Lupa Password.');
     }
 
     /**

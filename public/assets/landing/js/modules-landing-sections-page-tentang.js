@@ -52,7 +52,7 @@ async function loadTentangKami() {
         }
 
     } catch (error) {
-        console.error('❌ Error loading tentang kami:', error);
+        console.error('Error loading tentang kami:', error);
     }
 }
 

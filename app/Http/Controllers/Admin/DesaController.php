@@ -189,11 +189,14 @@ class DesaController extends Controller
         // diambil dari database SIEDA berdasarkan kode desa yang dipilih.
         $validated = $request->validate([
             'kecamatan_id' => 'required|exists:kecamatans,id',
-            'desa_code'    => 'required|string',   // Kode dari API
+            'desa_code'    => 'required|string|unique:desas,kode_wilayah', // Kode dari API; unik agar tak bisa didaftarkan dua kali
             'desa_name'    => 'required|string|max:100', // Nama dari API
             'sort_order'   => 'nullable|integer|min:0',
             'is_active'    => 'boolean',
             'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
+        ], [
+            'desa_code.required' => 'Desa wajib dipilih.',
+            'desa_code.unique'   => 'Desa ini sudah pernah ditambahkan.',
         ]);
 
         $validated['name'] = $validated['desa_name'];
@@ -228,11 +231,15 @@ class DesaController extends Controller
         // diambil dari database SIEDA berdasarkan kode desa yang dipilih.
         $validated = $request->validate([
             'kecamatan_id' => 'required|exists:kecamatans,id',
-            'desa_code'    => 'required|string',
+            // Desa yang sedang diedit dikecualikan sendiri agar tetap bisa disimpan.
+            'desa_code'    => 'required|string|unique:desas,kode_wilayah,' . $desa->id,
             'desa_name'    => 'required|string|max:100',
             'sort_order'   => 'nullable|integer|min:0',
             'is_active'    => 'boolean',
             'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
+        ], [
+            'desa_code.required' => 'Desa wajib dipilih.',
+            'desa_code.unique'   => 'Desa ini sudah pernah ditambahkan pada desa lain.',
         ]);
 
         $validated['name'] = $validated['desa_name'];

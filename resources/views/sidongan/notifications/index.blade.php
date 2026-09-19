@@ -45,8 +45,18 @@
     {{-- List --}}
     <div class="sd-notif-list animate-slide-in">
         @forelse($notifications as $notification)
-        <div class="sd-notif-item notif-item animate-slide-in" 
-             data-notif-id="{{ $notification->id }}">
+        @php
+            /* Surat Keluar (related_type = OutgoingLetterController) bisa
+               diklik langsung ke detail suratnya; sisanya tetap perilaku lama.
+               Notifikasi yang suratnya sudah tidak ada tidak diberi link. */
+            $notifUrl = $notification->related_type === \App\Http\Controllers\Sidongan\OutgoingLetterController::class && $notification->related_id
+                && \App\Models\OutgoingLetter::find($notification->related_id)
+                ? route('sidongan.outgoing.show', $notification->related_id)
+                : null;
+        @endphp
+        <div class="sd-notif-item notif-item animate-slide-in"
+             data-notif-id="{{ $notification->id }}"
+             @if($notifUrl) data-notif-url="{{ $notifUrl }}" style="cursor: pointer;" @endif>
             
             {{-- Icon --}}
             <div class="u-shrink-0">

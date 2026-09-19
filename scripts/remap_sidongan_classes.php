@@ -138,9 +138,9 @@ foreach ($files as $rel) {
 
     if ($newContent !== $work) {
         file_put_contents($root . '/' . $rel, $newContent);
-        echo "✏️  {$rel}\n";
+        echo "[OK]   {$rel}\n";
     } else {
-        echo "•  {$rel} (tidak berubah)\n";
+        echo "[SKIP] {$rel} (tidak berubah)\n";
     }
 
     foreach ($classToStyle as $cls => $style) {

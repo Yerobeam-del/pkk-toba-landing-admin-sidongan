@@ -31,17 +31,17 @@ class WilayahIndonesiaService
                 ->get($url);
             
             if (!$response->successful()) {
-                Log::error("❌ API Error: Status {$response->status()}");
+                Log::error("API Error: Status {$response->status()}");
                 return $this->getFallbackData();
             }
             
             $result = $response->json();
             
-            // ✅ Akses array 'data' dari response wrapper
+            // Akses array 'data' dari response wrapper
             $data = $result['data'] ?? [];
             
             if (!is_array($data) || empty($data)) {
-                Log::warning("⚠️ API response data kosong");
+                Log::warning("API response data kosong");
                 return $this->getFallbackData();
             }
             
@@ -55,7 +55,7 @@ class WilayahIndonesiaService
             }, array_filter($data, fn($i) => !empty($i['code']) && !empty($i['name'])));
             
         } catch (\Exception $e) {
-            Log::error("🔥 Fetch Exception: " . $e->getMessage());
+            Log::error("Fetch Exception: " . $e->getMessage());
             return $this->getFallbackData();
         }
     }
@@ -90,12 +90,12 @@ class WilayahIndonesiaService
      */
     public function syncKecamatansToba()
     {
-        Log::info("🚀 Starting sync kecamatan Toba ({$this->regencyCode})...");
+        Log::info("Starting sync kecamatan Toba ({$this->regencyCode})...");
         
         $apiData = $this->getKecamatansToba();
         
         if (empty($apiData)) {
-            Log::warning("⛔ No data to sync");
+            Log::warning("No data to sync");
             return 0;
         }
         
@@ -115,7 +115,7 @@ class WilayahIndonesiaService
             $count++;
         }
         
-        Log::info("✅ Synced {$count} kecamatan(s) to database");
+        Log::info("Synced {$count} kecamatan(s) to database");
         return $count;
     }
 }

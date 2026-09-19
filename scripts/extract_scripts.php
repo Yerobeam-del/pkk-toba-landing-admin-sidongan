@@ -113,7 +113,7 @@ foreach ($it as $file) {
 
     file_put_contents($path, $content);
     $changed++;
-    echo "✏️  {$rel} → assets/{$area}/js/{$slug}.js\n";
+    echo "[OK]   {$rel} -> assets/{$area}/js/{$slug}.js\n";
 }
 
 echo "\nBerkas diubah: {$changed}\n";

@@ -407,6 +407,39 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Multi-desa: isi dropdown desa tambahan (daftar semua desa Kabupaten
+    // Toba) — akun bisa mengelola landing page lebih dari satu desa.
+    async function loadDesaTambahan() {
+        const desaTambahanSelect = document.getElementById('siedaDesaTambahan');
+        if (!desaTambahanSelect) return;
+
+        // Restore pilihan lama dari data-selected (format JSON array).
+        const terpilih = (desaTambahanSelect.dataset.selected || '')
+            .replace(/[\[\]"]/g, '')
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean);
+
+        try {
+            const response = await fetch('/api/v1/wilayah/villages/12.12');
+            const result = await response.json();
+
+            if (result.success && result.data) {
+                desaTambahanSelect.innerHTML = '';
+                result.data.forEach(desa => {
+                    const option = document.createElement('option');
+                    option.value = desa.code;
+                    option.textContent = desa.name;
+                    if (terpilih.includes(desa.code)) option.selected = true;
+                    desaTambahanSelect.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error('Error loading desa tambahan:', error);
+            desaTambahanSelect.innerHTML = '<option value="">Gagal memuat data</option>';
+        }
+    }
+
     // Handle SIEDA Role Change
     function handleSiedaRoleChange() {
         const selectedRole = siedaRoleSelect ? siedaRoleSelect.value : '';
@@ -426,6 +459,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 kelurahanField.style.display = 'block';
                 siedaKecamatanSelect.required = true;
                 siedaKelurahanSelect.required = true;
+                loadDesaTambahan();
             }
         } else {
             siedaWilayahSection.style.display = 'none';
@@ -433,6 +467,8 @@ document.addEventListener('DOMContentLoaded', function () {
             siedaKelurahanSelect.required = false;
             siedaKecamatanSelect.value = '';
             siedaKelurahanSelect.value = '';
+            const desaTambahanSelect = document.getElementById('siedaDesaTambahan');
+            if (desaTambahanSelect) desaTambahanSelect.selectedIndex = -1;
         }
     }
 

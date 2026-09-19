@@ -130,7 +130,7 @@ class BeritaController extends Controller
         $originalSlug = $slug;
         $counter = 1;
 
-        // ✅ Gunakan 'News::class' atau 'News' saja, JANGAN '\App\Models\News'
+        // Gunakan 'News::class' atau 'News' saja, JANGAN '\App\Models\News'
         while (News::where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $counter;
             $counter++;
@@ -193,7 +193,7 @@ class BeritaController extends Controller
             $validated['author'] = $request->user()->name;
         }
 
-        // ✅ GENERATE SLUG UNIK UNTUK UPDATE
+        // GENERATE SLUG UNIK UNTUK UPDATE
         $slug = Str::slug($validated['title']);
         $originalSlug = $slug;
         $counter = 1;

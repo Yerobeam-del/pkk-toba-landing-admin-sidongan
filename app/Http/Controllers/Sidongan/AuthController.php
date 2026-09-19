@@ -57,18 +57,36 @@ class AuthController extends Controller
 
             $user = Auth::guard('sidongan')->user();
 
-            // Redirect langsung ke onboarding bila field pemblokir belum lengkap
-            // — paritas dengan SIEDA (LoginController) yang memeriksa kelengkapan
-            // saat login, bukan lewat bounce middleware dashboard. Field pemblokir
-            // didefinisikan sekali di App\Support\ProfileFields.
+            // ===== POST-LOGIN FLOW (paritas dengan Admin Panel) =====
+            // 1. Email pribadi pending (terisi tapi belum terverifikasi) →
+            //    onboarding, panel OTP "Cek Email" — SATU PINTU untuk semua
+            //    sistem: verifikasi terjadi di onboarding, bukan lagi via link
+            //    di halaman profil. Email pending diadopsi ke session supaya
+            //    panel dan tombol "Kirim kode" bekerja dari titik masuk mana pun.
             //
-            // PENGECUALIAN: user yang sebelumnya memilih "Lewati — nanti saja"
-            // (tersimpan di DB users.onboarding_skipped_at / session) TIDAK
-            // dilempar ke onboarding lagi di setiap login — tanpa ini user yang
-            // belum lengkap akan terjebak loop onboarding setiap kali login.
-            if (!ProfileFields::blockingComplete($user)
-                && !$user->onboarding_skipped_at
-                && !session('onboarding_skipped')) {
+            // 2. Field pemblokir kosong → onboarding juga — paritas dengan
+            //    SIEDA (LoginController) yang memeriksa kelengkapan saat login.
+            //    Field pemblokir didefinisikan sekali di App\Support\ProfileFields.
+            //
+            // PENGECUALIAN (untuk kasus 2): user yang sebelumnya memilih
+            // "Lewati — nanti saja" (tersimpan di DB users.onboarding_skipped_at
+            // / session) TIDAK dilempar ke onboarding lagi di setiap login —
+            // tanpa ini user yang belum lengkap akan terjebak loop onboarding
+            // setiap kali login. Email pending TETAP didahulukan di atas skip
+            // (konsisten dengan Admin Panel) — panel punya tautan
+            // "Verifikasi nanti & masuk dashboard" sehingga tidak pernah mengurung.
+            $pendingEmail = session('pending_personal_email')
+                ?? $user->personal_email;
+            $hasPendingEmail = $pendingEmail && !$user->hasVerifiedPersonalEmail();
+
+            if ($hasPendingEmail
+                || (!ProfileFields::blockingComplete($user)
+                    && !$user->onboarding_skipped_at
+                    && !session('onboarding_skipped'))) {
+                if ($hasPendingEmail && !session('pending_personal_email')) {
+                    session(['pending_personal_email' => $pendingEmail]);
+                }
+
                 return redirect()->route('onboarding');
             }
 

@@ -149,6 +149,20 @@ document.getElementById('imageInput')?.addEventListener('change', function(e) {
     }
 });
 
+// 6. Anti double-submit: nonaktifkan tombol simpan setelah dikirim.
+//    Dipasang via capture phase agar tetap jalan meski submit dipicu dari mana pun.
+const desaForm = document.querySelector('form[action*="desa"]');
+if (desaForm) {
+    desaForm.addEventListener('submit', function () {
+        const btn = this.querySelector('button[type="submit"]');
+        if (btn) {
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+        }
+    });
+}
+
 // Checkbox animation handler — sadar tema (dark mode pakai warna lain)
 function updateCheckboxStyle(boxId, checkId, isChecked) {
     const box = document.getElementById(boxId);

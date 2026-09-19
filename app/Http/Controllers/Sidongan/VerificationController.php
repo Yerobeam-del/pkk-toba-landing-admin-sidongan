@@ -66,7 +66,7 @@ class VerificationController extends Controller
             abort(403, 'Akses ditolak');
         }
         
-        // ✅ SIMPAN URL SEBELUMNYA DI SESSION
+        // SIMPAN URL SEBELUMNYA DI SESSION
         $previousUrl = url()->previous();
         
         // Hanya simpan jika bukan dari form verifikasi itu sendiri

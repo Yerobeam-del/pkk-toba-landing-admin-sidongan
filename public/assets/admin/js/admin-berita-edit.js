@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.editor = editor;
         })
         .catch(error => {
-            console.error('❌ CKEditor 5 error:', error);
+            console.error('CKEditor 5 error:', error);
             console.error('Stack:', error.stack);
         });
 });

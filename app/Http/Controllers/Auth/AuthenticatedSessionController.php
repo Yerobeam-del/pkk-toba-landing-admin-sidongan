@@ -39,19 +39,33 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        // ===== PERSONAL EMAIL FLOW AFTER LOGIN =====
-        // 1. Belum diset → redirect ke halaman setup
-        if (!$user->personal_email) {
-            return redirect()->route('personal-email.setup');
+        // ===== POST-LOGIN FLOW (onboarding-style, paritas dengan SIEDA) =====
+        // 1. Field pemblokir kosong (phone_number / personal_email) → onboarding
+        //    dengan branding Admin Panel. SEMUA kasus verifikasi email — termasuk
+        //    email pending yang sudah dikirim — ditangani DI ONBOARDING (panel
+        //    OTP), bukan lagi di halaman "Cek Email" terpisah, supaya tidak ada
+        //    dua alur berbeda untuk hal yang sama.
+        $pendingEmail = session('pending_personal_email')
+            ?? $user->personal_email;
+        $hasPendingEmail = $pendingEmail && !$user->hasVerifiedPersonalEmail();
+
+        if ($hasPendingEmail || (!\App\Support\ProfileFields::blockingComplete($user)
+            && !session('onboarding_skipped'))) {
+            return redirect()->route('onboarding');
         }
 
-        // 2. Sudah diset tapi belum diverifikasi → redirect ke notice
-        if (!$user->hasVerifiedPersonalEmail()) {
-            return redirect()->route('personal-email.notice');
+        // 2. Lengkap / di-skip → lanjut ke ruang kerja.
+        //    Belum pernah memilih → launcher "Pilih Ruang Kerja" (kartu sesuai
+        //    akses); sudah pernah → langsung ke ruang kerja tersimpan.
+        //    intended() tetap dipakai supaya deep-link (login ditengah jalan)
+        //    tetap kembali ke halaman yang dituju semula.
+        if (empty($user->workspace)) {
+            return redirect()->intended(route('workspace.pilih'));
         }
 
-        // 3. Sudah diverifikasi → lanjut ke dashboard
-        return redirect()->intended(route('admin.dashboard', absolute: false));
+        return redirect()->intended(
+            \App\Http\Controllers\WorkspaceController::url($user->workspace, $user)
+        );
     }
 
     /**
@@ -66,7 +80,8 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         // Kembali ke halaman login Admin Panel (bukan landing publik) —
-        // konsisten dengan alur login yang selalu berakhir di admin.dashboard.
+        // konsisten dengan alur login yang selalu berakhir di dashboard /
+        // launcher ruang kerja.
         return redirect()->route('login');
     }
 }

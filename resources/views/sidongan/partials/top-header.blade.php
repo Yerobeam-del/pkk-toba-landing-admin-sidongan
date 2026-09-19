@@ -30,11 +30,31 @@
     </button>
     <div class="header-right u-relative">
         
-        {{-- Dark Mode Toggle --}}
-        <button data-action="toggle-dark-mode" class="toggle-btn" title="Ganti tema">
-            <i class="fas fa-moon sd-dark-icon" style="font-size: 1rem;"></i>
-            <i class="fas fa-sun sd-light-icon" style="font-size: 1rem; display: none;"></i>
-        </button>
+        {{-- Pemilih Tema 3-mode (ala SIEDA): System (ikut perangkat) / Terang / Gelap --}}
+        <div class="theme-picker theme-picker--collapsed" data-theme-picker>
+            <button type="button" class="theme-picker__opt" data-theme-option="system" title="Ikuti tema perangkat" aria-label="Tema sistem">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+            </button>
+            <button type="button" class="theme-picker__opt" data-theme-option="light" title="Tema terang" aria-label="Tema terang">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+            </button>
+            <button type="button" class="theme-picker__opt" data-theme-option="dark" title="Tema gelap" aria-label="Tema gelap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+            <span class="theme-picker__thumb" data-theme-thumb></span>
+        </div>
 
         <div class="u-relative">
             <button data-action="toggle-notification-popup" class="toggle-btn" style="position: relative; margin-right: 0.5rem;">
@@ -60,8 +80,21 @@
                 
                 <div style="max-height: 350px; overflow-y: auto;">
                     @forelse($sidonganNotifications as $notif)
+                    @php
+                        /* URL tujuan bergantung jenis notifikasi: Surat Keluar
+                           (related_type = OutgoingLetterController) ke detail
+                           Surat Keluar; sisanya ke detail Surat Masuk. Notifikasi
+                           yang suratnya sudah tidak ada tidak diberi link. */
+                        if ($notif->related_type === \App\Http\Controllers\Sidongan\OutgoingLetterController::class) {
+                            $notifUrl = \App\Models\OutgoingLetter::find($notif->related_id)
+                                ? route('sidongan.outgoing.show', $notif->related_id)
+                                : null;
+                        } else {
+                            $notifUrl = route('sidongan.documents.show', $notif->related_id);
+                        }
+                    @endphp
                     <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-light, #f1f5f9); background: #eff6ff; cursor: pointer; transition: background 0.2s;"
-                        data-notif-id="{{ $notif->id }}" data-notif-url="{{ route('sidongan.documents.show', $notif->related_id) }}">
+                        data-notif-id="{{ $notif->id }}" @if($notifUrl) data-notif-url="{{ $notifUrl }}" @endif>
                         <div style="display: flex; gap: 0.75rem; align-items: start;">
                             <div style="width: 2rem; height: 2rem; background: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                 <i class="fas fa-bell" style="color: #3b82f6; font-size: 0.85rem;"></i>
@@ -91,7 +124,7 @@
                 </div>
                 
                 <div style="padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-light, #e2e8f0); text-align: center;">
-                    <a href="{{ route('sidongan.notifications') }}" style="font-size: 0.875rem; color: #2563eb; text-decoration: none; font-weight: 500;">Lihat Semua Notifikasi →</a>
+                    <a href="{{ route('sidongan.notifications') }}" style="font-size: 0.875rem; color: #2563eb; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem;">Lihat Semua Notifikasi<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
                 </div>
             </div>
         </div>
@@ -128,6 +161,15 @@
                 <div style="font-size:0.75rem;color:var(--text-muted,#64748b)">{{ $currentUser->sidongan_role_name }}</div>
             </div>
             <div style="padding:0.5rem 0;border-bottom:1px solid var(--border-light, #f1f5f9)">
+                <a href="{{ route('workspace.pilih') }}" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:var(--text-dark,#334155);transition:background 0.2s;text-align:left;font-size:0.85rem;text-decoration:none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    <span>Ganti Ruang Kerja</span>
+                </a>
                 <a href="{{ route('sidongan.profile.edit') }}" style="width:100%;display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1rem;background:none;border:none;cursor:pointer;color:var(--text-dark,#334155);transition:background 0.2s;text-align:left;font-size:0.85rem;text-decoration:none;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -153,29 +195,100 @@
     </div>
 </header>
 
-{{-- Dark Mode Toggle Script --}}
+{{-- Pemilih Tema 3-mode (ala SIEDA): ringkas saat idle (hanya ikon mode aktif),
+     terbuka saat diklik untuk memilih System/Terang/Gelap, menutup otomatis setelah memilih --}}
 <script>
 (function() {
+    var KEY = 'sidongan-theme';
     var html = document.documentElement;
-    var isDark = html.classList.contains('dark-mode');
-    var sunIcon = document.querySelector('.sd-light-icon');
-    var moonIcon = document.querySelector('.sd-dark-icon');
-    
-    function updateIcons() {
-        var dark = html.classList.contains('dark-mode');
-        if (sunIcon) sunIcon.style.display = dark ? 'inline' : 'none';
-        if (moonIcon) moonIcon.style.display = dark ? 'none' : 'inline';
+    var picker = document.querySelector('[data-theme-picker]');
+    if (!picker) return;
+
+    function currentMode() {
+        var s = localStorage.getItem(KEY);
+        return (s === 'light' || s === 'dark') ? s : 'system';
     }
-    updateIcons();
-    
-    document.querySelectorAll('[data-action="toggle-dark-mode"]').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            html.classList.toggle('dark-mode');
-            var dark = html.classList.contains('dark-mode');
-            localStorage.setItem('sidongan-theme', dark ? 'dark' : 'light');
-            updateIcons();
+
+    function activeOpt() {
+        return picker.querySelector('[data-theme-option="' + currentMode() + '"]');
+    }
+
+    function updateThumb() {
+        var opt = activeOpt();
+        if (!opt) return;
+        var thumb = picker.querySelector('[data-theme-thumb]');
+        thumb.style.transform = 'translateX(' + opt.offsetLeft + 'px)';
+        thumb.style.width = opt.offsetWidth + 'px';
+        picker.querySelectorAll('[data-theme-option]').forEach(function(b) {
+            b.classList.toggle('active', b === opt);
         });
+    }
+
+    function isCollapsed() { return picker.classList.contains('theme-picker--collapsed'); }
+
+    function collapse() { picker.classList.add('theme-picker--collapsed'); }
+
+    function expand() {
+        picker.classList.remove('theme-picker--collapsed');
+        updateThumb();
+    }
+
+    // Perangkat dengan kursor (desktop): buka/tutup via hover. Perangkat sentuh: via ketukan.
+    var canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    picker.addEventListener('click', function(e) {
+        // Ringkas: klik pertama hanya membuka pemilih (alur perangkat sentuh — di desktop dibuka via hover)
+        if (isCollapsed()) {
+            e.stopPropagation();
+            expand();
+            return;
+        }
+        var opt = e.target.closest('[data-theme-option]');
+        if (!opt) return;
+        var mode = opt.getAttribute('data-theme-option');
+        if (mode === 'light' || mode === 'dark') {
+            localStorage.setItem(KEY, mode);
+        } else {
+            localStorage.removeItem(KEY); // system = tidak ada preferensi tersimpan
+        }
+        var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+        var dark = (mode === 'dark') || (mode !== 'light' && mq && mq.matches);
+        html.classList.toggle('dark-mode', dark);
+        updateThumb();
+        // Beri tahu elemen lain (mis. favicon) bahwa tema berubah
+        document.dispatchEvent(new CustomEvent('sidongan-theme-changed'));
+        // Di perangkat sentuh (tanpa hover): tutup kembali setelah memilih.
+        // Di desktop, penutupan ditangani mouseleave agar picker tetap terbuka selama kursor masih di atasnya.
+        if (!canHover) setTimeout(collapse, 450);
     });
+
+    // Desktop: terbuka saat kursor melayang di atasnya, menutup saat kursor pergi.
+    // Delay singkat mencegah terbuka/menutup saat kursor hanya melintas.
+    var expandTimer = null, collapseTimer = null;
+    picker.addEventListener('mouseenter', function() {
+        if (!canHover) return;
+        clearTimeout(collapseTimer);
+        if (isCollapsed()) expandTimer = setTimeout(expand, 100);
+    });
+    picker.addEventListener('mouseleave', function() {
+        if (!canHover) return;
+        clearTimeout(expandTimer);
+        collapseTimer = setTimeout(collapse, 250);
+    });
+
+    // Klik di luar pemilih menutupnya kembali
+    document.addEventListener('click', function(e) {
+        if (!picker.contains(e.target)) collapse();
+    });
+
+    // Ikon harus mengikuti bila tema berubah dari luar (mis. tema perangkat berubah saat mode system)
+    document.addEventListener('sidongan-theme-changed', updateThumb);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateThumb);
+    } else {
+        updateThumb();
+    }
+    window.addEventListener('resize', updateThumb);
 })();
 </script>
 

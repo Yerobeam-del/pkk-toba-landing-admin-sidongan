@@ -6,7 +6,7 @@
 
 @section('content')
 @php
-    // ✅ Ambil URL kembali dari session
+    // Ambil URL kembali dari session
     $backUrl = session('verifikasi_form_back_url', route('sidongan.lapor_kegiatan.show', $report->id));
     
     // Validasi URL - pastikan bukan halaman form verifikasi

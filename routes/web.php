@@ -194,6 +194,8 @@ $registerSidonganRoutes = function (bool $withLanding): void {
         Route::delete('/documents/{document}', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'destroy'])->name('documents.destroy');
         Route::get('/documents/{document}/download', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'download'])->name('documents.download');
         Route::get('/documents/{document}/disposisi-print', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'printDisposisi'])->name('documents.disposisi-print');
+        Route::get('/documents/{document}/outgoing/create', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'createFromIncoming'])->name('documents.outgoing.create');
+        Route::post('/documents/{document}/outgoing', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'store'])->name('documents.outgoing.store');
         Route::patch('/documents/{document}/archive', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'archive'])->name('documents.archive');
         Route::post('/documents/bulk-archive', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'bulkArchive'])->name('documents.bulk-archive');
         Route::post('/documents/bulk-delete', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'bulkDelete'])->name('documents.bulk-delete');
@@ -205,6 +207,20 @@ $registerSidonganRoutes = function (bool $withLanding): void {
         Route::get('/verifikasi', [App\Http\Controllers\Sidongan\VerificationController::class, 'index'])->name('verifikasi');
         Route::get('/verifikasi/{id}/form', [App\Http\Controllers\Sidongan\VerificationController::class, 'form'])->name('verifikasi.form');
         Route::match(['post', 'put'], '/verifikasi/{id}', [App\Http\Controllers\Sidongan\VerificationController::class, 'store'])->name('verifikasi.store');
+
+        Route::get('/outgoing', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'index'])->name('outgoing.index');
+        Route::get('/outgoing/{letter}', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'show'])->name('outgoing.show');
+        Route::get('/outgoing/{letter}/edit', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'edit'])->name('outgoing.edit');
+        Route::put('/outgoing/{letter}', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'update'])->name('outgoing.update');
+        Route::post('/outgoing/{letter}/submit', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'submit'])->name('outgoing.submit');
+        Route::post('/outgoing/{letter}/approve', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'approve'])->name('outgoing.approve');
+        Route::post('/outgoing/{letter}/revision', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'requestRevision'])->name('outgoing.revision');
+        Route::get('/outgoing/{letter}/pdf', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'pdf'])->name('outgoing.pdf');
+        Route::get('/outgoing/{letter}/word', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'word'])->name('outgoing.word');
+        Route::post('/outgoing/{letter}/import-word', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'importWord'])->name('outgoing.import-word');
+        Route::get('/outgoing/{letter}/attachment', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'downloadAttachment'])->name('outgoing.attachment');
+        Route::post('/outgoing/{letter}/sent', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'markSent'])->name('outgoing.sent');
+        Route::post('/outgoing/{letter}/archive', [App\Http\Controllers\Sidongan\OutgoingLetterController::class, 'archive'])->name('outgoing.archive');
 
         Route::get('/arsip', [App\Http\Controllers\Sidongan\AdminDocumentController::class, 'arsip'])->name('arsip');
 
@@ -246,10 +262,29 @@ if (app()->environment('local')) {
 // 2. ONBOARDING — STANDALONE (works from any login source)
 // ======================================================================
 Route::middleware(['web'])->group(function () {
+    // Launcher "Pilih Ruang Kerja" — ditampilkan setelah login bila user
+    // belum memiliki pilihan default (users.workspace null). Kartu sesuai
+    // akses; pilihan disimpan ke users.workspace. Terpisah dari grup domain
+    // agar tetap hidup di host SIDONGAN saat pengembangan lokal.
+    Route::middleware('auth')->group(function () {
+        Route::get('/pilih-ruang-kerja', [App\Http\Controllers\WorkspaceController::class, 'pilih'])->name('workspace.pilih');
+        Route::post('/pilih-ruang-kerja', [App\Http\Controllers\WorkspaceController::class, 'simpan'])->name('workspace.simpan');
+        // Langkah kedua kartu Admin Panel Desa: pengelola multi-desa memilih desa.
+        Route::get('/pilih-ruang-kerja/desa', [App\Http\Controllers\WorkspaceController::class, 'pilihDesa'])->name('workspace.pilih-desa');
+        Route::get('/masuk-sidongan', [App\Http\Controllers\WorkspaceController::class, 'masukSidongan'])->name('workspace.sidongan');
+    });
+
     // Onboarding
     Route::get('/onboarding', [App\Http\Controllers\OnboardingController::class, 'show'])->name('onboarding');
     Route::post('/onboarding', [App\Http\Controllers\OnboardingController::class, 'store'])->name('onboarding.store');
     Route::get('/onboarding/skip', [App\Http\Controllers\OnboardingController::class, 'skip'])->name('onboarding.skip');
+    Route::post('/onboarding/verify-email', [App\Http\Controllers\OnboardingController::class, 'verifyEmailOtp'])->name('onboarding.verify-email');
+    Route::post('/onboarding/resend-email-otp', [App\Http\Controllers\OnboardingController::class, 'resendEmailOtp'])->name('onboarding.resend-email-otp');
+    // Polling status verifikasi email (panel "Cek Email" onboarding) —
+    // throttle longgar anti abuse, tapi cukup untuk polling tiap ~10 detik.
+    Route::get('/onboarding/email-status', [App\Http\Controllers\OnboardingController::class, 'emailStatus'])
+        ->middleware('throttle:30,1')
+        ->name('onboarding.email-status');
 
     // Unified Forgot Password
     Route::get('/forgot-password', [App\Http\Controllers\UnifiedForgotPasswordController::class, 'create'])->name('password.request');
@@ -562,6 +597,9 @@ Route::domain(config('app.landing_domain'))->group(function () {
         Route::get('/tentang', [App\Http\Controllers\Admin\TentangKamiController::class, 'index'])->name('tentang.index')->middleware('permission:manage-tentang');
         Route::post('/tentang/update', [App\Http\Controllers\Admin\TentangKamiController::class, 'update'])->name('tentang.update')->middleware('permission:manage-tentang');
 
+        Route::get('/settings', [App\Http\Controllers\Admin\SiteSettingController::class, 'index'])->name('settings.index')->middleware('permission:manage-settings');
+        Route::post('/settings/update', [App\Http\Controllers\Admin\SiteSettingController::class, 'update'])->name('settings.update')->middleware('permission:manage-settings');
+
         Route::prefix('user-management')->name('user-management.')->middleware('permission:manage-users')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\UserManagementController::class, 'index'])->name('index');
             Route::get('/create', [App\Http\Controllers\Admin\UserManagementController::class, 'create'])->name('create');
@@ -575,6 +613,7 @@ Route::domain(config('app.landing_domain'))->group(function () {
             Route::delete('/{user}', [App\Http\Controllers\Admin\UserManagementController::class, 'destroy'])->name('destroy');
             Route::post('/{user}/toggle-status', [App\Http\Controllers\Admin\UserManagementController::class, 'toggleStatus'])->name('toggle-status');
             Route::post('/{user}/reset-password', [App\Http\Controllers\Admin\UserManagementController::class, 'resetPassword'])->name('reset-password');
+            Route::post('/{user}/resend-personal-email-verification', [App\Http\Controllers\Admin\UserManagementController::class, 'resendPersonalEmailVerification'])->name('resend-personal-email-verification');
             Route::get('/{user}', [App\Http\Controllers\Admin\UserManagementController::class, 'show'])->name('show');
         });
 

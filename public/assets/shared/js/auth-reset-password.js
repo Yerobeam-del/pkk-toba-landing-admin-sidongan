@@ -65,11 +65,12 @@
                 }
             }
 
-            // Update hint text
+            // Update hint text (ikon centang SVG, bukan karakter unicode)
+            const checkIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polyline points="20 6 9 17 4 12"/></svg>';
             if (strength <= 1) hint.textContent = 'Password lemah';
             else if (strength <= 2) hint.textContent = 'Password cukup';
             else if (strength <= 3) hint.textContent = 'Password baik';
-            else hint.textContent = '✓ Password kuat';
+            else hint.innerHTML = checkIcon + ' Password kuat';
         }
     
 

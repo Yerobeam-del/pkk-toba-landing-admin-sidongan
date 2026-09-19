@@ -30,12 +30,15 @@ class User extends Authenticatable
         'email_verified_at',
         'personal_email_verified_at',
         'onboarding_skipped_at',
+        'workspace',
+        'workspace_desa',
         'password',
         'remember_token',
         'sidongan_role',
         'sieda_role',
         'sieda_kecamatan',
         'sieda_kelurahan',
+        'sieda_desas',
         'role_id',
     ];
 
@@ -50,6 +53,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'personal_email_verified_at' => 'datetime',
             'onboarding_skipped_at' => 'datetime',
+            'sieda_desas' => 'array',
+            'personal_email_otp_expires_at' => 'datetime',
+            'personal_email_otp_requested_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -65,6 +71,12 @@ class User extends Authenticatable
     {
         // PersonalEmailVerificationNotification membawa email tujuannya sendiri
         if ($notification instanceof PersonalEmailVerificationNotification) {
+            return $notification->email;
+        }
+
+        // OTP onboarding juga membawa email tujuannya sendiri (email pribadi
+        // yang baru didaftarkan, belum tentu tersimpan/terverifikasi di DB)
+        if ($notification instanceof \App\Notifications\PersonalEmailOtpNotification) {
             return $notification->email;
         }
 

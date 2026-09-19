@@ -2,6 +2,17 @@
      Dikembangkan oleh Institut Teknologi Del
      ============================================================ --}}
 @extends('admin.layouts.app')
+@php $sysArea = ['key' => 'akun', 'label' => 'Manajemen Akun', 'desc' => 'Kelola pengguna, role & permission, dan penugasan desa seluruh sistem PKK.']; @endphp
+@section('sysAreaStyles')
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-system-area.css') }}">
+@endsection
+@section('sysBodyAttr') data-area="{{ $sysArea['key'] }}" @endsection
+@section('sysSidebar')
+    @include('admin.partials.sys-sidebar')
+@endsection
+@section('sysBanner')
+    @include('admin.partials.sys-banner')
+@endsection
 @section('title', 'Tambah Akun')
 @section('page-title', 'Tambah Akun Baru')
 
@@ -267,7 +278,16 @@
                                 <select name="sieda_kelurahan" id="siedaKelurahan" class="form-control">
                                     <option value="">-- Pilih Desa/Kelurahan --</option>
                                 </select>
-                                <small class="u-hint-line">Kader: Hanya akses desa ini</small>
+                                <small class="u-hint-line">Kader: Hanya akses desa ini (desa utama)</small>
+
+                                <div id="desaTambahanField" style="margin-top:0.75rem;">
+                                    <label class="u-label-slate">Desa Tambahan <span class="u-text-muted">(opsional)</span></label>
+                                    <select name="sieda_desas[]" id="siedaDesaTambahan" class="form-control" multiple size="5"
+                                        data-selected='@json(old("sieda_desas", []))'>
+                                        <option value="">-- Memuat desa... --</option>
+                                    </select>
+                                    <small class="u-hint-line">Tahan Ctrl (Windows) / Cmd (Mac) untuk memilih beberapa desa — akun bisa mengelola landing page lebih dari satu desa.</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -411,8 +431,8 @@
         </div>
         <div class="crop-modal-footer">
             <div class="crop-modal-tools">
-                <button type="button" class="btn u-a13" data-action="rotate-crop" data-deg="-90">↺ Putar Kiri</button>
-                <button type="button" class="btn u-a13" data-action="rotate-crop" data-deg="90">Putar Kanan ↻</button>
+                <button type="button" class="btn u-a13" data-action="rotate-crop" data-deg="-90" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Putar Kiri</button>
+                <button type="button" class="btn u-a13" data-action="rotate-crop" data-deg="90" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Putar Kanan</button>
                 <button type="button" class="btn u-a13" data-action="reset-crop">Reset</button>
             </div>
             <div class="crop-modal-hint">Drag untuk geser, scroll untuk zoom</div>

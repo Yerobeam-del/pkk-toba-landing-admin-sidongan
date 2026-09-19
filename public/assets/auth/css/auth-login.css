@@ -429,3 +429,49 @@
             .btn-login { padding: 0.7rem; font-size: 0.9rem; }
         }
     
+/* ============================================================
+ * DARK MODE — 3-mode (system/light/dark) bersama panel admin
+ * (storage `admin-dark-mode`). Panel branding kiri tetap gradasi
+ * oranye khas Admin Panel; panel form & latar mengikuti tema.
+ * ============================================================ */
+
+html.dark-mode body {
+    background: linear-gradient(135deg, #0f172a 0%, #431407 55%, #7c2d12 100%);
+}
+html.dark-mode .login-wrapper {
+    background: #1e293b;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+html.dark-mode .login-form-wrapper { background: #1e293b; }
+html.dark-mode .login-header h2 { color: #f1f5f9; }
+html.dark-mode .login-header p { color: #94a3b8; }
+html.dark-mode .form-label { color: #cbd5e1; }
+html.dark-mode .form-control {
+    background: #0f172a;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+html.dark-mode .form-control::placeholder { color: #64748b; }
+html.dark-mode .form-control:focus {
+    border-color: var(--primary-light);
+    background: #0f172a;
+    box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.15);
+    color: #e2e8f0;
+}
+html.dark-mode .input-icon { color: #94a3b8; }
+html.dark-mode .custom-checkbox input:not(:checked) + .checkmark {
+    background: #0f172a;
+    border-color: #475569;
+}
+html.dark-mode .check-text { color: #cbd5e1; }
+html.dark-mode .forgot-password { color: var(--primary-light); }
+html.dark-mode .divider { color: #94a3b8; }
+html.dark-mode .divider::before,
+html.dark-mode .divider::after { background: #334155; }
+html.dark-mode .footer-security { color: #94a3b8; }
+html.dark-mode .footer-security svg { color: var(--primary-light); }
+html.dark-mode .alert-danger {
+    background: rgba(220, 38, 38, 0.12);
+    border-left-color: #ef4444;
+    color: #fca5a5;
+}

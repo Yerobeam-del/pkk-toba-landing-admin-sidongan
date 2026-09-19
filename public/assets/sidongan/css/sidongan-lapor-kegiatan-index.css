@@ -370,12 +370,6 @@ html.dark-mode .lk-meta-row {
     color: #94a3b8;
 }
 
-html.dark-mode .lk-agenda-badge {
-    background: #0f172a;
-    color: #38bdf8;
-    border: 1px solid rgba(56,189,248,0.2);
-}
-
 html.dark-mode .lk-btn-outline {
     background: #0f172a;
     color: #fb923c;
@@ -386,8 +380,39 @@ html.dark-mode .lk-btn-outline:hover {
     background: rgba(249,115,22,0.1);
 }
 
+/* Warna inline di Blade (style="color:#c2410c") menimpa rule di atas —
+   dipaksa agar tetap terbaca di dark mode. */
+html.dark-mode .lk-btn-outline[style] {
+    color: #fb923c !important;
+}
+
+/* Inline style dari Blade ($theme['bg'], $theme['text']) butuh !important
+   agar bisa ditembus di dark mode. Aksen status ($theme['btn']) tetap dipertahankan. */
 html.dark-mode .lk-dispo-box {
-    background: rgba(255,255,255,0.03);
+    background: rgba(255,255,255,0.03) !important;
+}
+
+html.dark-mode .lk-dispo-label {
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .lk-agenda-badge {
+    background: #0f172a;
+    color: #38bdf8 !important;
+    border: 1px solid rgba(56,189,248,0.25) !important;
+}
+
+html.dark-mode .lk-meta-icon-box {
+    background: rgba(255,255,255,0.06) !important;
+}
+
+html.dark-mode .u-card-footer {
+    background: #0f172a;
+    border-top-color: rgba(255,255,255,0.08);
+}
+
+html.dark-mode .u-card-footer strong {
+    color: #e2e8f0;
 }
 
 html.dark-mode .lk-dispo-icon-box {

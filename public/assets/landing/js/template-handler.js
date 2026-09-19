@@ -23,7 +23,7 @@ async function loadTemplatesFromAPI() {
 
         _renderTemplates(window.templateData);
     } catch (error) {
-        console.error('❌ Failed to load templates:', error);
+        console.error('Failed to load templates:', error);
         window.templateData = [];
         _renderTemplates([]);
     }
@@ -39,7 +39,7 @@ function _renderTemplates(templates) {
     const tbody = document.getElementById('templateBody');
 
     if (!grid || !loading || !empty || !tbody) {
-        console.error('❌ Template elements not found');
+        console.error('Template elements not found');
         return;
     }
 

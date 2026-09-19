@@ -78,7 +78,7 @@
                         Lokasi Kantor PKK Kabupaten Toba
                     </h3>
                     <p id="tentangMapsAddress">
-                        Jl. D.I Panjaitan No.1, Napitupulu, Kec. Balige, Kabupaten Toba, Sumatera Utara
+                        {!! nl2br(e(\App\Models\SiteSetting::get('footer_address'))) !!}
                     </p>
                     <a id="tentangMapsLink" href="https://goo.gl/maps/xxxxx" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:0.5rem;min-height:44px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
